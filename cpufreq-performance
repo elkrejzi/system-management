@@ -1,0 +1,3 @@
+#!/bin/bash
+
+for dir in cpu{0,1,2,3} ; do gksu "/bin/echo performance > /sys/devices/system/cpu/$dir/cpufreq/scaling_governor"; done

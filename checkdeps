@@ -1,0 +1,20 @@
+#!/bin/sh
+
+if [ ! $1 ]; then
+  /bin/echo -e "this script requires one arguments."
+  exit 1
+fi
+
+rm -f ${PWD}/check
+
+find {,/usr}/{bin,lib{,32},sbin} -type f ! -path */debug/* ! -path */java/* ! -path */vmware*/* \
+     ! -path */syslinux/* 2>/dev/null | while read BUILD_BINARY ; do
+case "$(file -bi "${BUILD_BINARY}")" in
+*application/x-sharedlib* | *application/x-executable*)
+  readelf -d ${BUILD_BINARY} | grep "NEEDED" | grep $1 > /dev/null
+  if [ $? -eq 0 ]; then
+    /bin/echo ${BUILD_BINARY} >> ${PWD}/check
+  fi
+esac
+done
+

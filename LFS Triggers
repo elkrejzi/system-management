@@ -1,0 +1,63 @@
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+
+[ -x /usr/bin/install-info ] && echo "Processing triggers for texinfo" && for file in usr/share/info/* ; do /usr/bin/install-info /$file /usr/share/info/dir ; done
+
+[ -x /usr/bin/gconftool-2 ] && echo "Processing triggers for gconf-2" && for schema in etc/gconf/schemas/*.schemas ; do GCONF_CONFIG_SOURCE=xml:merged:/etc/gconf/gconf.xml.defaults /usr/bin/gconftool-2 --makefile-install-rule /$schema ; done
+
+[ -x /usr/bin/fc-cache ] && echo "Processing triggers for fontconfig" && /usr/bin/fc-cache /usr/share/fonts
+
+[ -x /usr/bin/gio-querymodules ] && echo "Processing triggers for gio-2.0" && /usr/bin/gio-querymodules /usr/lib/gio/modules
+[ -x /usr/bin/update-mime-database ] && echo "Processing triggers for shared-mime-info" && /usr/bin/update-mime-database /usr/share/mime
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -q /usr/share/icons/hicolor
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for gnome-icon-theme" && /usr/bin/gtk-update-icon-cache -q /usr/share/icons/gnome
+[ -x /usr/bin/gdk-pixbuf-query-loaders ] && echo "Processing triggers for gdk-pixbuf-2.0" && /usr/bin/gdk-pixbuf-query-loaders > /usr/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache
+
+[ -x /usr/bin/glib-compile-schemas ] && echo "Processing triggers for glib-2.0" && /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas
+
+[ -x /usr/bin/gtk-query-immodules-2.0 ] && echo "Processing triggers for gtk-2.0" && /usr/bin/gtk-query-immodules-2.0 > /etc/gtk-2.0/gtk.immodules
+
+[ -x /usr/bin/gtk-query-immodules-3.0 ] && echo "Processing triggers for gtk-3.0" && /usr/bin/gtk-query-immodules-3.0 > /usr/lib/gtk-3.0/3.0.0/immodules.cache
+
+for dir in usr/include usr/lib ; do cp -rf --remove-destination $dir /usr ; done
+for dir in bin lib sbin usr ; do cp -rf --remove-destination $dir / ; done
+for dir in bin etc usr ; do cp -rf --remove-destination $dir / ; done
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+for dir in bin usr ; do cp -rf --remove-destination $dir / ; done
+
+for dir in usr/include usr/lib usr/share ; do cp -rf --remove-destination $dir /usr ; done
+
+for dir in usr/include usr/lib ; do cp -rf --remove-destination $dir /usr ; done
+for dir in usr/share/guile usr/share/info ; do cp -rf --remove-destination $dir /usr/share ; done
+cp -rf --remove-destination usr/share/man/man3 /usr/share/man
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+
+#!/bin/bash
+
+for dir in usr/include usr/lib ; do cp -rf --remove-destination $dir /usr ; done
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+
+#!/bin/bash
+
+for dir in usr/include usr/lib usr/share ; do cp -rf --remove-destination $dir /usr ; done
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/gconftool-2 ] && echo "Processing triggers for gconf-2" && for schema in etc/gconf/schemas/*.schemas ; do GCONF_CONFIG_SOURCE=xml:merged:/etc/gconf/gconf.xml.defaults /usr/bin/gconftool-2 --makefile-install-rule /$schema ; done

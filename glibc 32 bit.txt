@@ -1,0 +1,86 @@
+export PATH_HOLD=$PATH
+export PATH=/usr/gcc/bin:$PATH
+
+# Binutils
+
+../src/configure --target=x86_64-krejzi-linux-gnu --prefix=/usr/gcc --enable-multilib --disable-nls
+
+make configure-host -j4
+make -j4
+
+make install -j4
+
+ln -s lib /usr/gcc/lib64
+
+# Gcc
+
+../src/configure --target=x86_64-krejzi-linux-gnu \
+                 --prefix=/usr/gcc \
+                 --enable-multilib \
+                 --with-newlib \
+                 --without-headers \
+                 --disable-nls \
+                 --disable-shared \
+                 --disable-decimal-float \
+                 --disable-threads \
+                 --disable-libatomic \
+                 --disable-libgomp \
+                 --disable-libitm \
+                 --disable-libmudflap \
+                 --disable-libquadmath \
+                 --disable-libsanitizer \
+                 --disable-libssp \
+                 --disable-libstdc++-v3 \
+                 --enable-languages=c \
+                 --disable-target-zlib \
+                 --with-system-zlib
+
+make all-gcc all-target-libgcc -j4
+
+make install-gcc install-target-libgcc -j4
+
+ln -sv libgcc.a `x86_64-krejzi-linux-gnu-gcc -print-libgcc-file-name | sed 's/libgcc/&_eh/'`
+ln -sv libgcc.a `x86_64-krejzi-linux-gnu-gcc -m32 -print-libgcc-file-name | sed 's/libgcc/&_eh/'`
+
+# Glibc
+
+echo "libc_cv_ssp=no" > config.cache
+echo "slibdir=/lib32" > configparms
+
+CFLAGS="-march=native -mtune=native -g -O2"   \
+CXXFLAGS="-march=native -mtune=native -g -O2" \
+CPPLAGS="-march=native -mtune=native -g -O2"  \
+BUILD_CC="gcc" CC="x86_64-krejzi-linux-gnu-gcc -m32" \
+AR="x86_64-krejzi-linux-gnu-ar" RANLIB="x86_64-krejzi-linux-gnu-ranlib"      \
+../src/configure --prefix=/usr --libdir=/usr/lib32 --libexecdir=/usr/lib32   \
+                 --disable-profile --enable-add-ons --enable-kernel=3.12.0   \
+                 --enable-multi-arch --enable-obsolete-rpc                   \
+                 --with-headers=/usr/include --with-pkgversion="Krejzi 2.19" \
+                 --cache-file=config.cache i686-pc-linux-gnu
+
+make -j4
+
+install -dm755 ${PWD}/dest/etc
+touch ${PWD}/dest/etc/ld.so.conf
+
+make -j4 install install_root=${PWD}/dest
+
+mv ${PWD}/dest/lib32 /
+mv ${PWD}/dest/usr/lib32 /usr/
+mv ${PWD}/dest/usr/include/gnu/stubs-32.h /usr/include/gnu/
+
+ln -sf ../lib32/ld-linux.so.2 /lib/ld-linux.so.2
+ln -sf ../lib/locale /usr/lib32/locale
+
+cat >> /etc/ld.so.conf << "EOF"
+# Begin 32 bit Glibc adition
+/lib32
+/usr/lib32
+
+# End 32 bit Glibc adition
+EOF
+
+export PATH=$PATH_HOLD
+unset PATH_HOLD
+
+rm -rf /usr/gcc

@@ -1,0 +1,9 @@
+find * -type f ! -path */debug/* 2>/dev/null | while read BUILD_BINARY ; do
+case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+mkdir -p usr/lib/debug/`dirname ${BUILD_BINARY}`
+objcopy --only-keep-debug ${BUILD_BINARY} usr/lib/debug/${BUILD_BINARY}
+strip --strip-unneeded ${BUILD_BINARY}
+objcopy --add-gnu-debuglink=usr/lib/debug/${BUILD_BINARY} ${BUILD_BINARY}
+esac
+done
+

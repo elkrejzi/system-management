@@ -1,0 +1,237 @@
+5.4. Binutils-2.24 - Pass 1
+
+../src/configure        \
+    --prefix=/tools     \
+    --target=$LFS_TGT   \
+    --disable-nls       \
+    --disable-werror    \
+    --enable-multilib   \
+    --with-sysroot=$LFS \
+    --with-lib-path=/tools/lib32:/tools/lib
+
+make -j4
+make install
+
+5.5. GCC-4.9.0 - Pass 1
+
+tar -xf ../mpfr-3.1.2.tar.xz
+mv -v mpfr-3.1.2 mpfr
+tar -xf ../gmp-6.0.0a.tar.xz
+mv -v gmp-6.0.0 gmp
+tar -xf ../mpc-1.0.2.tar.gz
+mv -v mpc-1.0.2 mpc
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/gcc-fixes.patch
+patch -Np1 -i /media/ntfs/Other/Linux/patches/gcc-pure64.patch
+
+pushd mpfr
+patch -Np1 -i /media/ntfs/Other/Linux/patches/mpfr.patch
+popd
+
+sed -i "s|\$(if \$(wildcard \$(shell echo \$(SYSTEM_HEADER_DIR))/../../usr/lib32),../lib32)|../lib32|" gcc/config/i386/t-linux64
+
+for file in \
+ $(find gcc/config -name linux64.h -o -name linux.h -o -name sysv4.h)
+do
+  cp -uv $file{,.orig}
+  sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tools&@g' \
+      -e 's@/usr@/tools@g' $file.orig > $file
+  echo '
+#undef STANDARD_STARTFILE_PREFIX_1
+#undef STANDARD_STARTFILE_PREFIX_2
+#define STANDARD_STARTFILE_PREFIX_1 "/tools/lib/"
+#define STANDARD_STARTFILE_PREFIX_2 ""' >> $file
+  touch $file.orig
+done
+
+mkdir ../build
+cd ../build
+
+../src/configure                                     \
+    --target=$LFS_TGT                                \
+    --prefix=/tools                                  \
+    --with-sysroot=$LFS                              \
+    --with-newlib                                    \
+    --without-headers                                \
+    --with-local-prefix=/tools                       \
+    --with-native-system-header-dir=/tools/include   \
+    --disable-nls                                    \
+    --disable-shared                                 \
+    --disable-decimal-float                          \
+    --disable-threads                                \
+    --disable-libatomic                              \
+    --disable-libgomp                                \
+    --disable-libitm                                 \
+    --disable-libmudflap                             \
+    --disable-libquadmath                            \
+    --disable-libsanitizer                           \
+    --disable-libssp                                 \
+    --disable-libvtv                                 \
+    --disable-libcilkrts                             \
+    --disable-libstdc++-v3                           \
+    --enable-multilib                                \
+    --enable-languages=c,c++                         \
+    --with-mpfr-include=$(pwd)/../src/mpfr/src       \
+    --with-mpfr-lib=$(pwd)/mpfr/src/.libs
+
+make -j4
+make install
+
+5.7. Glibc-2.19 
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/glibc.patch
+patch -Np1 -i /media/ntfs/Other/Linux/patches/glibc-pure64.patch
+
+mkdir ../build
+cd ../build
+
+echo slibdir=/tools/lib > configparms
+
+../src/configure                             \
+      --prefix=/tools                        \
+      --libdir=/tools/lib                    \
+      --libexecdir=/tools/lib                \
+      --host=$LFS_TGT                        \
+      --build=$(../src/scripts/config.guess) \
+      --disable-profile                      \
+      --enable-kernel=2.6.32                 \
+      --with-headers=/tools/include          \
+      libc_cv_forced_unwind=yes              \
+      libc_cv_ctors_header=yes               \
+      libc_cv_c_cleanup=yes                  \
+      libc_cv_ssp=no
+
+make -j4
+make -j4 install
+
+rm -rf *
+
+echo slibdir=/tools/lib32 > configparms
+
+CC="$LFS_TGT-gcc -m32"                       \
+../src/configure                             \
+      --prefix=/tools                        \
+      --libdir=/tools/lib32                  \
+      --libexecdir=/tools/lib32              \
+      --host=i686-lfs-linux-gnu              \
+      --build=$(../src/scripts/config.guess) \
+      --disable-profile                      \
+      --enable-kernel=2.6.32                 \
+      --with-headers=/tools/include          \
+      libc_cv_forced_unwind=yes              \
+      libc_cv_ctors_header=yes               \
+      libc_cv_c_cleanup=yes                  \
+      libc_cv_ssp=no
+
+mv /tools/lib/cr*.o /tools
+
+make -j4
+make -j4 install install_root=$PWD/dest
+
+mv dest/tools/lib32 /tools
+mv dest/tools/include/gnu/stubs-32.h /tools/include/gnu
+
+mv /tools/cr*.o /tools/lib
+
+5.8. Libstdc++-4.9.0
+
+mkdir ../build
+cd ../build
+
+../src/libstdc++-v3/configure       \
+    --host=$LFS_TGT                 \
+    --prefix=/tools                 \
+    --disable-shared                \
+    --disable-nls                   \
+    --disable-libstdcxx-threads     \
+    --disable-libstdcxx-pch         \
+    --with-gxx-include-dir=/tools/$LFS_TGT/include/c++/4.9.0
+
+make -j4
+make install
+
+5.9. Binutils-2.24 - Pass 2
+
+mkdir ../build
+cd ../build
+
+CC=$LFS_TGT-gcc        \
+AR=$LFS_TGT-ar         \
+RANLIB=$LFS_TGT-ranlib \
+../src/configure       \
+    --prefix=/tools    \
+    --disable-nls      \
+    --disable-werror   \
+    --with-sysroot     \
+    --enable-multlib   \
+    --with-lib-path=/tools/lib32:/tools/lib
+
+make -j4
+make install
+
+make -C ld clean
+make -C ld LIB_PATH=/usr/lib32:/lib32:/usr/lib:/lib -j4
+cp -v ld/ld-new /tools/bin
+
+5.10. GCC-4.9.0 - Pass 2
+
+cat gcc/limitx.h gcc/glimits.h gcc/limity.h > \
+  `dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/include-fixed/limits.h
+
+tar -xf ../mpfr-3.1.2.tar.xz
+mv -v mpfr-3.1.2 mpfr
+tar -xf ../gmp-6.0.0a.tar.xz
+mv -v gmp-6.0.0 gmp
+tar -xf ../mpc-1.0.2.tar.gz
+mv -v mpc-1.0.2 mpc
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/gcc-fixes.patch
+patch -Np1 -i /media/ntfs/Other/Linux/patches/gcc-pure64.patch
+
+pushd mpfr
+patch -Np1 -i /media/ntfs/Other/Linux/patches/mpfr.patch
+popd
+
+sed -i "s|\$(if \$(wildcard \$(shell echo \$(SYSTEM_HEADER_DIR))/../../usr/lib32),../lib32)|../lib32|" gcc/config/i386/t-linux64
+
+for file in \
+ $(find gcc/config -name linux64.h -o -name linux.h -o -name sysv4.h)
+do
+  cp -uv $file{,.orig}
+  sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tools&@g' \
+      -e 's@/usr@/tools@g' $file.orig > $file
+  echo '
+#undef STANDARD_STARTFILE_PREFIX_1
+#undef STANDARD_STARTFILE_PREFIX_2
+#define STANDARD_STARTFILE_PREFIX_1 "/tools/lib/"
+#define STANDARD_STARTFILE_PREFIX_2 ""' >> $file
+  touch $file.orig
+done
+
+mkdir ../build
+cd ../build
+
+CC=$LFS_TGT-gcc                                      \
+CXX=$LFS_TGT-g++                                     \
+AR=$LFS_TGT-ar                                       \
+RANLIB=$LFS_TGT-ranlib                               \
+../src/configure                                     \
+    --prefix=/tools                                  \
+    --with-local-prefix=/tools                       \
+    --with-native-system-header-dir=/tools/include   \
+    --enable-clocale=gnu                             \
+    --enable-shared                                  \
+    --enable-threads=posix                           \
+    --enable-__cxa_atexit                            \
+    --enable-languages=c,c++                         \
+    --enable-multilib                                \
+    --disable-libstdcxx-pch                          \
+    --disable-bootstrap                              \
+    --disable-libgomp                                \
+    --with-mpfr-include=$(pwd)/../src/mpfr/src       \
+    --with-mpfr-lib=$(pwd)/mpfr/src/.libs
+
+make -j4
+make install
+
+ln -sv gcc /tools/bin/cc

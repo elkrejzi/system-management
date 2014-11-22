@@ -1,0 +1,5 @@
+#!/bin/sh
+
+find * -type f -o -type l | for file in `xargs` ; do rm -v /$file ; done
+find * -type d | sort -r | for file in `xargs` ; do rmdir -v /$file ; done
+
