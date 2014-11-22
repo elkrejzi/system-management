@@ -1,0 +1,234 @@
+diff -Naur a/lib/Makefile.in b/lib/Makefile.in
+--- a/lib/Makefile.in	2007-12-23 15:49:42.000000000 +0000
++++ b/lib/Makefile.in	2014-03-18 17:44:56.364807706 +0000
+@@ -24,7 +24,7 @@
+ X_LIBS    = @X_LIBS@
+ TOPSRC    = @top_srcdir@
+ XPM_LIB   = -lXpm
+-XLIB      = @X_PRE_LIBS@ -lXext -lX11 @X_EXTRA_LIBS@
++XLIB      = -lX11
+ LDFLAGS   = @LDFLAGS@
+ LDLIBS    = @LDLIBS@
+ AR        = ar rc
+@@ -137,7 +137,7 @@
+ 	$(LIBTOOL) --mode=link \
+ 		$(CC) $(LDFLAGS) -o $@ $(T1LIBX_OBJS) \
+ 	         -version-info @T1LIB_LT_CURRENT@:@T1LIB_LT_REVISION@:@T1LIB_LT_AGE@ \
+-	         libt1.la $(X_LIBS) $(XPM_LIB) $(XLIB)  -no-undefined -rpath $(libdir) 
++	         libt1.la $(X_LIBS) $(XLIB)  -no-undefined -rpath $(libdir) 
+ 	cp t1lib/t1libx.h .
+ 
+ 
+diff -Naur a/lib/t1lib/parseAFM.c b/lib/t1lib/parseAFM.c
+--- a/lib/t1lib/parseAFM.c	2007-12-23 15:49:42.000000000 +0000
++++ b/lib/t1lib/parseAFM.c	2014-03-18 17:44:11.321034345 +0000
+@@ -199,7 +199,9 @@
+     idx = 0;
+     
+     while (ch != EOF && ch != ' ' && ch != CR  && ch != LF &&
+-	   ch != CTRL_Z && ch != '\t' && ch != ':' && ch != ';'){
++	   ch != CTRL_Z && ch != '\t' && ch != ':' && ch != ';'
++     && idx < (MAX_NAME -1))
++    {
+       ident[idx++] = ch;
+       ch = fgetc(stream);
+     } /* while */
+@@ -235,7 +237,7 @@
+     while ((ch = fgetc(stream)) == ' ' || ch == '\t' ); 
+     
+     idx = 0;
+-    while (ch != EOF && ch != CR  && ch != LF && ch != CTRL_Z) 
++    while (ch != EOF && ch != CR  && ch != LF && ch != CTRL_Z && idx < (MAX_NAME - 1)) 
+     {
+         ident[idx++] = ch;
+         ch = fgetc(stream);
+diff -Naur a/lib/t1lib/t1subset.c b/lib/t1lib/t1subset.c
+--- a/lib/t1lib/t1subset.c	2007-12-23 15:49:42.000000000 +0000
++++ b/lib/t1lib/t1subset.c	2014-03-18 17:44:45.630623413 +0000
+@@ -759,7 +759,7 @@
+ 	     tr_len);
+     T1_PrintLog( "T1_SubsetFont()", err_warn_msg_buf,
+ 		 T1LOG_DEBUG);
+-    l+=sprintf( &(trailerbuf[l]), linebuf); /* contains the PostScript trailer */
++    l+=sprintf( &(trailerbuf[l]), "%s", linebuf); /* contains the PostScript trailer */
+   }
+   
+   /* compute size of output file */
+diff -Naur a/lib/type1/lines.c b/lib/type1/lines.c
+--- a/lib/type1/lines.c	2007-12-23 15:49:42.000000000 +0000
++++ b/lib/type1/lines.c	2014-03-18 17:44:36.034458665 +0000
+@@ -67,6 +67,10 @@
+ None.
+ */
+  
++#define  BITS         (sizeof(LONG)*8)
++#define  HIGHTEST(p)  (((p)>>(BITS-2)) != 0)  /* includes sign bit */
++#define  TOOBIG(xy)   ((xy < 0) ? HIGHTEST(-xy) : HIGHTEST(xy))
++
+ /*
+ :h2.StepLine() - Produces Run Ends for a Line After Checks
+  
+@@ -84,6 +88,9 @@
+        IfTrace4((LineDebug > 0), ".....StepLine: (%d,%d) to (%d,%d)\n",
+                                             x1, y1, x2, y2);
+  
++      if ( TOOBIG(x1) || TOOBIG(x2) || TOOBIG(y1) || TOOBIG(y2))
++              abort("Lines this big not supported", 49);
++
+        dy = y2 - y1;
+  
+ /*
+diff -Naur a/lib/type1/objects.c b/lib/type1/objects.c
+--- a/lib/type1/objects.c	2007-12-23 15:49:42.000000000 +0000
++++ b/lib/type1/objects.c	2014-03-18 17:44:45.630623413 +0000
+@@ -957,7 +957,7 @@
+  
+        sprintf(typemsg, "Wrong object type in %s; expected %s, found %s.\n",
+                   name, TypeFmt(expect), TypeFmt(obj->type));
+-       IfTrace0(TRUE,typemsg);
++       IfTrace1(TRUE, "%s", typemsg);
+  
+        ObjectPostMortem(obj);
+  
+@@ -1137,12 +1137,13 @@
+     "Context:  out of them", /* 46 */
+     "MatrixInvert:  can't", /* 47 */
+     "xiStub called", /* 48 */
+-    "Illegal access type1 abort() message" /* 49 */
++    "Lines this big not supported", /* 49 */
++    "Illegal access type1 abort() message" /* 50 */
+   };
+ 
+-  /* no is valid from 1 to 48 */
+-  if ( (number<1)||(number>48))
+-    number=49;
++  /* no is valid from 1 to 49 */
++  if ( (number<1)||(number>49))
++    number=50;
+   return( err_msgs[number-1]);
+     
+ }
+diff -Naur a/lib/type1/objects.h b/lib/type1/objects.h
+--- a/lib/type1/objects.h	2007-12-23 15:49:42.000000000 +0000
++++ b/lib/type1/objects.h	2014-03-18 17:44:45.630623413 +0000
+@@ -214,7 +214,7 @@
+ /*SHARED*/
+ /* NDW: personally, I want to see status and error messages! */
+ #define IfTrace0(condition,model)                                 \
+-        {if (condition) printf(model);}
++        {if (condition) fputs(model,stdout);}
+ #define IfTrace1(condition,model,arg0)                            \
+         {if (condition) printf(model,arg0);}
+ #define IfTrace2(condition,model,arg0,arg1)                       \
+diff -Naur a/lib/type1/type1.c b/lib/type1/type1.c
+--- a/lib/type1/type1.c	2007-12-23 15:49:42.000000000 +0000
++++ b/lib/type1/type1.c	2014-03-18 17:44:36.036458698 +0000
+@@ -1012,6 +1012,7 @@
+   double nextdtana = 0.0;   /* tangent of post-delta against horizontal line */ 
+   double nextdtanb = 0.0;   /* tangent of post-delta against vertical line */ 
+   
++  if (ppoints == NULL || numppoints < 1) Error0v("FindStems: No previous point!\n");
+  
+   /* setup default hinted position */
+   ppoints[numppoints-1].ax     = ppoints[numppoints-1].x;
+@@ -1289,7 +1290,7 @@
+ static int DoRead(CodeP)
+   int *CodeP;
+ {
+-  if (strindex >= CharStringP->len) return(FALSE); /* end of string */
++  if (!CharStringP || strindex >= CharStringP->len) return(FALSE); /* end of string */
+   /* We handle the non-documented Adobe convention to use lenIV=-1 to
+      suppress charstring encryption. */
+   if (blues->lenIV==-1) {
+@@ -1700,6 +1701,7 @@
+   long pindex = 0;
+   
+   /* compute hinting for previous segment! */
++  if (ppoints == NULL || numppoints < 2) Error0i("RLineTo: No previous point!\n");
+   FindStems( currx, curry, currx-ppoints[numppoints-2].x, curry-ppoints[numppoints-2].y, dx, dy);
+ 
+   /* Allocate a new path point and pre-setup data */
+@@ -1728,6 +1730,7 @@
+   long pindex = 0;
+   
+   /* compute hinting for previous point! */
++  if (ppoints == NULL || numppoints < 2) Error0i("RRCurveTo: No previous point!\n");
+   FindStems( currx, curry, currx-ppoints[numppoints-2].x, curry-ppoints[numppoints-2].y, dx1, dy1);
+ 
+   /* Allocate three new path points and pre-setup data */
+@@ -1786,7 +1789,9 @@
+   long tmpind;
+   double deltax = 0.0;
+   double deltay = 0.0;
+-  
++ 
++  if (ppoints == NULL || numppoints < 1) Error0i("DoClosePath: No previous point!");
++ 
+   /* If this ClosePath command together with the starting point of this
+      path completes to a segment aligned to a stem, we would miss
+      hinting for this point. --> Check and explicitly care for this! */
+@@ -1801,6 +1806,7 @@
+     deltax = ppoints[i].x - ppoints[numppoints-1].x;
+     deltay = ppoints[i].y - ppoints[numppoints-1].y;
+ 
++    if (ppoints == NULL || numppoints <= i + 1) Error0i("DoClosePath: No previous point!");
+     /* save nummppoints and reset to move point */
+     tmpind = numppoints;
+     numppoints = i + 1;
+@@ -1903,6 +1909,7 @@
+     FindStems( currx, curry, 0, 0, dx, dy);
+   }
+   else {
++    if (ppoints == NULL || numppoints < 2) Error0i("RMoveTo: No previous point!\n");
+     FindStems( currx, curry, ppoints[numppoints-2].x, ppoints[numppoints-2].y, dx, dy);
+   }
+   
+@@ -2152,6 +2159,7 @@
+   DOUBLE cx, cy;
+   DOUBLE ex, ey;
+ 
++  if (ppoints == NULL || numppoints < 8) Error0v("FlxProc: No previous point!");
+ 
+   /* Our PPOINT list now contains 7 moveto commands which
+      are about to be consumed by the Flex mechanism. --> Remove these
+@@ -2321,6 +2329,7 @@
+ /*   Returns currentpoint on stack          */
+ static void FlxProc2()
+ {
++  if (ppoints == NULL || numppoints < 1) Error0v("FlxProc2: No previous point!");
+   /* Push CurrentPoint on fake PostScript stack */
+   PSFakePush( ppoints[numppoints-1].x);
+   PSFakePush( ppoints[numppoints-1].y);
+diff -Naur a/type1afm/Makefile.in b/type1afm/Makefile.in
+--- a/type1afm/Makefile.in	2007-12-23 15:49:43.000000000 +0000
++++ b/type1afm/Makefile.in	2014-03-18 17:44:56.364807706 +0000
+@@ -70,7 +70,7 @@
+ 
+ type1afm: $(OBJS) ../lib/t1lib.h
+ 	$(LIBTOOL) --mode=link \
+-		$(CC) -o type1afm $(LDFLAGS) $(OBJS) $(T1LIB) $(LDLIBS)
++		$(CC) -o type1afm $(LDFLAGS) $(OBJS) $(T1LIB)
+ 
+ .SUFFIXES: .lo
+ .c.lo:
+diff -Naur a/xglyph/Makefile.in b/xglyph/Makefile.in
+--- a/xglyph/Makefile.in	2007-12-23 15:49:43.000000000 +0000
++++ b/xglyph/Makefile.in	2014-03-18 17:44:56.364807706 +0000
+@@ -24,7 +24,7 @@
+ X_LIBS    = @X_LIBS@
+ TOPSRC    = @top_srcdir@
+ XPM_LIB   = -lXpm
+-XLIB      = @X_PRE_LIBS@ -lXext -lX11 @X_EXTRA_LIBS@
++XLIB      = -lX11 @X_EXTRA_LIBS@
+ LDFLAGS   = @LDFLAGS@
+ LDLIBS    = @LDLIBS@ 
+ AR        = ar rc
+@@ -65,7 +65,7 @@
+ 
+ T1LIB  = ../lib/libt1.la
+ T1LIBX = ../lib/libt1x.la
+-XAWLIB = -lXaw -lXt -lXmu
++XAWLIB = -lXaw -lXt
+ 
+ 
+ all: xglyph

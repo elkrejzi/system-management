@@ -1,0 +1,54 @@
+diff -Naur a/config-bot.h b/config-bot.h
+--- a/config-bot.h	2009-08-14 21:11:38.000000000 +0200
++++ b/config-bot.h	2014-02-28 01:15:42.713879256 +0100
+@@ -196,4 +196,4 @@
+ /******************************************************************/
+ 
+ /* If you don't want bash to provide a default mail file to check. */
+-/* #undef DEFAULT_MAIL_DIRECTORY */
++#undef DEFAULT_MAIL_DIRECTORY
+diff -Naur a/config-top.h b/config-top.h
+--- a/config-top.h	2012-08-19 02:51:30.000000000 +0200
++++ b/config-top.h	2014-02-28 01:15:28.729632959 +0100
+@@ -59,14 +59,14 @@
+ /* The default value of the PATH variable. */
+ #ifndef DEFAULT_PATH_VALUE
+ #define DEFAULT_PATH_VALUE \
+-  "/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:."
++  "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+ #endif
+ 
+ /* The value for PATH when invoking `command -p'.  This is only used when
+    the Posix.2 confstr () function, or CS_PATH define are not present. */
+ #ifndef STANDARD_UTILS_PATH
+ #define STANDARD_UTILS_PATH \
+-  "/bin:/usr/bin:/sbin:/usr/sbin:/etc:/usr/etc"
++  "/bin:/usr/bin:/sbin:/usr/sbin"
+ #endif
+ 
+ /* Default primary and secondary prompt strings. */
+@@ -80,20 +80,20 @@
+ #define KSH_COMPATIBLE_SELECT
+ 
+ /* System-wide .bashrc file for interactive shells. */
+-/* #define SYS_BASHRC "/etc/bash.bashrc" */
++#define SYS_BASHRC "/etc/bash.bashrc"
+ 
+ /* System-wide .bash_logout for login shells. */
+-/* #define SYS_BASH_LOGOUT "/etc/bash.bash_logout" */
++#define SYS_BASH_LOGOUT "/etc/bash.bash_logout"
+ 
+ /* Define this to make non-interactive shells begun with argv[0][0] == '-'
+    run the startup files when not in posix mode. */
+-/* #define NON_INTERACTIVE_LOGIN_SHELLS */
++#define NON_INTERACTIVE_LOGIN_SHELLS
+ 
+ /* Define this if you want bash to try to check whether it's being run by
+    sshd and source the .bashrc if so (like the rshd behavior).  This checks
+    for the presence of SSH_CLIENT or SSH2_CLIENT in the initial environment,
+    which can be fooled under certain not-uncommon circumstances. */
+-/* #define SSH_SOURCE_BASHRC */
++#define SSH_SOURCE_BASHRC
+ 
+ /* Define if you want the case-capitalizing operators (~[~]) and the
+    `capcase' variable attribute (declare -c). */

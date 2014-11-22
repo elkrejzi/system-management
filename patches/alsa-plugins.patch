@@ -1,0 +1,19 @@
+Submitted By:            Igor Živković <contact@igor-zivkovic.from.hr>
+Date:                    2013-10-08
+Initial Package Version: 1.0.27
+Upstream Status:         Unknown
+Origin:                  Gentoo
+Description:             Fixes building against FFmpeg version >= 2.0.0
+
+diff -Naur alsa-plugins-1.0.27.orig/a52/pcm_a52.c alsa-plugins-1.0.27/a52/pcm_a52.c
+--- alsa-plugins-1.0.27.orig/a52/pcm_a52.c	2013-04-11 13:43:08.000000000 +0200
++++ alsa-plugins-1.0.27/a52/pcm_a52.c	2013-10-08 12:08:24.811631662 +0200
+@@ -27,7 +27,7 @@
+ #include <alsa/pcm_plugin.h>
+ #include AVCODEC_HEADER
+ 
+-#if LIBAVCODEC_VERSION_MAJOR >= 53 && LIBAVCODEC_VERSION_MINOR >= 34
++#if LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(53,34,0)
+ #include <libavutil/audioconvert.h>
+ #include <libavutil/mem.h>
+ #define USE_AVCODEC_FRAME

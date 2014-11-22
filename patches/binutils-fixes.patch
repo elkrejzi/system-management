@@ -1,0 +1,251 @@
+diff -Naur a/bfd/plugin.c b/bfd/plugin.c
+--- a/bfd/plugin.c	2013-11-04 16:33:37.000000000 +0100
++++ b/bfd/plugin.c	2014-11-14 23:05:03.660596228 +0100
+@@ -158,9 +158,54 @@
+ }
+ 
+ static int
+-try_load_plugin (const char *pname)
++try_claim (bfd *abfd)
+ {
+-  static void *plugin_handle;
++  int claimed = 0;
++  struct ld_plugin_input_file file;
++  bfd *iobfd;
++
++  file.name = abfd->filename;
++
++  if (abfd->my_archive)
++    {
++      iobfd = abfd->my_archive;
++      file.offset = abfd->origin;
++      file.filesize = arelt_size (abfd);
++    }
++  else
++    {
++      iobfd = abfd;
++      file.offset = 0;
++      file.filesize = 0;
++    }
++
++  if (!iobfd->iostream && !bfd_open_file (iobfd))
++    return 0;
++
++  file.fd = fileno ((FILE *) iobfd->iostream);
++
++  if (!abfd->my_archive)
++    {
++      struct stat stat_buf;
++      if (fstat (file.fd, &stat_buf))
++        return 0;
++      file.filesize = stat_buf.st_size;
++    }
++
++  file.handle = abfd;
++  off_t cur_offset = lseek(file.fd, 0, SEEK_CUR);
++  claim_file (&file, &claimed);
++  lseek(file.fd, cur_offset, SEEK_SET);
++  if (!claimed)
++    return 0;
++
++  return 1;
++}
++
++static int
++try_load_plugin (const char *pname, bfd *abfd)
++{
++  void *plugin_handle;
+   int tv_size = 4;
+   struct ld_plugin_tv tv[tv_size];
+   int i;
+@@ -202,6 +247,9 @@
+   if (!claim_file)
+     goto err;
+ 
++  if (!try_claim (abfd))
++    goto err;
++
+   return 1;
+ 
+  err:
+@@ -218,7 +266,7 @@
+ }
+ 
+ static int
+-load_plugin (void)
++load_plugin (bfd *abfd)
+ {
+   char *plugin_dir;
+   char *p;
+@@ -227,7 +275,7 @@
+   int found = 0;
+ 
+   if (plugin_name)
+-    return try_load_plugin (plugin_name);
++    return try_load_plugin (plugin_name, abfd);
+ 
+   if (plugin_program_name == NULL)
+     return 0;
+@@ -250,7 +298,7 @@
+ 
+       full_name = concat (p, "/", ent->d_name, NULL);
+       if (stat(full_name, &s) == 0 && S_ISREG (s.st_mode))
+-	found = try_load_plugin (full_name);
++	found = try_load_plugin (full_name, abfd);
+       free (full_name);
+       if (found)
+ 	break;
+@@ -268,53 +316,7 @@
+ static const bfd_target *
+ bfd_plugin_object_p (bfd *abfd)
+ {
+-  int claimed = 0;
+-  struct ld_plugin_input_file file;
+-  bfd *iobfd;
+-  static int have_loaded = 0;
+-  static int have_plugin = 0;
+-
+-  if (!have_loaded)
+-    {
+-      have_loaded = 1;
+-      have_plugin = load_plugin ();
+-    }
+-  if (!have_plugin)
+-    return NULL;
+-
+-  file.name = abfd->filename;
+-
+-  if (abfd->my_archive)
+-    {
+-      iobfd = abfd->my_archive;
+-      file.offset = abfd->origin;
+-      file.filesize = arelt_size (abfd);
+-    }
+-  else
+-    {
+-      iobfd = abfd;
+-      file.offset = 0;
+-      file.filesize = 0;
+-    }
+-
+-  if (!iobfd->iostream && !bfd_open_file (iobfd))
+-    return NULL;
+-
+-  file.fd = fileno ((FILE *) iobfd->iostream);
+-
+-  if (!abfd->my_archive)
+-    {
+-      struct stat stat_buf;
+-      if (fstat (file.fd, &stat_buf))
+-        return NULL;
+-      file.filesize = stat_buf.st_size;
+-    }
+-
+-  file.handle = abfd;
+-  off_t cur_offset = lseek(file.fd, 0, SEEK_CUR);
+-  claim_file (&file, &claimed);
+-  lseek(file.fd, cur_offset, SEEK_SET);
+-  if (!claimed)
++  if (!load_plugin (abfd))
+     return NULL;
+ 
+   return abfd->xvec;
+diff -Naur a/binutils/ar.c b/binutils/ar.c
+--- a/binutils/ar.c	2013-11-08 11:13:48.000000000 +0100
++++ b/binutils/ar.c	2014-11-14 23:04:10.217735907 +0100
+@@ -138,7 +138,11 @@
+ 
+ static int show_help = 0;
+ 
++#if BFD_SUPPORTS_PLUGINS
++static const char *plugin_target = "plugin";
++#else
+ static const char *plugin_target = NULL;
++#endif
+ 
+ static const char *target = NULL;
+ 
+@@ -571,7 +575,6 @@
+           break;
+ 	case OPTION_PLUGIN:
+ #if BFD_SUPPORTS_PLUGINS
+-	  plugin_target = "plugin";
+ 	  bfd_plugin_set_plugin (optarg);
+ #else
+ 	  fprintf (stderr, _("sorry - this program has been built without plugin support\n"));
+@@ -632,7 +635,6 @@
+ 	  /* PR binutils/13493: Support plugins.  */
+ 	case OPTION_PLUGIN:
+ #if BFD_SUPPORTS_PLUGINS
+-	  plugin_target = "plugin";
+ 	  bfd_plugin_set_plugin (optarg);
+ #else
+ 	  fprintf (stderr, _("sorry - this program has been built without plugin support\n"));
+diff -Naur a/binutils/nm.c b/binutils/nm.c
+--- a/binutils/nm.c	2013-11-08 11:13:48.000000000 +0100
++++ b/binutils/nm.c	2014-11-14 23:04:11.313753585 +0100
+@@ -177,7 +177,11 @@
+ static char desc_format[] = "%04x";
+ 
+ static char *target = NULL;
+-static char *plugin_target = NULL;
++#if BFD_SUPPORTS_PLUGINS
++static const char *plugin_target = "plugin";
++#else
++static const char *plugin_target = NULL;
++#endif
+ 
+ /* Used to cache the line numbers for a BFD.  */
+ static bfd *lineno_cache_bfd;
+@@ -1648,7 +1652,6 @@
+ 
+ 	case OPTION_PLUGIN:	/* --plugin */
+ #if BFD_SUPPORTS_PLUGINS
+-	  plugin_target = "plugin";
+ 	  bfd_plugin_set_plugin (optarg);
+ #else
+ 	  fatal (_("sorry - this program has been built without plugin support\n"));
+diff -Naur a/ld/emultempl/elf32.em b/ld/emultempl/elf32.em
+--- a/ld/emultempl/elf32.em	2013-11-26 12:37:33.000000000 +0100
++++ b/ld/emultempl/elf32.em	2014-11-14 23:04:11.314753601 +0100
+@@ -1480,6 +1480,8 @@
+   const char *rpath;
+   asection *sinterp;
+   bfd *abfd;
++  struct elf_link_hash_entry *ehdr_start = NULL;
++  struct bfd_link_hash_entry ehdr_start_save;
+ 
+   if (is_elf_hash_table (link_info.hash))
+     {
+@@ -1504,6 +1506,16 @@
+              _bfd_elf_link_hash_hide_symbol (&link_info, h, TRUE);
+              if (ELF_ST_VISIBILITY (h->other) != STV_INTERNAL)
+                h->other = (h->other & ~ELF_ST_VISIBILITY (-1)) | STV_HIDDEN;
++	     /* Don't leave the symbol undefined.  Undefined hidden
++		symbols typically won't have dynamic relocations, but
++		we most likely will need dynamic relocations for
++		__ehdr_start if we are building a PIE or shared
++		library.  */
++	     ehdr_start = h;
++	     ehdr_start_save = h->root;
++	     h->root.type = bfd_link_hash_defined;
++	     h->root.u.def.section = bfd_abs_section_ptr;
++	     h->root.u.def.value = 0;
+            }
+        }
+ 
+@@ -1620,6 +1632,14 @@
+ 
+   if (!bfd_elf_size_dynsym_hash_dynstr (link_info.output_bfd, &link_info))
+     einfo ("%P%F: failed to set dynamic section sizes: %E\n");
++
++  if (ehdr_start != NULL)
++    {
++      /* If we twiddled __ehdr_start to defined earlier, put it back
++	 as it was.  */
++      ehdr_start->root.type = ehdr_start_save.type;
++      ehdr_start->root.u = ehdr_start_save.u;
++    }
+ }
+ 
+ EOF

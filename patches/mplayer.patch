@@ -1,0 +1,87 @@
+Index: configure
+===================================================================
+--- configure	(revision 36425)
++++ configure	(working copy)
+@@ -4223,17 +4223,27 @@
+ fi
+ if test "$_smb" = auto; then
+   _smb=no
++  _smb4=no
+   for ld_tmp in "-lsmbclient" "-lsmbclient $ld_dl" "-lsmbclient $ld_dl -lnsl" "-lsmbclient $ld_dl -lssl -lnsl" ; do
+     statement_check libsmbclient.h 'smbc_opendir("smb://")' $ld_tmp &&
+       extra_ldflags="$extra_ldflags $ld_tmp" && _smb=yes && break
+   done
++  #samba 4
++  for ld_tmp in "-lsmbclient" "-lsmbclient $ld_dl" "-lsmbclient $ld_dl -lnsl" "-lsmbclient $ld_dl -lssl -lnsl" ; do
++    statement_check samba-4.0/libsmbclient.h 'smbc_opendir("smb://")' $ld_tmp &&
++      extra_ldflags="$extra_ldflags $ld_tmp" && _smb=yes && _smb4=yes && break
++  done
+ fi
+ 
+ if test "$_smb" = yes; then
+     def_smb="#define CONFIG_LIBSMBCLIENT 1"
+     inputmodules="smb $inputmodules"
++  if test "$_smb4" = yes; then
++    def_smb4="#define HAVE_SAMBA_4 1"
++  fi
+ else
+     def_smb="#undef CONFIG_LIBSMBCLIENT"
++    def_smb4="#undef HAVE_SAMBA_4"
+     noinputmodules="smb $noinputmodules"
+ fi
+ echores "$_smb"
+@@ -5051,7 +5061,9 @@
+ echocheck "OpenJPEG (JPEG 2000) support"
+ if test "$libopenjpeg" = auto ; then
+   libopenjpeg=no
++  libopenjpeg15=no
+   define_statement_check OPJ_STATIC openjpeg.h 'opj_dparameters_t dec_params; opj_set_default_decoder_parameters(&dec_params);opj_decode_with_info(0,0,0)' -lopenjpeg && libopenjpeg=yes
++  define_statement_check OPJ_STATIC openjpeg-1.5/openjpeg.h 'opj_dparameters_t dec_params; opj_set_default_decoder_parameters(&dec_params);opj_decode_with_info(0,0,0)' -lopenjpeg && libopenjpeg15=yes && libopenjpeg=yes
+ fi
+ echores "$libopenjpeg"
+ if test "$libopenjpeg" = yes ; then
+@@ -5060,8 +5072,12 @@
+   libavdecoders="$libavdecoders LIBOPENJPEG_DECODER"
+   libavencoders="$libavencoders LIBOPENJPEG_ENCODER"
+   codecmodules="OpenJPEG $codecmodules"
++  if test "$libopenjpeg15" = yes ; then
++    def_libopenjpeg15='#define HAVE_OPENJPEG_1_5_OPENJPEG_H 1'
++  fi
+ else
+   def_libopenjpeg='#define CONFIG_LIBOPENJPEG 0'
++  def_libopenjpeg15='#define HAVE_OPENJPEG_1_5_OPENJPEG_H 0'
+   nocodecmodules="OpenJPEG $nocodecmodules"
+ fi
+ 
+@@ -8894,6 +8910,7 @@
+ $def_nemesi
+ $def_networking
+ $def_smb
++$def_smb4
+ $def_vstream
+ 
+ 
+@@ -9013,6 +9030,7 @@
+ $def_libopencore_amrnb
+ $def_libopencore_amrwb
+ $def_libopenjpeg
++$def_libopenjpeg15
+ $def_librtmp
+ $def_libschroedinger_lavc
+ $def_mp3lame_lavc
+Index: stream/stream_smb.c
+===================================================================
+--- stream/stream_smb.c	(revision 36425)
++++ stream/stream_smb.c	(working copy)
+@@ -18,7 +18,11 @@
+ 
+ #include "config.h"
+ 
++#ifdef HAVE_SAMBA_4
++#include <samba-4.0/libsmbclient.h>
++#else
+ #include <libsmbclient.h>
++#endif
+ #include <unistd.h>
+ 
+ #include "mp_msg.h"

@@ -1,0 +1,132 @@
+diff -Naur a/src/libinput-device.c b/src/libinput-device.c
+--- a/src/libinput-device.c	2014-05-20 01:00:51.000000000 +0200
++++ b/src/libinput-device.c	2014-07-22 18:34:07.960633907 +0200
+@@ -73,11 +73,14 @@
+ {
+ 	struct evdev_device *device =
+ 		libinput_device_get_user_data(libinput_device);
++	wl_fixed_t dx, dy;
+ 
++	dx = wl_fixed_from_double(libinput_event_pointer_get_dx(pointer_event));
++	dy = wl_fixed_from_double(libinput_event_pointer_get_dy(pointer_event));
+ 	notify_motion(device->seat,
+ 		      libinput_event_pointer_get_time(pointer_event),
+-		      libinput_event_pointer_get_dx(pointer_event),
+-		      libinput_event_pointer_get_dy(pointer_event));
++		      dx,
++		      dy);
+ }
+ 
+ static void
+@@ -99,10 +102,12 @@
+ 	width = device->output->current_mode->width;
+ 	height = device->output->current_mode->height;
+ 
+-	x = libinput_event_pointer_get_absolute_x_transformed(pointer_event,
+-							      width);
+-	y = libinput_event_pointer_get_absolute_y_transformed(pointer_event,
+-							      height);
++	x = wl_fixed_from_double(
++		libinput_event_pointer_get_absolute_x_transformed(pointer_event,
++								  width));
++	y = wl_fixed_from_double(
++		libinput_event_pointer_get_absolute_y_transformed(pointer_event,
++								  height));
+ 
+ 	weston_output_transform_coordinate(device->output, x, y, &x, &y);
+ 	notify_motion_absolute(device->seat, time, x, y);
+@@ -127,11 +132,13 @@
+ {
+ 	struct evdev_device *device =
+ 		libinput_device_get_user_data(libinput_device);
++	double value;
+ 
++	value = libinput_event_pointer_get_axis_value(pointer_event);
+ 	notify_axis(device->seat,
+ 		    libinput_event_pointer_get_time(pointer_event),
+ 		    libinput_event_pointer_get_axis(pointer_event),
+-		    libinput_event_pointer_get_axis_value(pointer_event));
++		    wl_fixed_from_double(value));
+ }
+ 
+ static void
+@@ -155,8 +162,10 @@
+ 
+ 	width = device->output->current_mode->width;
+ 	height = device->output->current_mode->height;
+-	x = libinput_event_touch_get_x_transformed(touch_event, width);
+-	y = libinput_event_touch_get_y_transformed(touch_event, height);
++	x = wl_fixed_from_double(
++		libinput_event_touch_get_x_transformed(touch_event, width));
++	y = wl_fixed_from_double(
++		libinput_event_touch_get_y_transformed(touch_event, height));
+ 
+ 	weston_output_transform_coordinate(device->output,
+ 					   x, y, &x, &y);
+diff -Naur a/src/libinput-seat.c b/src/libinput-seat.c
+--- a/src/libinput-seat.c	2014-05-20 01:00:51.000000000 +0200
++++ b/src/libinput-seat.c	2014-07-22 18:34:54.667471080 +0200
+@@ -252,8 +252,9 @@
+ }
+ 
+ static void
+-libinput_log_func(enum libinput_log_priority priority, void *user_data,
+-		     const char *format, va_list args)
++libinput_log_func(struct libinput *libinput,
++		  enum libinput_log_priority priority,
++		  const char *format, va_list args)
+ {
+ 	weston_vlog(format, args);
+ }
+@@ -268,25 +269,34 @@
+ 
+ 	input->compositor = c;
+ 
+-	libinput_log_set_handler(&libinput_log_func, NULL);
+-
+ 	log_priority = getenv("WESTON_LIBINPUT_LOG_PRIORITY");
+ 
++	input->libinput = libinput_udev_create_context(&libinput_interface,
++						       input, udev);
++	if (!input->libinput) {
++		return -1;
++	}
++
++	libinput_log_set_handler(input->libinput, &libinput_log_func);
++
+ 	if (log_priority) {
+ 		if (strcmp(log_priority, "debug") == 0) {
+-			libinput_log_set_priority(LIBINPUT_LOG_PRIORITY_DEBUG);
++			libinput_log_set_priority(input->libinput,
++						  LIBINPUT_LOG_PRIORITY_DEBUG);
+ 		} else if (strcmp(log_priority, "info") == 0) {
+-			libinput_log_set_priority(LIBINPUT_LOG_PRIORITY_INFO);
++			libinput_log_set_priority(input->libinput,
++						  LIBINPUT_LOG_PRIORITY_INFO);
+ 		} else if (strcmp(log_priority, "error") == 0) {
+-			libinput_log_set_priority(LIBINPUT_LOG_PRIORITY_ERROR);
++			libinput_log_set_priority(input->libinput,
++						  LIBINPUT_LOG_PRIORITY_ERROR);
+ 		}
+ 	}
+ 
+-	input->libinput = libinput_udev_create_for_seat(&libinput_interface, input,
+-							udev, seat_id);
+-	if (!input->libinput) {
++	if (libinput_udev_assign_seat(input->libinput, seat_id) != 0) {
++		libinput_unref(input->libinput);
+ 		return -1;
+ 	}
++
+ 	process_events(input);
+ 
+ 	return udev_input_enable(input);
+@@ -300,7 +310,7 @@
+ 	wl_event_source_remove(input->libinput_source);
+ 	wl_list_for_each_safe(seat, next, &input->compositor->seat_list, base.link)
+ 		udev_seat_destroy(seat);
+-	libinput_destroy(input->libinput);
++	libinput_unref(input->libinput);
+ }
+ 
+ static void

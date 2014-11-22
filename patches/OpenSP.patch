@@ -1,0 +1,90 @@
+--- OpenSP.orig/lib/ExtendEntityManager.cxx	2005-11-05 10:05:20.000000000 +0100
++++ OpenSP/lib/ExtendEntityManager.cxx	2012-05-23 13:14:09.785585101 +0200
+@@ -1238,7 +1238,8 @@
+ }
+ 
+ StorageObjectSpec::StorageObjectSpec(const StorageObjectSpec& x)
+-: codingSystemName(x.codingSystemName),
++: storageManager(x.storageManager),
++  codingSystemName(x.codingSystemName),
+   codingSystem(x.codingSystem),
+   specId(x.specId),
+   baseId(x.baseId),
+@@ -1253,6 +1254,7 @@
+ StorageObjectSpec& StorageObjectSpec::operator=(const StorageObjectSpec& x)
+ {
+   if (this != &x) {
++    storageManager = x.storageManager;
+     codingSystemName = x.codingSystemName;
+     codingSystem = x.codingSystem;
+     specId = x.specId;
+--- OpenSP.orig/lib/Syntax.cxx	2005-11-05 10:05:20.000000000 +0100
++++ OpenSP/lib/Syntax.cxx	2012-05-23 13:13:56.963318318 +0200
+@@ -24,7 +24,7 @@
+   16,
+   16,
+   16,
+-  32,
++  253,
+   96,
+   16,
+   240,
+--- OpenSP.orig/sx/XmlOutputEventHandler.cxx	2005-08-26 22:08:19.000000000 +0200
++++ OpenSP/sx/XmlOutputEventHandler.cxx	2012-05-23 13:14:24.169884247 +0200
+@@ -1199,12 +1199,22 @@
+           // Check to make sure we haven't passed outside of the
+           // output directory
+ 	  char *dirs = strdup (filePath);
++#ifdef MAXPATHLEN
+           char realDirs[MAXPATHLEN];
+           char realOutputDir[MAXPATHLEN];
++#else
++          char *realDirs;
++          char *realOutputDir;
++#endif
+           char *outputDir = strdup(outputDir_);
+ 
++#ifdef MAXPATHLEN
+           realpath((const char *)dirname(dirs), realDirs);
+           realpath((const char *)dirname(outputDir), realOutputDir);
++#else
++          realDirs = realpath((const char *)dirname(dirs), NULL);
++          realOutputDir = realpath((const char *)dirname(outputDir), NULL);
++#endif
+ 
+           if (strncmp(realDirs, realOutputDir, strlen (realOutputDir)) != 0) {
+             app_->message(XmlOutputMessages::pathOutsideOutputDirectory,
+@@ -1214,6 +1224,11 @@
+             }
+           }
+ 
++#ifndef MAXPATHLEN
++	  free(realDirs);
++	  free(realOutputDir);
++#endif
++
+ 	  // Make the necessary directories
+ 	  maybeCreateDirectories(dirname(dirs));
+ 
+--- OpenSP.orig/unicode/gensyntax.pl	2005-05-14 11:17:42.000000000 +0200
++++ OpenSP/unicode/gensyntax.pl	2012-05-23 13:13:56.967318400 +0200
+@@ -185,7 +185,7 @@
+ 
+ QUANTITY        SGMLREF         -- To be determined --
+         ATTSPLEN        1920    -- ?? --
+-        LITLEN          240     -- ?? --
++        LITLEN          8092    -- ?? --
+         NAMELEN         240     -- ?? --
+         PILEN           1920    -- ?? --
+         TAGLEN          1920    -- ?? --
+--- OpenSP.orig/unicode/unicode.syn	2005-05-14 11:17:42.000000000 +0200
++++ OpenSP/unicode/unicode.syn	2012-05-23 13:13:56.978318629 +0200
+@@ -1266,7 +1266,7 @@
+ 
+ QUANTITY        SGMLREF         -- To be determined --
+         ATTSPLEN        1920    -- ?? --
+-        LITLEN          240     -- ?? --
++        LITLEN          8092    -- ?? --
+         NAMELEN         240     -- ?? --
+         PILEN           1920    -- ?? --
+         TAGLEN          1920    -- ?? --

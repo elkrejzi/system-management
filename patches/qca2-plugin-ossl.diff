@@ -1,0 +1,103 @@
+diff -urN qca2-plugin-ossl-0.1~20070904/qca-ossl.cpp qca2-plugin-ossl-0.1~20070904/qca-ossl.cpp
+--- qca2-plugin-ossl-0.1~20070904/qca-ossl.cpp	2011-05-16 17:03:56.000000000 +0900
++++ qca2-plugin-ossl-0.1~20070904/qca-ossl.cpp	2011-05-16 17:01:37.000000000 +0900
+@@ -1746,8 +1746,10 @@
+ 			md = EVP_sha1();
+ 		else if(alg == EMSA3_MD5)
+ 			md = EVP_md5();
++#if !defined(NO_MD2)
+ 		else if(alg == EMSA3_MD2)
+ 			md = EVP_md2();
++#endif
+ 		else if(alg == EMSA3_RIPEMD160)
+ 			md = EVP_ripemd160();
+ 		else if(alg == EMSA3_Raw)
+@@ -1764,8 +1766,10 @@
+ 			md = EVP_sha1();
+ 		else if(alg == EMSA3_MD5)
+ 			md = EVP_md5();
++#if !defined(NO_MD2)
+ 		else if(alg == EMSA3_MD2)
+ 			md = EVP_md2();
++#endif
+ 		else if(alg == EMSA3_RIPEMD160)
+ 			md = EVP_ripemd160();
+ 		else if(alg == EMSA3_Raw)
+@@ -3346,9 +3350,11 @@
+ 		case NID_md5WithRSAEncryption:
+ 		    p.sigalgo = QCA::EMSA3_MD5;
+ 		    break;
++#if !defined(NO_MD2)
+ 		case NID_md2WithRSAEncryption:
+ 		    p.sigalgo = QCA::EMSA3_MD2;
+ 		    break;
++#endif
+ 		case NID_ripemd160WithRSA:
+ 		    p.sigalgo = QCA::EMSA3_RIPEMD160;
+ 		    break;
+@@ -3663,9 +3669,11 @@
+ 		case NID_md5WithRSAEncryption:
+ 		    p.sigalgo = QCA::EMSA3_MD5;
+ 		    break;
++#if !defined(NO_MD2)
+ 		case NID_md2WithRSAEncryption:
+ 		    p.sigalgo = QCA::EMSA3_MD2;
+ 		    break;
++#endif
+ 		case NID_ripemd160WithRSA:
+ 		    p.sigalgo = QCA::EMSA3_RIPEMD160;
+ 		    break;
+@@ -4925,9 +4933,11 @@
+ 		OpenSSL_add_ssl_algorithms();
+ 		SSL_CTX *ctx = 0;
+ 		switch (version) {
++#if !defined(OPENSSL_NO_SSL2)
+ 		case TLS::SSL_v2:
+ 			ctx = SSL_CTX_new(SSLv2_client_method());
+ 			break;
++#endif
+ 		case TLS::SSL_v3:
+ 			ctx = SSL_CTX_new(SSLv3_client_method());
+ 			break;
+@@ -6374,7 +6384,9 @@
+ 	list += "sha1";
+ 	list += "sha0";
+ 	list += "ripemd160";
++#if !defined(NO_MD2)
+ 	list += "md2";
++#endif
+ 	list += "md4";
+ 	list += "md5";
+ #ifdef SHA224_DIGEST_LENGTH
+@@ -6551,7 +6563,9 @@
+ 		list += all_hash_types();
+ 		list += all_mac_types();
+ 		list += all_cipher_types();
++#if !defined(NO_MD2)
+ 		list += "pbkdf1(md2)";
++#endif
+ 		list += "pbkdf1(sha1)";
+ 		list += "pkey";
+ 		list += "dlgroup";
+@@ -6580,8 +6594,10 @@
+ 			return new opensslHashContext( EVP_sha(), this, type);
+ 		else if ( type == "ripemd160" )
+ 			return new opensslHashContext( EVP_ripemd160(), this, type);
++#if !defined(NO_MD2)
+ 		else if ( type == "md2" )
+ 			return new opensslHashContext( EVP_md2(), this, type);
++#endif
+ 		else if ( type == "md4" )
+ 			return new opensslHashContext( EVP_md4(), this, type);
+ 		else if ( type == "md5" )
+@@ -6610,8 +6626,10 @@
+ */
+ 		else if ( type == "pbkdf1(sha1)" )
+ 			return new opensslPbkdf1Context( EVP_sha1(), this, type );
++#if !defined(NO_MD2)
+ 		else if ( type == "pbkdf1(md2)" )
+ 			return new opensslPbkdf1Context( EVP_md2(), this, type );
++#endif
+ 		else if ( type == "hmac(md5)" )
+ 			return new opensslHMACContext( EVP_md5(), this, type );
+ 		else if ( type == "hmac(sha1)" )

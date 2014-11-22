@@ -1,0 +1,182 @@
+diff -Naur a/channels/drdynvc/tsmf/ffmpeg/tsmf_ffmpeg.c b/channels/drdynvc/tsmf/ffmpeg/tsmf_ffmpeg.c
+--- a/channels/drdynvc/tsmf/ffmpeg/tsmf_ffmpeg.c	2013-01-02 22:46:59.000000000 +0100
++++ b/channels/drdynvc/tsmf/ffmpeg/tsmf_ffmpeg.c	2014-09-17 15:48:31.268317412 +0200
+@@ -28,6 +28,8 @@
+ #include "tsmf_constants.h"
+ #include "tsmf_decoder.h"
+ 
++#define AVCODEC_MAX_AUDIO_FRAME_SIZE 192000
++
+ /* Compatibility with older FFmpeg */
+ #if LIBAVUTIL_VERSION_MAJOR < 50
+ #define AVMEDIA_TYPE_VIDEO 0
+@@ -39,7 +41,7 @@
+ 	ITSMFDecoder iface;
+ 
+ 	int media_type;
+-	enum CodecID codec_id;
++	enum AVCodecID codec_id;
+ 	AVCodecContext* codec_context;
+ 	AVCodec* codec;
+ 	AVFrame* frame;
+@@ -54,7 +56,7 @@
+ {
+ 	TSMFFFmpegDecoder* mdecoder = (TSMFFFmpegDecoder*) decoder;
+ 
+-	mdecoder->codec_context = avcodec_alloc_context();
++	mdecoder->codec_context = avcodec_alloc_context3(NULL);
+ 	if (!mdecoder->codec_context)
+ 	{
+ 		DEBUG_WARN("avcodec_alloc_context failed.");
+@@ -88,16 +90,6 @@
+ 	mdecoder->codec_context->channels = media_type->Channels;
+ 	mdecoder->codec_context->block_align = media_type->BlockAlign;
+ 
+-#ifdef AV_CPU_FLAG_SSE2
+-	mdecoder->codec_context->dsp_mask = AV_CPU_FLAG_SSE2 | AV_CPU_FLAG_MMX2;
+-#else
+-#if LIBAVCODEC_VERSION_MAJOR < 53
+-	mdecoder->codec_context->dsp_mask = FF_MM_SSE2 | FF_MM_MMXEXT;
+-#else
+-	mdecoder->codec_context->dsp_mask = FF_MM_SSE2 | FF_MM_MMX2;
+-#endif
+-#endif
+-
+ 	return true;
+ }
+ 
+@@ -174,7 +166,7 @@
+ {
+ 	TSMFFFmpegDecoder* mdecoder = (TSMFFFmpegDecoder*) decoder;
+ 
+-	if (avcodec_open(mdecoder->codec_context, mdecoder->codec) < 0)
++	if (avcodec_open2(mdecoder->codec_context, mdecoder->codec, NULL) < 0)
+ 	{
+ 		DEBUG_WARN("avcodec_open failed.");
+ 		return false;
+@@ -372,8 +364,9 @@
+ 			av_init_packet(&pkt);
+ 			pkt.data = (uint8*) src;
+ 			pkt.size = src_size;
+-			len = avcodec_decode_audio3(mdecoder->codec_context,
+-				(int16_t*) dst, &frame_size, &pkt);
++			AVFrame * frame = avcodec_alloc_frame (); 
++			len = avcodec_decode_audio4(mdecoder->codec_context,
++				frame, &frame_size, &pkt);
+ 		}
+ #endif
+ 		if (len <= 0 || frame_size <= 0)
+@@ -499,7 +492,6 @@
+ 
+ 	if (!initialized)
+ 	{
+-		avcodec_init();
+ 		avcodec_register_all();
+ 		initialized = true;
+ 	}
+diff -Naur a/client/X11/xf_keyboard.c b/client/X11/xf_keyboard.c
+--- a/client/X11/xf_keyboard.c	2013-01-02 22:46:59.000000000 +0100
++++ b/client/X11/xf_keyboard.c	2014-09-17 15:49:00.815586375 +0200
+@@ -169,6 +169,9 @@
+ 	/* on focus in send a tab up like mstsc.exe */
+ 	input->KeyboardEvent(input, KBD_FLAGS_RELEASE, 0x0F);
+ 
++	/* release windows key */
++	input->KeyboardEvent(input, KBD_FLAGS_EXTENDED|KBD_FLAGS_RELEASE, 0x5B);
++
+ 	/* synchronize toggle keys */
+ 	syncFlags = xf_kbd_get_toggle_keys_state(xfi);
+ 	input->SynchronizeEvent(input, syncFlags);
+diff -Naur a/include/freerdp/kbd/vkcodes.h b/include/freerdp/kbd/vkcodes.h
+--- a/include/freerdp/kbd/vkcodes.h	2013-01-02 22:46:59.000000000 +0100
++++ b/include/freerdp/kbd/vkcodes.h	2014-09-17 15:48:47.231976071 +0200
+@@ -434,7 +434,7 @@
+ 	{ 0x00, 0, "VK_SEPARATOR"        , NULL   },
+ 	{ 0x4A, 0, "VK_SUBTRACT"         , "KPSU" },
+ 	{ 0x53, 0, "VK_DECIMAL"          , "KPDL" },
+-	{ 0x35, 0, "VK_DIVIDE"           , "KPDV" },
++	{ 0x35, 1, "VK_DIVIDE"           , "KPDV" },
+ 	{ 0x3B, 0, "VK_F1"               , "FK01" },
+ 	{ 0x3C, 0, "VK_F2"               , "FK02" },
+ 	{ 0x3D, 0, "VK_F3"               , "FK03" },
+diff -Naur a/libfreerdp-core/license.c b/libfreerdp-core/license.c
+--- a/libfreerdp-core/license.c	2013-01-02 22:46:59.000000000 +0100
++++ b/libfreerdp-core/license.c	2014-09-17 15:49:15.305881981 +0200
+@@ -199,7 +199,8 @@
+ 	switch (bMsgType)
+ 	{
+ 		case LICENSE_REQUEST:
+-			license_read_license_request_packet(license, s);
++			if(!license_read_license_request_packet(license, s))
++				return false;
+ 			license_send_new_license_request_packet(license);
+ 			break;
+ 
+@@ -533,13 +534,16 @@
+  * @param scopeList scope list
+  */
+ 
+-void license_read_scope_list(STREAM* s, SCOPE_LIST* scopeList)
++boolean license_read_scope_list(STREAM* s, SCOPE_LIST* scopeList)
+ {
+ 	uint32 i;
+ 	uint32 scopeCount;
+ 
+ 	stream_read_uint32(s, scopeCount); /* ScopeCount (4 bytes) */
+ 
++	if (scopeCount > stream_get_length(s) / 4)  /* every blob is at least 4 bytes */
++		return false;
++
+ 	scopeList->count = scopeCount;
+ 	scopeList->array = (LICENSE_BLOB*) xmalloc(sizeof(LICENSE_BLOB) * scopeCount);
+ 
+@@ -549,6 +553,7 @@
+ 		scopeList->array[i].type = BB_SCOPE_BLOB;
+ 		license_read_binary_blob(s, &scopeList->array[i]);
+ 	}
++	return true;
+ }
+ 
+ /**
+@@ -593,7 +598,7 @@
+  * @param s stream
+  */
+ 
+-void license_read_license_request_packet(rdpLicense* license, STREAM* s)
++boolean license_read_license_request_packet(rdpLicense* license, STREAM* s)
+ {
+ 	/* ServerRandom (32 bytes) */
+ 	stream_read(s, license->server_random, 32);
+@@ -608,7 +613,8 @@
+ 	license_read_binary_blob(s, license->server_certificate);
+ 
+ 	/* ScopeList */
+-	license_read_scope_list(s, license->scope_list);
++	if(!license_read_scope_list(s, license->scope_list))
++		return false;
+ 
+ 	/* Parse Server Certificate */
+ 	certificate_read_server_certificate(license->certificate,
+@@ -617,6 +623,7 @@
+ 	license_generate_keys(license);
+ 	license_generate_hwid(license);
+ 	license_encrypt_premaster_secret(license);
++	return true;
+ }
+ 
+ /**
+diff -Naur a/libfreerdp-core/license.h b/libfreerdp-core/license.h
+--- a/libfreerdp-core/license.h	2013-01-02 22:46:59.000000000 +0100
++++ b/libfreerdp-core/license.h	2014-09-17 15:49:15.305881981 +0200
+@@ -177,9 +177,9 @@
+ 
+ SCOPE_LIST* license_new_scope_list();
+ void license_free_scope_list(SCOPE_LIST* scopeList);
+-void license_read_scope_list(STREAM* s, SCOPE_LIST* scopeList);
++boolean license_read_scope_list(STREAM* s, SCOPE_LIST* scopeList);
+ 
+-void license_read_license_request_packet(rdpLicense* license, STREAM* s);
++boolean license_read_license_request_packet(rdpLicense* license, STREAM* s);
+ void license_read_platform_challenge_packet(rdpLicense* license, STREAM* s);
+ void license_read_new_license_packet(rdpLicense* license, STREAM* s);
+ void license_read_upgrade_license_packet(rdpLicense* license, STREAM* s);

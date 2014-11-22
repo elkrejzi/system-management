@@ -1,0 +1,33 @@
+Submitted By:            Armin K. <krejzi at email dot com>, rediffed by Fernando de Oliveira <famobr at yahoo dot com dot br>
+Date:                    2014-06-23
+Initial Package Version: 0.48.5
+Upstream Status:         Unknown
+Origin:                  Armin K. <krejzi at email dot com>
+URL: 
+Description:             Fixes build with gc-7.4.2
+
+
+--- inkscape-0.48.5.orig/configure	2014-06-20 19:05:43.525382393 -0300
++++ inkscape-0.48.5/configure	2014-06-23 15:24:38.730084988 -0300
+@@ -9044,8 +9044,8 @@
+ 			# include <gc.h>
+ 			#endif
+ 			#include <stdio.h>
+-			extern unsigned GC_version;
+ 			int main(void){
++				unsigned GC_version = GC_get_version();
+ 				unsigned min = ((6 << 16) | (4 << 8) | 0);
+ 				printf("%d.%d.%d ",GC_version >> 16, (GC_version >> 8) & 0xFF, GC_version & 0xFF);
+ 				if (GC_version>=min) return 0;
+--- inkscape-0.48.5.orig/configure.ac	2014-06-20 17:29:03.717600589 -0300
++++ inkscape-0.48.5/configure.ac	2014-06-23 15:24:19.592598799 -0300
+@@ -241,8 +241,8 @@
+ 			# include <gc.h>
+ 			#endif
+ 			#include <stdio.h>
+-			extern unsigned GC_version;
+ 			int main(void){
++				unsigned GC_version = GC_get_version();
+ 				unsigned min = ((6 << 16) | (4 << 8) | 0);
+ 				printf("%d.%d.%d ",GC_version >> 16, (GC_version >> 8) & 0xFF, GC_version & 0xFF);
+ 				if (GC_version>=min) return 0;

@@ -1,0 +1,133 @@
+diff --git a/configure.ac b/configure.ac
+index 78d4826..893981b 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
+ dnl initialize autoconf
+ dnl releases only do -Wall, cvs and prerelease does -Werror too
+ dnl use a three digit version number for releases, and four for cvs/prerelease
+-AC_INIT(Farstream, 0.1.2.1,
++AC_INIT(Farstream, 0.1.2,
+     https://bugs.freedesktop.org/enter_bug.cgi?product=Farstream,
+     farstream)
+ 
+diff --git a/gst/fsrawconference/fs-raw-stream.c b/gst/fsrawconference/fs-raw-stream.c
+index 9b416b0..a15952b 100644
+--- a/gst/fsrawconference/fs-raw-stream.c
++++ b/gst/fsrawconference/fs-raw-stream.c
+@@ -440,7 +440,8 @@ fs_raw_stream_set_property (GObject *object,
+               (direction & FS_DIRECTION_SEND) ? TRUE : FALSE, NULL);
+           g_object_unref (st);
+         }
+-        fs_raw_session_update_direction (self->priv->session, direction);
++        if (self->priv->session)
++          fs_raw_session_update_direction (self->priv->session, direction);
+         if (conference)
+           GST_OBJECT_LOCK (conference);
+       }
+diff --git a/gst/fsrtpconference/default-codec-preferences b/gst/fsrtpconference/default-codec-preferences
+index 1dedc61..80faa09 100644
+--- a/gst/fsrtpconference/default-codec-preferences
++++ b/gst/fsrtpconference/default-codec-preferences
+@@ -41,6 +41,8 @@ feedback:nack/pli=
+ [video/H263]
+ feedback:nack/pli=
+ 
++[video/VP8-DRAFT-IETF-01]
++
+ [video/THEORA]
+ #feedback:tfrc=
+ feedback:nack/pli=
+diff --git a/gst/fsrtpconference/fs-rtp-discover-codecs.c b/gst/fsrtpconference/fs-rtp-discover-codecs.c
+index d128e84..dab94c9 100644
+--- a/gst/fsrtpconference/fs-rtp-discover-codecs.c
++++ b/gst/fsrtpconference/fs-rtp-discover-codecs.c
+@@ -383,7 +383,6 @@ validate_h263_codecs (CodecCap *codec_cap)
+   if (!rtp_struct)
+     return FALSE;
+ 
+-  /* If there no h263version, we accept everything */
+   encoding_name = gst_structure_get_string (rtp_struct, "encoding-name");
+ 
+   /* If there is no encoding name, we have a problem, lets refuse it */
+@@ -536,7 +535,7 @@ remove_duplicates (GList *list)
+       if (gst_caps_is_equal (codec_cap1->rtp_caps, codec_cap2->rtp_caps))
+       {
+         codec_cap_free (codec_cap2);
+-        walk1 = g_list_remove_link (walk1, walk2);
++        walk1 = g_list_delete_link (walk1, walk2);
+         goto again;
+       }
+     }
+@@ -1110,11 +1109,8 @@ compare_media_caps (gconstpointer a, gconstpointer b)
+ }
+ 
+ static gint
+-compare_rtp_caps (gconstpointer a, gconstpointer b)
++compare_rtp_caps (CodecCap *element, GstCaps *c_caps)
+ {
+-  CodecCap *element = (CodecCap *)a;
+-  GstCaps *c_caps = (GstCaps *)b;
+-
+   return !gst_caps_can_intersect (element->rtp_caps, c_caps);
+ }
+ 
+@@ -1226,7 +1222,7 @@ create_codec_cap_list (GstElementFactory *factory,
+         if (rtp_caps) {
+           if (entry->rtp_caps) {
+             GstCaps *new_rtp_caps;
+-            new_rtp_caps = gst_caps_union (rtp_caps, entry->rtp_caps);
++            new_rtp_caps = gst_caps_intersect (rtp_caps, entry->rtp_caps);
+             gst_caps_unref (entry->rtp_caps);
+             entry->rtp_caps = new_rtp_caps;
+           } else {
+@@ -1313,15 +1309,44 @@ get_plugins_filtered_from_caps (FilterFunc filter,
+     else
+     {
+       gint i;
+-      for (i = 0; i < gst_caps_get_size (matched_caps); i++)
++      GPtrArray *capslist = g_ptr_array_new_with_free_func (
++        (GDestroyNotify) gst_caps_unref);
++
++      while (gst_caps_get_size (matched_caps) > 0)
+       {
+-        GstCaps *cur_caps =
+-            gst_caps_copy_nth (matched_caps, i);
++        GstCaps *stolencaps = gst_caps_new_full (
++          gst_caps_steal_structure (matched_caps, 0), NULL);
++        gboolean got_match = FALSE;
++
++        for (i = 0; i < capslist->len; i++)
++        {
++          GstCaps *intersect = gst_caps_intersect (stolencaps,
++              g_ptr_array_index (capslist, i));
++
++          if (gst_caps_is_empty (intersect))
++          {
++            gst_caps_unref (intersect);
++          }
++          else
++          {
++            got_match = TRUE;
++            gst_caps_unref (g_ptr_array_index (capslist, i));
++            g_ptr_array_index (capslist, i) = intersect;
++          }
++        }
++
++        if (got_match)
++          gst_caps_unref (stolencaps);
++        else
++          g_ptr_array_add (capslist, stolencaps);
+ 
+-        list = create_codec_cap_list (factory, direction, list, cur_caps);
+-        gst_caps_unref (cur_caps);
+       }
+       gst_caps_unref (matched_caps);
++
++      for (i = 0; i < capslist->len; i++)
++        list = create_codec_cap_list (factory, direction, list,
++            g_ptr_array_index (capslist, i));
++      g_ptr_array_unref (capslist);
+     }
+   }
+ 

@@ -1,0 +1,127 @@
+diff -Naur a/src/core/shutdown.c b/src/core/shutdown.c
+--- a/src/core/shutdown.c	2014-10-27 11:48:29.291966279 +0000
++++ b/src/core/shutdown.c	2014-11-15 00:29:33.631873277 +0000
+@@ -75,7 +75,9 @@
+         assert(argc >= 1);
+         assert(argv);
+ 
+-        while ((c = getopt_long(argc, argv, "", options, NULL)) >= 0)
++        /* "-" prevents getopt from permuting argv[] and moving the verb away
++         * from argv[1]. Our interface to initrd promises it'll be there. */
++        while ((c = getopt_long(argc, argv, "-", options, NULL)) >= 0)
+                 switch (c) {
+ 
+                 case ARG_LOG_LEVEL:
+@@ -113,6 +115,13 @@
+ 
+                         break;
+ 
++                case '\001':
++                        if (!arg_verb)
++                                arg_verb = optarg;
++                        else
++                                log_error("Excess arguments, ignoring");
++                        break;
++
+                 case '?':
+                         return -EINVAL;
+ 
+@@ -120,15 +129,11 @@
+                         assert_not_reached("Unhandled option code.");
+                 }
+ 
+-        if (optind >= argc) {
++        if (!arg_verb) {
+                 log_error("Verb argument missing.");
+                 return -EINVAL;
+         }
+ 
+-        arg_verb = argv[optind];
+-
+-        if (optind + 1 < argc)
+-                log_error("Excess arguments, ignoring");
+         return 0;
+ }
+ 
+diff -Naur a/src/libsystemd/sd-bus/bus-match.c b/src/libsystemd/sd-bus/bus-match.c
+--- a/src/libsystemd/sd-bus/bus-match.c	2014-10-07 13:59:01.463579428 +0000
++++ b/src/libsystemd/sd-bus/bus-match.c	2014-11-15 00:28:49.526139724 +0000
+@@ -537,7 +537,7 @@
+         else if (BUS_MATCH_CAN_HASH(t))
+                 n = hashmap_get(c->compare.children, value_str);
+         else {
+-                for (n = c->child; !value_node_same(n, t, value_u8, value_str); n = n->next)
++                for (n = c->child; n && !value_node_same(n, t, value_u8, value_str); n = n->next)
+                         ;
+         }
+ 
+diff -Naur a/src/libsystemd-network/sd-dhcp-client.c b/src/libsystemd-network/sd-dhcp-client.c
+--- a/src/libsystemd-network/sd-dhcp-client.c	2014-10-13 15:19:31.019675598 +0000
++++ b/src/libsystemd-network/sd-dhcp-client.c	2014-11-15 00:29:02.438354405 +0000
+@@ -1269,6 +1269,9 @@
+                 if (r >= 0) {
+                         client->timeout_resend =
+                                 sd_event_source_unref(client->timeout_resend);
++                        client->receive_message =
++                                sd_event_source_unref(client->receive_message);
++                        client->fd = asynchronous_close(client->fd);
+ 
+                         if (IN_SET(client->state, DHCP_STATE_REQUESTING,
+                                    DHCP_STATE_REBOOTING))
+diff -Naur a/src/nspawn/nspawn.c b/src/nspawn/nspawn.c
+--- a/src/nspawn/nspawn.c	2014-10-27 11:48:29.295966274 +0000
++++ b/src/nspawn/nspawn.c	2014-11-15 00:28:36.013915132 +0000
+@@ -758,7 +758,7 @@
+                  * and char devices. */
+                 if (S_ISDIR(source_st.st_mode)) {
+                         r = mkdir_label(where, 0755);
+-                        if (r < 0) {
++                        if (r < 0 && errno != EEXIST) {
+                                 log_error("Failed to create mount point %s: %s", where, strerror(-r));
+ 
+                                 return r;
+diff -Naur a/src/shared/install.c b/src/shared/install.c
+--- a/src/shared/install.c	2014-10-27 11:48:29.296966273 +0000
++++ b/src/shared/install.c	2014-11-15 00:29:20.584656210 +0000
+@@ -1620,12 +1620,10 @@
+         STRV_FOREACH(i, files) {
+                 UnitFileState state;
+ 
++                /* We only want to know if this unit is masked, so we ignore
++                 * errors from unit_file_get_state, deferring other checks.
++                 * This allows templated units to be enabled on the fly. */
+                 state = unit_file_get_state(scope, root_dir, *i);
+-                if (state < 0) {
+-                        log_error("Failed to get unit file state for %s: %s", *i, strerror(-state));
+-                        return state;
+-                }
+-
+                 if (state == UNIT_FILE_MASKED || state == UNIT_FILE_MASKED_RUNTIME) {
+                         log_error("Failed to enable unit: Unit %s is masked", *i);
+                         return -ENOTSUP;
+diff -Naur a/units/systemd-journal-flush.service.in b/units/systemd-journal-flush.service.in
+--- a/units/systemd-journal-flush.service.in	2014-10-22 22:39:42.449739860 +0000
++++ b/units/systemd-journal-flush.service.in	2014-11-15 00:30:23.240699136 +0000
+@@ -10,8 +10,10 @@
+ Documentation=man:systemd-journald.service(8) man:journald.conf(5)
+ DefaultDependencies=no
+ Requires=systemd-journald.service
+-After=systemd-journald.service local-fs.target remote-fs.target
++After=systemd-journald.service
++After=systemd-remount-fs.service
+ Before=systemd-user-sessions.service systemd-tmpfiles-setup.service
++RequiresMountsFor=/var/log/journal
+ 
+ [Service]
+ ExecStart=@rootbindir@/journalctl --flush
+diff -Naur a/units/systemd-journald.service.in b/units/systemd-journald.service.in
+--- a/units/systemd-journald.service.in	2014-10-22 17:12:06.748818217 +0000
++++ b/units/systemd-journald.service.in	2014-11-15 00:30:00.020312479 +0000
+@@ -14,6 +14,7 @@
+ Before=sysinit.target
+ 
+ [Service]
++Type=notify
+ Sockets=systemd-journald.socket systemd-journald-dev-log.socket
+ ExecStart=@rootlibexecdir@/systemd-journald
+ Restart=always

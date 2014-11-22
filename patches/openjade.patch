@@ -1,0 +1,169 @@
+--- openjade.orig/jade/Makefile.sub	2002-11-15 23:46:50.000000000 +0100
++++ openjade/jade/Makefile.sub	2012-05-23 13:49:10.991731188 +0200
+@@ -4,7 +4,7 @@
+ INCLUDE=-I$(srcdir)/../grove -I$(srcdir)/../spgrove -I$(srcdir)/../style
+ # XLIBS=../style/libostyle.a ../spgrove/libospgrove.a ../grove/libogrove.a \
+ #   ../lib/libosp.a
+-XLIBS=../style/libostyle.a ../spgrove/libospgrove.a ../grove/libogrove.a $(splibdir)/libosp.a
++XLIBS=../style/libostyle.a ../spgrove/libospgrove.a ../grove/libogrove.a -losp
+ GENSRCS=JadeMessages.h HtmlMessages.h RtfMessages.h TeXMessages.h \
+  HtmlFOTBuilder_inst.cxx RtfFOTBuilder_inst.cxx  TeXFOTBuilder_inst.cxx \
+  TransformFOTBuilder_inst.cxx MifMessages.h MifFOTBuilder_inst.cxx
+--- openjade.orig/jade/TeXFOTBuilder.cxx	2002-01-15 11:35:37.000000000 +0100
++++ openjade/jade/TeXFOTBuilder.cxx	2012-05-23 13:49:35.260256420 +0200
+@@ -75,6 +75,7 @@
+     virtual void end(TeXFOTBuilder &) const = 0;
+   };
+   class PageFloatFlowObj : public TeXCompoundExtensionFlowObj {
++  public:
+     void start(TeXFOTBuilder &fotb, const NodePtr &) const {
+       fotb.startPageFloat(nic_);
+     }
+@@ -88,12 +89,14 @@
+       value.convertString(nic_.placement);
+       }
+     ExtensionFlowObj *copy() const { return new PageFloatFlowObj(*this); }
++    PageFloatFlowObj() {}
+   private:
+     PageFloatNIC nic_;
+     StringC name_;
+     StringC placement;
+   };
+   class PageFootnoteFlowObj : public TeXCompoundExtensionFlowObj {
++  public:
+     void start(TeXFOTBuilder &fotb, const NodePtr &) const {
+       fotb.startPageFootnote();
+     }
+@@ -101,6 +104,7 @@
+       fotb.endPageFootnote();
+     }
+     ExtensionFlowObj *copy() const { return new PageFootnoteFlowObj(*this); }
++    PageFootnoteFlowObj() {}
+   private:
+   };
+   //////////////////////////////////////////////////////////////////////
+--- openjade.orig/jade/TransformFOTBuilder.cxx	2002-12-01 15:55:51.000000000 +0100
++++ openjade/jade/TransformFOTBuilder.cxx	2012-05-23 13:49:35.261256441 +0200
+@@ -51,6 +51,7 @@
+       value.convertString(name_);
+     }
+     ExtensionFlowObj *copy() const { return new EntityRefFlowObj(*this); }
++    EntityRefFlowObj() {}
+   private:
+     StringC name_;
+   };
+@@ -66,10 +67,12 @@
+       value.convertString(data_);
+     }
+     ExtensionFlowObj *copy() const { return new ProcessingInstructionFlowObj(*this); }
++    ProcessingInstructionFlowObj() {}
+   private:
+     StringC data_;
+   };
+   class EmptyElementFlowObj : public TransformExtensionFlowObj {
++  public:
+     void atomic(TransformFOTBuilder &fotb, const NodePtr &nd) const {
+       if (nic_.gi.size() > 0)
+ 	fotb.emptyElement(nic_);
+@@ -98,10 +101,12 @@
+       }
+     }
+     ExtensionFlowObj *copy() const { return new EmptyElementFlowObj(*this); }
++    EmptyElementFlowObj() {}
+   private:
+     ElementNIC nic_;
+   };
+   class ElementFlowObj : public TransformCompoundExtensionFlowObj {
++  public:
+     void start(TransformFOTBuilder &fotb, const NodePtr &nd) const {
+       if (nic_.gi.size() > 0)
+ 	fotb.startElement(nic_);
+@@ -133,10 +138,12 @@
+       }
+     }
+     ExtensionFlowObj *copy() const { return new ElementFlowObj(*this); }
++    ElementFlowObj() {}
+   private:
+     ElementNIC nic_;
+   };
+   class EntityFlowObj : public TransformCompoundExtensionFlowObj {
++  public:
+     void start(TransformFOTBuilder &fotb, const NodePtr &) const {
+       fotb.startEntity(systemId_);
+     }
+@@ -150,10 +157,12 @@
+       value.convertString(systemId_);
+     }
+     ExtensionFlowObj *copy() const { return new EntityFlowObj(*this); }
++    EntityFlowObj() {}
+   private:
+     StringC systemId_;
+   };
+   class DocumentTypeFlowObj : public TransformExtensionFlowObj {
++  public:
+     void atomic(TransformFOTBuilder &fotb, const NodePtr &nd) const {
+       fotb.documentType(nic_);
+     }
+@@ -174,6 +183,7 @@
+       }
+     }
+     ExtensionFlowObj *copy() const { return new DocumentTypeFlowObj(*this); }
++    DocumentTypeFlowObj() {}
+   private:
+     DocumentTypeNIC nic_;
+   };
+--- openjade.orig/msggen.pl	2002-10-20 23:47:23.000000000 +0200
++++ openjade/msggen.pl	2012-05-23 13:53:55.141875402 +0200
+@@ -15,10 +15,51 @@
+ 
+ $gen_c = 0;
+ 
++sub Getopts {
++    local($argumentative) = @_;
++    local(@args,$_,$first,$rest);
++    local($errs) = 0;
++
++    @args = split( / */, $argumentative );
++    while(@ARGV && ($_ = $ARGV[0]) =~ /^-(.)(.*)/) {
++	($first,$rest) = ($1,$2);
++	$pos = index($argumentative,$first);
++	if($pos >= 0) {
++	    if($pos < $#args && $args[$pos+1] eq ':') {
++		shift(@ARGV);
++		if($rest eq '') {
++		    ++$errs unless @ARGV;
++		    $rest = shift(@ARGV);
++		}
++		${"opt_$first"} = $rest;
++	    }
++	    else {
++		${"opt_$first"} = 1;
++		if($rest eq '') {
++		    shift(@ARGV);
++		}
++		else {
++		    $ARGV[0] = "-$rest";
++		}
++	    }
++	}
++	else {
++	    print STDERR "Unknown option: $first\n";
++	    ++$errs;
++	    if($rest ne '') {
++		$ARGV[0] = "-$rest";
++	    }
++	    else {
++		shift(@ARGV);
++	    }
++	}
++    }
++    $errs == 0;
++}
++
+ undef $opt_l;
+ undef $opt_p;
+ undef $opt_t;
+-do 'getopts.pl';
+ &Getopts('l:p:t:');
+ $module = $opt_l;
+ $pot_file = $opt_p;

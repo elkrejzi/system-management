@@ -1,0 +1,25 @@
+diff -Naur a/dao/main.cc b/dao/main.cc
+--- a/dao/main.cc	2009-05-04 17:49:52.000000000 +0200
++++ b/dao/main.cc	2014-09-21 22:33:16.383310254 +0200
+@@ -207,7 +207,7 @@
+ 
+ static void printVersion()
+ {
+-  log_message(2, "Cdrdao version %s - (C) Andreas Mueller <andreas@daneb.de>",
++  log_message(0, "Cdrdao version %s - (C) Andreas Mueller <andreas@daneb.de>",
+ 	  VERSION);
+ 
+   std::list<std::string> list;
+diff -Naur a/dao/ScsiIf-linux.cc b/dao/ScsiIf-linux.cc
+--- a/dao/ScsiIf-linux.cc	2009-09-28 12:12:03.000000000 +0200
++++ b/dao/ScsiIf-linux.cc	2014-09-21 22:33:27.822524217 +0200
+@@ -19,6 +19,9 @@
+ 
+ #include <config.h>
+ 
++#include <sys/types.h>
++#include <sys/stat.h>
++
+ #include <stdio.h>
+ #include <fcntl.h>
+ #include <unistd.h>

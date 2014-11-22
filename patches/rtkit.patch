@@ -1,0 +1,101 @@
+diff -Naur a/configure.ac b/configure.ac
+--- a/configure.ac	2012-05-15 15:25:40.000000000 +0200
++++ b/configure.ac	2014-01-02 02:39:45.483743466 +0100
+@@ -115,6 +115,7 @@
+ AC_SEARCH_LIBS([cap_init], [cap])
+ 
+ PKG_CHECK_MODULES(DBUS, dbus-1)
++PKG_CHECK_MODULES(LIBSYSTEMD_DAEMON, libsystemd-daemon)
+ 
+ AC_ARG_WITH([systemdsystemunitdir],
+         AS_HELP_STRING([--with-systemdsystemunitdir=DIR], [Directory for systemd service files]),
+diff -Naur a/Makefile.am b/Makefile.am
+--- a/Makefile.am	2012-05-15 15:38:05.000000000 +0200
++++ b/Makefile.am	2014-01-02 02:39:45.484743587 +0100
+@@ -56,13 +56,14 @@
+ endif
+ 
+ rtkit_daemon_SOURCES = \
+-	rtkit-daemon.c rtkit.h \
+-	sd-daemon.c sd-daemon.h
++	rtkit-daemon.c rtkit.h
+ rtkit_daemon_LDADD = \
+-	$(DBUS_LIBS)
++	$(DBUS_LIBS) \
++	$(LIBSYSTEMD_DAEMON_LIBS)
+ rtkit_daemon_CFLAGS = \
+ 	$(AM_CFLAGS) \
+-	$(DBUS_CFLAGS)
++	$(DBUS_CFLAGS) \
++	$(LIBSYSTEMD_DAEMON_CFLAGS)
+ 
+ rtkitctl_SOURCES = \
+ 	rtkitctl.c rtkit.h
+@@ -93,7 +94,3 @@
+ 
+ DISTCHECK_CONFIGURE_FLAGS = \
+ 	--with-systemdsystemunitdir=$$dc_install_base/$(systemdsystemunitdir)
+-
+-update-systemd:
+-	curl http://cgit.freedesktop.org/systemd/systemd/plain/src/libsystemd-daemon/sd-daemon.c > sd-daemon.c
+-	curl http://cgit.freedesktop.org/systemd/systemd/plain/src/systemd/sd-daemon.h > sd-daemon.h
+diff -Naur a/rtkit-daemon.c b/rtkit-daemon.c
+--- a/rtkit-daemon.c	2012-05-15 15:25:40.000000000 +0200
++++ b/rtkit-daemon.c	2014-01-02 02:40:08.423382833 +0100
+@@ -50,9 +50,9 @@
+ #include <dirent.h>
+ #include <syslog.h>
+ #include <grp.h>
++#include <systemd/sd-daemon.h>
+ 
+ #include "rtkit.h"
+-#include "sd-daemon.h"
+ 
+ #ifndef __linux__
+ #error "This stuff only works on Linux!"
+@@ -1170,12 +1170,14 @@
+         DBusMessage *m = NULL, *r = NULL;
+         const char *unix_process = "unix-process";
+         const char *pid = "pid";
++        const char *uid = "uid";
+         const char *start_time = "start-time";
+         const char *cancel_id = "";
+         uint32_t flags = 0;
+         uint32_t pid_u32 = p->pid;
+-        uint64_t start_time_u64 = p->starttime;
++        uint32_t uid_u32 = (uint32_t)u->uid;
+         DBusMessageIter iter_msg, iter_struct, iter_array, iter_dict, iter_variant;
++        uint64_t start_time_u64 = p->starttime;
+         int ret;
+         dbus_bool_t authorized = FALSE;
+ 
+@@ -1206,6 +1208,13 @@
+         assert_se(dbus_message_iter_close_container(&iter_dict, &iter_variant));
+         assert_se(dbus_message_iter_close_container(&iter_array, &iter_dict));
+ 
++        assert_se(dbus_message_iter_open_container(&iter_array, DBUS_TYPE_DICT_ENTRY, NULL, &iter_dict));
++        assert_se(dbus_message_iter_append_basic(&iter_dict, DBUS_TYPE_STRING, &uid));
++        assert_se(dbus_message_iter_open_container(&iter_dict, DBUS_TYPE_VARIANT, "u", &iter_variant));
++        assert_se(dbus_message_iter_append_basic(&iter_variant, DBUS_TYPE_UINT32, &uid_u32));
++        assert_se(dbus_message_iter_close_container(&iter_dict, &iter_variant));
++        assert_se(dbus_message_iter_close_container(&iter_array, &iter_dict));
++
+         assert_se(dbus_message_iter_close_container(&iter_struct, &iter_array));
+         assert_se(dbus_message_iter_close_container(&iter_msg, &iter_struct));
+ 
+diff -Naur a/rtkit-daemon.service.in b/rtkit-daemon.service.in
+--- a/rtkit-daemon.service.in	2012-05-15 15:25:40.000000000 +0200
++++ b/rtkit-daemon.service.in	2014-01-02 02:39:57.959217101 +0100
+@@ -24,12 +24,7 @@
+ BusName=org.freedesktop.RealtimeKit1
+ NotifyAccess=main
+ CapabilityBoundingSet=CAP_SYS_NICE CAP_DAC_READ_SEARCH CAP_SYS_PTRACE CAP_SYS_CHROOT CAP_SETGID CAP_SETUID
+-PrivateTmp=yes
+ PrivateNetwork=yes
+ 
+-# Work around the fact that the Linux currently doesn't assign any RT
+-# budget to CPU control groups that have none configured explicitly
+-ControlGroup=cpu:/
+-
+ [Install]
+ WantedBy=graphical.target

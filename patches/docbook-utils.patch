@@ -1,0 +1,544 @@
+--- docbook-utils.orig/Makefile.am	2002-04-18 21:38:30.000000000 +0200
++++ docbook-utils/Makefile.am	2012-05-23 15:21:33.631838156 +0200
+@@ -1,6 +1,6 @@
+ SUBDIRS = backends bin doc frontends helpers
+ 
+-sgmldudir = $(prefix)/share/sgml/docbook/utils-@VERSION@
++sgmldudir = $(prefix)/share/docbook-utils
+ sgmldu_DATA = docbook-utils.dsl
+ 
+ EXTRA_DIST = AUTHORS README COPYING INSTALL NEWS ChangeLog TODO \
+--- docbook-utils.orig/Makefile.in	2004-02-11 15:16:06.000000000 +0100
++++ docbook-utils/Makefile.in	2012-05-23 15:21:33.631838156 +0200
+@@ -128,7 +128,7 @@
+ sysconfdir = @sysconfdir@
+ target_alias = @target_alias@
+ SUBDIRS = backends bin doc frontends helpers
+-sgmldudir = $(prefix)/share/sgml/docbook/utils-@VERSION@
++sgmldudir = $(prefix)/share/docbook-utils
+ sgmldu_DATA = docbook-utils.dsl
+ EXTRA_DIST = AUTHORS README COPYING INSTALL NEWS ChangeLog TODO \
+ 	$(sgmldu_DATA) docbook-utils.spec
+--- docbook-utils.orig/backends/Makefile.am	2002-04-18 23:12:19.000000000 +0200
++++ docbook-utils/backends/Makefile.am	2012-05-23 15:21:33.633838186 +0200
+@@ -1,4 +1,4 @@
+-sgmldudir = $(prefix)/share/sgml/docbook/utils-@VERSION@
++sgmldudir = $(prefix)/share/docbook-utils
+ sgmldubedir = $(sgmldudir)/backends
+ sgmldube_DATA = dvi html man pdf ps rtf tex texi txt
+ 
+--- docbook-utils.orig/backends/Makefile.in	2004-02-11 15:16:06.000000000 +0100
++++ docbook-utils/backends/Makefile.in	2012-05-23 15:21:33.632838172 +0200
+@@ -104,7 +104,7 @@
+ sharedstatedir = @sharedstatedir@
+ sysconfdir = @sysconfdir@
+ target_alias = @target_alias@
+-sgmldudir = $(prefix)/share/sgml/docbook/utils-@VERSION@
++sgmldudir = $(prefix)/share/docbook-utils
+ sgmldubedir = $(sgmldudir)/backends
+ sgmldube_DATA = dvi html man pdf ps rtf tex texi txt
+ EXTRA_DIST = dvi html man.in pdf ps rtf tex texi.in txt
+--- docbook-utils.orig/backends/man.in	2003-02-11 13:56:23.000000000 +0100
++++ docbook-utils/backends/man.in	2012-05-23 15:21:33.633838186 +0200
+@@ -3,7 +3,7 @@
+ # This program is under GPL license. See LICENSE file for details.
+ 
+ # Convert to *roff
+-HELPER=$SGML_BASE_DIR/docbook/utils-@VERSION@/helpers/docbook2man-spec.pl
++HELPER=docbook2man-spec.pl
+ TMPDIR=`mktemp -d /tmp/man.XXXXXX` || \
+  { echo >&2 "man backend: could not create secure temporary directory"; exit 1;}
+ trap 'rm -rf "${TMPDIR}"' EXIT
+--- docbook-utils.orig/backends/texi.in	2002-08-05 23:20:56.000000000 +0200
++++ docbook-utils/backends/texi.in	2012-05-23 15:21:33.634838201 +0200
+@@ -3,7 +3,7 @@
+ # This program is under GPL license. See LICENSE file for details.
+ 
+ # Convert to texinfo
+-nsgmls $SGML_FILE | sgmlspl $SGML_BASE_DIR/docbook/utils-@VERSION@/helpers/docbook2texi-spec.pl >$SGML_FILE_NAME.texi
++nsgmls $SGML_FILE | sgmlspl docbook2texi-spec.pl >$SGML_FILE_NAME.texi
+ if [ $? -ne 0 ]
+ then exit 1
+ fi
+--- docbook-utils.orig/bin/jw.in	2003-04-30 18:21:49.000000000 +0200
++++ docbook-utils/bin/jw.in	2012-05-23 15:21:33.635838219 +0200
+@@ -80,17 +80,17 @@
+ SGML_CATALOGS_DIR="/etc/sgml"
+ if [ -f "$SGML_CONF" ]
+ then
+-  RE='^[:space:]*SGML_BASE_DIR[:space:]*=[:space:]*'
++  RE='^[[:space:]]*SGML_BASE_DIR[[:space:]]*=[[:space:]]*'
+   SGML_BASE_DIR=`grep $RE $SGML_CONF | sed "s/$RE//"`
+-  RE='^[:space:]*SGML_CATALOGS_DIR[:space:]*=[:space:]*'
++  RE='^[[:space:]]*SGML_CATALOGS_DIR[[:space:]]*=[[:space:]]*'
+   SGML_CATALOGS_DIR=`grep $RE $SGML_CONF | sed "s/$RE//"`
+ fi
+ 
+ # Set frontend to use
+-SGML_FRONTEND="$SGML_BASE_DIR/docbook/utils-@VERSION@/frontends/docbook"
++SGML_FRONTEND="@prefix@/share/docbook-utils/frontends/docbook"
+ 
+ # Set backend to use
+-SGML_BACKEND="$SGML_BASE_DIR/docbook/utils-@VERSION@/backends/html"
++SGML_BACKEND="@prefix@/share/docbook-utils/backends/html"
+ 
+ # Set main stylesheet
+ SGML_STYLESHEET="default"
+@@ -120,14 +120,14 @@
+ do case $1 in
+   -f|--frontend) case "$2" in
+ 		  /*) SGML_FRONTEND="$2" ;;
+-		   *) d=$SGML_BASE_DIR/docbook/utils-@VERSION@/frontends
++		   *) d=@prefix@/share/docbook-utils/frontends
+ 		      SGML_FRONTEND="$d/$2" ;;
+ 		esac
+ 		shift 2
+ 		;;
+   -b|--backend)	case "$2" in
+ 		  /*) SGML_BACKEND="$2" ;;
+-		   *) d=$SGML_BASE_DIR/docbook/utils-@VERSION@/backends
++		   *) d=@prefix@/share/docbook-utils/backends
+ 		      SGML_BACKEND="$d/$2" ;;
+ 		esac
+ 		shift 2
+@@ -186,8 +186,8 @@
+ 		shift 2
+ 		;;
+   -w|--warning)	case $2 in
+-		  list) echo -e "List of allowed warning types (multiple -w options are allowed):\n"
+-			echo -e $SGML_WARNINGS_LIST
++		  list) printf "List of allowed warning types (multiple -w options are allowed):\n\n"
++			printf "$SGML_WARNINGS_LIST\n"
+ 			exit 0
+ 			;;
+ 		  xml|mixed|sgmldecl|should|default|duplicate|undefined|unclosed|empty|net|min-tag|unused-map|unused-param|notation-sysid|all|no-xml|no-mixed|no-sgmldecl|no-should|no-default|no-duplicate|no-undefined|no-unclosed|no-empty|no-net|no-min-tag|no-unused-map|no-unused-param|no-notation-sysid) \
+@@ -195,14 +195,14 @@
+ 			shift 2
+ 			;;
+ 		  *)	echo "Unknown warning type \"$2\". Allowed warning types are:" >&2
+-		        echo -e $SGML_WARNINGS_LIST >&2
++		        printf "$SGML_WARNINGS_LIST\n" >&2
+ 			exit 1
+ 			;;
+ 		esac
+ 		;;
+   -e|--error)	case $2 in
+-		  list) echo -e "List of allowed error types (multiple -e options are allowed):\n"
+-			echo -e $SGML_ERRORS_LIST
++		  list) printf "List of allowed error types (multiple -e options are allowed):\n\n"
++			printf "$SGML_ERRORS_LIST\n"
+ 			exit 0
+ 			;;
+ 		  no-idref|no-significant|no-valid) \
+@@ -210,19 +210,19 @@
+ 			shift 2
+ 			;;
+ 		  *)	echo "Unknown error type \"$2\". Allowed error types are:" >&2
+-		        echo -e $SGML_ERRORS_LIST >&2
++		        printf "$SGML_ERRORS_LIST\n" >&2
+ 			exit 1
+ 			;;
+ 		esac
+ 		;;
+-  -h|--help)	echo -e "`basename $0` - Jade Wrapper\n"
+-		echo -e "$SGML_HELP_MESSAGE"
++  -h|--help)	printf "`basename $0` - Jade Wrapper\n\n"
++		printf "$SGML_HELP_MESSAGE\n"
+ 		exit 0
+ 		;;
+-  -v|--version)	echo -e "$SGML_VERSION_MESSAGE"
++  -v|--version)	printf "$SGML_VERSION_MESSAGE\n"
+ 		exit 0
+ 		;;
+-  -*)		echo -e "$SGML_HELP_MESSAGE" >&2
++  -*)		printf "$SGML_HELP_MESSAGE\n" >&2
+ 		exit 1
+ 		;;
+   *)		if [ -z "$SGML_FILE" ]
+@@ -233,7 +233,7 @@
+ 		  esac
+ 		  shift 1
+ 		else
+-		  echo -e "$SGML_HELP_MESSAGE" >&2
++		  printf "$SGML_HELP_MESSAGE\n" >&2
+ 		  exit 1
+ 		fi
+ 		;;
+@@ -243,7 +243,7 @@
+ # Check that we have a frontend
+ if [ -z "$SGML_FRONTEND" ]
+ then
+-  echo -e $SGML_HELP_MESSAGE >&2
++  printf "$SGML_HELP_MESSAGE\n" >&2
+   exit 1
+ fi
+ if [ ! -s $SGML_FRONTEND ]
+@@ -255,7 +255,7 @@
+ # Check that we have a backend
+ if [ -z "$SGML_BACKEND" ]
+ then
+-  echo -e $SGML_HELP_MESSAGE >&2
++  printf "$SGML_HELP_MESSAGE\n" >&2
+   exit 1
+ fi
+ if [ ! -s $SGML_BACKEND ]
+@@ -267,7 +267,7 @@
+ # Check that we have a file to process
+ if [ -z "$SGML_FILE" ]
+ then
+-  echo -e $SGML_HELP_MESSAGE >&2
++  printf "$SGML_HELP_MESSAGE\n" >&2
+   exit 1
+ fi
+ if [ ! -s $SGML_FILE ]
+@@ -290,7 +290,7 @@
+ 
+ # Use SGML declaration for XML if needed
+ if [ "$SGML_DECL" = "" -a "$SGML_XML" = "xml" ]
+-then SGML_DECL=${SGML_BASE_DIR}/xml.dcl
++then SGML_DECL=${SGML_BASE_DIR}/declaration/xml.dcl
+ fi
+ 
+ # Try to find the SGML normalizer
+@@ -312,7 +312,7 @@
+ 	  SGML_CATALOG_FILES=$SGML_CENTRALIZED_CATALOG
+ 	else
+ 	  SGML_CATALOG_FILES=`find $SGML_BASE_DIR -name catalog`
+-	  SGML_CATALOG_FILES=`echo "$SGML_CATALOG_FILES" | tr [:space:] :`
++	  SGML_CATALOG_FILES=`echo "$SGML_CATALOG_FILES" | tr [[:space:]] :`
+ 	fi
+ 	;;
+   no)	SGML_CATALOG_FILES=""
+@@ -402,7 +402,7 @@
+ # Create output directory if not available
+ if [ -z "$SGML_OUTPUT_DIRECTORY" ]
+ then
+-  echo -e $SGML_HELP_MESSAGE >&2
++  printf "$SGML_HELP_MESSAGE\n" >&2
+   exit 1
+ fi
+ if [ ! -d $SGML_OUTPUT_DIRECTORY ]
+--- docbook-utils.orig/doc/HTML/Makefile.in	2004-02-11 15:16:07.000000000 +0100
++++ docbook-utils/doc/HTML/Makefile.in	2012-05-23 15:21:33.637838263 +0200
+@@ -103,7 +103,7 @@
+ sharedstatedir = @sharedstatedir@
+ sysconfdir = @sysconfdir@
+ target_alias = @target_alias@
+-htmldir = $(docdir)/html/docbook-utils-@VERSION@
++htmldir = $(docdir)/html/
+ html_DATA = api.html \
+ 	backend-spec.html \
+ 	docbook2man.html \
+--- docbook-utils.orig/doc/man/docbook2man-spec.pl.1	2004-02-11 15:16:22.000000000 +0100
++++ docbook-utils/doc/man/docbook2man-spec.pl.1	2012-05-23 15:21:45.808096666 +0200
+@@ -17,7 +17,7 @@
+ .SH "DESCRIPTION"
+ .PP
+ \fBdocbook2man\fR is a sgmlspl spec file that produced man
+-pages (using the -man macros) from DocBook RefEntry markup.
++pages (using the \-man macros) from DocBook RefEntry markup.
+ .PP
+ The program reads ESIS produced by nsgmls (or other SGML parsers) from
+ standard input.  Markup not found in RefEntry is discarded.
+--- docbook-utils.orig/doc/man/frontend-spec.7	2004-02-11 15:16:22.000000000 +0100
++++ docbook-utils/doc/man/frontend-spec.7	2012-05-23 15:21:45.809096690 +0200
+@@ -10,7 +10,7 @@
+ .SH "DESCRIPTION"
+ .PP
+ \fBjw\fR(1) calls frontends like
+-\fIfrontends/docbook\fR to get the informations
++\fIfrontends/docbook\fR to get the information
+ specific to a given input format. The frontend knows which information
+ to return from the first command line parameter. It gets all necessary
+ data via environment variables ready to use.
+--- docbook-utils.orig/doc/man/jw.1	2004-02-11 15:16:21.000000000 +0100
++++ docbook-utils/doc/man/jw.1	2012-05-23 15:21:45.810096712 +0200
+@@ -128,7 +128,7 @@
+ Here we have chosen to generate HTML output. In fact we can
+ use any of the backends stored in the \fIbackends/\fR
+ subdirectory of the DocBook-utils distribution directory (usually
+-\fI/usr/share/sgml/docbook/utils-0.6.14\fR).
++\fI/usr/share/docbook-utils\fR).
+ Similarly, you can use any frontend defined in the
+ \fIfrontends/\fR subdirectory to convert from another
+ input format.
+@@ -142,7 +142,7 @@
+ The following options apply to the conversion script:
+ .TP
+ \fB   -f \fIfrontend\fB | --frontend \fIfrontend\fB  \fR
+-Allows to specify another frontend than default \fIdocbook\fR\&.
++Allows one to specify another frontend than default \fIdocbook\fR\&.
+ The list of currently available frontends is:
+ .RS
+ .TP
+@@ -156,13 +156,13 @@
+ .RE
+ .TP
+ \fB   -b \fIbackend\fB | --backend \fIbackend\fB  \fR
+-Allows to specify another backend than default
++Allows one to specify another backend than default
+ \fIHTML\fR\&. The list of currently available
+ backends is:
+ .RS
+ .TP
+ \fB\fIdvi\fB\fR
+-Converts to DVI (DeVice Independant
++Converts to DVI (DeVice Independent
+ files) by calling \fBJade\fR or
+ \fBOpenJade\fR\&.
+ .TP
+@@ -210,7 +210,7 @@
+ .RE
+ .TP
+ \fB   -c \fIfile\fB | --cat \fIfile\fB  \fR
+-Allows to use an extra SGML Open Catalog that will list
++Allows one to use an extra SGML Open Catalog that will list
+ other files like customization style sheets, adaptations to the
+ DocBook Document Type Definition, special character entities,
+ etc. This catalog is added to the list of catalogs determined
+@@ -241,7 +241,7 @@
+ are specified on the command line.
+ .TP
+ \fB   -d \fIfile\fB|default|none | --dsl \fIfile\fB|default|none  \fR
+-Allows to use a customized style sheet instead
++Allows one to use a customized style sheet instead
+ of the default one.
+ 
+ A "target" starting with a hash mark "#" can be appended
+@@ -355,13 +355,13 @@
+ vary if another frontend than \fIdocbook\fR
+ is used.
+ .TP
+-\fB\fI/usr/share/sgml/docbook/utils-0.6.14/backends\fB\fR
++\fB\fI/usr/share/docbook-utils/backends\fB\fR
+ The various backends
+ .TP
+-\fB\fI/usr/share/sgml/docbook/utils-0.6.14/frontends\fB\fR
++\fB\fI/usr/share/docbook-utils/frontends\fB\fR
+ The various frontends
+ .TP
+-\fB\fI/usr/share/sgml/docbook/utils-0.6.14/helpers\fB\fR
++\fB\fI/usr/share/perl5/sgmlspl-specs\fB\fR
+ The various helper scripts like docbook2man or docbook2texi
+ .SH "AUTHORS"
+ .PP
+--- docbook-utils.orig/doc/man/sgmldiff.1	2004-02-11 15:16:22.000000000 +0100
++++ docbook-utils/doc/man/sgmldiff.1	2012-05-23 15:21:45.810096712 +0200
+@@ -17,7 +17,7 @@
+ 
+ .SH "DESCRIPTION"
+ .PP
+-This perl script allows to determine the structural differences
++This perl script allows one to determine the structural differences
+ between two SGML files. It compares the files, regardless of what
+ is in between the tags, to only focus on the markup. Its output
+ is similar to \fBdiff\fR(1)\&.
+@@ -62,8 +62,8 @@
+ Lines 5 to 7 of the first file have been changed
+ into lines 8 to 10 of the second line.
+ In addition to those summaries, the lines of the first file are
+-shown preceeded by '<' and the lines of the second file are
+-shown preceeded by '>".
++shown preceded by '<' and the lines of the second file are
++shown preceded by '>".
+ .SH "OPTIONS"
+ .PP
+ Here is the list of actions that can be requested to
+--- docbook-utils.orig/doc/refentry/jw.sgml	2002-10-21 17:54:35.000000000 +0200
++++ docbook-utils/doc/refentry/jw.sgml	2012-05-23 15:21:33.636838240 +0200
+@@ -230,7 +230,7 @@
+     <para>Here we have chosen to generate HTML output. In fact we can
+     use any of the backends stored in the <filename>backends/</filename>
+     subdirectory of the DocBook-utils distribution directory (usually
+-    <filename>/usr/share/sgml/docbook/utils-&version;</filename>).
++    <filename>/usr/share/docbook-utils</filename>).
+     Similarly, you can use any frontend defined in the
+     <filename>frontends/</filename> subdirectory to convert from another
+     input format.</para>
+@@ -592,21 +592,21 @@
+       </varlistentry>
+ 
+       <varlistentry>
+-	<term><filename>/usr/share/sgml/docbook/utils-&version;/backends</filename></term>
++	<term><filename>/usr/share/docbook-utils/backends</filename></term>
+ 	<listitem>
+           <para>The various backends</para>
+ 	</listitem>
+       </varlistentry>
+ 
+       <varlistentry>
+-	<term><filename>/usr/share/sgml/docbook/utils-&version;/frontends</filename></term>
++	<term><filename>/usr/share/docbook-utils/frontends</filename></term>
+ 	<listitem>
+           <para>The various frontends</para>
+ 	</listitem>
+       </varlistentry>
+ 
+       <varlistentry>
+-	<term><filename>/usr/share/sgml/docbook/utils-&version;/helpers</filename></term>
++	<term><filename>/usr/share/perl5/sgmlspl-specs</filename></term>
+ 	<listitem>
+           <para>The various helper scripts like docbook2man or docbook2texi</para>
+ 	</listitem>
+--- docbook-utils.orig/frontends/Makefile.am	2002-04-19 10:54:49.000000000 +0200
++++ docbook-utils/frontends/Makefile.am	2012-05-23 15:21:33.639838308 +0200
+@@ -1,3 +1,3 @@
+-sgmldudir = $(prefix)/share/sgml/docbook/utils-@VERSION@
++sgmldudir = $(prefix)/share/docbook-utils
+ sgmldufedir = $(sgmldudir)/frontends
+ sgmldufe_DATA = docbook
+--- docbook-utils.orig/frontends/Makefile.in	2004-02-11 15:16:09.000000000 +0100
++++ docbook-utils/frontends/Makefile.in	2012-05-23 15:21:33.638838286 +0200
+@@ -104,7 +104,7 @@
+ sharedstatedir = @sharedstatedir@
+ sysconfdir = @sysconfdir@
+ target_alias = @target_alias@
+-sgmldudir = $(prefix)/share/sgml/docbook/utils-@VERSION@
++sgmldudir = $(prefix)/share/docbook-utils
+ sgmldufedir = $(sgmldudir)/frontends
+ sgmldufe_DATA = docbook
+ all: all-am
+--- docbook-utils.orig/frontends/docbook.in	2002-11-02 18:45:10.000000000 +0100
++++ docbook-utils/frontends/docbook.in	2012-05-23 15:21:33.639838308 +0200
+@@ -6,7 +6,7 @@
+ # Give the location of the centralized catalog
+ # First try the one with a version matching the version that is indicated in the document
+   centralized-catalog)
+-	if [ -n "$SGML_NORM" ]; then
++	if [ -n "$SGML_NORM" ] && [ "$SGML_XML" == "sgml" ]; then
+ 	  SGML_NORM_OPTS='-d'
+ 	else
+ 	  SGML_NORM=cat
+@@ -27,10 +27,7 @@
+ 	done
+ 	if [ -z "$SGML_CATALOG" ]
+ 	then
+-	  if [ "${SGML_XML}" != "sgml" ]
+-	  then SGML_CATALOG=${SGML_CATALOGS_DIR}/${SGML_XML}-docbook.cat
+-	  else SGML_CATALOG=${SGML_CATALOGS_DIR}/catalog
+-	  fi
++	  SGML_CATALOG=${SGML_CATALOGS_DIR}/catalog
+ 	fi
+ 	echo "$SGML_CATALOG"
+ 	;;
+@@ -38,7 +35,7 @@
+   style-sheet)
+ 	case $SGML_STYLESHEET in
+ 	  default)
+-	    echo "${SGML_BASE_DIR}/docbook/utils-@VERSION@/docbook-utils.dsl#${SGML_TYPE}"
++	    echo "/usr/share/docbook-utils/docbook-utils.dsl#${SGML_TYPE}"
+ 	    ;;
+ 	  none)
+ 	    find $SGML_BASE_DIR -name docbook.dsl | grep "$SGML_TYPE/docbook.dsl" | awk '{print $1}'
+--- docbook-utils.orig/helpers/Makefile.am	2001-04-27 18:17:02.000000000 +0200
++++ docbook-utils/helpers/Makefile.am	2012-05-23 15:21:33.643838392 +0200
+@@ -1,5 +1,5 @@
+-sgmldudir = $(prefix)/share/sgml/docbook/utils-@VERSION@
+-sgmlduhedir = $(sgmldudir)/helpers
++sgmldudir = $(prefix)/share
++sgmlduhedir = $(sgmldudir)/perl5/sgmlspl-specs
+ sgmlduhe_DATA = docbook2man-spec.pl docbook2texi-spec.pl
+ 
+ EXTRA_DIST = $(sgmlduhe_DATA)
+--- docbook-utils.orig/helpers/Makefile.in	2004-02-11 15:16:09.000000000 +0100
++++ docbook-utils/helpers/Makefile.in	2012-05-23 15:21:33.642838371 +0200
+@@ -103,8 +103,8 @@
+ sharedstatedir = @sharedstatedir@
+ sysconfdir = @sysconfdir@
+ target_alias = @target_alias@
+-sgmldudir = $(prefix)/share/sgml/docbook/utils-@VERSION@
+-sgmlduhedir = $(sgmldudir)/helpers
++sgmldudir = $(prefix)/share
++sgmlduhedir = $(sgmldudir)/perl5/sgmlspl-specs
+ sgmlduhe_DATA = docbook2man-spec.pl docbook2texi-spec.pl
+ EXTRA_DIST = $(sgmlduhe_DATA)
+ all: all-am
+--- docbook-utils.orig/helpers/docbook2man-spec.pl	2003-06-10 10:30:30.000000000 +0200
++++ docbook-utils/helpers/docbook2man-spec.pl	2012-05-23 15:21:33.641838350 +0200
+@@ -278,8 +278,9 @@
+ .\\" etc. to Steve Cheng <steve\@ggi-project.org>.
+ _END_BANNER
+ 
+-	my $manpage_date = `date "+%d %B %Y"`;
+-		
++	my $date = `date "+%d %B %Y"`;
++	my $manpage_date = $manpage_date || $date ;
++
+ 	output '.TH "';
+ 	
+ 	# If the title is not mixed-case, convention says to
+@@ -292,7 +293,7 @@
+ 	}
+ 	
+ 	output  '" "', fold_string($manpage_sect), 
+-		'" "', fold_string(`date "+%d %B %Y"`), 
++		'" "', fold_string($manpage_date), 
+ 		'" "', $manpage_misc, 
+ 		'" "', $manpage_manual, 
+ 		"\"\n";
+@@ -358,11 +359,14 @@
+ # NAME section
+ man_sgml('<REFNAMEDIV>', sub {
+ 	my %words = qw( fr NOM es NOMBRE de NAME );
+-	if (defined($_[0]->attribute('LANG')->value)) {
+-	my $id = $_[0]->attribute('LANG')->value;
+-	my $ad = $words{$id};
+-	output("\n.SH $ad\n");}
+-	else {output("\n.SH NAME\n");}
++	# Use the REFNAMEDIV's lang attribute, and default to the
++	# REFENTRY's lang attribute.
++	my $lang = $_[0]->attribute('LANG')->value;
++	$lang = $manpage_lang unless defined $lang;
++	if (defined($lang) and defined $words{lc($lang)}) {
++		my $ad = $words{lc($lang)};
++		output("\n.SH $ad\n");}
++	else {	output("\n.SH NAME\n");}
+ });
+ 
+ sgml('<REFNAME>', \&save_cdata);
+@@ -568,6 +572,15 @@
+ sgml('</ATTRIBUTION>', sub { $_[0]->parent->ext->{'attribution'} = pop_output(); });
+ 
+ 
++sgml('<DATE>', sub {
++	save_cdata();
++});
++sgml('</DATE>', sub { 
++	$manpage_date = fold_string(pop_output());
++	$raw_cdata--;
++});
++
++
+ # IGNORE.
+ sgml('<DOCINFO>', sub { push_output('nul'); });
+ sgml('</DOCINFO>', sub { pop_output(); });
+@@ -1199,8 +1212,8 @@
+ 	$_[0] =~ s/\\/\\\\/g;
+ 
+ 	# Escape dots and single quotes in column 1
+-	$_[0] =~ s/^\./\\\&\./;
+-	$_[0] =~ s/^\'/\\\&\'/;
++	$_[0] =~ s/^[ \t]*\./\\\&\./;
++	$_[0] =~ s/^[ \t]*\'/\\\&\'/;
+ 
+ 	# In non-'pre'-type elements:
+ 	if(!$nocollapse_whitespace) {
+--- docbook-utils.orig/helpers/docbook2texi-spec.pl	2000-07-21 22:22:30.000000000 +0200
++++ docbook-utils/helpers/docbook2texi-spec.pl	2012-05-23 15:21:33.644838413 +0200
+@@ -774,7 +774,7 @@
+ ## Print the URL
+ sgml('<ULINK>', sub {
+ 	if($skip_inline++) { return; }	# hopefully doesn't happen
+-	output '@uref{', output $_[0]->attribute('URL'), ', '
++	output '@uref{', $_[0]->attribute('URL')->value, ', '
+ });
+ sgml('</ULINK>', sub {
+ 	output '}' unless --$skip_inline;
+@@ -807,6 +807,7 @@
+ sgml('|[lt    ]|', "<");
+ sgml('|[gt    ]|', ">");
+ sgml('|[amp   ]|', "&");
++sgml('|[ndash ]|', "-");
+ 
+ #
+ # Default handlers (uncomment these if needed).  Right now, these are set

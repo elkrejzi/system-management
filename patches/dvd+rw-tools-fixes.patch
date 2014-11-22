@@ -1,0 +1,46 @@
+diff -Naur a/dvd+rw-format.cpp b/dvd+rw-format.cpp
+--- a/dvd+rw-format.cpp	2008-03-01 12:48:44.000000000 +0100
++++ b/dvd+rw-format.cpp	2014-09-21 22:37:15.522784624 +0200
+@@ -247,7 +247,7 @@
+ 	alarm(1);
+ 	while ((waitpid(pid,&i,0) != pid) && !WIFEXITED(i)) ;
+ 	if (WEXITSTATUS(i) == 0) fprintf (stderr,"\n");
+-	exit (0);
++	exit (WEXITSTATUS(i));
+     }
+ #endif
+ 
+diff -Naur a/growisofs_mmc.cpp b/growisofs_mmc.cpp
+--- a/growisofs_mmc.cpp	2008-03-04 18:47:49.000000000 +0100
++++ b/growisofs_mmc.cpp	2014-09-21 22:36:28.604906568 +0200
+@@ -1640,9 +1640,7 @@
+     blocks += 15, blocks &= ~15;
+ 
+     if (blocks <= split)
+-	fprintf (stderr,":-( more than 50%% of space will be *wasted*!\n"
+-			"    use single layer media for this recording\n"),
+-	exit (FATAL_START(EMEDIUMTYPE));
++	fprintf (stderr,":-? more than 50%% of space will be *wasted*!\n");
+ 
+     blocks /= 16;
+     blocks += 1;
+diff -Naur a/transport.hxx b/transport.hxx
+--- a/transport.hxx	2008-03-01 11:34:43.000000000 +0100
++++ b/transport.hxx	2014-09-21 22:37:03.152553110 +0200
+@@ -11,6 +11,7 @@
+ #include <stdlib.h>
+ #include <unistd.h>
+ #include <string.h>
++#include <limits.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+@@ -123,7 +124,7 @@
+ extern "C" char *plusminus_locale()
+ { static class __plusminus {
+     private:
+-	char str[4];
++	char str[MB_LEN_MAX];
+     public:
+ 	__plusminus()	{   setlocale(LC_CTYPE,ENV_LOCALE);
+ 			    int l = wctomb(str,(wchar_t)(unsigned char)'±');

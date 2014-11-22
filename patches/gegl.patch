@@ -1,0 +1,353 @@
+diff -Naur a/operations/external/ff-load.c b/operations/external/ff-load.c
+--- a/operations/external/ff-load.c	2012-04-01 13:17:57.000000000 +0200
++++ b/operations/external/ff-load.c	2014-01-02 04:38:35.382951057 +0100
+@@ -137,7 +137,7 @@
+       if (p->enc)
+         avcodec_close (p->enc);
+       if (p->ic)
+-        av_close_input_file (p->ic);
++        avformat_close_input(&p->ic);
+       if (p->lavc_frame)
+         av_free (p->lavc_frame);
+ 
+@@ -216,9 +216,9 @@
+             {
+               do
+                 {
+-                  if (av_read_packet (p->ic, &p->pkt) < 0)
++                  if (av_read_frame (p->ic, &p->pkt) < 0)
+                     {
+-                      fprintf (stderr, "av_read_packet failed for %s\n",
++                      fprintf (stderr, "av_read_frame failed for %s\n",
+                                o->path);
+                       return -1;
+                     }
+@@ -271,12 +271,12 @@
+       gint err;
+ 
+       ff_cleanup (o);
+-      err = av_open_input_file (&p->ic, o->path, NULL, 0, NULL);
++      err = avformat_open_input(&p->ic, o->path, NULL, 0);
+       if (err < 0)
+         {
+           print_error (o->path, err);
+         }
+-      err = av_find_stream_info (p->ic);
++      err = avformat_find_stream_info (p->ic, NULL);
+       if (err < 0)
+         {
+           g_warning ("ff-load: error finding stream info for %s", o->path);
+@@ -312,7 +312,7 @@
+       if (p->codec->capabilities & CODEC_CAP_TRUNCATED)
+         p->enc->flags |= CODEC_FLAG_TRUNCATED;
+ 
+-      if (avcodec_open (p->enc, p->codec) < 0)
++      if (avcodec_open2 (p->enc, p->codec, NULL) < 0)
+         {
+           g_warning ("error opening codec %s", p->enc->codec->name);
+           return;
+diff -Naur a/operations/external/ppm-load.c b/operations/external/ppm-load.c
+--- a/operations/external/ppm-load.c	2012-03-29 22:05:50.000000000 +0200
++++ b/operations/external/ppm-load.c	2014-01-02 04:38:47.955175260 +0100
+@@ -36,6 +36,7 @@
+ #include "gegl-chant.h"
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <errno.h>
+ 
+ typedef enum {
+   PIXMAP_ASCII  = 51,
+@@ -44,8 +45,8 @@
+ 
+ typedef struct {
+ 	map_type   type;
+-	gint       width;
+-	gint       height;
++	glong      width;
++	glong      height;
+         gsize      numsamples; /* width * height * channels */
+         gsize      bpc;        /* bytes per channel */
+ 	guchar    *data;
+@@ -61,7 +62,7 @@
+     gchar  header[MAX_CHARS_IN_ROW];
+     gint   maxval;
+ 
+-    /* Check the PPM file Type P2 or P5 */
++    /* Check the PPM file Type P3 or P6 */
+     fgets (header,MAX_CHARS_IN_ROW,fp);
+ 
+     if (header[0] != ASCII_P ||
+@@ -82,12 +83,33 @@
+       }
+ 
+     /* Get Width and Height */
+-    img->width  = strtol (header,&ptr,0);
+-    img->height = atoi (ptr);
+-    img->numsamples = img->width * img->height * CHANNEL_COUNT;
++    errno = 0;
++    img->width  = strtol (header,&ptr,10);
++    if (errno)
++      {
++        g_warning ("Error reading width: %s", strerror(errno));
++        return FALSE;
++      }
++    else if (img->width < 0)
++      {
++        g_warning ("Error: width is negative");
++        return FALSE;
++      }
++
++    img->height = strtol (ptr,&ptr,10);
++    if (errno)
++      {
++        g_warning ("Error reading height: %s", strerror(errno));
++        return FALSE;
++      }
++    else if (img->width < 0)
++      {
++        g_warning ("Error: height is negative");
++        return FALSE;
++      }
+ 
+     fgets (header,MAX_CHARS_IN_ROW,fp);
+-    maxval = strtol (header,&ptr,0);
++    maxval = strtol (header,&ptr,10);
+ 
+     if ((maxval != 255) && (maxval != 65535))
+       {
+@@ -109,6 +131,16 @@
+       g_warning ("%s: Programmer stupidity error", G_STRLOC);
+     }
+ 
++    /* Later on, img->numsamples is multiplied with img->bpc to allocate
++     * memory. Ensure it doesn't overflow. */
++    if (!img->width || !img->height ||
++        G_MAXSIZE / img->width / img->height / CHANNEL_COUNT < img->bpc)
++      {
++        g_warning ("Illegal width/height: %ld/%ld", img->width, img->height);
++        return FALSE;
++      }
++    img->numsamples = img->width * img->height * CHANNEL_COUNT;
++
+     return TRUE;
+ }
+ 
+@@ -229,12 +261,24 @@
+   if (!ppm_load_read_header (fp, &img))
+     goto out;
+ 
+-  rect.height = img.height;
+-  rect.width = img.width;
+-
+   /* Allocating Array Size */
++
++  /* Should use g_try_malloc(), but this causes crashes elsewhere because the
++   * error signalled by returning FALSE isn't properly acted upon. Therefore
++   * g_malloc() is used here which aborts if the requested memory size can't be
++   * allocated causing a controlled crash. */
+   img.data = (guchar*) g_malloc (img.numsamples * img.bpc);
+ 
++  /* No-op without g_try_malloc(), see above. */
++  if (! img.data)
++    {
++      g_warning ("Couldn't allocate %" G_GSIZE_FORMAT " bytes, giving up.", ((gsize)img.numsamples * img.bpc));
++      goto out;
++    }
++
++  rect.height = img.height;
++  rect.width = img.width;
++
+   switch (img.bpc)
+     {
+     case 1:
+diff -Naur a/operations/generated/src-over.c b/operations/generated/src-over.c
+--- a/operations/generated/src-over.c	2012-03-29 22:05:50.000000000 +0200
++++ b/operations/generated/src-over.c	1970-01-01 01:00:00.000000000 +0100
+@@ -1,122 +0,0 @@
+-
+-/* !!!! AUTOGENERATED FILE generated by svg-12-porter-duff.rb !!!!!
+- *
+- * This file is an image processing operation for GEGL
+- *
+- * GEGL is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU Lesser General Public
+- * License as published by the Free Software Foundation; either
+- * version 3 of the License, or (at your option) any later version.
+- *
+- * GEGL is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * Lesser General Public License for more details.
+- *
+- * You should have received a copy of the GNU Lesser General Public
+- * License along with GEGL; if not, see <http://www.gnu.org/licenses/>.
+- *
+- *  Copyright 2006, 2007 Øyvind Kolås <pippin@gimp.org>
+- *            2007 John Marshall
+- *
+- * SVG rendering modes; see:
+- *     http://www.w3.org/TR/SVG12/rendering.html
+- *     http://www.w3.org/TR/2004/WD-SVG12-20041027/rendering.html#comp-op-prop
+- *
+- *     aA = aux(src) alpha      aB = in(dst) alpha      aD = out alpha
+- *     cA = aux(src) colour     cB = in(dst) colour     cD = out colour
+- *
+- * !!!! AUTOGENERATED FILE !!!!!
+- */
+-#include "config.h"
+-#include <glib/gi18n-lib.h>
+-
+-
+-#ifdef GEGL_CHANT_PROPERTIES
+-
+-/* no properties */
+-
+-#else
+-
+-#define GEGL_CHANT_TYPE_POINT_COMPOSER
+-#define GEGL_CHANT_C_FILE        "src-over.c"
+-
+-#include "gegl-chant.h"
+-
+-static void prepare (GeglOperation *operation)
+-{
+-  const Babl *format = babl_format ("RaGaBaA float");
+-
+-  gegl_operation_set_format (operation, "input", format);
+-  gegl_operation_set_format (operation, "aux", format);
+-  gegl_operation_set_format (operation, "output", format);
+-}
+-
+-static gboolean
+-process (GeglOperation        *op,
+-          void                *in_buf,
+-          void                *aux_buf,
+-          void                *out_buf,
+-          glong                n_pixels,
+-          const GeglRectangle *roi,
+-          gint                 level)
+-{
+-  gint i;
+-  gfloat * GEGL_ALIGNED in = in_buf;
+-  gfloat * GEGL_ALIGNED aux = aux_buf;
+-  gfloat * GEGL_ALIGNED out = out_buf;
+-
+-  if (aux==NULL)
+-    return TRUE;
+-
+-  for (i = 0; i < n_pixels; i++)
+-    {
+-      gint   j;
+-      gfloat aA G_GNUC_UNUSED, aB G_GNUC_UNUSED, aD G_GNUC_UNUSED;
+-
+-      aB = in[3];
+-      aA = aux[3];
+-      aD = aA + aB - aA * aB;
+-
+-      for (j = 0; j < 3; j++)
+-        {
+-          gfloat cA G_GNUC_UNUSED, cB G_GNUC_UNUSED;
+-
+-          cB = in[j];
+-          cA = aux[j];
+-          out[j] = cA + cB * (1.0f - aA);
+-        }
+-      out[3] = aD;
+-      in  += 4;
+-      aux += 4;
+-      out += 4;
+-    }
+-  return TRUE;
+-}
+-
+-
+-static void
+-gegl_chant_class_init (GeglChantClass *klass)
+-{
+-  GeglOperationClass              *operation_class;
+-  GeglOperationPointComposerClass *point_composer_class;
+-
+-  operation_class      = GEGL_OPERATION_CLASS (klass);
+-  point_composer_class = GEGL_OPERATION_POINT_COMPOSER_CLASS (klass);
+-
+-  point_composer_class->process = process;
+-  operation_class->prepare = prepare;
+-
+-
+-  operation_class->compat_name = "gegl:src-over";
+-  gegl_operation_class_set_keys (operation_class,
+-    "name"      , "svg:src-over",
+-    "categories", "compositors:porter-duff",
+-    "description",
+-        _("Porter Duff operation src-over (d = cA + cB * (1.0f - aA))"),
+-        NULL);
+- 
+-
+-}
+-
+-#endif
+diff -Naur a/operations/generated/svg-12-porter-duff.rb b/operations/generated/svg-12-porter-duff.rb
+--- a/operations/generated/svg-12-porter-duff.rb	2012-03-29 22:05:50.000000000 +0200
++++ b/operations/generated/svg-12-porter-duff.rb	2014-01-02 04:39:22.290776108 +0100
+@@ -1,4 +1,5 @@
+ #!/usr/bin/env ruby
++# encoding: utf-8
+ 
+ copyright = '
+ /* !!!! AUTOGENERATED FILE generated by svg-12-porter-duff.rb !!!!!
+@@ -38,8 +39,8 @@
+                         'aA'],
+       ['dst',           'cB',
+                         'aB'],
+-      ['src_over',      'cA + cB * (1.0f - aA)',
+-                        'aA + aB - aA * aB'],
++#      ['src_over',      'cA + cB * (1.0f - aA)',
++#                        'aA + aB - aA * aB'],
+       ['dst_over',      'cB + cA * (1.0f - aB)',
+                         'aA + aB - aA * aB'],
+       ['dst_in',        'cB * aA', # <- XXX: typo?
+diff -Naur a/operations/workshop/external/gluas.c b/operations/workshop/external/gluas.c
+--- a/operations/workshop/external/gluas.c	2012-03-29 22:05:50.000000000 +0200
++++ b/operations/workshop/external/gluas.c	2014-01-02 04:39:05.165478514 +0100
+@@ -97,7 +97,7 @@
+ static int l_flush     (lua_State * lua);
+ static int l_print     (lua_State * lua);
+ 
+-static const luaL_reg gluas_functions[] =
++static const luaL_Reg gluas_functions[] =
+ {
+     {"set_rgba",    l_set_rgba},
+     {"get_rgba",    l_get_rgba},
+@@ -122,7 +122,7 @@
+ };
+ static void
+ register_functions (lua_State      *L,
+-                    const luaL_reg *l)
++                    const luaL_Reg *l)
+ {
+   for (;l->name; l++)
+     lua_register (L, l->name, l->func);
+@@ -146,7 +146,7 @@
+     lua_State *L;
+     Priv p;
+ 
+-    L = lua_open ();
++    L = luaL_newstate ();
+     luaL_openlibs (L);
+ 
+     register_functions (L, gluas_functions);
+diff -Naur a/po/POTFILES.in b/po/POTFILES.in
+--- a/po/POTFILES.in	2012-04-02 14:24:21.000000000 +0200
++++ b/po/POTFILES.in	2014-01-02 04:39:22.290776108 +0100
+@@ -115,10 +115,9 @@
+ operations/generated/screen.c
+ operations/generated/soft-light.c
+ operations/generated/src-atop.c
++operations/generated/src.c
+ operations/generated/src-in.c
+ operations/generated/src-out.c
+-operations/generated/src-over.c
+-operations/generated/src.c
+ operations/generated/subtract.c
+ operations/generated/svg-multiply.c
+ operations/generated/xor.c

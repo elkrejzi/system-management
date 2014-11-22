@@ -1,0 +1,7 @@
+--- sgml-common.orig/doc/man/Makefile.am	2001-01-30 15:42:22.000000000 +0100
++++ sgml-common/doc/man/Makefile.am	2012-05-23 12:42:43.888319587 +0200
+@@ -1,2 +1 @@
+-man8dir	  = $(mandir)/man8
+-man8_DATA = *.8
++man_MANS = install-catalog.8
+

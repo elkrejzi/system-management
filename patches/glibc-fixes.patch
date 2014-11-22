@@ -1,0 +1,53 @@
+diff -Naur a/libio/wfileops.c b/libio/wfileops.c
+--- a/libio/wfileops.c	2014-09-07 10:09:09.000000000 +0200
++++ b/libio/wfileops.c	2014-09-15 20:12:20.300167273 +0200
+@@ -711,6 +711,7 @@
+ 		return WEOF;
+ 
+ 	      offset += outstop - out;
++	      free (out);
+ 	    }
+ 
+ 	  /* We don't trust _IO_read_end to represent the current file offset
+diff -Naur a/sysdeps/gnu/netinet/udp.h b/sysdeps/gnu/netinet/udp.h
+--- a/sysdeps/gnu/netinet/udp.h	2014-09-07 10:09:09.000000000 +0200
++++ b/sysdeps/gnu/netinet/udp.h	2014-09-15 20:12:42.460450986 +0200
+@@ -78,6 +78,10 @@
+ #define UDP_CORK	1	/* Never send partially complete segments.  */
+ #define UDP_ENCAP	100	/* Set the socket to accept
+ 				   encapsulated packets.  */
++#define UDP_NO_CHECK6_TX 101	/* Disable sending checksum for UDP
++				   over IPv6.  */
++#define UDP_NO_CHECK6_RX 102	/* Disable accepting checksum for UDP
++				   over IPv6.  */
+ 
+ /* UDP encapsulation types */
+ #define UDP_ENCAP_ESPINUDP_NON_IKE 1	/* draft-ietf-ipsec-nat-t-ike-00/01 */
+diff -Naur a/sysdeps/unix/sysv/linux/ifaddrs.c b/sysdeps/unix/sysv/linux/ifaddrs.c
+--- a/sysdeps/unix/sysv/linux/ifaddrs.c	2014-09-07 10:09:09.000000000 +0200
++++ b/sysdeps/unix/sysv/linux/ifaddrs.c	2014-09-15 20:12:31.986982667 +0200
+@@ -770,20 +770,17 @@
+ 
+ 		  if (cp != NULL)
+ 		    {
+-		      char c;
+ 		      unsigned int preflen;
+ 
+-		      if ((max_prefixlen > 0) &&
+-			  (ifam->ifa_prefixlen > max_prefixlen))
++		      if (ifam->ifa_prefixlen > max_prefixlen)
+ 			preflen = max_prefixlen;
+ 		      else
+ 			preflen = ifam->ifa_prefixlen;
+ 
+-		      for (i = 0; i < ((preflen - 1) / 8); i++)
++		      for (i = 0; i < preflen / 8; i++)
+ 			*cp++ = 0xff;
+-		      c = 0xff;
+-		      c <<= ((128 - preflen) % 8);
+-		      *cp = c;
++		      if (preflen % 8)
++			*cp = 0xff << (8 - preflen % 8);
+ 		    }
+ 		}
+ 	    }

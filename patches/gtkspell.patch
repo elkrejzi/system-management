@@ -1,0 +1,318 @@
+diff -ruN gtkspell.old/acinclude.m4 gtkspell/acinclude.m4
+--- gtkspell.old/acinclude.m4	1970-01-01 01:00:00.000000000 +0100
++++ gtkspell/acinclude.m4	2011-11-21 18:49:14.824883280 +0100
+@@ -0,0 +1,32 @@
++dnl From msw.
++dnl
++dnl a macro to check for ability to create python extensions
++dnl  AM_CHECK_PYTHON_HEADERS([ACTION-IF-POSSIBLE], [ACTION-IF-NOT-POSSIBLE])
++dnl function also defines PYTHON_INCLUDES
++AC_DEFUN([AM_CHECK_PYTHON_HEADERS],
++[AC_REQUIRE([AM_PATH_PYTHON])
++AC_MSG_CHECKING(for headers required to compile python extensions)
++dnl deduce PYTHON_INCLUDES
++py_prefix=`$PYTHON -c "import sys; print sys.prefix"`
++py_exec_prefix=`$PYTHON -c "import sys; print sys.exec_prefix"`
++if test -x "$PYTHON-config"; then
++    PYTHON_INCLUDES=`$PYTHON-config --includes 2>/dev/null`
++else
++    PYTHON_INCLUDES="-I${py_prefix}/include/python${PYTHON_VERSION}"
++    if test "$py_prefix" != "$py_exec_prefix"; then
++      PYTHON_INCLUDES="$PYTHON_INCLUDES -I${py_exec_prefix}/include/python${PYTHON_VERSION}"
++    fi
++fi
++PYTHON_LIBS="-L${py_prefix}/libs -lpython${PYTHON_VERSION}"
++AC_SUBST(PYTHON_INCLUDES)
++AC_SUBST(PYTHON_LIBS)
++dnl check if the headers exist:
++save_CPPFLAGS="$CPPFLAGS"
++CPPFLAGS="$CPPFLAGS $PYTHON_INCLUDES"
++AC_TRY_CPP([#include <Python.h>],dnl
++[AC_MSG_RESULT(found)
++$1],dnl
++[AC_MSG_RESULT(not found)
++$2])
++CPPFLAGS="$save_CPPFLAGS"
++])
+diff -ruN gtkspell.old/configure.ac gtkspell/configure.ac
+--- gtkspell.old/configure.ac	2009-10-23 04:52:31.000000000 +0200
++++ gtkspell/configure.ac	2011-11-21 18:51:08.880778493 +0100
+@@ -86,11 +86,41 @@
+ 
+ AM_PROG_LIBTOOL
+ 
++dnl Python bindings
++AC_ARG_ENABLE(python, [  --enable-python         build python bindings],enable_python=$enableval,enable_python=auto)
+ 
++AC_MSG_CHECKING([whether to build python bindings])
++
++BUILD_PYTHON=false
++if test x$enable_python != xno; then
++    AM_PATH_PYTHON
++    if test -n "$PYTHON"; then
++        BUILD_PYTHON=true
++    fi
++fi
++
++if $BUILD_PYTHON; then
++    AM_CHECK_PYTHON_HEADERS(,BUILD_PYTHON=false)
++fi
++
++AC_SUBST(PYTHONREV)
++AC_SUBST(PYTHON_MODULES)
++AM_CONDITIONAL(BUILD_PYTHON_MODULES, $BUILD_PYTHON)
++
++if $BUILD_PYTHON; then
++    PKG_CHECK_MODULES(PYGTK, pygtk-2.0 >= 2.4.0, BUILD_PYTHON=true, BUILD_PYTHON=false)
++fi
++
++AC_SUBST(PYGTK_CFLAGS)
++AM_CONDITIONAL(BUILD_PYGTK_CFLAGS, $BUILD_PYTHON)
++
++if ! $BUILD_PYTHON; then
++    AC_MSG_RESULT([Python bindings disabled])
++fi
+ 
+ dnl AM_MAINTAINER_MODE
+ 
+-AC_CONFIG_FILES(Makefile gtkspell/Makefile examples/Makefile gtkspell-2.0.pc gtkspell.spec docs/Makefile po/Makefile.in)
++AC_CONFIG_FILES(Makefile gtkspell/Makefile examples/Makefile gtkspell-2.0.pc gtkspell.spec docs/Makefile python/Makefile po/Makefile.in)
+ 
+ GTK_DOC_CHECK(1.0)
+ 
+diff -ruN gtkspell.old/Makefile.am gtkspell/Makefile.am
+--- gtkspell.old/Makefile.am	2009-10-08 00:24:30.000000000 +0200
++++ gtkspell/Makefile.am	2011-11-21 18:50:16.770998936 +0100
+@@ -1,4 +1,4 @@
+-SUBDIRS=gtkspell examples docs po
++SUBDIRS=gtkspell examples docs python po
+ 
+ pkgconfigdir=$(libdir)/pkgconfig
+ pkgconfig_DATA=gtkspell-2.0.pc
+diff -ruN gtkspell.old/python/gtkspell.c gtkspell/python/gtkspell.c
+--- gtkspell.old/python/gtkspell.c	1970-01-01 01:00:00.000000000 +0100
++++ gtkspell/python/gtkspell.c	2011-11-21 18:50:26.675337181 +0100
+@@ -0,0 +1,207 @@
++#include <Python.h>
++#include <gtk/gtk.h>
++#include <gtkspell/gtkspell.h>
++#include "pygobject.h"
++
++typedef struct {
++    PyObject_HEAD
++    GtkSpell *spell;
++} gtkspell_SpellObject;
++
++extern PyTypeObject gtkspell_SpellType;
++
++static PyTypeObject *_PyGtkTextView_Type;
++#define PyGtkTextView_Type (*_PyGtkTextView_Type)
++
++
++static PyObject *
++_wrap_gtkspell_new_attach (PyTypeObject *type, PyObject *args, PyObject *kwds)
++{
++	gtkspell_SpellObject *self;
++	PyObject *pytextview;
++	GtkTextView *textview;
++        GtkSpell *spell;
++        char *language = NULL;
++        GError *error = NULL;
++
++	if (!PyArg_ParseTuple(args, "O!|z:gtkspell.Spell.__new__",
++                              &PyGtkTextView_Type, &pytextview, &language))
++            return NULL;
++
++	textview = GTK_TEXT_VIEW(((PyGObject *)pytextview)->obj);
++        spell = gtkspell_new_attach(textview, language, &error);
++
++        if (pyg_error_check(&error))
++            return NULL;
++        if (!spell) {
++            PyErr_SetString(PyExc_RuntimeError, "unable to create and attach a Spell object");
++            return NULL;
++        }
++
++	self = (gtkspell_SpellObject *)type->tp_alloc(type, 0);
++        self->spell = spell;
++	return (PyObject *)self;
++}
++
++static PyObject *
++_wrap_gtkspell_set_language (gtkspell_SpellObject *self, PyObject *args, PyObject *kwds)
++{
++	gchar *lang = NULL;
++	gboolean result;
++	char *argnames[] = {"language", NULL};
++
++        if (!PyArg_ParseTupleAndKeywords (args, kwds, "z", argnames, &lang))
++            return NULL;
++
++	result = gtkspell_set_language (self->spell, lang, NULL);	
++
++	if (!result) {
++		/*there are no specific errors in GtkSpell yet*/
++       		PyErr_SetString(PyExc_RuntimeError, "Error setting language");
++		return NULL;
++	}
++
++	Py_INCREF(Py_None);
++	return Py_None;
++}
++
++static PyObject *
++_wrap_gtkspell_recheck_all (gtkspell_SpellObject *self)
++{
++	gtkspell_recheck_all ((GtkSpell *)self->spell);
++
++        Py_INCREF(Py_None);
++        return Py_None;
++	
++}
++
++static PyObject *
++_wrap_gtkspell_get_from_text_view (PyObject *junk, PyObject *args, PyObject *kwds)
++{
++	PyObject *pytextview;
++        GtkTextView *textview;
++       	gtkspell_SpellObject *self; 
++	char *argnames[] = {"textview", NULL};
++
++	if (!PyArg_ParseTupleAndKeywords (args, kwds, "O", argnames, &pytextview))
++            return NULL;
++
++        textview = GTK_TEXT_VIEW(((PyGObject *)pytextview)->obj);
++
++	self = (gtkspell_SpellObject *)PyType_GenericAlloc((PyTypeObject *)&gtkspell_SpellType, 1);
++        if (self != NULL) {
++                self->spell = gtkspell_get_from_text_view(textview);
++                if (self->spell == NULL) {
++                        Py_DECREF(self);
++                        return NULL;
++                }
++        }
++        return (PyObject *)self;
++}
++
++static PyObject *
++_wrap_gtkspell_detach (gtkspell_SpellObject *self)
++{
++	gtkspell_detach(self->spell);
++        self->spell = NULL;
++	Py_INCREF(Py_None);
++	return Py_None;
++}
++
++
++static PyMethodDef gtkspell_methods[] = {
++        {"set_language", (PyCFunction)_wrap_gtkspell_set_language,
++         METH_KEYWORDS, "Set the language"},
++        {"recheck_all", (PyCFunction)_wrap_gtkspell_recheck_all,
++         METH_NOARGS, "Recheck the spelling in the entire buffer"},
++        {"detach", (PyCFunction)_wrap_gtkspell_detach,
++         METH_NOARGS, "Detaches a Spell object from a TextView"},
++        { NULL, NULL, 0 }
++};
++
++
++PyTypeObject gtkspell_SpellType = {
++    PyObject_HEAD_INIT(NULL)
++    0,                            /*ob_size*/
++    "gtkspell.Spell",             /*tp_name*/
++    sizeof(gtkspell_SpellObject), /*tp_basicsize*/
++    0,                            /*tp_itemsize*/
++    0, 				  /*tp_dealloc*/
++    0,                            /*tp_print*/
++    0,                            /*tp_getattr*/
++    0,                            /*tp_setattr*/
++    0,                            /*tp_compare*/
++    0,                            /*tp_repr*/
++    0,                            /*tp_as_number*/
++    0,                            /*tp_as_sequence*/
++    0,                            /*tp_as_mapping*/
++    0,                            /*tp_hash */
++    0,                            /*tp_call*/
++    0,                            /*tp_str*/
++    0,                            /*tp_getattro*/
++    0,                            /*tp_setattro*/
++    0,                            /*tp_as_buffer*/
++    Py_TPFLAGS_DEFAULT,           /*tp_flags*/
++    "GtkSpell object",            /* tp_doc */
++    0,		               /* tp_traverse */
++    0,		               /* tp_clear */
++    0,		               /* tp_richcompare */
++    0,		               /* tp_weaklistoffset */
++    0,		               /* tp_iter */
++    0,		               /* tp_iternext */
++    gtkspell_methods,          /* tp_methods */
++    0,             	       /* tp_members */
++    0,                         /* tp_getset */
++    0,                         /* tp_base */
++    0,                         /* tp_dict */
++    0,                         /* tp_descr_get */
++    0,                         /* tp_descr_set */
++    0,                         /* tp_dictoffset */
++    0,       			/* tp_init */
++    0,       			/* tp_alloc */
++    _wrap_gtkspell_new_attach,  /* tp_new */
++};
++
++static PyMethodDef gtkspell_functions[] = {        
++    {"get_from_text_view", (PyCFunction)_wrap_gtkspell_get_from_text_view,
++     METH_KEYWORDS, "Retrieves the Spell object attach"},
++    { NULL, NULL, 0, NULL }
++};
++
++DL_EXPORT(void)
++initgtkspell(void)
++{
++    PyObject *m, *module;
++        
++    init_pygobject();
++
++    if ((module = PyImport_ImportModule("gtk")) != NULL) {
++        PyObject *moddict = PyModule_GetDict(module);
++
++        _PyGtkTextView_Type = (PyTypeObject *)PyDict_GetItemString(moddict, "TextView");
++        if (_PyGtkTextView_Type == NULL) {
++            PyErr_SetString(PyExc_ImportError,
++                            "cannot import name TextView from gtk");
++            return;
++        }
++    } else {
++        PyErr_SetString(PyExc_ImportError,
++                        "could not import gtk");
++        return;
++    }
++
++
++    m = Py_InitModule3 ("gtkspell", gtkspell_functions, "GtkSpell bindings");
++
++    if (PyType_Ready(&gtkspell_SpellType) < 0)
++        return;
++
++    Py_INCREF(&gtkspell_SpellType);
++    PyModule_AddObject(m, "Spell", (PyObject *)&gtkspell_SpellType);
++
++    if (PyErr_Occurred ()) {
++        PyErr_Print();
++        Py_FatalError ("can't initialise module gtkspell");
++    }
++}
++
+diff -ruN gtkspell.old/python/Makefile.am gtkspell/python/Makefile.am
+--- gtkspell.old/python/Makefile.am	1970-01-01 01:00:00.000000000 +0100
++++ gtkspell/python/Makefile.am	2011-11-21 18:50:22.683200846 +0100
+@@ -0,0 +1,12 @@
++if BUILD_PYTHON_MODULES
++
++pythonsiteexecdir = $(pyexecdir)/gtk-2.0
++pythonsiteexec_LTLIBRARIES = gtkspell.la
++
++gtkspell_la_SOURCES = gtkspell.c
++gtkspell_la_CPPFLAGS = -I$(top_srcdir)/gtkspell $(AM_CFLAGS)
++gtkspell_la_CFLAGS = $(PYTHON_INCLUDES) $(PYGTK_CFLAGS) $(AM_CFLAGS)
++gtkspell_la_LDFLAGS = -module -avoid-version $(PYTHON_LIBS) $(PYTHON_LDFLAGS) $(AM_LDFLAGS)
++gtkspell_la_LIBADD = $(top_builddir)/gtkspell/libgtkspell.la $(LIBS)
++
++endif

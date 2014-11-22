@@ -1,0 +1,558 @@
+Submitted By:            Armin K. <krejzi at email dot com>
+Date:                    2014-07-24
+Initial Package Version: 39
+Upstream Status:         Fixed
+Origin:                  Upstream
+Description:             Latest upstream changes required to support Qt 5.3.
+
+--- a/doc/qtchooser.1	2013-12-16 08:03:54.000000000 +0100
++++ b/doc/qtchooser.1	2014-07-24 13:43:32.545065202 +0200
+@@ -50,6 +50,12 @@
+ .RE
+ .SH ENVIRONMENT
+ .TP
++.B QTCHOOSER_NO_GLOBAL_DIR
++If qtchooser has been built with \fBQTCHOOSER_GLOBAL_DIR\fR (predefined search
++paths for qtchooser's configuration files, useful in some distros), setting this
++variable will override its effect.
++.RE
++.TP
+ .B QT_SELECT
+ Same as \fB\-qt=\fIversion\fR. If set, the selected configuration is used and binaries
+ symlinked to qtchooser will be executed without additional parameters.
+--- a/Makefile	2013-12-16 08:03:54.000000000 +0100
++++ b/Makefile	2014-07-24 13:46:45.657357529 +0200
+@@ -1,3 +1,4 @@
++MKDIR  = mkdir -p
+ prefix = /usr
+ bindir = $(prefix)/bin
+ TOOLS = assistant \
+@@ -18,10 +19,12 @@
+ 	qglinfo \
+ 	qhelpconverter \
+ 	qhelpgenerator \
++	qlalr \
+ 	qmake \
+ 	qml \
+ 	qml1plugindump \
+ 	qmlbundle \
++	qmlimportscanner \
+ 	qmlmin \
+ 	qmlplugindump \
+ 	qmlprofiler \
+@@ -29,6 +32,8 @@
+ 	qmltestrunner \
+ 	qmlviewer \
+ 	qtconfig \
++	qtdiag \
++	qtpaths \
+ 	rcc \
+ 	uic \
+ 	uic3 \
+@@ -56,6 +61,8 @@
+ 	case `uname -s` in Darwin) \
+ 	    for tool in $(MACTOOLS); do ln -sf qtchooser "$(INSTALL_ROOT)$(bindir)/$$tool"; done \
+ 	;; esac
++	$(MKDIR) $(INSTALL_ROOT)$(prefix)/share/man/man1
++	install -m 644 -p doc/qtchooser.1 $(INSTALL_ROOT)$(prefix)/share/man/man1
+ 
+ uninstall:
+ 	cd src/qtchooser && $(MAKE) uninstall
+--- a/scripts/qtchooser.bash	2013-12-16 08:03:54.000000000 +0100
++++ b/scripts/qtchooser.bash	2014-07-24 13:47:52.139245337 +0200
+@@ -56,3 +56,15 @@
+     eval "$1=\"\${contents[*]}\""
+ }
+ 
++# completion:
++function _qt()
++{
++    COMPREPLY=()
++    if [ ${#COMP_WORDS[@]} -eq 2 ] && [ $COMP_CWORD -eq 1 ]; then
++        local cur opts
++        cur="${COMP_WORDS[COMP_CWORD]}"
++        opts=`qtchooser -list-versions`
++        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
++    fi
++}
++complete -F _qt qt
+--- a/src/qtchooser/main.cpp	2013-12-16 08:03:54.000000000 +0100
++++ b/src/qtchooser/main.cpp	2014-07-24 13:47:14.686178258 +0200
+@@ -60,6 +60,7 @@
+ #include <stdio.h>
+ #include <string.h>
+ #include <stdlib.h>
++#include <limits.h>
+ 
+ #if defined(_WIN32) || defined(__WIN32__)
+ #  include <process.h>
+@@ -68,7 +69,9 @@
+ #  define EXE_SUFFIX ".exe"
+ #else
+ #  include <sys/types.h>
++#  include <sys/stat.h>
+ #  include <dirent.h>
++#  include <fcntl.h>
+ #  include <libgen.h>
+ #  include <pwd.h>
+ #  include <unistd.h>
+@@ -87,7 +90,17 @@
+     PrintHelp,
+     RunTool,
+     ListVersions,
+-    PrintEnvironment
++    PrintEnvironment,
++    Install
++};
++
++enum InstallOptions
++{
++    GlobalInstall    = 0,
++    LocalInstall     = 1,
++
++    NoOverwrite      = 0,
++    ForceOverwrite   = 2
+ };
+ 
+ struct Sdk
+@@ -106,6 +119,7 @@
+     int listVersions();
+     int printEnvironment(const string &targetSdk);
+     int runTool(const string &targetSdk, const string &targetTool, char **argv);
++    int install(const string &sdkName, const string &qmake, int installOptions);
+ 
+ private:
+     vector<string> searchPaths() const;
+@@ -123,6 +137,7 @@
+ {
+     puts("Usage:\n"
+          "  qtchooser { -l | -list-versions | -print-env }\n"
++         "  qtchooser -install [-f] [-local] <name> <path-to-qmake>\n"
+          "  qtchooser -run-tool=<tool name> [-qt=<Qt version>] [program arguments]\n"
+          "  <executable name> [-qt=<Qt version>] [program arguments]\n"
+          "\n"
+@@ -204,6 +219,51 @@
+     return false;
+ }
+ 
++static bool readLine(FILE *f, string *result)
++{
++#if _POSIX_VERSION >= 200809L
++    size_t len = 0;
++    char *line = 0;
++    ssize_t read = getline(&line, &len, f);
++    if (read < 0) {
++        free(line);
++        return false;
++    }
++
++    line[strlen(line) - 1] = '\0';
++    *result = line;
++    free(line);
++#elif defined(PATH_MAX)
++    char buf[PATH_MAX];
++    if (!fgets(buf, PATH_MAX - 1, f))
++        return false;
++
++    buf[PATH_MAX - 1] = '\0';
++    buf[strlen(buf) - 1] = '\0';
++    *result = buf;
++#else
++# error "POSIX < 2008 and no PATH_MAX, fix me"
++#endif
++    return true;
++}
++
++static bool mkparentdir(string name)
++{
++    // create the dir containing this dir
++    size_t pos = name.rfind('/');
++    if (pos == string::npos)
++        return false;
++    name.erase(pos);
++    if (mkdir(name.c_str(), 0777) == -1) {
++        if (errno != ENOENT)
++            return false;
++        // try this dir's parent too
++        if (!mkparentdir(name))
++            return false;
++    }
++    return true;
++}
++
+ int ToolWrapper::runTool(const string &targetSdk, const string &targetTool, char **argv)
+ {
+     Sdk sdk = selectSdk(targetSdk);
+@@ -240,6 +300,105 @@
+ #endif
+ }
+ 
++static const char *to_number(int number)
++{
++    // obviously not thread-safe
++    static char buffer[sizeof "2147483647"];
++    snprintf(buffer, sizeof buffer, "%d", number);
++    return buffer;
++}
++
++int ToolWrapper::install(const string &sdkName, const string &qmake, int installOptions)
++{
++    if (qmake.size() == 0) {
++        fprintf(stderr, "%s: missing option: path to qmake\n", argv0);
++        return 1;
++    }
++
++    if ((installOptions & ForceOverwrite) == 0) {
++        Sdk matchedSdk = iterateSdks(sdkName, &ToolWrapper::matchSdk);
++        if (matchedSdk.isValid()) {
++            fprintf(stderr, "%s: SDK \"%s\" already exists\n", argv0, sdkName.c_str());
++            return 1;
++        }
++    }
++
++    // first of all, get the bin and lib dirs from qmake
++    string bindir, libdir;
++    FILE *bin, *lib;
++    bin = popen(("'" + qmake + "' -query QT_INSTALL_BINS").c_str(), "r");
++    lib = popen(("'" + qmake + "' -query QT_INSTALL_LIBS").c_str(), "r");
++
++    if (!readLine(bin, &bindir) || !readLine(lib, &libdir)\
++            || pclose(bin) == -1 || pclose(lib) == -1) {
++        fprintf(stderr, "%s: error running %s: %s\n", argv0, qmake.c_str(), strerror(errno));
++        return 1;
++    }
++
++    const string sdkFileName = sdkName + confSuffix;
++    const string fileContents = bindir + "\n" + libdir + "\n";
++    string sdkFullPath;
++
++    // get the list of paths to try and install the SDK on the first we are able to;
++    // since the list is sorted in search order, we need to try in the reverse order
++    const vector<string> paths = searchPaths();
++    vector<string>::const_iterator it = paths.end();
++    vector<string>::const_iterator prev = it - 1;
++    for ( ; it != paths.begin(); it = prev--) {
++        sdkFullPath = *prev + sdkFileName;
++
++        // are we trying to install here?
++        bool installHere = (installOptions & LocalInstall) == 0 || prev == paths.begin();
++        if (!installHere)
++            continue;
++
++#ifdef QTCHOOSER_TEST_MODE
++        puts(sdkFullPath.c_str());
++        puts(fileContents.c_str());
++        return 0;
++#else
++        // we're good, create the SDK name
++        string tempname = sdkFullPath + "." + to_number(rand());
++        int fd;
++        // create a temporary file here
++        while (true) {
++            fd = ::open(tempname.c_str(), O_WRONLY | O_CREAT | O_EXCL, 0666);
++            if (fd == -1 && errno == EEXIST)
++                continue;
++            if (fd == -1 && errno == ENOENT) {
++                // could be because the dir itself doesn't exist
++                if (mkparentdir(tempname))
++                    continue;
++            }
++            break;
++        }
++        if (fd == -1)
++            continue;
++
++        size_t bytesWritten = 0;
++        while (bytesWritten < fileContents.size()) {
++            ssize_t written = ::write(fd, fileContents.data() + bytesWritten, fileContents.size() - bytesWritten);
++            if (written == -1) {
++                fprintf(stderr, "%s: error writing to \"%s\": %s\n", argv0, tempname.c_str(), strerror(errno));
++                ::close(fd);
++                return 1;
++            }
++
++            bytesWritten += written;
++        }
++
++        // atomic rename
++        ::close(fd);
++        if (rename(tempname.c_str(), sdkFullPath.c_str()) == 0)
++            return 0;   // success
++#endif
++    }
++
++    // if we got here, we failed to create the file
++    fprintf(stderr, "%s: could not create SDK: %s: %s\n", argv0, sdkFullPath.c_str(), strerror(errno));
++    return 1;
++}
++
+ static vector<string> stringSplit(const char *source)
+ {
+ #if defined(_WIN32) || defined(__WIN32__)
+@@ -377,44 +536,10 @@
+         // 1) the first line contains the path to the Qt tools like qmake
+         // 2) the second line contains the path to the Qt libraries
+         // further lines are reserved for future enhancement
+-#if _POSIX_VERSION >= 200809L
+-        size_t len = 0;
+-        char *line = 0;
+-        ssize_t read = getline(&line, &len, f);
+-        if (read < 0) {
+-            free(line);
+-            fclose(f);
+-            return false;
+-        }
+-        sdk.toolsPath = line;
+-
+-        read = getline(&line, &len, f);
+-        if (read < 0) {
+-            free(line);
+-            fclose(f);
+-            return false;
+-        }
+-        sdk.librariesPath = line;
+-
+-        free(line);
+-#elif defined(PATH_MAX)
+-        char buf[PATH_MAX];
+-        if (!fgets(buf, PATH_MAX - 1, f)) {
+-            fclose(f);
+-            return false;
+-        }
+-        sdk.toolsPath = buf;
+-
+-        if (!fgets(buf, PATH_MAX - 1, f)) {
++        if (!readLine(f, &sdk.toolsPath) || !readLine(f, &sdk.librariesPath)) {
+             fclose(f);
+             return false;
+         }
+-        sdk.librariesPath = buf;
+-#else
+-# error "POSIX < 2008 and no PATH_MAX, fix me"
+-#endif
+-        sdk.toolsPath.erase(sdk.toolsPath.size() - 1); // drop newline
+-        sdk.librariesPath.erase(sdk.librariesPath.size() - 1); // drop newline
+ 
+         fclose(f);
+         return true;
+@@ -487,6 +612,9 @@
+     // running qtchooser itself
+     // check for our arguments
+     operatingMode = PrintHelp;
++    int installOptions = 0;
++    string sdkName;
++    string qmakePath;
+     for ( ; optind < argc; ++optind) {
+         char *arg = argv[optind];
+         if (*arg == '-') {
+@@ -496,14 +624,30 @@
+             // double-dash arguments are OK too
+             if (*arg == '-')
+                 ++arg;
+-            if (strcmp(arg, "list-versions") == 0 || strcmp(arg, "l") == 0) {
++            if (strcmp(arg, "install") == 0) {
++                operatingMode = Install;
++            } else if (operatingMode == Install && (strcmp(arg, "force") == 0 || strcmp(arg, "f") == 0)) {
++                installOptions |= ForceOverwrite;
++            } else if (strcmp(arg, "list-versions") == 0 || strcmp(arg, "l") == 0) {
+                 operatingMode = ListVersions;
++            } else if (operatingMode == Install && strcmp(arg, "local") == 0) {
++                installOptions |= LocalInstall;
+             } else if (beginsWith(arg, "print-env")) {
+                 operatingMode = PrintEnvironment;
+             } else if (strcmp(arg, "help") != 0) {
+                 fprintf(stderr, "%s: unknown option: %s\n", argv0, arg - 1);
+                 return 1;
+             }
++        } else if (operatingMode == Install) {
++            if (qmakePath.size()) {
++                fprintf(stderr, "%s: install mode takes exactly two arguments; unknown option: %s\n", argv0, arg);
++                return 1;
++            }
++            if (sdkName.size()) {
++                qmakePath = arg;
++            } else {
++                sdkName = strlen(arg) ? arg : "default";
++            }
+         } else {
+             fprintf(stderr, "%s: unknown argument: %s\n", argv0, arg);
+             return 1;
+@@ -526,5 +670,8 @@
+ 
+     case ListVersions:
+         return wrapper.listVersions();
++
++    case Install:
++        return wrapper.install(sdkName, qmakePath, installOptions);
+     }
+ }
+--- a/tests/auto/qtchooser/testdata/config1/qtchooser/later.conf	1970-01-01 01:00:00.000000000 +0100
++++ b/tests/auto/qtchooser/testdata/config1/qtchooser/later.conf	2014-07-24 13:47:14.686178258 +0200
+@@ -0,0 +1,2 @@
++/later/tooldir
++/later/libdir
+--- a/tests/auto/qtchooser/tst_qtchooser.cpp	2013-12-16 08:03:54.000000000 +0100
++++ b/tests/auto/qtchooser/tst_qtchooser.cpp	2014-07-24 13:47:14.687178286 +0200
+@@ -57,9 +57,9 @@
+ #endif
+ 
+ #define VERIFY_NORMAL_EXIT(proc) \
+-    if (!proc) return; \
+-    QCOMPARE(proc->readAllStandardError().constData(), ""); \
+-    QCOMPARE(proc->exitCode(), 0)
++    if (!(proc)) return; \
++    QCOMPARE((proc)->readAllStandardError().constData(), ""); \
++    QCOMPARE((proc)->exitCode(), 0)
+ 
+ class tst_ToolChooser : public QObject
+ {
+@@ -73,6 +73,7 @@
+         CommandLine = 0x8
+     };
+     QProcessEnvironment testModeEnvironment;
++    QString testData;
+     QString toolPath;
+     QString pathsWithDefault;
+     QString tempFileName;
+@@ -100,15 +101,18 @@
+     void defaultQt();
+     void passArgs_data();
+     void passArgs();
++    void install_data();
++    void install();
++    void install2();
+ };
+ 
+ tst_ToolChooser::tst_ToolChooser()
+     : testModeEnvironment(QProcessEnvironment::systemEnvironment())
+ {
+ #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+-    QString testData = QFINDTESTDATA("testdata");
++    testData = QFINDTESTDATA("testdata");
+ #else
+-    QString testData = SRCDIR "testdata";
++    testData = SRCDIR "testdata";
+ #endif
+     pathsWithDefault = testData + "/config1" LIST_SEP +
+             testData + "/config2";
+@@ -374,6 +378,120 @@
+     QCOMPARE(QString::fromLocal8Bit(procstdout), expected.join("\n"));
+ }
+ 
++void tst_ToolChooser::install_data()
++{
++    QTest::addColumn<QStringList>("args");
++    QTest::addColumn<QString>("expectedName");
++
++    QTest::newRow("missing-name") << QStringList() << QString();
++    QTest::newRow("missing-qmake") << (QStringList() << "sdk") << QString();
++
++    QString qmake = QLibraryInfo::location(QLibraryInfo::BinariesPath) + "/qmake";
++    QVERIFY(QFile::exists(qmake));
++
++    QStringList baseArgs;
++    baseArgs << "5" << qmake;
++
++    QTest::newRow("global-wouldoverwrite") << baseArgs << QString();
++    QTest::newRow("local-wouldoverwrite") << (QStringList() << "-local" << baseArgs) << QString();
++
++    baseArgs.prepend("-f");
++    QTest::newRow("global-overwrite") << baseArgs << testData + "/config2/qtchooser/5.conf";
++    QTest::newRow("local-overwrite") << (QStringList() << "-local" << baseArgs) << "/dev/null/qtchooser/5.conf";
++
++    baseArgs.clear();
++    baseArgs << "newname" << qmake;
++    QTest::newRow("global-newname") << baseArgs << testData + "/config2/qtchooser/newname.conf";
++    QTest::newRow("local-newname") << (QStringList() << "-local" << baseArgs) << "/dev/null/qtchooser/newname.conf";
++
++    // ensure that we find an SDK in a later path, even if we could install on an earlier one
++    QTest::newRow("global-wouldoverwrite-later") << (QStringList() << "later" << qmake) << QString();
++}
++
++void tst_ToolChooser::install()
++{
++    QFETCH(QStringList, args);
++    QFETCH(QString, expectedName);
++
++    QProcessEnvironment env = testModeEnvironment;
++    QScopedPointer<QProcess> proc(execute((QStringList() << "-install") + args, env));
++    QVERIFY(!!proc);
++    if (expectedName.isEmpty()) {
++        QByteArray err = proc->readAllStandardError();
++        QVERIFY(!err.isEmpty());
++        QVERIFY(proc->exitCode() != 0);
++        qDebug() << err.trimmed();
++    } else {
++        VERIFY_NORMAL_EXIT(proc);
++
++        QByteArray out = proc->readLine();
++        QVERIFY(!out.isEmpty());
++        QCOMPARE(QString(out).trimmed(), expectedName);
++
++        out = proc->readLine();
++        QCOMPARE(QString(out).trimmed(), QLibraryInfo::location(QLibraryInfo::BinariesPath));
++
++        out = proc->readLine();
++        QCOMPARE(QString(out).trimmed(), QLibraryInfo::location(QLibraryInfo::LibrariesPath));
++    }
++}
++
++void tst_ToolChooser::install2()
++{
++    // verify that the root is not writable by the current user
++    QString root = QDir::rootPath();
++    {
++        QFile f(root + "qtchooser");
++        QVERIFY(!f.exists());
++        QVERIFY(!f.open(QIODevice::ReadWrite));
++    }
++
++    QTemporaryDir tempdir;
++    QDir dir(tempdir.path());
++    dir.mkdir("/global");
++    dir.mkdir("/home");
++
++    QString realToolPath = QCoreApplication::applicationDirPath() + "/../../../src/qtchooser/qtchooser" EXE_SUFFIX;
++    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
++    env.remove("XDG_CONFIG_HOME");
++    env.insert("XDG_CONFIG_DIRS", tempdir.path() + "/global/etc/xdg" LIST_SEP "/");
++    env.insert("HOME", tempdir.path() + "/home");
++
++    QProcess proc;
++    proc.setProcessEnvironment(env);
++    QString qmake = QLibraryInfo::location(QLibraryInfo::BinariesPath) + "/qmake";
++    QString expectedContents = QLibraryInfo::location(QLibraryInfo::BinariesPath) + '\n' +
++                               QLibraryInfo::location(QLibraryInfo::LibrariesPath) + '\n';
++
++    // test 1: check that it installs into $HOME and recursively mkdirs
++    proc.setProgram(realToolPath);
++    proc.setArguments(QStringList() << "-install" << "-local" << "test" << qmake);
++    proc.start();
++    QVERIFY(proc.waitForFinished());
++    VERIFY_NORMAL_EXIT(&proc);
++
++    // find the file it must've created
++    {
++        QFile f(tempdir.path() + "/home/.config/qtchooser/test.conf");
++        QVERIFY2(f.open(QIODevice::ReadOnly), qPrintable(f.errorString()));
++        QCOMPARE(f.readAll(), expectedContents.toLocal8Bit());
++    }
++    QVERIFY(!QFile::exists(tempdir.path() + "/global/etc/xdg/qtchooser/test.conf"));
++
++    // test 2: check that it can create a global override
++    proc.setArguments(QStringList() << "-install" << "-f" << "test" << qmake);
++    proc.start();
++    QVERIFY(proc.waitForFinished());
++    VERIFY_NORMAL_EXIT(&proc);
++
++    // find the global file
++    {
++        QFile f(tempdir.path() + "/global/etc/xdg/qtchooser/test.conf");
++        QVERIFY2(f.open(QIODevice::ReadOnly), qPrintable(f.errorString()));
++        QCOMPARE(f.readAll(), expectedContents.toLocal8Bit());
++    }
++}
++
+ QTEST_MAIN(tst_ToolChooser)
+ 
+ #include "tst_qtchooser.moc"

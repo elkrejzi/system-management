@@ -1,0 +1,68 @@
+diff -Naur a/Makeconfig b/Makeconfig
+--- a/Makeconfig	2014-02-07 10:04:38.000000000 +0100
++++ b/Makeconfig	2014-07-02 17:13:30.419923660 +0200
+@@ -259,7 +259,7 @@
+ 
+ # Directory for the database files and Makefile for nss_db.
+ ifndef vardbdir
+-vardbdir = $(localstatedir)/db
++vardbdir = $(localstatedir)/lib/nss_db
+ endif
+ inst_vardbdir = $(install_root)$(vardbdir)
+ 
+diff -Naur a/nscd/nscd.h b/nscd/nscd.h
+--- a/nscd/nscd.h	2014-02-07 10:04:38.000000000 +0100
++++ b/nscd/nscd.h	2014-07-02 17:13:30.419923660 +0200
+@@ -112,11 +112,11 @@
+ 
+ 
+ /* Paths of the file for the persistent storage.  */
+-#define _PATH_NSCD_PASSWD_DB	"/var/db/nscd/passwd"
+-#define _PATH_NSCD_GROUP_DB	"/var/db/nscd/group"
+-#define _PATH_NSCD_HOSTS_DB	"/var/db/nscd/hosts"
+-#define _PATH_NSCD_SERVICES_DB	"/var/db/nscd/services"
+-#define _PATH_NSCD_NETGROUP_DB	"/var/db/nscd/netgroup"
++#define _PATH_NSCD_PASSWD_DB	"/var/cache/nscd/passwd"
++#define _PATH_NSCD_GROUP_DB	"/var/cache/nscd/group"
++#define _PATH_NSCD_HOSTS_DB	"/var/cache/nscd/hosts"
++#define _PATH_NSCD_SERVICES_DB	"/var/cache/nscd/services"
++#define _PATH_NSCD_NETGROUP_DB	"/var/cache/nscd/netgroup"
+ 
+ /* Path used when not using persistent storage.  */
+ #define _PATH_NSCD_XYZ_DB_TMP	"/var/run/nscd/dbXXXXXX"
+diff -Naur a/nss/db-Makefile b/nss/db-Makefile
+--- a/nss/db-Makefile	2014-02-07 10:04:38.000000000 +0100
++++ b/nss/db-Makefile	2014-07-02 17:13:30.419923660 +0200
+@@ -22,7 +22,7 @@
+ 		       /etc/rpc /etc/services /etc/shadow /etc/gshadow \
+ 		       /etc/netgroup)
+ 
+-VAR_DB = /var/db
++VAR_DB = /var/lib/nss_db
+ 
+ AWK = awk
+ MAKEDB = makedb --quiet
+diff -Naur a/sysdeps/generic/paths.h b/sysdeps/generic/paths.h
+--- a/sysdeps/generic/paths.h	2014-02-07 10:04:38.000000000 +0100
++++ b/sysdeps/generic/paths.h	2014-07-02 17:13:30.419923660 +0200
+@@ -68,7 +68,7 @@
+ /* Provide trailing slash, since mostly used for building pathnames. */
+ #define	_PATH_DEV	"/dev/"
+ #define	_PATH_TMP	"/tmp/"
+-#define	_PATH_VARDB	"/var/db/"
++#define	_PATH_VARDB	"/var/lib/nss_db/"
+ #define	_PATH_VARRUN	"/var/run/"
+ #define	_PATH_VARTMP	"/var/tmp/"
+ 
+diff -Naur a/sysdeps/unix/sysv/linux/paths.h b/sysdeps/unix/sysv/linux/paths.h
+--- a/sysdeps/unix/sysv/linux/paths.h	2014-02-07 10:04:38.000000000 +0100
++++ b/sysdeps/unix/sysv/linux/paths.h	2014-07-02 17:13:30.419923660 +0200
+@@ -68,7 +68,7 @@
+ /* Provide trailing slash, since mostly used for building pathnames. */
+ #define	_PATH_DEV	"/dev/"
+ #define	_PATH_TMP	"/tmp/"
+-#define	_PATH_VARDB	"/var/db/"
++#define	_PATH_VARDB	"/var/lib/nss_db/"
+ #define	_PATH_VARRUN	"/var/run/"
+ #define	_PATH_VARTMP	"/var/tmp/"
+ 

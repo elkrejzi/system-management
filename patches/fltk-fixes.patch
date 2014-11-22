@@ -1,0 +1,253 @@
+diff -Naur a/FL/Enumerations.H b/FL/Enumerations.H
+--- a/FL/Enumerations.H	2014-10-15 23:00:20.000000000 +0200
++++ b/FL/Enumerations.H	2014-11-18 21:48:30.139062874 +0100
+@@ -909,27 +909,27 @@
+ /* FIXME: We should renumber these, but that will break the ABI */
+ enum Fl_Cursor {
+   FL_CURSOR_DEFAULT    =  0, /**< the default cursor, usually an arrow. */
+-  FL_CURSOR_ARROW      = 35, /**< an arrow pointer. */
+-  FL_CURSOR_CROSS      = 66, /**< crosshair. */
+-  FL_CURSOR_WAIT       = 76, /**< busy indicator (e.g. hourglass). */
+-  FL_CURSOR_INSERT     = 77, /**< I-beam. */
+-  FL_CURSOR_HAND       = 31, /**< pointing hand. */
+-  FL_CURSOR_HELP       = 47, /**< question mark pointer. */
+-  FL_CURSOR_MOVE       = 27, /**< 4-pointed arrow or hand. */
++  FL_CURSOR_ARROW      = 1, /**< an arrow pointer. */
++  FL_CURSOR_CROSS      = 2, /**< crosshair. */
++  FL_CURSOR_WAIT       = 3, /**< busy indicator (e.g. hourglass). */
++  FL_CURSOR_INSERT     = 4, /**< I-beam. */
++  FL_CURSOR_HAND       = 5, /**< pointing hand. */
++  FL_CURSOR_HELP       = 6, /**< question mark pointer. */
++  FL_CURSOR_MOVE       = 7, /**< 4-pointed arrow or hand. */
+ 
+   /* Resize indicators */
+-  FL_CURSOR_NS         = 78, /**< up/down resize. */
+-  FL_CURSOR_WE         = 79, /**< left/right resize. */
+-  FL_CURSOR_NWSE       = 80, /**< diagonal resize. */
+-  FL_CURSOR_NESW       = 81, /**< diagonal resize. */
+-  FL_CURSOR_N          = 70, /**< upwards resize. */
+-  FL_CURSOR_NE         = 69, /**< upwards, right resize. */
+-  FL_CURSOR_E          = 49, /**< rightwards resize. */
+-  FL_CURSOR_SE         =  8, /**< downwards, right resize. */
+-  FL_CURSOR_S          =  9, /**< downwards resize. */
+-  FL_CURSOR_SW         =  7, /**< downwards, left resize. */
+-  FL_CURSOR_W          = 36, /**< leftwards resize. */
+-  FL_CURSOR_NW         = 68, /**< upwards, left resize. */
++  FL_CURSOR_NS         = 101, /**< up/down resize. */
++  FL_CURSOR_WE         = 102, /**< left/right resize. */
++  FL_CURSOR_NWSE       = 103, /**< diagonal resize. */
++  FL_CURSOR_NESW       = 104, /**< diagonal resize. */
++  FL_CURSOR_NE         = 110, /**< upwards, right resize. */
++  FL_CURSOR_N          = 111, /**< upwards resize. */
++  FL_CURSOR_NW         = 112, /**< upwards, left resize. */
++  FL_CURSOR_E          = 113, /**< rightwards resize. */
++  FL_CURSOR_W          = 114, /**< leftwards resize. */
++  FL_CURSOR_SE         = 115, /**< downwards, right resize. */
++  FL_CURSOR_S          = 116, /**< downwards resize. */
++  FL_CURSOR_SW         = 117, /**< downwards, left resize. */
+ 
+   FL_CURSOR_NONE       =255  /**< invisible. */
+ };
+diff -Naur a/FL/Fl_Widget.H b/FL/Fl_Widget.H
+--- a/FL/Fl_Widget.H	2014-09-08 10:55:49.000000000 +0200
++++ b/FL/Fl_Widget.H	2014-11-18 21:48:30.140062874 +0100
+@@ -172,6 +172,7 @@
+         COPIED_TOOLTIP  = 1<<17,  ///< the widget tooltip is internally copied, its destruction is handled by the widget
+         FULLSCREEN      = 1<<18,  ///< a fullscreen window (Fl_Window)
+         MAC_USE_ACCENTS_MENU = 1<<19, ///< On the Mac OS platform, pressing and holding a key on the keyboard opens an accented-character menu window (Fl_Input_, Fl_Text_Editor)
++       SIMPLE_KEYBOARD = 1<<20,  ///< the widget wants simple, consistent keypresses and not advanced input (like character composition and CJK input)
+         // (space for more flags)
+         USERFLAG3       = 1<<29,  ///< reserved for 3rd party extensions
+         USERFLAG2       = 1<<30,  ///< reserved for 3rd party extensions
+@@ -789,6 +790,35 @@
+    */
+   void set_active() {flags_ &= ~INACTIVE;}
+ 
++  /** 
++      Returns if the widget sees a simplified keyboard model or not.
++
++      Normally widgets get a full-featured keyboard model that is geared
++      towards text input. This includes support for compose sequences and
++      advanced input methods, commonly used for asian writing system. This
++      system however has downsides in that extra graphic can be presented
++      to the user and that a physical key press doesn't correspond directly
++      to a FLTK event.
++
++      Widgets that need a direct correspondence between actual key events
++      and those seen by the widget can swith to the simplified keyboard
++      model.
++
++     \retval 0 if the widget uses the normal keyboard model
++     \see set_changed(), clear_changed()
++   */
++  unsigned int simple_keyboard() const {return flags_&SIMPLE_KEYBOARD;}
++
++  /** Marks a widget to use the simple keyboard model.
++      \see changed(), clear_changed()
++   */
++  void set_simple_keyboard() {flags_ |= SIMPLE_KEYBOARD;}
++
++  /** Marks a widget to use the normal keyboard model.
++      \see changed(), set_changed()
++   */
++  void set_normal_keyboard() {flags_ &= ~SIMPLE_KEYBOARD;}
++
+   /** Gives the widget the keyboard focus.
+       Tries to make this widget be the Fl::focus() widget, by first sending 
+       it an FL_FOCUS event, and if it returns non-zero, setting 
+diff -Naur a/fltk-config.in b/fltk-config.in
+--- a/fltk-config.in	2013-04-05 17:28:43.000000000 +0200
++++ b/fltk-config.in	2014-11-18 21:48:20.425062717 +0100
+@@ -359,26 +359,26 @@
+ fi
+ 
+ if test "$echo_libs" = "yes"; then
+-    USELIBS="$libdir/libfltk.a"
++    USELIBS="$libdir/libfltk.so"
+ 
+     if test x$use_forms = xyes; then
+-        USELIBS="$libdir/libfltk_forms.a $USELIBS"
++        USELIBS="$libdir/libfltk_forms.so $USELIBS"
+     fi
+ 
+     if test x$use_gl = xyes; then
+-        USELIBS="$libdir/libfltk_gl.a $USELIBS"
++        USELIBS="$libdir/libfltk_gl.so $USELIBS"
+     fi
+ 
+     if test x$use_cairo = xyes; then
+-        USELIBS="$libdir/libfltk_cairo.a $USELIBS"
++        USELIBS="$libdir/libfltk_cairo.so $USELIBS"
+     fi
+ 
+     if test x$use_images = xyes; then
+-        USELIBS="$libdir/libfltk_images.a $USELIBS"
++        USELIBS="$libdir/libfltk_images.so $USELIBS"
+ 
+         for lib in fltk_jpeg fltk_png fltk_z; do
+-            if test -f $libdir/lib$lib.a; then
+-                USELIBS="$libdir/lib$lib.a $USELIBS"
++            if test -f $libdir/lib$lib.so; then
++                USELIBS="$libdir/lib$lib.so $USELIBS"
+             fi
+ 	done
+     fi
+diff -Naur a/src/Fl_cocoa.mm b/src/Fl_cocoa.mm
+--- a/src/Fl_cocoa.mm	2014-11-02 22:06:07.000000000 +0100
++++ b/src/Fl_cocoa.mm	2014-11-18 21:48:30.142062875 +0100
+@@ -724,7 +724,7 @@
+     return NO;	// prevent the caption to be redrawn as active on click
+ 		//  when another modal window is currently the key win
+ 
+-  return !(w->tooltip_window() || w->menu_window());
++  return !w->tooltip_window();
+ }
+ 
+ - (BOOL)canBecomeMainWindow
+diff -Naur a/src/Fl.cxx b/src/Fl.cxx
+--- a/src/Fl.cxx	2014-10-08 14:47:20.000000000 +0200
++++ b/src/Fl.cxx	2014-11-18 21:48:30.145062875 +0100
+@@ -70,6 +70,8 @@
+ extern double fl_mac_flush_and_wait(double time_to_wait);
+ #endif // WIN32
+ 
++extern void fl_update_focus(void);
++
+ //
+ // Globals...
+ //
+@@ -982,6 +984,8 @@
+       fl_oldfocus = p;
+     }
+     e_number = old_event;
++    // let the platform code do what it needs
++    fl_update_focus();
+   }
+ }
+ 
+diff -Naur a/src/Fl_grab.cxx b/src/Fl_grab.cxx
+--- a/src/Fl_grab.cxx	2012-03-23 17:47:53.000000000 +0100
++++ b/src/Fl_grab.cxx	2014-11-18 21:48:30.146062875 +0100
+@@ -29,6 +29,7 @@
+ // override_redirect, it does similar things on WIN32.
+ 
+ extern void fl_fix_focus(); // in Fl.cxx
++void fl_update_focus(void);
+ 
+ #ifdef WIN32
+ // We have to keep track of whether we have captured the mouse, since
+@@ -80,6 +81,7 @@
+ #endif
+     }
+     grab_ = win;
++    fl_update_focus();
+   } else {
+     if (grab_) {
+ #ifdef WIN32
+@@ -98,6 +100,7 @@
+       XFlush(fl_display);
+ #endif
+       grab_ = 0;
++      fl_update_focus();
+       fl_fix_focus();
+     }
+   }
+diff -Naur a/src/Fl_x.cxx b/src/Fl_x.cxx
+--- a/src/Fl_x.cxx	2014-10-29 21:25:46.000000000 +0100
++++ b/src/Fl_x.cxx	2014-11-18 21:48:30.148062875 +0100
+@@ -666,6 +666,30 @@
+   fl_xim_deactivate();
+ }
+ 
++extern Fl_Window *fl_xfocus;
++
++void fl_update_focus(void)
++{
++  Fl_Widget *focus;
++
++  focus = Fl::grab();
++  if (!focus)
++    focus = Fl::focus();
++  if (!focus)
++    return;
++
++  if (focus->simple_keyboard()) {
++    fl_xim_deactivate();
++  } else {
++    // fl_xfocus should always be set if something has focus, but let's
++    // play it safe
++    if (!fl_xfocus || !fl_xid(fl_xfocus))
++      return;
++
++    fl_xim_activate(fl_xid(fl_xfocus));
++  }
++}
++
+ void fl_open_display() {
+   if (fl_display) return;
+ 
+diff -Naur a/src/xutf8/imKStoUCS.c b/src/xutf8/imKStoUCS.c
+--- a/src/xutf8/imKStoUCS.c	2014-08-21 16:03:52.000000000 +0200
++++ b/src/xutf8/imKStoUCS.c	2014-11-18 21:48:30.146062875 +0100
+@@ -266,6 +266,12 @@
+     0x20a8, 0x20a9, 0x20aa, 0x20ab, 0x20ac                          /* 0x20a8-0x20af */
+ };
+ 
++static unsigned short const keysym_to_unicode_fe50_fe60[] = {
++    0x0300, 0x0301, 0x0302, 0x0303, 0x0304, 0x0306, 0x0307, 0x0308, /* 0xfe50-0xfe57 */
++    0x030a, 0x030b, 0x030c, 0x0327, 0x0328, 0x1da5, 0x3099, 0x309a, /* 0xfe58-0xfe5f */
++    0x0323                                                          /* 0xfe60-0xfe67 */
++};
++
+ static unsigned int
+ KeySymToUcs4(KeySym keysym)
+ {
+@@ -315,6 +321,8 @@
+ 	return keysym_to_unicode_1e9f_1eff[keysym - 0x1e9f];
+     else if (keysym > 0x209f && keysym < 0x20ad)
+ 	return keysym_to_unicode_20a0_20ac[keysym - 0x20a0];
++    else if (keysym > 0xfe4f && keysym < 0xfe61)
++	return keysym_to_unicode_fe50_fe60[keysym - 0xfe50];
+     else 
+ 	return 0;
+ }

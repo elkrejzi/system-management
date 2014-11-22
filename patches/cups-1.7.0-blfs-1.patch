@@ -1,0 +1,55 @@
+diff -Naur a/conf/pam.std.in b/conf/pam.std.in
+--- a/conf/pam.std.in	2013-06-07 03:00:33.000000000 +0200
++++ b/conf/pam.std.in	2013-10-25 09:31:04.484645911 +0200
+@@ -1,2 +1,7 @@
+-auth	required	@PAMMODAUTH@
+-account	required	@PAMMOD@
++# Begin /etc/pam.d/cups
++
++auth    include system-auth
++account include system-account
++session include system-session
++
++# End /etc/pam.d/cups
+diff -Naur a/config-scripts/cups-manpages.m4 b/config-scripts/cups-manpages.m4
+--- a/config-scripts/cups-manpages.m4	2012-10-15 23:02:10.000000000 +0200
++++ b/config-scripts/cups-manpages.m4	2013-10-25 09:31:04.484645911 +0200
+@@ -55,10 +55,10 @@
+ 		;;
+ 	Linux* | GNU* | Darwin*)
+ 		# Linux, GNU Hurd, and OS X
+-		MAN1EXT=1.gz
+-		MAN5EXT=5.gz
+-		MAN7EXT=7.gz
+-		MAN8EXT=8.gz
++		MAN1EXT=1
++		MAN5EXT=5
++		MAN7EXT=7
++		MAN8EXT=8
+ 		MAN8DIR=8
+ 		;;
+ 	*)
+diff -Naur a/Makedefs.in b/Makedefs.in
+--- a/Makedefs.in	2013-07-17 17:21:18.000000000 +0200
++++ b/Makedefs.in	2013-10-25 09:31:04.484645911 +0200
+@@ -40,14 +40,14 @@
+ # Installation programs...
+ #
+ 
+-INSTALL_BIN	=	$(LIBTOOL) $(INSTALL) -c -m 555 @INSTALL_STRIP@
+-INSTALL_COMPDATA =	$(INSTALL) -c -m 444 @INSTALL_GZIP@
++INSTALL_BIN	=	$(LIBTOOL) $(INSTALL) -c -m 755 @INSTALL_STRIP@
++INSTALL_COMPDATA =	$(INSTALL) -c -m 644 @INSTALL_GZIP@
+ INSTALL_CONFIG	=	$(INSTALL) -c -m @CUPS_CONFIG_FILE_PERM@
+-INSTALL_DATA	=	$(INSTALL) -c -m 444
++INSTALL_DATA	=	$(INSTALL) -c -m 644
+ INSTALL_DIR	=	$(INSTALL) -d
+-INSTALL_LIB	=	$(LIBTOOL) $(INSTALL) -c -m 555 @INSTALL_STRIP@
+-INSTALL_MAN	=	$(INSTALL) -c -m 444
+-INSTALL_SCRIPT	=	$(INSTALL) -c -m 555
++INSTALL_LIB	=	$(LIBTOOL) $(INSTALL) -c -m 755 @INSTALL_STRIP@
++INSTALL_MAN	=	$(INSTALL) -c -m 644
++INSTALL_SCRIPT	=	$(INSTALL) -c -m 755
+ 
+ #
+ # Default user, group, and system groups for the scheduler...
