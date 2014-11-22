@@ -13,7 +13,8 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
             --with-daemon-user=colord \
             --enable-vala             \
             --disable-bash-completion \
-            --disable-static
+            --disable-static          \
+            --enable-sane
 
 make -j4
 make install DESTDIR=${DEST}
