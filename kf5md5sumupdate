@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+rm -rf frameworks.txt
+
+for file in * ; do echo ${file%-*} >> frameworks.txt ; done
+
+cat frameworks.txt | while read file
+do
+  MD5SUM=$(md5sum ${file}-[0-9]*.tar.* | awk '{print $1}')
+  test -z $MD5SUM || sed "/ENTITY ${file}.*-md5sum/s|\".*\"|\"$MD5SUM\"|" -i /home/armin/src/BLFS/kde5/kde5.ent
+done
+
+rm -rf frameworks.txt

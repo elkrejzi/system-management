@@ -1,0 +1,37 @@
+#!/bin/bash -e
+
+. /home/armin/.kf5env
+
+cat /home/armin/frameworks-order.txt | while read file
+do
+time (
+
+set -e
+
+pushd ${file}
+
+mkdir build
+pushd build
+
+cmake -DCMAKE_INSTALL_PREFIX=$KF5_PREFIX      \
+      -DCMAKE_BUILD_TYPE=Release              \
+      -DSYSCONF_INSTALL_DIR=$KF5_SYSCONFDIR   \
+      -DLIB_INSTALL_DIR=lib                   \
+      -DBUILD_TESTING=OFF                     \
+      -DQML_INSTALL_DIR=lib/qt5/qml           \
+      -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
+      -DECM_MKSPECS_INSTALL_DIR=$KF5_PREFIX/share/qt5/mkspecs/modules \
+      ..
+
+make -j3
+make install DESTDIR=$PWD/dest
+
+popd
+
+make -C build install DESTDIR=/opt/kf5dest
+make -C build install DESTDIR=/opt/kf5bin/$(basename $PWD)
+cp -a /opt/kf5bin/$(basename $PWD)/opt/kf5/* /opt/kf5
+popd
+) 2>&1 | tee /home/armin/src/${file}.log
+
+done

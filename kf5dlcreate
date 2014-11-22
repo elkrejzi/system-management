@@ -1,0 +1,58 @@
+#!/bin/bash -e
+
+export KF5_VERSION=$(grep "ENTITY kf5-version " kde5/kde5.ent | cut -d \" -f 2)
+export ECM_VERSION=$(grep "ENTITY extra-cmake-modules-version " kde5/kde5.ent | cut -d \" -f 2)
+export DBUSMENUQT_VERSION=$(grep "ENTITY libdbusmenu-qt5-version " kde5/kde5.ent | cut -d \" -f 2)
+export PHONON5_VERSION=$(grep "ENTITY phonon5-version " kde5/kde5.ent | awk '{print $3}' | cut -d \" -f 2)
+export PHONON5_GST_VERSION=$(grep "ENTITY phonon-backend-gstreamer5-version " kde5/kde5.ent | cut -d \" -f 2)
+export PHONON5_VLC_VERSION=$(grep "ENTITY phonon-backend-vlc5-version " kde5/kde5.ent | cut -d \" -f 2)
+export POLKIT_QT5_VERSION=$(grep "ENTITY polkit-qt5-version " kde5/kde5.ent | cut -d \" -f 2)
+
+export KF5_DOWNLOAD=$(grep "ENTITY kf5-download-http " kde5/kde5.ent | cut -d \" -f 2 | sed "s:\&kf5-version\;:$KF5_VERSION:g")
+
+rm -rf $HOME/frameworks-download.txt $HOME/frameworks-md5.txt $HOME/frameworks-order.txt
+
+grep "ENTITY .*-download-http " kde5/kde5.ent | cut -d \" -f 2 > $HOME/frameworks-download.txt
+
+sed -i $HOME/frameworks-download.txt \
+    -e "/plasma-download-http/d" \
+    -e "/plasma-version/d" \
+    -e "/oxygen-icons/d" \
+    -e "/demo-url/d" \
+    -e "/grantlee.org/d" \
+    -e "1,2d"
+
+cat $HOME/frameworks-download.txt | sed "s:\/: :g" | grep -o '[^ ,]\+.tar.*' | while read file
+do
+  file2=$(echo $file | sed -e "s:-\&.*-version\;.tar.*::g" -e "s:polkit-qt-1:polkit-qt:g")
+  FILE_MD5=$(grep "ENTITY ${file2}-md5sum " kde5/kde5.ent | cut -d \" -f 2)
+  test -z $FILE_MD5 && FILE_MD5=$(grep "ENTITY ${file2}5-md5sum " kde5/kde5.ent | cut -d \" -f 2)
+  test -z $FILE_MD5 || echo "${FILE_MD5}  ${file}" >> $HOME/frameworks-md5.txt
+done
+
+sed -i $HOME/frameworks-download.txt  \
+    -i $HOME/frameworks-md5.txt \
+    -e "s:\&kf5-version\;:$KF5_VERSION:g" \
+    -e "s:\&extra-cmake-modules-version\;:$ECM_VERSION:g" \
+    -e "s:\&libdbusmenu-qt5-version\;:$DBUSMENUQT_VERSION:g" \
+    -e "s:\&phonon5-version\;:$PHONON5_VERSION:g" \
+    -e "s:\&phonon-backend-gstreamer5-version\;:$PHONON5_GST_VERSION:g" \
+    -e "s:\&phonon-backend-vlc5-version\;:$PHONON5_VLC_VERSION:g" \
+    -e "s:\&polkit-qt5-version\;:$POLKIT_QT5_VERSION:g" \
+    -e "s:\&kf5-version\;:$KF5_VERSION:g" \
+    -e "s|\&kf5-download-http\;|$KF5_DOWNLOAD|g"
+
+grep include kde5/frameworks/frameworks.xml | cut -d \" -f 4 | sed -e "s:\.xml::g" -e "/intro/d" -e "/porting-aids/d" | while read file
+do
+  echo "$file-$KF5_VERSION" >> $HOME/frameworks-order.txt
+done
+
+sed -i $HOME/frameworks-order.txt \
+    -e "s:extra-cmake-modules-$KF5_VERSION:extra-cmake-modules-$ECM_VERSION:g" \
+    -e "s:libdbusmenu-qt-$KF5_VERSION:libdbusmenu-qt-$DBUSMENUQT_VERSION:g" \
+    -e "s:phonon-$KF5_VERSION:phonon-$PHONON5_VERSION:g" \
+    -e "s:phonon-backend-gstreamer-$KF5_VERSION:phonon-backend-gstreamer-$PHONON5_GST_VERSION:g" \
+    -e "s:phonon-backend-vlc-$KF5_VERSION:phonon-backend-vlc-$PHONON5_VLC_VERSION:g" \
+    -e "s:polkit-qt-$KF5_VERSION:polkit-qt-1-$POLKIT_QT5_VERSION:g" \
+    -e "/kde-frameworks/d" \
+    -e "/individual-frameworks/d"
