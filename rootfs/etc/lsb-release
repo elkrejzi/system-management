@@ -1,0 +1,4 @@
+DISTRIB_ID="Linux From Scratch"
+DISTRIB_RELEASE="7.6-systemd"
+DISTRIB_CODENAME="Krejzi"
+DISTRIB_DESCRIPTION="Linux From Scratch"
