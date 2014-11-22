@@ -1,0 +1,16 @@
+autoconf
+automake
+git
+gtk-doc
+imagemagick
+qpdf
+gnumeric
+postgresql
+subversion
+pidgin
+xfconf
+openldap
+dvd::rip
+perl-sgmls
+perl-gettext
+libproxy
