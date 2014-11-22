@@ -1,0 +1,123 @@
+diff -Naur a/backend/kodakaio.c b/backend/kodakaio.c
+--- a/backend/kodakaio.c	2013-08-25 23:22:58.000000000 +0200
++++ b/backend/kodakaio.c	2014-11-22 15:17:52.828328189 +0100
+@@ -127,7 +127,7 @@
+ 
+ #define KODAKAIO_VERSION	02
+ #define KODAKAIO_REVISION	4
+-#define KODAKAIO_BUILD		6
++#define KODAKAIO_BUILD		7
+ 
+ /* for usb (but also used for net though it's not required). */
+ #define MAX_BLOCK_SIZE		32768
+@@ -2184,6 +2184,7 @@
+     AvahiLookupResultFlags flags,
+     AVAHI_GCC_UNUSED void* userdata) {
+ 
++	AvahiStringList *vid_pair_list = NULL, *pid_pair_list = NULL;
+ 	char *pidkey, *pidvalue;
+ 	char *vidkey, *vidvalue;
+ 	size_t valuesize;
+@@ -2204,20 +2205,40 @@
+             avahi_address_snprint(a, sizeof(a), address);
+ 
+ /* Output short for Kodak ESP */
+-	DBG(min(10,DBG_AUTO), "%s:%u  %s  ", a,port,host_name);
+-	avahi_string_list_get_pair(avahi_string_list_find(txt, "vid"), 
+-		&vidkey, &vidvalue, &valuesize);
+-	DBG(min(10,DBG_AUTO), "%s=%s  ", vidkey, vidvalue);
+-	avahi_string_list_get_pair(avahi_string_list_find(txt, "pid"), 
+-		&pidkey, &pidvalue, &valuesize);
+-	DBG(min(10,DBG_AUTO), "%s=%s\n", pidkey, pidvalue);
++	DBG(min(10,DBG_AUTO), "%s:%u  %s\n", a,port,host_name);
+ 
++	vid_pair_list = avahi_string_list_find(txt, "vid");
++	if(vid_pair_list != NULL) {
++		avahi_string_list_get_pair(vid_pair_list, &vidkey, &vidvalue, &valuesize);
++		DBG(min(10,DBG_AUTO), "%s=%s  ", vidkey, vidvalue);
++	}
++	else	DBG(min(10,DBG_AUTO), "failed to find key vid\n");
++
++	pid_pair_list = avahi_string_list_find(txt, "pid");
++	if(pid_pair_list != NULL) {
++		avahi_string_list_get_pair(pid_pair_list, &pidkey, &pidvalue, &valuesize);
++		DBG(min(10,DBG_AUTO), "%s=%s\n", pidkey, pidvalue);
++	}
++	else	DBG(min(10,DBG_AUTO), "failed to find key pid\n");
++
++	if(pid_pair_list != NULL && vid_pair_list != NULL) {
+ 		ProcessAvahiDevice(name, vidvalue, pidvalue, a);
+-	avahi_free(vidkey); avahi_free(vidvalue);
+-	avahi_free(pidkey); avahi_free(pidvalue);
++	}
++	else DBG(min(10,DBG_AUTO), "didn't call ProcessAvahiDevice\n");
++
++	if(vid_pair_list != NULL) {
++		avahi_free(vidkey); 
++		avahi_free(vidvalue);
++		DBG(min(15,DBG_AUTO), "vidkey and vidvalue freed\n");
++	}
++	if(pid_pair_list != NULL) {
++		avahi_free(pidkey); 
++		avahi_free(pidvalue);
++		DBG(min(15,DBG_AUTO), "pidkey and pidvalue freed\n");
++	}
+         }
+     }
+-
++    DBG(min(10,DBG_AUTO), "ending resolve_callback\n");
+     avahi_service_resolver_free(r);
+ }
+ 
+diff -Naur a/doc/descriptions/kodakaio.desc b/doc/descriptions/kodakaio.desc
+--- a/doc/descriptions/kodakaio.desc	2013-09-18 02:43:00.000000000 +0200
++++ b/doc/descriptions/kodakaio.desc	2014-11-22 15:17:52.828328189 +0100
+@@ -1,6 +1,6 @@
+ :backend "kodakaio"
+ :url "http://sourceforge.net/projects/cupsdriverkodak/" 
+-:version "2.4.6"
++:version "2.4.7"
+ :manpage "sane-kodakaio"
+ :comment "Backend for Kodak AiO ESP and Hero printers. Also possibly Advent AWL10"
+ :devicetype :scanner
+diff -Naur a/sanei/sanei_tcp.c b/sanei/sanei_tcp.c
+--- a/sanei/sanei_tcp.c	2013-08-26 03:01:38.000000000 +0200
++++ b/sanei/sanei_tcp.c	2014-11-22 15:18:06.261550152 +0100
+@@ -45,6 +45,7 @@
+ #include <unistd.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <time.h>
+ 
+ #ifdef HAVE_WINSOCK2_H
+ #include <winsock2.h>
+@@ -123,14 +124,27 @@
+ ssize_t
+ sanei_tcp_read(int fd, u_char * buf, int count)
+ {
+-        ssize_t bytes_recv = 0, rc = 1;
++    ssize_t bytes_recv = 0, rc = 1;
++	int retry = 5;
+ 
+ 	while (bytes_recv < count && rc > 0)
+ 	{
+ 		rc = recv(fd, buf+bytes_recv, count-bytes_recv, 0);
++		DBG(1, "%s: bytes received %d\n", __FUNCTION__, rc);
+ 		if (rc > 0)
+ 		  bytes_recv += rc;
+-
++		else {
++			if ( errno == EAGAIN && retry-- ) {
++				DBG(1, "%s: waiting  %d\n", __FUNCTION__, retry);
++				/* wait for max 1s */
++				struct timespec req;
++				struct timespec rem;
++				req.tv_sec = 0;
++				req.tv_nsec= 100000000;
++				nanosleep(&req, &rem);	
++				rc = 1;
++			}
++		}
+ 	}
+ 	return bytes_recv;
+ }

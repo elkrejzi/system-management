@@ -1,0 +1,23 @@
+#!/bin/bash -e
+
+export VER=20141029
+export DEST=/binary/foomatic-db-4.0-${VER}
+
+pushd foomatic-db-${VER}
+
+./configure --prefix=/usr
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf foomatic-db-${VER}
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL

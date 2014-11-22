@@ -1,0 +1,62 @@
+#!/bin/bash -e
+
+export VER=3.14.10
+export DEST=/binary/hplip-${VER}
+
+pushd hplip-${VER}
+
+for i in ppd/hpijs/*.ppd.gz
+do
+    rm -f ${i}.temp
+    gunzip -c ${i} | sed 's/foomatic-rip-hplip/foomatic-rip/g' | gzip > ${i}.temp || return 1
+    mv ${i}.temp ${i}
+done
+
+export AUTOMAKE='automake --foreign'
+autoreconf --force --install
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr                  \
+             --enable-qt4                  \
+             --enable-foomatic-ppd-install \
+             --enable-hpcups-install       \
+             --enable-new-hpcups           \
+             --enable-cups-ppd-install     \
+             --enable-cups-drv-install     \
+             --enable-hpijs-install        \
+             --enable-foomatic-drv-install \
+             --enable-pp-build             \
+             --disable-foomatic-rip-hplip-install
+
+make -j4
+make install DESTDIR=${DEST} rulesdir=/lib/udev/rules.d rulessystemdir=/lib/systemd/system
+
+popd
+
+rm -rf hplip-${VER}
+
+rm -rf ${DEST}/etc/sane.d ${DEST}/etc/xdg ${DEST}/usr/share/doc ${DEST}/usr/share/hal
+
+find ${DEST} -name "*.la" -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL
