@@ -1,0 +1,169 @@
+#!/bin/bash -e
+
+export VER=2.4.40
+export DEST=/binary/openldap-${VER}
+
+pushd openldap-${VER}
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/openldap-blfs-paths.patch
+patch -Np1 -i /media/ntfs/Other/Linux/patches/openldap-symbol-versions.patch
+patch -Np1 -i /media/ntfs/Other/Linux/patches/openldap-bdb.patch
+
+autoconf
+
+popd
+
+cp -a openldap-${VER} openldap-${VER}-32
+
+pushd openldap-${VER}
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr         \
+            --sysconfdir=/etc     \
+            --localstatedir=/var  \
+            --libexecdir=/usr/lib \
+            --disable-static      \
+            --disable-debug       \
+            --enable-dynamic      \
+            --enable-crypt        \
+            --enable-spasswd      \
+            --enable-modules      \
+            --enable-rlookups     \
+            --enable-sql          \
+            --enable-backends=mod \
+            --enable-overlays=mod \
+            --disable-ndb
+
+make depend
+make -j4
+
+make install DESTDIR=${DEST}
+
+popd
+
+pushd openldap-${VER}-32
+
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr         \
+            --sysconfdir=/etc     \
+            --localstatedir=/var  \
+            --libdir=/usr/lib32   \
+            --libexecdir=/usr/lib \
+            --disable-static      \
+            --disable-debug       \
+            --enable-dynamic      \
+            --enable-crypt        \
+            --enable-modules      \
+            --enable-rlookups     \
+            --enable-backends=mod \
+            --enable-overlays=mod \
+            --without-cyrus-sasl  \
+            --disable-bdb         \
+            --disable-hdb         \
+            --disable-ndb         \
+            --disable-spasswd     \
+            --disable-sql
+
+make -C include
+make -C libraries depend
+
+make -C libraries -j4
+
+make -C libraries install DESTDIR=${DEST}
+
+popd
+
+rm -rf openldap-${VER} openldap-${VER}-32
+
+find ${DEST} -name "*.la" -delete
+
+rm -rf ${DEST}/etc/openldap/ldap.conf ${DEST}/etc/openldap/slapd.conf ${DEST}/etc/openldap/slapd.ldif
+rm -rf ${DEST}/var/lib/openldap/*  ${DEST}/var/run
+
+mkdir -p ${DEST}/etc/default ${DEST}/etc/openldap/slapd.d ${DEST}/etc/systemd/system/multi-user.target.wants
+mkdir -p ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d
+
+cat > ${DEST}/etc/default/slapd << "EOF"
+# Begin /etc/default/slapd
+
+# Options to pass to slapd.
+# See slapd(8) for more details.
+#SLAPD_OPTS=""
+
+# slapd normally serves ldap only on all TCP-ports 389. slapd can also
+# service requests on TCP-port 636 (ldaps) and requests via unix
+# sockets.
+#SLAPD_OPTS='-h "ldap://127.0.0.1:389/ ldaps:/// ldapi:///"'
+
+# End /etc/default/slapd
+EOF
+
+cat > ${DEST}/usr/lib/tmpfiles.d/slapd.conf << "EOF"
+d /run/openldap 0755 ldap ldap -
+EOF
+
+cat > ${DEST}/lib/systemd/system/slapd.service << "EOF"
+[Unit]
+Description=OpenLDAP server daemon
+After=network.target
+
+[Service]
+Type=forking
+EnvironmentFile=/etc/default/slapd
+ExecStart=/usr/sbin/slapd -u ldap -g ldap $SLAPD_OPTS
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+ln -sf /lib/systemd/system/slapd.service ${DEST}/etc/systemd/system/multi-user.target.wants/slapd.service
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib usr var ; do cp -rf --remove-destination $dir / ; done
+
+getent group ldap >/dev/null || groupadd -g 83 ldap
+getent passwd ldap >/dev/null || useradd -c "OpenLDAP Daemon Owner" -d /var/lib/openldap -u 83 -g ldap -s /bin/false ldap
+
+install -dm750 -o ldap -g ldap /run/openldap
+
+if [ ! -e /etc/openldap/ldap.conf ]; then
+   cp -r /etc/openldap/ldap.conf.default /etc/openldap/ldap.conf
+fi
+
+if [ ! -e /etc/openldap/slapd.conf ]; then
+   cp -r /etc/openldap/slapd.conf.default /etc/openldap/slapd.conf
+fi
+
+if [ ! -e /etc/openldap/slapd.ldif ]; then
+   cp -r /etc/openldap/slapd.ldif.default /etc/openldap/slapd.ldif
+fi
+
+chmod 700 /etc/openldap/slapd.d /var/lib/openldap
+chown -R ldap:ldap /etc/openldap/slapd.d /var/lib/openldap
+
+chmod 640 /etc/openldap/slapd.conf /etc/openldap/slapd.ldif /etc/openldap/DB_CONFIG.example
+chown root:ldap /etc/openldap/slapd.conf /etc/openldap/slapd.ldif /etc/openldap/DB_CONFIG.example
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q /usr/share/man
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

@@ -1,0 +1,54 @@
+#!/bin/bash -e
+
+export VER=3.17.0
+export DEST=/binary/iproute2-${VER}
+
+pushd iproute2-${VER}
+
+make -j4 CCOPTS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "
+
+install -dm755 ${DEST}/bin ${DEST}/sbin ${DEST}/usr/bin ${DEST}/usr/lib/tc ${DEST}/usr/share
+
+cp -rf etc ${DEST}/etc
+cp -rf man ${DEST}/usr/share/man
+
+find ${DEST}/usr/share/man -name Makefile -delete
+find ${DEST}/usr/share/man -name *.in -delete
+
+rm -rf ${DEST}/usr/share/man/*/.gitignore ${DEST}/usr/share/man/man8/arpd.8
+
+install -m755 misc/ss ip/ip ${DEST}/bin
+install -m755 ip/rtmon tc/tc misc/rtacct ${DEST}/sbin
+install -m755 misc/lnstat misc/nstat ${DEST}/usr/bin
+install -m755 ip/routef ip/routel ${DEST}/usr/bin
+install -m755 tc/*.so ${DEST}/usr/lib/tc
+install -m644 netem/*.dist ${DEST}/usr/lib/tc
+
+ln -sf lnstat ${DEST}/usr/bin/rtstat
+ln -sf lnstat ${DEST}/usr/bin/ctstat
+ln -sf ../bin/ip ${DEST}/sbin/ip
+ln -sf m_xt.so ${DEST}/usr/lib/tc/m_ipt.so
+
+popd
+
+rm -rf iproute2-${VER}
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in bin etc sbin usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

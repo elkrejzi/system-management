@@ -1,0 +1,46 @@
+#!/bin/bash -e
+
+export VER=1.3.3
+export DEST=/binary/xvidcore-${VER}
+
+pushd xvidcore/build/generic
+
+sed -i 's/^LN_S=@LN_S@/& -f -v/' platform.inc.in
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr
+
+make -j4
+
+sed -i '/libdir.*STATIC_LIB/ s/^/#/' Makefile
+
+make install DESTDIR=${DEST}
+
+chmod 755 ${DEST}/usr/lib/libxvidcore.so
+
+popd
+
+rm -rf xvidcore
+
+find ${DEST} -name "*.la" -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

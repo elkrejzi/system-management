@@ -1,0 +1,53 @@
+#!/bin/bash -e
+
+export VER=5.25
+export DEST=/binary/bluez-${VER}
+
+pushd bluez-${VER}
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/bluez.patch
+
+autoreconf -fi
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr        \
+            --sysconfdir=/etc    \
+            --localstatedir=/var \
+            --enable-library
+
+make -j4
+make install DESTDIR=${DEST}
+
+install -dm755 ${DEST}/etc/bluetooth ${DEST}/etc/systemd/system/bluetooth.target.wants
+install -m644 src/main.conf ${DEST}/etc/bluetooth
+
+ln -sf /lib/systemd/system/bluetooth.service ${DEST}/etc/systemd/system/dbus-org.bluez.service
+ln -sf /lib/systemd/system/bluetooth.service ${DEST}/etc/systemd/system/bluetooth.target.wants/bluetooth.service
+
+popd
+
+rm -rf bluez-${VER}
+
+find ${DEST} -name "*.la" -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

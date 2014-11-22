@@ -1,0 +1,173 @@
+#!/bin/bash -e
+
+export VER=4.3
+export DEST=/binary/bash-${VER}
+
+pushd bash-${VER}
+
+if [ -f /media/ntfs/Other/Linux/patches/bash-fixes.patch ]
+then
+   patch -Np1 -i /media/ntfs/Other/Linux/patches/bash-fixes.patch
+fi
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/bash-config.patch
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr         \
+            --bindir=/bin         \
+            --without-bash-malloc \
+            --with-installed-readline
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf bash-${VER}
+
+rm -rf ${DEST}/bin/bashbug ${DEST}/usr/share/man/man1/bashbug.1
+rm -rf ${DEST}/usr/share/doc
+
+ln -s bash ${DEST}/bin/sh
+ln -s bash.1 ${DEST}/usr/share/man/man1/sh.1
+
+rm -rf ${DEST}/usr/share/info/dir
+gzip -9 ${DEST}/usr/share/info/*
+
+install -dm755 ${DEST}/etc/skel
+
+cat > ${DEST}/etc/bash.bashrc << "EOF"
+# Begin /etc/bash.bashrc
+
+[ -z "$PS1" ] && return
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# set a fancy prompt (non-color, overwrite the one in /etc/profile)
+PS1='\u@\h:\w\$ '
+
+# End /etc/bash.bashrc
+EOF
+
+cat > ${DEST}/etc/skel/.bash_logout << "EOF"
+# Begin ~/.bash_logout
+
+if [ "$SHLVL" = 1 ]; then
+    [ -x /usr/bin/clear ] && /usr/bin/clear
+fi
+
+# End ~/.bash_logout
+EOF
+
+cat > ${DEST}/etc/skel/.bashrc << "EOF"
+# Begin ~/.bashrc
+
+[ -z "$PS1" ] && return
+
+HISTCONTROL=$HISTCONTROL${HISTCONTROL+:}ignoredups
+HISTCONTROL=ignoreboth
+
+shopt -s histappend
+shopt -s checkwinsize
+
+case "$TERM" in
+    xterm-color) color_prompt=yes;;
+esac
+
+# uncomment for a colored prompt, if the terminal has the capability; turned
+# off by default to not distract the user: the focus in a terminal window
+# should be on the output of commands, not on the prompt
+#force_color_prompt=yes
+
+if [ -n "$force_color_prompt" ]; then
+    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+	# We have color support; assume it's compliant with Ecma-48
+	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+	# a case would tend to support setf rather than setaf.)
+	color_prompt=yes
+    else
+	color_prompt=
+    fi
+fi
+
+if [ "$color_prompt" = yes ]; then
+    PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+else
+    PS1='\u@\h:\w\$ '
+fi
+unset color_prompt force_color_prompt
+
+case "$TERM" in
+xterm*|rxvt*)
+    PS1="\[\e]0;\u@\h: \w\a\]$PS1"
+    ;;
+*)
+    ;;
+esac
+
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
+
+    #alias grep='grep --color=auto'
+    #alias fgrep='fgrep --color=auto'
+    #alias egrep='egrep --color=auto'
+fi
+
+# some more ls aliases
+#alias ll='ls -l'
+#alias la='ls -A'
+#alias l='ls -CF'
+
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+    . /etc/bash_completion
+fi
+
+# End ~/.bashrc
+EOF
+
+cat > ${DEST}/etc/skel/.profile << "EOF"
+# Begin ~/.profile
+
+if [ -n "$BASH_VERSION" ]; then
+    if [ -f "$HOME/.bashrc" ]; then
+	. "$HOME/.bashrc"
+    fi
+fi
+
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+
+# End ~/.profile
+EOF
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in bin etc usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/install-info ] && echo "Processing triggers for texinfo" && for file in usr/share/info/* ; do /usr/bin/install-info /$file /usr/share/info/dir ; done
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

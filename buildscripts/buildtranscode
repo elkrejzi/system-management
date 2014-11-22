@@ -1,0 +1,66 @@
+#!/bin/bash -e
+
+export VER=1.1.7
+export DEST=/binary/transcode-${VER}
+
+pushd transcode-${VER}
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/transcode-fixes.patch
+
+sed -i "s:#include <freetype/ftglyph.h>:#include FT_GLYPH_H:" filter/subtitler/load_font.c
+sed -i "s:av_close_input_file:avformat_close_input:g" import/probe_ffmpeg.c
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr            \
+            --enable-libv4l2         \
+            --enable-libv4lconvert   \
+            --enable-libmpeg2        \
+            --enable-v4l             \
+            --enable-alsa            \
+            --enable-libpostproc     \
+            --enable-freetype2       \
+            --enable-xvid            \
+            --enable-x264            \
+            --enable-ogg             \
+            --enable-libquicktime    \
+            --enable-a52             \
+            --enable-faac            \
+            --enable-libxml2         \
+            --enable-sdl             \
+            --enable-libmpeg2convert \
+            --enable-vorbis          \
+            --enable-theora          \
+            --enable-libdv           \
+            --enable-lzo             \
+            --enable-mjpegtools      \
+            --enable-imagemagick
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf transcode-${VER}
+
+rm -rf ${DEST}/usr/share/doc
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

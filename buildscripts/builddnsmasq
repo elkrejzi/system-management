@@ -1,0 +1,62 @@
+#!/bin/bash -e
+
+export VER=2.70
+export DEST=/binary/dnsmasq-${VER}
+
+pushd dnsmasq-${VER}
+
+make CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " COPTS="-DHAVE_DNSSEC -DHAVE_DBUS" -j4
+make install PREFIX=/usr DESTDIR=${DEST}
+
+install -Dm644 dnsmasq.conf.example ${DEST}/etc/dnsmasq.conf
+install -Dm644 dbus/dnsmasq.conf ${DEST}/etc/dbus-1/system.d/dnsmasq.conf
+install -Dm644 trust-anchors.conf ${DEST}/usr/share/dnsmasq/trust-anchors.conf
+
+sed -i 's,%%PREFIX%%,/usr,' ${DEST}/etc/dnsmasq.conf
+
+popd
+
+rm -rf dnsmasq-${VER}
+
+mkdir -p ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/lib/systemd/system
+
+cat >> ${DEST}/lib/systemd/system/dnsmasq.service << "EOF"
+[Unit]
+Description=A lightweight DHCP and caching DNS server
+After=network.target
+Documentation=man:dnsmasq(8)
+
+[Service]
+Type=dbus
+BusName=uk.org.thekelleys.dnsmasq
+ExecStartPre=/usr/sbin/dnsmasq --test
+ExecStart=/usr/sbin/dnsmasq -k --enable-dbus --user=dnsmasq --pid-file
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+Alias=dbus-uk.org.thekelleys.dnsmasq
+EOF
+
+ln -sf /lib/systemd/system/dnsmasq.service ${DEST}/etc/systemd/system/dbus-uk.org.thekelleys.dnsmasq
+ln -sf /lib/systemd/system/dnsmasq.service ${DEST}/etc/systemd/system/multi-user.target.wants/dnsmasq.service
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

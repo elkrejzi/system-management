@@ -1,0 +1,113 @@
+#!/bin/bash -e
+
+export VER=10.3.3
+
+pushd Mesa-${VER}
+
+autoreconf -fi
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/mesalib-xdemos.patch
+
+popd
+
+cp -a Mesa-${VER} Mesa-${VER}-32
+
+pushd Mesa-${VER}
+
+CFLAGS="-march=native -mtune=native -g -O2"   \
+CXXFLAGS="-march=native -mtune=native -g -O2" \
+./configure --prefix=/usr             \
+            --sysconfdir=/etc         \
+            --disable-gallium-egl     \
+            --disable-gallium-gbm     \
+            --disable-xvmc            \
+            --enable-texture-float    \
+            --enable-gles1            \
+            --enable-gles2            \
+            --enable-osmesa           \
+            --enable-gbm              \
+            --enable-vdpau            \
+            --enable-omx              \
+            --enable-opencl           \
+            --enable-opencl-icd       \
+            --enable-gallium-llvm     \
+            --enable-glx-tls          \
+            --enable-llvm-shared-libs \
+            --with-dri-drivers="i965" \
+            --with-egl-platforms="drm,x11,wayland" \
+            --with-gallium-drivers="r600,swrast"   \
+            --enable-debug
+
+make -j4
+make -C xdemos
+
+make install DESTDIR=/binary/Mesa-${VER}
+make -C xdemos install DESTDIR=/binary/Mesa-${VER}
+
+cd ../Mesa-${VER}-32
+
+rm -rf ../Mesa-${VER}
+
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+export LLVM_CONFIG=/usr/bin/llvm-config32
+
+CFLAGS="-march=native -mtune=native -g -O2"   \
+CXXFLAGS="-march=native -mtune=native -g -O2" \
+./configure --prefix=/usr             \
+            --sysconfdir=/etc         \
+            --libdir=/usr/lib32       \
+            --disable-gallium-egl     \
+            --disable-gallium-gbm     \
+            --disable-xvmc            \
+            --enable-32-bit           \
+            --enable-texture-float    \
+            --enable-gles1            \
+            --enable-gles2            \
+            --enable-osmesa           \
+            --enable-vdpau            \
+            --enable-gallium-llvm     \
+            --enable-glx-tls          \
+            --enable-llvm-shared-libs \
+            --with-dri-drivers="i965" \
+            --with-egl-platforms="drm,x11,wayland" \
+            --with-gallium-drivers="r600,swrast"   \
+            --build=i686-pc-linux-gnu \
+            --host=i686-pc-linux-gnu
+
+make -j4
+make -C xdemos EXT=32 CC="${CC}"
+
+make install DESTDIR=${PWD}/dest
+
+mv dest/usr/lib32 /binary/Mesa-${VER}/usr/
+
+install -m755 xdemos/glxinfo32 /binary/Mesa-${VER}/usr/bin/
+install -m755 xdemos/glxgears32 /binary/Mesa-${VER}/usr/bin/
+
+cd ..
+
+rm -rf Mesa-${VER}-32
+
+find /binary/Mesa-${VER} -name "*.la" -delete
+
+pushd /binary/Mesa-${VER}
+/media/ntfs/Other/Linux/makedebug
+popd
+
+mkdir -p /binary/Mesa-${VER}-debug/usr/lib/
+mv /binary/Mesa-${VER}/usr/lib/debug /binary/Mesa-${VER}-debug/usr/lib/
+
+unset CC CXX PKG_CONFIG_PATH LLVM_CONFIG CFLAGS CXXFLAGS
+
+cat > /binary/Mesa-${VER}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 /binary/Mesa-${VER}/INSTALL

@@ -1,0 +1,101 @@
+#!/bin/bash -e
+
+export VER=3.17.2
+#export EXTRA=.with.ckbi.1.93
+
+export TARBALL=nss-${VER}${EXTRA}.tar.gz
+
+export XCFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "
+
+tar xf ${TARBALL}
+
+echo "Building 64bit NSS"
+
+pushd nss-${VER}
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/nss-3.15-standalone-1.patch
+
+cd nss
+
+make nss_build_all BUILD_OPT=1       \
+  NSPR_INCLUDE_DIR=/usr/include/nspr \
+  USE_SYSTEM_ZLIB=1                  \
+  ZLIB_LIBS=-lz                      \
+  USE_64=1                           \
+  NSS_USE_SYSTEM_SQLITE=1
+
+cd ../dist
+
+mkdir -p /binary/nss-${VER}/usr/bin
+mkdir -p /binary/nss-${VER}/usr/include/nss
+mkdir -p /binary/nss-${VER}/usr/lib/pkgconfig
+
+install -m755 Linux*/lib/*.so /binary/nss-${VER}/usr/lib
+install -m644 Linux*/lib/libcrmf.a /binary/nss-${VER}/usr/lib
+install -m644 Linux*/lib/*.chk /binary/nss-${VER}/usr/lib
+
+install -v -m644 Linux*/lib/pkgconfig/nss.pc /binary/nss-${VER}/usr/lib/pkgconfig
+
+cp -RL public/nss/* /binary/nss-${VER}/usr/include/nss
+cp -RL private/nss/* /binary/nss-${VER}/usr/include/nss
+
+install -v -m755 Linux*/bin/certutil /binary/nss-${VER}/usr/bin
+install -v -m755 Linux*/bin/nss-config /binary/nss-${VER}/usr/bin
+install -v -m755 Linux*/bin/pk12util /binary/nss-${VER}/usr/bin
+
+strip --strip-unneeded /binary/nss-${VER}/usr/bin/certutil
+strip --strip-unneeded /binary/nss-${VER}/usr/bin/pk12util
+
+strip --strip-unneeded /binary/nss-${VER}/usr/lib/*.a
+strip --strip-unneeded /binary/nss-${VER}/usr/lib/*.so
+
+popd
+
+rm -rf nss-${VER}
+
+tar xf ${TARBALL}
+
+echo "Building 32bit NSS"
+
+pushd nss-${VER}
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/nss-3.15-standalone-1.patch
+
+cd nss
+
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+make nss_build_all BUILD_OPT=1       \
+  NSPR_INCLUDE_DIR=/usr/include/nspr \
+  USE_SYSTEM_ZLIB=1                  \
+  ZLIB_LIBS=-lz                      \
+  NSS_USE_SYSTEM_SQLITE=1
+
+cd ../dist
+
+mkdir -p /binary/nss-${VER}/usr/lib32/pkgconfig
+
+install -m755 Linux*/lib/*.so /binary/nss-${VER}/usr/lib32
+install -m644 Linux*/lib/libcrmf.a /binary/nss-${VER}/usr/lib32
+install -m644 Linux*/lib/*.chk /binary/nss-${VER}/usr/lib32
+
+sed "s@/lib@&32@g" Linux*/lib/pkgconfig/nss.pc > /binary/nss-${VER}/usr/lib32/pkgconfig/nss.pc
+
+strip --strip-unneeded /binary/nss-${VER}/usr/lib32/*.a
+strip --strip-unneeded /binary/nss-${VER}/usr/lib32/*.so
+
+unset PKG_CONFIG_PATH
+
+popd
+
+rm -rf nss-${VER}
+
+cat > /binary/nss-${VER}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 /binary/nss-${VER}/INSTALL

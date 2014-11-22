@@ -1,0 +1,127 @@
+#!/bin/bash
+
+export VER=1.1.8
+export DEST=/binary/Linux-PAM-${VER}
+
+pushd Linux-PAM-${VER}
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr     \
+            --sysconfdir=/etc \
+            --libdir=/usr/lib \
+            --enable-securedir=/lib/security
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf Linux-PAM-${VER}
+
+rm -rf ${DEST}/usr/share/doc
+
+find ${DEST} -name "*.la" -delete
+
+chmod 4755 ${DEST}/sbin/unix_chkpwd
+
+for file in pam pam_misc pamc
+do
+  mv ${DEST}/usr/lib/lib${file}.so.* ${DEST}/lib
+  ln -sf ../../lib/$(readlink ${DEST}/usr/lib/lib${file}.so) ${DEST}/usr/lib/lib${file}.so
+done
+
+
+cat > ${DEST}/etc/pam.conf << "EOF"
+# ---------------------------------------------------------------------------#
+# /etc/pam.conf								     #
+# ---------------------------------------------------------------------------#
+#
+# NOTE
+# ----
+#
+# NOTE: Most program use a file under the /etc/pam.d/ directory to setup their
+# PAM service modules. This file is used only if that directory does not exist.
+# ---------------------------------------------------------------------------#
+
+# Format:
+# serv.	module	   ctrl	      module [path]	...[args..]		     #
+# name	type	   flag							     #
+EOF
+
+install -dm755 ${DEST}/etc/pam.d
+
+cat > ${DEST}/etc/pam.d/system-account << "EOF"
+# Begin /etc/pam.d/system-account
+
+account	  required       pam_unix.so
+
+# End /etc/pam.d/system-account
+EOF
+
+cat > ${DEST}/etc/pam.d/system-auth << "EOF"
+# Begin /etc/pam.d/system-auth
+
+auth      required       pam_unix.so nullok_secure
+-auth      optional       pam_cap.so
+
+# End /etc/pam.d/system-auth
+EOF
+
+cat > ${DEST}/etc/pam.d/system-password << "EOF"
+# Begin /etc/pam.d/system-password
+
+password  required       pam_unix.so sha512
+-password  optional       pam_gnome_keyring.so
+
+# End /etc/pam.d/system-password
+EOF
+
+cat > ${DEST}/etc/pam.d/system-session << "EOF"
+# Begin /etc/pam.d/system-session
+
+session   required       pam_unix.so
+session   required       pam_loginuid.so
+-session   optional       pam_systemd.so
+
+# End /etc/pam.d/system-session
+EOF
+
+cat > ${DEST}/etc/pam.d/other << "EOF"
+# Begin /etc/pam.d/other
+
+auth      required       pam_warn.so
+auth      required       pam_deny.so
+account   required       pam_warn.so
+account   required       pam_deny.so
+password  required       pam_warn.so
+password  required       pam_deny.so
+session   required       pam_warn.so
+session   required       pam_deny.so
+
+# End /etc/pam.d/other
+EOF
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib sbin usr ; do cp -rf --remove-destination $dir / ; done
+
+chmod 4755 /sbin/unix_chkpwd
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL
+

@@ -1,0 +1,35 @@
+#!/bin/bash -e
+
+export VER=0.2.5
+export DEST=/binary/cups-pk-helper-${VER}
+
+pushd cups-pk-helper-${VER}
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr --sysconfdir=/etc
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf cups-pk-helper-${VER}
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL

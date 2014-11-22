@@ -1,0 +1,64 @@
+#!/bin/bash -e
+
+export VER=0.112
+export DEST=/binary/polkit-${VER}
+
+pushd polkit-${VER}
+
+sed "s:/sys/fs/cgroup/systemd/:/bin:g" -i configure
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr        \
+            --sysconfdir=/etc    \
+            --localstatedir=/var \
+            --disable-static
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf polkit-${VER}
+
+find ${DEST} -name "*.la" -delete
+
+cat > ${DEST}/etc/pam.d/polkit-1 << "EOF"
+# Begin /etc/pam.d/polkit-1
+
+auth     include        system-auth
+account  include        system-account
+password include        system-password
+session  include        system-session
+
+# End /etc/pam.d/polkit-1
+EOF
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib usr ; do cp -rf --remove-destination $dir / ; done
+
+getent group polkitd > /dev/null || groupadd -g 27 polkitd
+getent passwd polkitd > /dev/null || useradd -c "PolicyKit Daemon Owner" -d /etc/polkit-1 -u 27 -g polkitd -s /bin/false polkitd
+
+chmod 4755 /usr/bin/pkexec /usr/lib/polkit-1/polkit-agent-helper-1
+
+chmod 700 /etc/polkit-1/rules.d /usr/share/polkit-1/rules.d
+chown polkitd:polkitd /etc/polkit-1/rules.d /usr/share/polkit-1/rules.d
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

@@ -1,0 +1,59 @@
+#!/bin/bash -e
+
+export VER=2.1.5
+export DEST=/binary/vlc-${VER}
+
+pushd vlc-${VER}
+
+sed "s:< 56:< 57:g" -i configure
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr     \
+            --enable-a52      \
+            --enable-aa       \
+            --enable-egl      \
+            --enable-faad     \
+            --enable-gles1    \
+            --enable-gles2    \
+            --enable-ncurses  \
+            --enable-opus     \
+            --enable-realrtsp \
+            --enable-upnp     \
+            --enable-vcdx
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf vlc-${VER}
+
+find ${DEST} -name "*.la" -delete
+
+rm -rf ${DEST}/usr/share/doc
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+/usr/lib/vlc/vlc-cache-gen /usr/lib/vlc/plugins
+
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

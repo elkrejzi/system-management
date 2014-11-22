@@ -1,0 +1,59 @@
+#!/bin/bash -e
+
+export VER=4.8.0
+export DEST=/binary/phonon-backend-gstreamer-${VER}
+
+install -dm755 phonon-backend-gstreamer-${VER}/build4 phonon-backend-gstreamer-${VER}/build5
+
+pushd phonon-backend-gstreamer-${VER}/build4
+
+cmake -DCMAKE_BUILD_TYPE=Release  \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_INSTALL_LIBDIR=lib  \
+      -DCMAKE_SKIP_RPATH=ON       \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+      -Wno-dev ..
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+pushd phonon-backend-gstreamer-${VER}/build5
+
+cmake -DCMAKE_BUILD_TYPE=Release   \
+      -DCMAKE_INSTALL_PREFIX=/usr  \
+      -DCMAKE_INSTALL_LIBDIR=lib   \
+      -DCMAKE_SKIP_RPATH=ON        \
+      -DPHONON_BUILD_PHONON4QT5=ON \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+      -Wno-dev ..
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf phonon-backend-gstreamer-${VER}
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
+EOF
+
+chmod 755 ${DEST}/INSTALL

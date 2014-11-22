@@ -1,0 +1,43 @@
+#!/bin/bash -e
+
+export VER=5.1.1
+export DEST=/binary/kdeplasma-addons-${VER}
+
+install -dm755 kdeplasma-addons-${VER}/build
+
+pushd kdeplasma-addons-${VER}/build
+
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
+      -DLIB_INSTALL_DIR=lib       \
+      -DBUILD_TESTING=OFF         \
+      -DQML_INSTALL_DIR=lib/qt5/qml           \
+      -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+      -Wno-dev ..
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf kdeplasma-addons-${VER}
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL

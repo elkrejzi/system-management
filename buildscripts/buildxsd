@@ -1,0 +1,40 @@
+#!/bin/bash -e
+
+export VER=4.0.0
+export DEST=/binary/xsd-${VER}
+
+pushd xsd-${VER}+dep
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/xsd-fixes.patch
+
+make CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " -j4
+make install install_prefix=${DEST}/usr
+
+popd
+
+rm -rf xsd-${VER}+dep
+
+mv ${DEST}/usr/bin/xsd ${DEST}/usr/bin/xsdcxx
+mv ${DEST}/usr/share/man/man1/xsd.1 ${DEST}/usr/share/man/man1/xsdcxx.1
+
+rm -rf ${DEST}/usr/share/doc
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

@@ -1,0 +1,59 @@
+#!/bin/bash -e
+
+export VER=2.7.8
+export DEST=/binary/Python-${VER}
+
+pushd Python-${VER}
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/python2-bdb.patch
+
+rm -r Modules/expat
+rm -r Modules/zlib
+rm -r Modules/_ctypes/{darwin,libffi}*
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr         \
+            --enable-shared       \
+            --with-system-expat   \
+            --with-system-ffi     \
+            --enable-unicode=ucs4 \
+            --with-dbmliborder=bdb:gdbm:ndbm
+
+make -j4
+make install DESTDIR=${DEST}
+
+sed -i "s#$PWD:##" ${DEST}/usr/lib/python2.7/config/Makefile ${DEST}/usr/lib/python2.7/_sysconfigdata.py
+sed -i "s#$PWD##" ${DEST}/usr/lib/python2.7/config/Makefile ${DEST}/usr/lib/python2.7/_sysconfigdata.py
+
+popd
+
+rm -rf Python-${VER}
+
+mv ${DEST}/usr/bin/2to3{,-2.7}
+
+chmod 755 ${DEST}/usr/lib/libpython2.7.so.1.0
+
+rm -rf ${DEST}/usr/lib/python2.7/{distutils/tests,lib-tk/test,sqlite3/test,json/tests,test}
+rm -rf ${DEST}/usr/lib/python2.7/{ctypes/test,lib2to3/tests,email/test,unittest/test,bsddb/test}
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

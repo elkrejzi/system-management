@@ -1,0 +1,23 @@
+#!/bin/bash -e
+
+export VER=3.14.1
+export DEST=/binary/gnome-backgrounds-${VER}
+
+pushd gnome-backgrounds-${VER}
+
+./configure --prefix=/usr
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf gnome-backgrounds-${VER}
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL

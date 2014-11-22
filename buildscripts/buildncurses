@@ -1,0 +1,190 @@
+#!/bin/bash -e
+
+export VER=5.9-20141101
+export DEST=/binary/ncurses-${VER}
+
+cd ncurses-${VER}
+
+mkdir buildncursesw6{,-32} buildncursesw{,-32} buildncurses{,-32}
+
+pushd buildncursesw6
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+../configure --prefix=/usr \
+             --mandir=/usr/share/man \
+             --with-shared \
+             --without-debug \
+             --enable-pc-files \
+             --enable-widec \
+             --enable-ext-colors \
+             --enable-ext-mouse
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+pushd buildncursesw
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+../configure --prefix=/usr \
+             --mandir=/usr/share/man \
+             --with-shared \
+             --without-debug \
+             --enable-pc-files \
+             --enable-widec
+
+make -j4
+
+for lib in ncursesw formw panelw menuw; do
+  install -m755 lib/lib${lib}.so.5.9 ${DEST}/usr/lib
+  ln -s lib${lib}.so.5.9 ${DEST}/usr/lib/lib${lib}.so.5
+done
+
+popd
+
+pushd buildncurses
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+../configure --prefix=/usr \
+             --mandir=/usr/share/man \
+             --with-shared \
+             --without-debug \
+             --enable-pc-files \
+             --with-chtype=long
+
+make -j4
+
+for lib in ncurses form panel menu; do
+  install -m755 lib/lib${lib}.so.5.9 ${DEST}/usr/lib
+  ln -s lib${lib}.so.5.9 ${DEST}/usr/lib/lib${lib}.so.5
+done
+
+popd
+
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+pushd buildncursesw6-32
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+../configure --prefix=/usr \
+             --libdir=/usr/lib32 \
+             --with-pkg-config-libdir=/usr/lib32/pkgconfig \
+             --mandir=/usr/share/man \
+             --with-shared \
+             --without-debug \
+             --enable-pc-files \
+             --enable-widec \
+             --enable-ext-colors \
+             --enable-ext-mouse
+
+make -j4
+make install DESTDIR=/binary/ncurses32
+
+mv /binary/ncurses32/usr/lib32 ${DEST}/usr
+
+rm -rf /binary/ncurses32
+
+popd
+
+pushd buildncursesw-32
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+../configure --prefix=/usr \
+             --libdir=/usr/lib32 \
+             --with-pkg-config-libdir=/usr/lib32/pkgconfig \
+             --mandir=/usr/share/man \
+             --with-shared \
+             --without-debug \
+             --enable-pc-files \
+             --enable-widec
+
+make -j4
+
+for lib in ncursesw formw panelw menuw; do
+  install -m755 lib/lib${lib}.so.5.9 ${DEST}/usr/lib32
+  ln -s lib${lib}.so.5.9 ${DEST}/usr/lib32/lib${lib}.so.5
+done
+
+popd
+
+pushd buildncurses-32
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+../configure --prefix=/usr \
+             --libdir=/usr/lib32 \
+             --with-pkg-config-libdir=/usr/lib32/pkgconfig \
+             --mandir=/usr/share/man \
+             --with-shared \
+             --without-debug \
+             --enable-pc-files \
+             --with-chtype=long
+
+make -j4
+
+for lib in ncurses form panel menu; do
+  install -m755 lib/lib${lib}.so.5.9 ${DEST}/usr/lib32
+  ln -s lib${lib}.so.5.9 ${DEST}/usr/lib32/lib${lib}.so.5
+done
+
+popd
+
+cd ..
+
+rm -rf ncurses-${VER}
+
+install -dm755 ${DEST}/lib
+
+mv ${DEST}/usr/lib/libncursesw.so.6{,.0} ${DEST}/lib
+ln -sf ../../lib/libncursesw.so.6.0 ${DEST}/usr/lib/libncursesw.so
+
+for lib in ncurses form panel menu ; do
+  rm -f ${DEST}/usr/lib/lib${lib}.so
+  rm -f ${DEST}/usr/lib32/lib${lib}.so
+  echo "INPUT(-l${lib}w)" > ${DEST}/usr/lib/lib${lib}.so
+  echo "INPUT(-l${lib}w)" > ${DEST}/usr/lib32/lib${lib}.so
+done
+
+for lib in ncurses ncurses++ form panel menu; do
+  ln -s ${lib}w.pc ${DEST}/usr/lib/pkgconfig/${lib}.pc
+  ln -s ${lib}w.pc ${DEST}/usr/lib32/pkgconfig/${lib}.pc
+done
+
+rm -f ${DEST}/usr/lib/libcursesw.so
+rm -f ${DEST}/usr/lib/libcursesw.so
+echo "INPUT(-lncursesw)" > ${DEST}/usr/lib/libcursesw.so
+echo "INPUT(-lncursesw)" > ${DEST}/usr/lib32/libcursesw.so
+ln -s libncurses.so ${DEST}/usr/lib/libcurses.so
+ln -s libncurses.so ${DEST}/usr/lib32/libcurses.so
+
+rm -f ${DEST}/usr/lib/*.a
+rm -f ${DEST}/usr/lib32/*.a
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in lib usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

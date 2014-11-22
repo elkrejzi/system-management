@@ -1,0 +1,52 @@
+#!/bin/bash -e
+
+export VER=4.11.3
+export DEST=/binary/python-pyqt-${VER}
+
+cp -a PyQt-x11-gpl-${VER} PyQt-x11-gpl-${VER}-2
+
+pushd PyQt-x11-gpl-${VER}-2
+
+python configure-ng.py --confirm-license --qsci-api -v /usr/share/sip
+
+find -name 'Makefile' | xargs sed -i 's|-Wl,-rpath,/usr/lib||g;s|-Wl,-rpath,.* ||g'
+
+make -j4
+make install DESTDIR=${DEST} INSTALL_ROOT=${DEST}
+
+mv ${DEST}/usr/bin/pyuic4 ${DEST}/usr/bin/python2-pyuic4
+
+popd
+
+pushd PyQt-x11-gpl-${VER}
+
+python3 configure-ng.py --confirm-license --qsci-api
+
+find -name 'Makefile' | xargs sed -i 's|-Wl,-rpath,/usr/lib||g;s|-Wl,-rpath,.* ||g'
+
+make -j4
+make install DESTDIR=${DEST} INSTALL_ROOT=${DEST}
+
+popd
+
+rm -rf PyQt-x11-gpl-${VER} PyQt-x11-gpl-${VER}-2
+
+find ${DEST} -name "*.so" -exec chmod 755 {} \;
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL

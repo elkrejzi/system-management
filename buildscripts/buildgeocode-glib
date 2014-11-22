@@ -1,0 +1,40 @@
+#!/bin/bash -e
+
+export VER=3.14.0
+export DEST=/binary/geocode-glib-${VER}
+
+pushd geocode-glib-${VER}
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr --disable-static
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf geocode-glib-${VER}
+
+find ${DEST} -name "*.la" -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for gnome-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/gnome
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

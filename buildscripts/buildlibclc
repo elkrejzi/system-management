@@ -1,0 +1,23 @@
+#!/bin/bash -e
+
+export VER=222082
+export DEST=/binary/libclc-${VER}
+
+pushd libclc-${VER}
+
+./configure.py --prefix=/usr
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf libclc-${VER}
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL

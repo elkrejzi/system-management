@@ -1,0 +1,60 @@
+#!/bin/bash -e
+
+export VER="1.78.1"
+export DEST=/binary/docbook-xsl-${VER}
+
+pushd docbook-xsl-${VER}
+
+install -dm755 ${DEST}/usr/share/xml/docbook/xsl-stylesheets-${VER}/{common,params}
+install -m644 common/*.{xml,xsl,dtd,ent} ${DEST}/usr/share/xml/docbook/xsl-stylesheets-${VER}/common/
+install -m644 params/*.xml ${DEST}/usr/share/xml/docbook/xsl-stylesheets-${VER}/params/
+
+for fn in fo highlighting html roundtrip; do
+	install -dm755 ${DEST}/usr/share/xml/docbook/xsl-stylesheets-${VER}/${fn}
+	install -m644 ${fn}/*.{xml,xsl} ${DEST}/usr/share/xml/docbook/xsl-stylesheets-${VER}/${fn}/
+done
+
+for fn in eclipse htmlhelp javahelp lib manpages profiling template website xhtml{,-1_1}; do
+	install -dm755 ${DEST}/usr/share/xml/docbook/xsl-stylesheets-${VER}/${fn}
+	install -m644 ${fn}/*.xsl ${DEST}/usr/share/xml/docbook/xsl-stylesheets-${VER}/${fn}/
+done
+
+install -dm755 ${DEST}/etc/xml
+install -m644 VERSION ${DEST}/usr/share/xml/docbook/xsl-stylesheets-${VER}/
+
+ln -sf VERSION ${DEST}/usr/share/xml/docbook/xsl-stylesheets-${VER}/VERSION.xsl
+
+popd
+
+rm -rf docbook-xsl-${VER}
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -r --remove-destination $dir / ; done
+
+if [ ! -e /etc/xml/catalog ]; then
+  xmlcatalog --noout --create /etc/xml/catalog
+fi
+
+xmlcatalog --noout --add "rewriteSystem" \
+  "http://docbook.sourceforge.net/release/xsl/DBVER" \
+  "/usr/share/xml/docbook/xsl-stylesheets-DBVER" \
+  /etc/xml/catalog
+xmlcatalog --noout --add "rewriteURI" \
+  "http://docbook.sourceforge.net/release/xsl/DBVER" \
+  "/usr/share/xml/docbook/xsl-stylesheets-DBVER" \
+  /etc/xml/catalog
+xmlcatalog --noout --add "rewriteSystem" \
+  "http://docbook.sourceforge.net/release/xsl/current" \
+  "/usr/share/xml/docbook/xsl-stylesheets-DBVER" \
+  /etc/xml/catalog
+xmlcatalog --noout --add "rewriteURI" \
+  "http://docbook.sourceforge.net/release/xsl/current" \
+  "/usr/share/xml/docbook/xsl-stylesheets-DBVER" \
+  /etc/xml/catalog
+EOF
+
+sed -i "s:DBVER:${VER}:g" ${DEST}/INSTALL
+
+chmod 755 ${DEST}/INSTALL

@@ -1,0 +1,69 @@
+#!/bin/bash -e
+
+export VER=2007f
+export DEST=/binary/libc-client-${VER}
+
+pushd imap-${VER}
+
+sed -i "s#BSD_SOURCE#DEFAULT_SOURCE#g" src/osdep/unix/os_{ln,sl}x.h
+
+sed -i "s#BASELDFLAGS=\"\$(PAMLDFLAGS)\"#BASELDFLAGS=\"../c-client/c-client.a \$(PAMLDFLAGS)\"#g" src/osdep/unix/Makefile
+sed -i "s#\$(BINARIES);\$(RANLIB)#\$(BINARIES) \$(LIBRARIES);\$(RANLIB)#g" src/osdep/unix/Makefile
+sed -i "s#\$(CCLIENTLIB) ##g" $(grep -rl "(CCLIENTLIB)")
+
+/bin/echo -e '
+ldbs:  an
+\t$(BUILD) BUILDTYPE=lnps IP=$(IP6) \
+\tSPECIALS="SSLDIR=/usr SSLINCLUDE=/usr/include SSLCERTS=/etc/ssl/certs SSLKEYS=/etc/ssl/private"
+' >> Makefile
+
+/bin/echo -e '
+lnps:  # Linux Pluggable Authentication modules (c-client as shared lib)
+\t$(BUILD) `$(CAT) SPECIALS` OS=lnx \
+\tSIGTYPE=psx CHECKPW=pam CRXTYPE=nfs \
+\tSPOOLDIR=/var/spool \
+\tACTIVEFILE=/var/lib/news/active \
+\tRSHPATH=/usr/bin/rsh \
+\tBASECFLAGS="-fPIC $(GCCCFLAGS)" \
+\tARCHIVE="libc-client.so" \
+\tBASELDFLAGS="-L../c-client -lc-client $(PAMLDFLAGS)" \
+\tARRC="gcc --shared -Wl,-soname,libc-client.so.$(VERSION) -o" \
+\tLIBRARIES="$(PAMLDFLAGS) $(EXTRALDFLAGS) $(SSLLDFLAGS)" \
+\tRANLIB=true
+' >> src/osdep/unix/Makefile
+
+yes "y" | make ldbs VERSION=${VER}
+
+for file in c-client mail imap4r1 rfc822 linkage misc smtp nntp \
+            osdep env_unix env fs ftl nl tcp sslio utf8 utf8aux
+do
+    install -Dm644 c-client/${file}.h ${DEST}/usr/include/c-client/${file}.h
+done
+
+install -Dm755 c-client/libc-client.so ${DEST}/usr/lib/libc-client.so.${VER}
+
+ln -sf libc-client.so.${VER} ${DEST}/usr/lib/libc-client.so
+
+popd
+
+rm -rf imap-${VER}
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

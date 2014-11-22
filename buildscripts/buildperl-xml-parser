@@ -1,0 +1,39 @@
+#!/bin/bash -e
+
+export VER=2.41
+export DEST=/binary/perl-xml-parser-${VER}
+
+pushd XML-Parser-${VER}
+
+perl Makefile.PL INSTALLDIRS=vendor
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf XML-Parser-${VER}
+
+rm -rf ${DEST}/usr/lib/perl
+
+find ${DEST} -name .packlist -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

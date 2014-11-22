@@ -1,0 +1,36 @@
+#!/bin/bash -e
+
+export VER=0.12
+export DEST=/binary/python-docutils-${VER}
+
+cp -a docutils-${VER} docutils-${VER}-3
+
+pushd docutils-${VER}-3
+
+python3 setup.py build
+python3 setup.py install --root=${DEST} --optimize=1
+
+for file in ${DEST}/usr/bin/*.py
+do
+  ln -sf $(basename ${file}) ${file%.py}
+  mv ${file} ${file%.py}3.py
+done
+
+popd
+
+pushd docutils-${VER}
+
+python setup.py build
+python setup.py install --root=${DEST} --optimize=1
+
+popd
+
+rm -rf docutils-${VER} docutils-${VER}-3
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL

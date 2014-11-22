@@ -1,0 +1,36 @@
+#!/bin/bash -e
+
+sed 's|diag libinstaller dos win32 win64 dosutil txt|libinstaller txt|g' -i Makefile
+sed 's|win32/syslinux.exe win64/syslinux64.exe||g' -i Makefile
+sed 's|dosutil/*.com dosutil/*.sys||g' -i Makefile
+sed 's|dos/syslinux.com||g' -i Makefile
+sed 's|INSTALLSUBDIRS = com32 utils dosutil|INSTALLSUBDIRS = com32 utils|g' -i Makefile
+sed 's|install -m 644 -c $(INSTALL_DIAG) $(INSTALLROOT)$(DIAGDIR)|# install -m 644 -c $(INSTALL_DIAG) $(INSTALLROOT)$(DIAGDIR)|g' -i Makefile
+sed 's|-include $(MAKEDIR)/devel.mk||g' -i mk/syslinux.mk
+
+sed 's|/usr/man|/usr/share/man|g' -i mk/syslinux.mk
+
+#patch -Np1 -i /media/ntfs/Other/Linux/patches/syslinux.patch
+
+make bios
+make bios installer
+
+make INSTALLROOT="/binary/$(basename $PWD)/" AUXDIR="/usr/lib/syslinux/" bios install
+
+cat > /binary/$(basename $PWD)/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in sbin usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 /binary/$(basename $PWD)/INSTALL
+
+pushd /binary/$(basename $PWD)
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+popd

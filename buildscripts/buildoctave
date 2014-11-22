@@ -1,0 +1,58 @@
+#!/bin/bash -e
+
+export VER=3.8.2
+export DEST=/binary/octave-${VER}
+
+pushd octave-${VER}
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/octave-fixes.patch
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr --with-umfpack="-lumfpack -lsuitesparseconfig" \
+            LEXLIB=/usr/lib/libfl.a \
+            MOC=moc-qt4 UIC=uic-qt4
+
+make -j3
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf octave-${VER}
+
+find ${DEST} -name "*.la" -delete
+
+rm -rf ${DEST}/usr/share/info/dir
+gzip -9 ${DEST}/usr/share/info/*
+
+sed -i "/^Exec/s:bin/octave:& --force-gui:g" ${DEST}/usr/share/applications/www.octave.org-octave.desktop
+sed -i "/Terminal/d" ${DEST}/usr/share/applications/www.octave.org-octave.desktop
+
+mv ${DEST}/usr/share/applications/www.octave.org-octave.desktop ${DEST}/usr/share/applications/octave.desktop
+
+install -dm755 ${DEST}/etc/ld.so.conf.d
+
+echo "/usr/lib/octave/${VER}" > ${DEST}/etc/ld.so.conf.d/octave.conf
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+[ -x /usr/bin/install-info ] && echo "Processing triggers for texinfo" && for file in usr/share/info/* ; do /usr/bin/install-info /$file /usr/share/info/dir ; done
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

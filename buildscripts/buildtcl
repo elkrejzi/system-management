@@ -1,0 +1,68 @@
+#!/bin/bash -e
+
+export TCLMAJOR=8.6
+export VER=${TCLMAJOR}.3
+export DEST=/binary/tcl-${VER}
+
+pushd tcl${VER}/unix
+
+rm -rf ../pkgs/sqlite*
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr           \
+            --without-tzdata        \
+            --mandir=/usr/share/man \
+            --enable-64bit
+
+make -j4
+
+sed -e "s@^\(TCL_SRC_DIR='\).*@\1/usr/include'@" \
+    -e "/TCL_B/s@='\(-L\)\?.*unix@='\1/usr/lib@" \
+    -i tclConfig.sh
+
+make install install-private-headers DESTDIR=${DEST}
+
+ln -sf tclsh${TCLMAJOR} ${DEST}/usr/bin/tclsh
+
+chmod 644 ${DEST}/usr/lib/libtclstub${TCLMAJOR}.a
+
+find ${DEST} -name "*.so" -exec chmod 755 {} \;
+
+cd ..
+
+sed -e "s#${PWD}/unix/pkgs/tdbc1.0.2#/usr/lib/tdbc1.0.2#" \
+    -e "s#${PWD}/pkgs/tdbc1.0.2/generic#/usr/include#" \
+    -e "s#${PWD}/pkgs/tdbc1.0.2/library#/usr/lib/tcl${TCLMAJOR}#" \
+    -e "s#${PWD}/pkgs/tdbc1.0.2#/usr/include#" \
+    -i "${DEST}/usr/lib/tdbc1.0.2/tdbcConfig.sh"
+
+sed -e "s#${PWD}/unix/pkgs/itcl4.0.2#/usr/lib/itcl4.0.2#" \
+    -e "s#${PWD}/pkgs/itcl4.0.2/generic#/usr/include#" \
+    -e "s#${PWD}/pkgs/itcl4.0.2#/usr/include#" \
+    -i "${DEST}/usr/lib/itcl4.0.2/itclConfig.sh"
+
+popd
+
+rm -rf tcl${VER}
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

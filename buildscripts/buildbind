@@ -1,0 +1,256 @@
+#!/bin/bash -e
+
+export VER=9.10.1
+export DEST=/binary/bind-${VER}
+
+pushd bind-${VER}
+
+if [ -f /media/ntfs/Other/Linux/patches/bind-fixes.patch ]; then
+  patch -Np1 -i /media/ntfs/Other/Linux/patches/bind-fixes.patch
+fi
+
+export CC="clang" CXX="clang++"
+
+CFLAGS="-march=native -mtune=native -g -O2"   \
+CXXFLAGS="-march=native -mtune=native -g -O2" \
+./configure --prefix=/usr \
+            --sysconfdir=/etc/bind \
+            --localstatedir=/var \
+            --mandir=/usr/share/man \
+            --disable-static \
+            --with-openssl=/usr \
+            --with-gssapi=/usr \
+            --with-libtool \
+            --with-dlz-postgres \
+            --with-dlz-mysql \
+            --with-dlz-bdb \
+            --with-dlz-ldap \
+            --with-dlz-odbc=/usr
+
+sed  -i "/DLZDRIVER_LIBS/s:ldb:& -lodbc:" bin/named/Makefile
+
+make
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf bind-${VER}
+
+rm -rf ${DEST}/usr/lib/*.la
+rm -rf ${DEST}/var
+
+chmod 755 ${DEST}/usr/lib/*.so
+
+mkdir -p ${DEST}/etc/systemd/system/multi-user.target.wants
+mkdir -p ${DEST}/lib/systemd/system
+mkdir -p ${DEST}/usr/lib/tmpfiles.d
+
+cat > ${DEST}/etc/bind/named.conf << "EOF"
+// This is the primary configuration file for the BIND DNS server named.
+
+options {
+        directory "/var/cache/bind";
+
+        // forwarders {
+        //      0.0.0.0;
+        // };
+
+        auth-nxdomain no;    # conform to RFC1035
+        // listen-on-v6 { any; };
+};
+
+zone "." {
+	type hint;
+	file "/etc/bind/db.root";
+};
+
+zone "localhost" {
+	type master;
+	file "/etc/bind/db.local";
+};
+
+zone "127.in-addr.arpa" {
+        type master;
+        file "/etc/bind/db.127";
+};
+EOF
+
+cat > ${DEST}/etc/bind/db.127 << "EOF"
+;
+; BIND reverse data file for local loopback interface
+;
+$TTL	604800
+@	IN	SOA	localhost. root.localhost. (
+			      1		; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+;
+@	IN	NS	localhost.
+1.0.0	IN	PTR	localhost.
+EOF
+
+cat > ${DEST}/etc/bind/db.local << "EOF"
+;
+; BIND data file for local loopback interface
+;
+$TTL	604800
+@	IN	SOA	localhost. root.localhost. (
+			      2		; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+;
+@	IN	NS	localhost.
+@	IN	A	127.0.0.1
+@	IN	AAAA	::1
+EOF
+
+cat > ${DEST}/etc/bind/db.root << "EOF"
+;       This file holds the information on root name servers needed to
+;       initialize cache of Internet domain name servers
+;       (e.g. reference this file in the "cache  .  <file>"
+;       configuration file of BIND domain name servers).
+;
+;       This file is made available by InterNIC 
+;       under anonymous FTP as
+;           file                /domain/named.root
+;           on server           FTP.INTERNIC.NET
+;       -OR-                    RS.INTERNIC.NET
+;
+;       last update:    Feb 04, 2008
+;       related version of root zone:   2008020400
+;
+; formerly NS.INTERNIC.NET
+;
+.                        3600000  IN  NS    A.ROOT-SERVERS.NET.
+A.ROOT-SERVERS.NET.      3600000      A     198.41.0.4
+A.ROOT-SERVERS.NET.      3600000      AAAA  2001:503:BA3E::2:30
+;
+; formerly NS1.ISI.EDU
+;
+.                        3600000      NS    B.ROOT-SERVERS.NET.
+B.ROOT-SERVERS.NET.      3600000      A     192.228.79.201
+;
+; formerly C.PSI.NET
+;
+.                        3600000      NS    C.ROOT-SERVERS.NET.
+C.ROOT-SERVERS.NET.      3600000      A     192.33.4.12
+;
+; formerly TERP.UMD.EDU
+;
+.                        3600000      NS    D.ROOT-SERVERS.NET.
+D.ROOT-SERVERS.NET.      3600000      A     128.8.10.90
+;
+; formerly NS.NASA.GOV
+;
+.                        3600000      NS    E.ROOT-SERVERS.NET.
+E.ROOT-SERVERS.NET.      3600000      A     192.203.230.10
+;
+; formerly NS.ISC.ORG
+;
+.                        3600000      NS    F.ROOT-SERVERS.NET.
+F.ROOT-SERVERS.NET.      3600000      A     192.5.5.241
+F.ROOT-SERVERS.NET.      3600000      AAAA  2001:500:2f::f
+;
+; formerly NS.NIC.DDN.MIL
+;
+.                        3600000      NS    G.ROOT-SERVERS.NET.
+G.ROOT-SERVERS.NET.      3600000      A     192.112.36.4
+;
+; formerly AOS.ARL.ARMY.MIL
+;
+.                        3600000      NS    H.ROOT-SERVERS.NET.
+H.ROOT-SERVERS.NET.      3600000      A     128.63.2.53
+H.ROOT-SERVERS.NET.      3600000      AAAA  2001:500:1::803f:235
+;
+; formerly NIC.NORDU.NET
+;
+.                        3600000      NS    I.ROOT-SERVERS.NET.
+I.ROOT-SERVERS.NET.      3600000      A     192.36.148.17
+;
+; operated by VeriSign, Inc.
+;
+.                        3600000      NS    J.ROOT-SERVERS.NET.
+J.ROOT-SERVERS.NET.      3600000      A     192.58.128.30
+J.ROOT-SERVERS.NET.      3600000      AAAA  2001:503:C27::2:30
+;
+; operated by RIPE NCC
+;
+.                        3600000      NS    K.ROOT-SERVERS.NET.
+K.ROOT-SERVERS.NET.      3600000      A     193.0.14.129
+K.ROOT-SERVERS.NET.      3600000      AAAA  2001:7fd::1
+;
+; operated by ICANN
+;
+.                        3600000      NS    L.ROOT-SERVERS.NET.
+L.ROOT-SERVERS.NET.      3600000      A     199.7.83.42
+;
+; operated by WIDE
+;
+.                        3600000      NS    M.ROOT-SERVERS.NET.
+M.ROOT-SERVERS.NET.      3600000      A     202.12.27.33
+M.ROOT-SERVERS.NET.      3600000      AAAA  2001:dc3::35
+; End of File
+EOF
+
+cat > ${DEST}/usr/lib/tmpfiles.d/named.conf << "EOF"
+d /run/named 0750 named named -
+EOF
+
+cat > ${DEST}/lib/systemd/system/named.service << "EOF"
+[Unit]
+Description=Internet domain name server
+After=network.target
+
+[Service]
+ExecStart=/usr/sbin/named -4 -f -u named
+ExecReload=/usr/sbin/rndc reload
+ExecStop=/usr/sbin/rndc stop
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+mkdir -p usr/lib/debug/`dirname ${BUILD_BINARY}`
+objcopy --only-keep-debug ${BUILD_BINARY} usr/lib/debug/${BUILD_BINARY}
+strip --strip-unneeded ${BUILD_BINARY}
+objcopy --add-gnu-debuglink=usr/lib/debug/${BUILD_BINARY} ${BUILD_BINARY}
+esac
+done
+
+popd
+
+ln -sf /lib/systemd/system/named.service ${DEST}/etc/systemd/system/multi-user.target.wants/named.service
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib usr ; do cp -rf --remove-destination $dir / ; done
+
+getent group named >/dev/null || groupadd -g 20 named
+getent passwd named >/dev/null || useradd -d /var/cache/bind -g named -s /bin/false -u 20 named
+
+install -d -m 755 -o root -g named /var/lib/bind
+install -d -m 755 -o root -g named /var/cache/bind
+
+if [ ! -s /etc/bind/rndc.key ]; then
+   rndc-confgen -r /dev/urandom -a
+fi
+
+chgrp named /etc/bind /etc/bind/named.conf /etc/bind/rndc.key
+chmod g+s /etc/bind
+chmod g+r /etc/bind/rndc.key /etc/bind/named.conf
+chmod g+rwx /var/cache/bind
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

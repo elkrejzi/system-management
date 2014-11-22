@@ -1,0 +1,46 @@
+#!/bin/bash -e
+
+export VER=0.9.15
+export DEST=/binary/zeitgeist-${VER}
+
+pushd zeitgeist-${VER}
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/zeitgeist-fixes.patch
+
+NOCONFIGURE=1 ./autogen.sh
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr     \
+            --sysconfdir=/etc \
+            --disable-static
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf zeitgeist-${VER}
+
+find ${DEST} -name "*.la" -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

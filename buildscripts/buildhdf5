@@ -1,0 +1,47 @@
+#!/bin/bash -e
+
+export VER=1.8.14
+export DEST=/binary/hdf5-${VER}
+
+pushd hdf5-${VER}
+
+sed -i "s:BSD_SOURCE:DEFAULT_SOURCE:g" configure configure.ac
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr       \
+            --enable-production \
+            --enable-threadsafe \
+            --disable-static    \
+            --disable-sharedlib-rpath
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf hdf5-${VER}
+
+find ${DEST} -name "*.la" -delete
+
+rm -rf ${DEST}/usr/share
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in usr/include usr/lib ; do cp -rf --remove-destination $dir /usr ; done
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

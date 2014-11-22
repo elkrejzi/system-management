@@ -1,0 +1,48 @@
+#!/bin/bash -e
+
+export VER=1.22.3
+export DEST=/binary/groff-${VER}
+
+pushd groff-${VER}
+
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+PAGE=A4 ./configure --prefix=/usr
+
+make # -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf groff-${VER}
+
+rm -rf ${DEST}/usr/share/doc ${DEST}/usr/share/info/dir
+gzip -9 ${DEST}/usr/share/info/*
+
+for file in eqn tbl
+do
+  ln -sf $file ${DEST}/usr/bin/g${file}
+  ln -sf $file.1 ${DEST}/usr/share/man/man1/g${file}.1
+done
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/install-info ] && echo "Processing triggers for texinfo" && for file in usr/share/info/* ; do /usr/bin/install-info /$file /usr/share/info/dir ; done
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

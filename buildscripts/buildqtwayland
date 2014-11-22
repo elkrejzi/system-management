@@ -1,0 +1,50 @@
+#!/bin/bash -e
+
+git clone https://gitorious.org/qt/qtwayland.git -b dev
+
+pushd qtwayland
+
+git checkout a6d8c05
+
+export VER=$(git describe)
+export DEST=/binary/qtwayland-${VER}
+
+sed -i "/PKGCONFIG/s:xcomposite:& xrender:" src/hardwareintegration/client/xcomposite-glx/xcomposite-glx.pri
+sed -i "/LIBS/s:-lXcomposite:& -lXrender:" src/hardwareintegration/client/xcomposite-glx/xcomposite-glx.pri
+
+qmake-qt5 "QMAKE_CFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong " "QMAKE_CXXFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong "
+
+make -j4
+make install INSTALL_ROOT=${DEST}
+
+popd
+
+rm -rf qtwayland
+
+find ${DEST} -name "*.la" -delete
+
+sed -i "/QMAKE_PRL_BUILD_DIR/d" ${DEST}/usr/lib/libQt5WaylandClient.prl
+
+install -dm755 ${DEST}/usr/bin
+
+ln -sf ../lib/qt5/bin/qtwaylandscanner ${DEST}/usr/bin/qtwaylandscanner
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

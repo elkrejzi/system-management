@@ -1,0 +1,105 @@
+#!/bin/bash -e
+
+export VER=2.8.12.1
+export DEST=/binary/wxgtk-${VER}
+
+cp -a wxPython-src-${VER} wxPython-src-${VER}-32
+
+pushd wxPython-src-${VER}
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/wxgtk.patch
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w" \
+./configure --prefix=/usr             \
+            --libdir=/usr/lib         \
+            --disable-precomp-headers \
+            --enable-graphics_ctx     \
+            --enable-mediactrl        \
+            --enable-unicode          \
+            --with-gtk=2              \
+            --with-libjpeg=sys        \
+            --with-libpng=sys         \
+            --with-libtiff=sys        \
+            --with-libxpm=sys         \
+            --with-opengl             \
+            --with-regex=builtin      \
+            --with-sdl
+
+make -j4
+make -C locale allmo -j4
+make -C contrib/src -j4
+
+make install DESTDIR=${DEST}
+make -C contrib/src install DESTDIR=${DEST}
+
+popd
+
+pushd wxPython-src-${VER}-32
+
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+sed -e "s:rm -f wx-config:rm -f wx-config-\$(WX_RELEASE):" \
+    -e "s:FULLNAME) wx-config:FULLNAME) wx-config32-\$(WX_RELEASE):" \
+    -i Makefile.in
+
+sed -e "/\$(LN_S) wxrc-\$(WX_RELEASE)/d" \
+    -i utils/wxrc/Makefile.in
+
+sed -e "/mv -f/s:wxrc-\$(WX_RELEASE):wxrc32-\$(WX_RELEASE):" \
+    -i utils/wxrc/Makefile.in
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w" \
+./configure --prefix=/usr             \
+            --libdir=/usr/lib32       \
+            --disable-mediactrl       \
+            --disable-precomp-headers \
+            --enable-graphics_ctx     \
+            --enable-unicode          \
+            --with-gtk=2              \
+            --with-libjpeg=sys        \
+            --with-libpng=sys         \
+            --with-libtiff=sys        \
+            --with-libxpm=sys         \
+            --with-opengl             \
+            --with-regex=builtin      \
+            --with-sdl
+
+make -j4
+make -C locale allmo -j4
+make -C contrib/src -j4
+
+make install DESTDIR=${PWD}/dest
+make -C contrib/src install DESTDIR=${PWD}/dest
+
+mv dest/usr/bin/* ${DEST}/usr/bin
+mv dest/usr/lib32 ${DEST}/usr
+
+popd
+
+rm -rf wxPython-src-${VER} wxPython-src-${VER}-32
+
+find ${DEST} -name "*.la" -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

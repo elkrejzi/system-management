@@ -1,0 +1,67 @@
+#!/bin/bash -e
+
+export DEST=/binary/xorg
+
+export APP=/media/ntfs/Other/Linux/app.wget
+export XORG_HTTP=http://xorg.freedesktop.org/archive/individual
+
+export APP_HTTP=${XORG_HTTP}/app/
+
+export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "
+export CONFIG="--prefix=/usr --sysconfdir=/etc --localstatedir=/var"
+
+mkdir -p app
+
+pushd app
+  grep -v '^#' ${APP} | awk '{print $2}' | wget -i- -c -B ${APP_HTTP}
+  md5sum -c ${APP}
+popd
+
+pushd app
+
+for package in $(grep -v '^#' ${APP} | awk '{print $2}')
+do
+  packagedir=${package%.tar.bz2}
+  tar -xf ${package}
+  pushd ${packagedir}
+  case $packagedir in
+    luit-[0-9]* )
+      line1="#ifdef _XOPEN_SOURCE"
+      line2="#  undef _XOPEN_SOURCE"
+      line3="#  define _XOPEN_SOURCE 600"
+      line4="#endif"
+ 
+      sed -i -e "s@#ifdef HAVE_CONFIG_H@$line1\n$line2\n$line3\n$line4\n\n&@" sys.c
+      unset line1 line2 line3 line4
+    ;;
+  esac
+  ./configure ${CONFIG}
+  make -j4
+  make install DESTDIR=${DEST}/apps-7.7
+  popd
+  rm -rf ${packagedir}
+done
+
+popd
+
+rm -rf app
+
+pushd ${DEST}/apps-7.7
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/apps-7.7/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/apps-7.7/INSTALL

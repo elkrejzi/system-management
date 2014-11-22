@@ -1,0 +1,48 @@
+#!/bin/bash -e
+
+export VER=1.3
+export DEST=/binary/thermal_daemon-${VER}
+
+pushd thermal_daemon-${VER}
+
+autoreconf -fi
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr     \
+            --sysconfdir=/etc \
+            --localstatedir=/var
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf thermal_daemon-${VER}
+
+rm -rf ${DEST}/etc/init
+
+install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants
+
+ln -sf /lib/systemd/system/thermald.service ${DEST}/etc/systemd/system/dbus-org.freedesktop.thermald.service
+ln -sf /lib/systemd/system/thermald.service ${DEST}/etc/systemd/system/multi-user.target.wants/thermald.service
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

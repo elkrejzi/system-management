@@ -1,0 +1,41 @@
+#!/bin/bash -e
+
+export VER=0.5.0
+export DEST=/binary/kpartx-${VER}
+
+pushd multipath-tools-${VER}/kpartx
+
+sed -i "s:lib64:lib:g" ../Makefile.inc
+sed -i "s:-O2:-march=native -mtune=native -O2 -pipe -fstack-protector-strong :g" ../Makefile.inc
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf multipath-tools-${VER}
+
+mv ${DEST}/etc/udev/rules.d ${DEST}/lib/udev
+rm -rf ${DEST}/etc
+
+gzip -d ${DEST}/usr/share/man/man8/*.gz
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in lib sbin usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

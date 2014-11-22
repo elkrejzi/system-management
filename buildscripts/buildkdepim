@@ -1,0 +1,48 @@
+#!/bin/bash -e
+
+export VER=4.14.2
+export DEST=/binary/kdepim-${VER}
+
+install -dm755 kdepim-${VER}/build
+
+pushd kdepim-${VER}/build
+
+cmake -DCMAKE_BUILD_TYPE=Release  \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DKDE4_BUILD_TESTS=OFF      \
+      -DCMAKE_SKIP_RPATH=ON       \
+      -DKDEPIM_BUILD_MOBILE=OFF   \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+      -Wno-dev ..
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf kdepim-${VER}
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for oxygen-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/oxygen
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

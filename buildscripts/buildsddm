@@ -1,0 +1,99 @@
+#!/bin/bash -e
+
+export VER=0.10.0
+export DEST=/binary/sddm-${VER}
+
+pushd sddm-${VER}
+
+cmake -DCMAKE_BUILD_TYPE=Release  \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DBUILD_MAN_PAGES=ON        \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+      -Wno-dev
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf sddm-${VER}
+
+cat > ${DEST}/etc/pam.d/sddm << "EOF"
+# Begin /etc/pam.d/sddm
+
+auth     requisite      pam_nologin.so
+auth     required       pam_env.so
+
+auth     required       pam_succeed_if.so uid >= 1000 quiet
+auth     include        system-auth
+-auth    optional       pam_gnome_keyring.so
+
+account  include        system-account
+password include        system-password
+
+session  required       pam_limits.so
+session  include        system-session
+-session  optional      pam_gnome_keyring.so auto_start
+
+# End /etc/pam.d/sddm
+EOF
+
+cat > ${DEST}/etc/pam.d/sddm-autologin << "EOF"
+# Begin /etc/pam.d/sddm-autologin
+
+auth     requisite      pam_nologin.so
+auth     required       pam_env.so
+
+auth     required       pam_succeed_if.so uid >= 1000 quiet
+auth     required       pam_permit.so
+
+account  include        system-account
+
+password required       pam_deny.so
+
+session  required       pam_limits.so
+session  include        system-session
+
+# End /etc/pam.d/sddm-autologin
+EOF
+
+cat > ${DEST}/etc/pam.d/sddm-greeter << "EOF"
+# Begin /etc/pam.d/sddm-greeter
+
+auth     required       pam_env.so
+auth     required       pam_permit.so
+
+account  required       pam_permit.so
+password required       pam_deny.so
+
+session  required       pam_unix.so
+-session optional       pam_systemd.so
+
+# End /etc/pam.d/sddm-greeter
+EOF
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib usr ; do cp -rf --remove-destination $dir / ; done
+
+getent group sddm > /dev/null || groupadd -g 64 sddm
+getent passwd sddm > /dev/null || useradd -c "Simple Desktop Display Manager" -u 64 -g sddm -d /var/lib/sddm -s /sbin/nologin sddm
+
+install -dm755 -o sddm -g sddm /var/lib/sddm
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

@@ -1,0 +1,55 @@
+#!/bin/bash
+
+export VER=1.5.2
+export DEST=/binary/OpenSP-${VER}
+
+pushd OpenSP-${VER}
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/OpenSP.patch
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr       \
+            --disable-static    \
+            --disable-doc-build \
+            --enable-http       \
+            --enable-default-catalog=/etc/sgml/catalog \
+            --enable-default-search-path=/usr/share/sgml
+
+make pkgdatadir=/usr/share/sgml/OpenSP
+make install pkgdatadir=/usr/share/sgml/OpenSP DESTDIR=${DEST}
+
+popd
+
+rm -rf OpenSP-${VER}
+
+for file in nsgmls sgmlnorm spam spcat spent sx ; do
+  ln -sf o${file} ${DEST}/usr/bin/$file
+done
+
+ln -sf osx ${DEST}/usr/bin/sgml2xml
+ln -sf libosp.so ${DEST}/usr/lib/libsp.so
+
+rm -rf ${DEST}/usr/share/doc
+
+find ${DEST} -name "*.la" -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

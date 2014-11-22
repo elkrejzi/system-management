@@ -1,0 +1,39 @@
+#!/bin/bash -e
+
+export VER=1.3.8
+export DEST=/binary/serf-${VER}
+
+pushd serf-${VER}
+
+sed -i "/Append/s:RPATH=libdir,::"   SConstruct
+sed -i "/Default/s:lib_static,::"    SConstruct
+sed -i "/Alias/s:install_static,::"  SConstruct
+
+scons PREFIX=/usr CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "
+scons PREFIX=${DEST}/usr install
+
+popd
+
+rm -rf serf-${VER}
+
+#find ${DEST} -name "*.la" -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

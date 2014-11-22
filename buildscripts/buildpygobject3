@@ -1,0 +1,52 @@
+#!/bin/bash -e
+
+export VER=3.14.0
+export DEST=/binary/pygobject-${VER}
+
+cp -a pygobject-${VER} pygobject-${VER}-3
+
+pushd pygobject-${VER}-3
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr --with-python=/usr/bin/python3
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+pushd pygobject-${VER}
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr --with-python=/usr/bin/python
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf pygobject-${VER} pygobject-${VER}-3
+
+find ${DEST} -name "*.la" -delete
+
+rm -rf ${DEST}/usr/share
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL

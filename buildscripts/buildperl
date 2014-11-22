@@ -1,0 +1,97 @@
+#!/bin/bash -e
+
+export BUILD_ZLIB=False
+export ZLIB_INCLUDE=/usr/include
+export ZLIB_LIB=/usr/lib
+
+export BUILD_BZIP2=0
+export BZIP2_INCLUDE=/usr/include
+export BZIP2_LIB=/usr/lib
+
+export MAJOR_VER=5.20
+export MINOR_VER=1
+export VER=${MAJOR_VER}.${MINOR_VER}
+
+export DEST=/binary/perl-${VER}
+
+export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "
+
+pushd perl-${VER}
+
+sh Configure -Dprefix=/usr   \
+             -Dusethreads    \
+             -Duselargefiles \
+             -Dprivlib=/usr/share/perl/${MAJOR_VER} \
+             -Darchlib=/usr/lib/perl/${MAJOR_VER}   \
+             -Dvendorprefix=/usr          \
+             -Dvendorlib=/usr/share/perl5 \
+             -Dvendorarch=/usr/lib/perl5  \
+             -Dsiteprefix=/usr/local      \
+             -Dsitelib=/usr/local/share/perl/${VER} \
+             -Dsitearch=/usr/local/lib/perl/${VER}  \
+             -Dman1dir=/usr/share/man/man1 \
+             -Dman3dir=/usr/share/man/man3 \
+             -Dpager=/usr/bin/pager        \
+             -Duseshrplib                  \
+             -Dlibperl=libperl.so.${VER}   \
+             -des -Uafs -Ud_csh -Ud_ualarm \
+             -Uusesfio -Uusenm -Ui_libutil \
+             -Dcccdlflags='-fPIC'   \
+             -Doptimize="${CFLAGS}"
+
+make libperl.so.${VER} SHRPLDFLAGS='$(LDDLFLAGS) -Wl,-soname,libperl.so.${MAJOR_VER}'
+
+ln -s libperl.so.${VER} libperl.so.${MAJOR_VER}
+ln -s libperl.so.${MAJOR_VER} libperl.so
+
+make all
+make install DESTDIR=${DEST}
+
+unset BUILD_ZLIB ZLIB_INCLUDE ZLIB_LIB
+unset BUILZ_BZIP2 BZIP2_INCLUDE BZIP2_LIB
+
+popd
+
+rm -rf perl-${VER}
+
+rm -f ${DEST}/usr/bin/perl${VER}
+rm -f ${DEST}/usr/lib/perl/${MAJOR_VER}/.packlist
+rm -f ${DEST}/usr/lib/perl/${MAJOR_VER}/CORE/libperl.so
+rm -f ${DEST}/usr/lib/perl/${MAJOR_VER}/CORE/libperl.so.${MAJOR_VER}
+
+mv ${DEST}/usr/lib/perl/${MAJOR_VER}/CORE/libperl.so.${VER} ${DEST}/usr/lib
+ln -sf libperl.so.${VER} ${DEST}/usr/lib/libperl.so.${MAJOR_VER}
+ln -sf libperl.so.${MAJOR_VER} ${DEST}/usr/lib/libperl.so
+
+ln -sf perl ${DEST}/usr/bin/perl${VER}
+
+chmod 755 ${DEST}/usr/lib/libperl.so.${VER}
+
+sed -e '/(makepl_arg =>/   s/""/"INSTALLDIRS=vendor"/' \
+    -e '/(mbuildpl_arg =>/ s/""/"installdirs=vendor"/' \
+    -i ${DEST}/usr/share/perl/${MAJOR_VER}/CPAN/FirstTime.pm
+
+mv ${DEST}/usr/lib/perl/${MAJOR_VER} ${DEST}/usr/lib/perl/${VER}
+mv ${DEST}/usr/share/perl/${MAJOR_VER} ${DEST}/usr/share/perl/${VER}
+
+ln -sf ${VER} ${DEST}/usr/lib/perl/${MAJOR_VER}
+ln -sf ${VER} ${DEST}/usr/share/perl/${MAJOR_VER}
+
+pushd ${DEST}
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 0755 ${DEST}/INSTALL

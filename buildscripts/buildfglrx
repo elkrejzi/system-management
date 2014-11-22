@@ -1,0 +1,380 @@
+#!/bin/bash -e
+
+export VER="14.1-betav1.3"
+
+export USE_MULTILIB="1"
+export MACHINE="$(uname -m)"
+
+if [ $MACHINE = "x86_64" ]; then
+   export ARCH="x86_64"
+   export LIBDIR="64"
+   export XPIC="_64a"
+else
+   export ARCH="x86"
+   export LIBDIR=""
+   export XPIC=""
+fi
+
+#export URL="http://www2.ati.com/drivers/linux/amd-catalyst-${VER}-linux-x86.x86_64.zip"
+export URL="http://www2.ati.com/drivers/beta/amd-catalyst-${VER}-linux-x86.x86_64.zip"
+export PKG="amd-catalyst-${VER}-linux-x86.x86_64"
+export PKG2="amd-driver-installer-13.35.1005-x86.x86_64"
+export DEST="/binary/fglrx-${VER}"
+export SRC="$PWD/fglrx"
+
+if [ ! -e ${PKG2}.run ]; then
+   if [ ! -e ${PKG}.zip ]; then
+      wget ${URL}
+   fi
+
+   unzip ${PKG}.zip
+fi
+
+sh ${PKG2}.run --extract fglrx
+
+pushd ${SRC}
+   patch -Np1 -i /media/ntfs/Other/Linux/fglrx.patch
+
+#if [ -e /media/ntfs/Other/Linux/fglrx-fixes.patch ]; then
+#   patch -Np1 -i /media/ntfs/Other/Linux/fglrx-fixes.patch
+#fi
+
+popd
+
+# Kernel Module
+
+install -o root -g root -dm755 ${DEST}/etc/modprobe.d/
+install -o root -g root -dm755 ${DEST}/usr/src/fglrx/2.6.x/
+
+cat > ${DEST}/etc/modprobe.d/fglrx.conf << "EOF"
+blacklist radeon
+EOF
+
+install -o root -g root -m644 ${SRC}/common/lib/modules/fglrx/build_mod/*.c ${DEST}/usr/src/fglrx/
+install -o root -g root -m644 ${SRC}/common/lib/modules/fglrx/build_mod/*.h ${DEST}/usr/src/fglrx/
+install -o root -g root -m644 ${SRC}/common/lib/modules/fglrx/build_mod/2.6.x/Makefile ${DEST}/usr/src/fglrx/2.6.x/
+install -o root -g root -m644 ${SRC}/arch/${ARCH}/lib/modules/fglrx/build_mod/libfglrx_ip.a ${DEST}/usr/src/fglrx/
+install -o root -g root -m755 ${SRC}/common/lib/modules/fglrx/build_mod/make.sh ${DEST}/usr/src/fglrx/
+
+# etc files
+install -o root -g root -dm755 ${DEST}/etc/ati/
+install -o root -g root -dm755 ${DEST}/etc/OpenCL/vendors/
+#for etcfile in signature control atiogl.xml amdpcsdb.default atiapfxx.blb
+#do
+#    install -o root -g root -m644 ${SRC}/common/etc/ati/${etcfile} ${DEST}/etc/ati/
+#done
+install -o root -g root -m644 ${SRC}/common/etc/ati/* ${DEST}/etc/ati/
+install -o root -g root -m644 ${SRC}/arch/${ARCH}/etc/OpenCL/vendors/* ${DEST}/etc/OpenCL/vendors/
+unset etcfile
+
+# binaries
+install -o root -g root -dm755 ${DEST}/usr/bin/
+install -o root -g root -dm755 ${DEST}/usr/sbin/
+install -o root -g root -m755 ${SRC}/common/usr/X11R6/bin/* ${SRC}/arch/${ARCH}/usr/bin/* ${SRC}/arch/${ARCH}/usr/X11R6/bin/* ${DEST}/usr/bin/
+install -o root -g root -m755 ${SRC}/common/usr/sbin/* ${SRC}/arch/${ARCH}/usr/sbin/* ${DEST}/usr/sbin/
+
+# development headers
+install -o root -g root -dm755 ${DEST}/usr/include/GL/
+install -o root -g root -m644 ${SRC}/common/usr/include/GL/* ${DEST}/usr/include/GL/
+
+# libraries
+install -o root -g root -dm755 ${DEST}/usr/lib/fglrx/
+install -o root -g root -m755 ${SRC}/arch/${ARCH}/usr/lib${LIBDIR}/*.so* ${DEST}/usr/lib/
+install -o root -g root -m755 ${SRC}/arch/${ARCH}/usr/X11R6/lib${LIBDIR}/fglrx/fglrx-libGL.so.1.2 ${DEST}/usr/lib/fglrx/
+install -o root -g root -m755 ${SRC}/arch/${ARCH}/usr/X11R6/lib${LIBDIR}/*.so* ${DEST}/usr/lib/
+install -o root -g root -m644 ${SRC}/arch/${ARCH}/usr/X11R6/lib${LIBDIR}/libAMDXvBA.cap ${DEST}/usr/lib/
+ln -sf libatiuki.so.1.0 ${DEST}/usr/lib/libatiuki.so.1
+ln -sf fglrx-libGL.so.1.2 ${DEST}/usr/lib/fglrx/libGL.so.1
+ln -sf libAMDXvBA.so.1.0 ${DEST}/usr/lib/libAMDXvBA.so.1
+ln -sf libAMDXvBA.so.1.0 ${DEST}/usr/lib/libAMDXvBA.so
+ln -sf libXvBAW.so.1.0 ${DEST}/usr/lib/libXvBAW.so.1
+ln -sf libXvBAW.so.1 ${DEST}/usr/lib/libXvBAW.so
+ln -sf libfglrx_dm.so.1.0 ${DEST}/usr/lib/libfglrx_dm.so.1
+mv ${DEST}/usr/lib/libOpenCL.so.1 ${DEST}/usr/lib/fglrx/
+
+# drivers
+install -o root -g root -dm755 ${DEST}/usr/lib/dri/
+install -o root -g root -dm755 ${DEST}/usr/lib/xorg/modules/extensions/fglrx/
+install -o root -g root -dm755 ${DEST}/usr/lib/xorg/modules/drivers/
+install -o root -g root -dm755 ${DEST}/usr/lib/xorg/modules/linux/
+install -o root -g root -m755 ${SRC}/arch/${ARCH}/usr/X11R6/lib${LIBDIR}/modules/dri/fglrx_dri.so ${DEST}/usr/lib/dri/
+install -o root -g root -m755 ${SRC}/xpic${XPIC}/usr/X11R6/lib${LIBDIR}/modules/extensions/fglrx/fglrx-libglx.so ${DEST}/usr/lib/xorg/modules/extensions/fglrx/
+install -o root -g root -m755 ${SRC}/xpic${XPIC}/usr/X11R6/lib${LIBDIR}/modules/drivers/fglrx_drv.so ${DEST}/usr/lib/xorg/modules/drivers/
+install -o root -g root -m755 ${SRC}/xpic${XPIC}/usr/X11R6/lib${LIBDIR}/modules/linux/libfglrxdrm.so ${DEST}/usr/lib/xorg/modules/linux/
+install -o root -g root -m755 ${SRC}/xpic${XPIC}/usr/X11R6/lib${LIBDIR}/modules/amdxmm.so ${DEST}/usr/lib/xorg/modules/
+install -o root -g root -m755 ${SRC}/xpic${XPIC}/usr/X11R6/lib${LIBDIR}/modules/glesx.so ${DEST}/usr/lib/xorg/modules/
+
+# misc
+install -o root -g root -dm755 ${DEST}/etc/security/console.apps/
+install -o root -g root -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants/
+install -o root -g root -dm755 ${DEST}/lib/systemd/system/
+install -o root -g root -dm755 ${DEST}/usr/share/applications/
+install -o root -g root -dm755 ${DEST}/usr/share/ati/amdcccle/
+install -o root -g root -dm755 ${DEST}/usr/share/man/man8/
+install -o root -g root -dm755 ${DEST}/usr/share/pixmaps/
+install -o root -g root -m644 ${SRC}/common/etc/security/console.apps/amdcccle-su ${DEST}/etc/security/console.apps/
+install -o root -g root -m644 ${SRC}/common/usr/share/applications/* ${DEST}/usr/share/applications/
+install -o root -g root -m644 ${SRC}/common/usr/share/ati/amdcccle/* ${DEST}/usr/share/ati/amdcccle/
+install -o root -g root -m644 ${SRC}/common/usr/share/man/man8/* ${DEST}/usr/share/man/man8/
+install -o root -g root -m644 ${SRC}/common/usr/share/icons/* ${DEST}/usr/share/pixmaps
+
+cat > ${DEST}/lib/systemd/system/atieventsd.service << "EOF"
+[Unit]
+Description=Catalyst Event Daemon
+Requires=acpid.socket
+
+[Service]
+ExecStart=/usr/sbin/atieventsd --nodaemon
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+ln -s /lib/systemd/system/atieventsd.service ${DEST}/etc/systemd/system/multi-user.target.wants/atieventsd.service
+
+if [ ${USE_MULTILIB} ]; then
+   install -o root -g root -m755 ${SRC}/arch/x86/usr/X11R6/bin/fgl_glxgears ${DEST}/usr/bin/fgl_glxgears32
+   install -o root -g root -m755 ${SRC}/arch/x86/usr/X11R6/bin/fglrxinfo ${DEST}/usr/bin/fglrxinfo32
+   install -o root -g root -dm755 ${DEST}/usr/lib32/dri/
+   install -o root -g root -dm755 ${DEST}/usr/lib32/fglrx/
+   install -o root -g root -dm755 ${DEST}/usr/lib32/xorg/modules/
+   install -o root -g root -m755 ${SRC}/arch/x86/usr/lib/*.so* ${DEST}/usr/lib32/
+   install -o root -g root -m755 ${SRC}/arch/x86/usr/X11R6/lib/fglrx/fglrx-libGL.so.1.2 ${DEST}/usr/lib32/fglrx/
+   install -o root -g root -m755 ${SRC}/arch/x86/usr/X11R6/lib/*.so* ${DEST}/usr/lib32/
+   install -o root -g root -m755 ${SRC}/arch/x86/usr/X11R6/lib/modules/dri/fglrx_dri.so ${DEST}/usr/lib32/dri/
+   install -o root -g root -m755 ${SRC}/xpic/usr/X11R6/lib/modules/amdxmm.so ${DEST}/usr/lib32/xorg/modules/
+   install -o root -g root -m755 ${SRC}/xpic/usr/X11R6/lib/modules/glesx.so ${DEST}/usr/lib32/xorg/modules/
+   install -o root -g root -m644 ${SRC}/arch/x86/usr/X11R6/lib/libAMDXvBA.cap ${DEST}/usr/lib32/
+   ln -sf libatiuki.so.1.0 ${DEST}/usr/lib32/libatiuki.so.1
+   ln -sf fglrx-libGL.so.1.2 ${DEST}/usr/lib32/fglrx/libGL.so.1
+   ln -sf libAMDXvBA.so.1.0 ${DEST}/usr/lib32/libAMDXvBA.so.1
+   ln -sf libAMDXvBA.so.1.0 ${DEST}/usr/lib32/libAMDXvBA.so
+   ln -sf libXvBAW.so.1.0 ${DEST}/usr/lib32/libXvBAW.so.1
+   ln -sf libXvBAW.so.1 ${DEST}/usr/lib32/libXvBAW.so
+   ln -sf libfglrx_dm.so.1.0 ${DEST}/usr/lib32/libfglrx_dm.so.1
+   mv ${DEST}/usr/lib32/libOpenCL.so.1 ${DEST}/usr/lib32/fglrx/
+fi
+
+cat > ${DEST}/usr/lib/fglrx/switchlibGL << "EOF"
+#!/bin/bash
+
+case "$1" in
+   "amd")
+   if [ -e /usr/lib/libGL.so.1 ]; then
+      if [ -e /usr/lib/fglrx/libGL.so.1 ]; then
+         if [ $(readlink /usr/lib/libGL.so.1) != "fglrx/libGL.so.1" ]; then
+            rm -f /usr/lib/libGL.so.1
+            ln -sf fglrx/libGL.so.1 /usr/lib/libGL.so.1
+         fi
+      else
+         echo "Can't find /usr/lib/fglrx/libGL.so.1"
+         exit 1
+      fi
+   else
+      if [ -e /usr/lib/fglrx/libGL.so.1 ]; then
+         ln -sf fglrx/libGL.so.1 /usr/lib/libGL.so.1
+      else
+         echo "Can't find /usr/lib/fglrx/libGL.so.1"
+         exit 1
+      fi
+   fi
+   if [ $(uname -m) = "x86_64" ]; then
+      if [ -e /usr/lib32/libGL.so.1 ]; then
+         if [ -e /usr/lib32/fglrx/libGL.so.1 ]; then
+            if [ $(readlink /usr/lib32/libGL.so.1) != "fglrx/libGL.so.1" ]; then
+               rm -f /usr/lib32/libGL.so.1
+               ln -sf fglrx/libGL.so.1 /usr/lib32/libGL.so.1
+            fi
+         else
+            echo "Can't find /usr/lib32/fglrx/libGL.so.1"
+            exit 1
+         fi
+      else
+         if [ -e /usr/lib32/fglrx/libGL.so.1 ]; then
+            ln -sf fglrx/libGL.so.1 /usr/lib32/libGL.so.1
+         else
+            echo "Can't find /usr/lib32/fglrx/libGL.so.1"
+            exit 1
+         fi
+      fi
+   fi
+
+   echo "amd"
+   ;;
+   "intel")
+   if [ -e /usr/lib/libGL.so.1 ]; then
+      if [ -e /usr/lib/libGL.so.1.2.0 ]; then
+         if [ $(readlink /usr/lib/libGL.so.1) != "libGL.so.1.2.0" ]; then
+            rm -f /usr/lib/libGL.so.1
+            ln -sf libGL.so.1.2.0 /usr/lib/libGL.so.1
+         fi
+      else
+         echo "Can't find /usr/lib/libGL.so.1.2.0"
+         exit 1
+      fi
+   else
+      if [ -e /usr/lib/libGL.so.1.2.0 ]; then
+         ln -sf libGL.so.1.2.0 /usr/lib/libGL.so.1
+      else
+         echo "Can't find /usr/lib/libGL.so.1.2.0"
+         exit 1
+      fi
+   fi
+   if [ $(uname -m) = "x86_64" ]; then
+      if [ -e /usr/lib32/libGL.so.1 ]; then
+         if [ -e /usr/lib32/libGL.so.1.2.0 ]; then
+            if [ $(readlink /usr/lib32/libGL.so.1) != "libGL.so.1.2.0" ]; then
+               rm -f /usr/lib32/libGL.so.1
+               ln -sf libGL.so.1.2.0 /usr/lib32/libGL.so.1
+            fi
+         else
+            echo "Can't find /usr/lib32/libGL.so.1.2.0"
+            exit 1
+         fi
+      else
+         if [ -e /usr/lib32/libGL.so.1.2.0 ]; then
+            ln -sf libGL.so.1.2.0 /usr/lib32/libGL.so.1
+         else
+            echo "Can't find /usr/lib32/libGL.so.1.2.0"
+            exit 1
+         fi
+      fi
+   fi
+
+   echo "intel"
+   ;;
+   "query")
+   if [ $(uname -m) = "x86_64" ]; then
+      if [ -e /usr/lib/libGL.so.1 -a -e /usr/lib32/libGL.so.1 ]; then
+         if [ $(readlink /usr/lib/libGL.so.1) = "fglrx/libGL.so.1" -a $(readlink /usr/lib32/libGL.so.1) = "fglrx/libGL.so.1" ]; then
+            echo "amd"
+         elif [ $(readlink /usr/lib/libGL.so.1) = "libGL.so.1.2.0" -a $(readlink /usr/lib32/libGL.so.1) = "libGL.so.1.2.0" ]; then
+            echo "intel"
+         else
+            echo "Unknown error."
+            exit 1
+         fi
+      fi
+   else
+      if [ -e /usr/lib/libGL.so.1 ]; then
+         if [ $(readlink /usr/lib/libGL.so.1) = "fglrx/libGL.so.1" ]; then
+            echo "amd"
+         elif [ $(readlink /usr/lib/libGL.so.1) = "libGL.so.1.2.0" ]; then
+            echo "intel"
+         else
+           echo "Unknown error."
+           exit 1
+         fi
+      fi
+   fi
+   ;;
+   *)
+   echo "Usage: `basename $0` amd|intel|query"
+   exit 1
+esac
+
+exit 0
+EOF
+
+cat > ${DEST}/usr/lib/fglrx/switchlibglx << "EOF"
+#!/bin/bash
+
+case "$1" in
+   "amd")
+   if [ -e /usr/lib/xorg/modules/extensions/libglx.so ]; then
+      if [ -e /usr/lib/xorg/modules/extensions/fglrx/fglrx-libglx.so ]; then
+         if [ $(readlink /usr/lib/xorg/modules/extensions/libglx.so) != "fglrx/fglrx-libglx.so" ]; then
+            rm -f /usr/lib/xorg/modules/extensions/libglx.so
+            ln -sf fglrx/fglrx-libglx.so /usr/lib/xorg/modules/extensions/libglx.so
+         fi
+      else
+         echo "Can't find /usr/lib/xorg/modules/extensions/fglrx/fglrx-libglx.so"
+         exit 1
+      fi
+   else
+      if [ -e /usr/lib/xorg/modules/extensions/fglrx/fglrx-libglx.so ]; then
+         ln -sf fglrx/fglrx-libglx.so /usr/lib/xorg/modules/extensions/libglx.so
+      else
+         echo "Can't find /usr/lib/xorg/modules/extensions/fglrx/fglrx-libglx.so"
+         exit 1
+      fi
+   fi
+
+   echo "amd"
+   ;;
+   "intel")
+   if [ -e /usr/lib/xorg/modules/extensions/libglx.so ]; then
+      if [ -e /usr/lib/xorg/modules/extensions/libglx.so.xorg ]; then
+         if [ $(readlink /usr/lib/xorg/modules/extensions/libglx.so) != "libglx.so.xorg" ]; then
+            rm -f /usr/lib/xorg/modules/extensions/libglx.so
+            ln -sf libglx.so.xorg /usr/lib/xorg/modules/extensions/libglx.so
+         fi
+      else
+         echo "Can't find /usr/lib/xorg/modules/extensions/libglx.so.xorg"
+         exit 1
+      fi
+   else
+      if [ -e /usr/lib/xorg/modules/extensions/libglx.so.xorg ]; then
+         ln -sf libglx.so.xorg /usr/lib/xorg/modules/extensions/libglx.so
+      else
+         echo "Can't find /usr/lib/xorg/modules/extensions/libglx.so.xorg"
+         exit 1
+      fi
+   fi
+
+   echo "intel"
+   ;;
+   "query")
+   if [ -e /usr/lib/xorg/modules/extensions/libglx.so ]; then
+      if [ $(readlink /usr/lib/xorg/modules/extensions/libglx.so) = "fglrx/fglrx-libglx.so" ]; then
+         echo "amd"
+      elif [ $(readlink /usr/lib/xorg/modules/extensions/libglx.so) = "libglx.so.xorg" ]; then
+         echo "intel"
+      else
+         echo "Unknown error."
+         exit 1
+      fi
+   fi
+   ;;
+   *)
+   echo "Usage: `basename $0` amd|intel|query"
+   exit 1
+esac
+
+exit 0
+EOF
+
+chmod 755 ${DEST}/usr/lib/fglrx/switchlibGL ${DEST}/usr/lib/fglrx/switchlibglx
+
+install -dm755 ${DEST}/usr/X11R6/lib64/modules
+
+ln -sf lib ${DEST}/usr/lib64
+ln -sf /usr/lib/dri ${DEST}/usr/X11R6/lib64/modules/dri
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib usr ; do cp -rf --remove-destination $dir / ; done
+
+/usr/lib/fglrx/switchlibGL amd
+/usr/lib/fglrx/switchlibglx amd
+
+aticonfig --initial
+
+if [ -e /lib/systemd/system/atieventsd.service ]; then
+   systemctl start atieventsd
+fi
+
+pushd /usr/src/fglrx/2.6.x
+   make
+   install -Dm644 fglrx.ko /lib/modules/$(uname -r)/extramodules/fglrx.ko
+   depmod $(uname -r)
+   make clean
+   rm /usr/src/fglrx/2.6.x/modules.order
+popd
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

@@ -1,0 +1,82 @@
+#!/bin/bash -e
+
+export VER=2.24.25
+export DEST=/binary/gtk+-${VER}
+
+cp -a gtk+-${VER} gtk+-${VER}-32
+
+pushd gtk+-${VER}
+
+sed -i 's#l \(gtk-.*\).sgml#& -o \1#' docs/{faq,tutorial}/Makefile.in
+sed -i 's#.*@man_#man_#' docs/reference/gtk/Makefile.in
+sed -i -e 's#pltcheck.sh#$(NULL)#g' gtk/Makefile.in
+
+CFLAGS="-march=native -mtune=native -g -O2"   \
+CXXFLAGS="-march=native -mtune=native -g -O2" \
+./configure --prefix=/usr --sysconfdir=/etc
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+pushd gtk+-${VER}-32
+
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+sed -i 's#l \(gtk-.*\).sgml#& -o \1#' docs/{faq,tutorial}/Makefile.in
+sed -i 's#.*@man_#man_#' docs/reference/gtk/Makefile.in
+sed -i -e 's#pltcheck.sh#$(NULL)#g' gtk/Makefile.in
+
+CFLAGS="-march=native -mtune=native -g -O2"   \
+CXXFLAGS="-march=native -mtune=native -g -O2" \
+./configure --prefix=/usr       \
+            --libdir=/usr/lib32 \
+            --sysconfdir=/etc   \
+            --disable-introspection
+
+make -j4
+make install DESTDIR=${PWD}/dest
+
+mv dest/usr/lib32 ${DEST}/usr
+mv dest/usr/bin/gtk-query-immodules-2.0 ${DEST}/usr/bin/gtk-query-immodules-2.0-32
+
+popd
+
+rm -rf gtk+-${VER} gtk+-${VER}-32
+
+find ${DEST} -name "*.la" -delete
+
+cat > ${DEST}/usr/share/gtk-2.0/gtkrc << "EOF"
+gtk-icon-theme-name = "Adwaita"
+gtk-theme-name = "Adwaita"
+gtk-font-name = "Cantarell 11"
+EOF
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+mkdir -p usr/lib/debug/`dirname ${BUILD_BINARY}`
+objcopy --only-keep-debug ${BUILD_BINARY} usr/lib/debug/${BUILD_BINARY}
+strip --strip-unneeded ${BUILD_BINARY}
+objcopy --add-gnu-debuglink=usr/lib/debug/${BUILD_BINARY} ${BUILD_BINARY}
+esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/gtk-query-immodules-2.0 ] && echo "Processing triggers for gtk-2.0" && /usr/bin/gtk-query-immodules-2.0 --update-cache
+[ -x /usr/bin/gtk-query-immodules-2.0-32 ] && echo "Processing triggers for gtk-2.0 (32 bit)" && /usr/bin/gtk-query-immodules-2.0-32 --update-cache
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

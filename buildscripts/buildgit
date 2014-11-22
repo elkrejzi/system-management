@@ -1,0 +1,91 @@
+#!/bin/bash -e
+
+export VER=2.1.3
+export DEST=/binary/git-${VER}
+
+pushd git-${VER}
+
+sed -i "/BSD_SOURCE/d" git-compat-util.h
+
+make prefix=/usr USE_LIBPCRE=1 NO_CROSS_DIRECTORY_HARDLINKS=1 INSTALLDIRS=vendor CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " -j4
+make prefix=/usr USE_LIBPCRE=1 NO_CROSS_DIRECTORY_HARDLINKS=1 INSTALLDIRS=vendor CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " install DESTDIR=${DEST}
+
+popd
+
+rm -rf git-${VER}
+
+rm -rf ${DEST}/usr/lib
+
+pushd ${DEST}/usr/share/man
+
+#wget https://git-core.googlecode.com/files/git-manpages-${VER}.tar.gz -O - | tar xfz -
+wget https://www.kernel.org/pub/software/scm/git/git-manpages-${VER}.tar.xz -O - | tar xfJ -
+
+popd
+
+install -dm755 ${DEST}/etc/httpd/extra ${DEST}/etc/systemd/system/sockets.target.wants ${DEST}/lib/systemd/system
+
+cat > ${DEST}/etc/httpd/extra/git.conf << "EOF"
+<Directory "/usr/libexec/git-core/">
+        AllowOverride None
+        Options ExecCGI FollowSymlinks
+        Require all granted
+</Directory>
+
+SetEnv GIT_PROJECT_ROOT /var/lib/git/repositories
+ScriptAlias /git/ /usr/libexec/git-core/git-http-backend/
+EOF
+
+cat > ${DEST}/lib/systemd/system/git-daemon@.service << "EOF"
+[Unit]
+Description=Git Daemon Instance
+
+[Service]
+User=git
+ExecStart=-/usr/libexec/git-core/git-daemon --inetd --base-path=/var/lib/git/repositories
+StandardInput=socket
+StandardOutput=inherit
+StandardError=journal
+EOF
+
+cat > ${DEST}/lib/systemd/system/git-daemon.socket << "EOF"
+[Unit]
+Description=Git Daemon Socket
+
+[Socket]
+ListenStream=9418
+Accept=true
+
+[Install]
+WantedBy=sockets.target
+EOF
+
+ln -sf /lib/systemd/system/git-daemon.socket ${DEST}/etc/systemd/system/sockets.target.wants/git-daemon.socket
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib usr ; do cp -rf --remove-destination $dir / ; done
+
+getent group git > /dev/null || groupadd -g 55 git
+getent passwd git > /dev/null || useradd -c "Git Repositories Owner" -d /var/lib/git -g git -u 55 -s /bin/bash git
+
+if [ ! -d /var/lib/git ]; then
+   install -dm755 -o git -g git /var/lib/git
+   install -dm700 -o git -g git /var/lib/git/.ssh
+fi
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

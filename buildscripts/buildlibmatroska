@@ -1,0 +1,36 @@
+#!/bin/bash -e
+
+export VER=1.4.1
+export DEST=/binary/libmatroska-${VER}
+
+pushd libmatroska-${VER}/make/linux
+
+make CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " -j4
+make prefix=${DEST}/usr install
+
+popd
+
+rm -rf libmatroska-${VER}
+
+rm -rf ${DEST}/usr/lib/*.a
+chmod 755 ${DEST}/usr/lib/*.so
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

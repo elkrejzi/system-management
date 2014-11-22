@@ -1,0 +1,42 @@
+#!/bin/bash -e
+
+export VER=1.13
+export DEST=/binary/ladspa-${VER}
+
+tar xf /media/ntfs/Other/Linux/packages/ladspa_sdk_1.13.tgz
+
+pushd ladspa_sdk/src
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/ladspa-fixes.patch
+
+sed -e 's/mkdirhier/mkdir -p/' \
+    -e "s#-O3#-march=native -mtune=native -O2 -pipe -fstack-protector-strong #" \
+    -i makefile
+
+make targets
+
+make INSTALL_PLUGINS_DIR="${DEST}/usr/lib/ladspa/" \
+     INSTALL_INCLUDE_DIR="${DEST}/usr/include/" \
+     INSTALL_BINARY_DIR="${DEST}/usr/bin/" install
+
+popd
+
+rm -rf ladspa_sdk
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL

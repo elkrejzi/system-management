@@ -1,0 +1,56 @@
+#!/bin/bash -e
+
+export VER=1.12.91-106-gd397a04
+export DEST=/binary/akonadi-${VER}
+
+pushd akonadi-${VER}
+
+cmake -DCMAKE_INSTALL_PREFIX=/usr   \
+      -DCMAKE_BUILD_TYPE=Release    \
+      -DSYSCONF_INSTALL_DIR=/etc    \
+      -DLIB_INSTALL_DIR=lib         \
+      -DBUILD_TESTING=OFF           \
+      -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+      -Wno-dev
+
+make -j4
+make install DESTDIR=${DEST}/akonadi-binaries
+
+popd
+
+rm -rf akonadi-${VER}
+
+install -dm755 ${DEST}/akonadi-libraries/usr
+
+mv ${DEST}/akonadi-binaries/usr/include ${DEST}/akonadi-libraries/usr
+mv ${DEST}/akonadi-binaries/usr/lib ${DEST}/akonadi-libraries/usr
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/akonadi-binaries/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/update-mime-database ] && echo "Processing triggers for shared-mime-info" && /usr/bin/update-mime-database /usr/share/mime
+EOF
+
+cat > ${DEST}/akonadi-libraries/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/akonadi-binaries/INSTALL ${DEST}/akonadi-libraries/INSTALL

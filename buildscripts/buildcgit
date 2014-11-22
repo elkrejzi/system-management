@@ -1,0 +1,188 @@
+#!/bin/bash -e
+
+export VER=0.10.2
+export DEST=/binary/cgit-${VER}
+
+pushd cgit-${VER}
+
+export LUA_PKGCONFIG=lua
+
+make get-git
+
+sed -i "/BSD_SOURCE/d" git/git-compat-util.h
+
+make CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " -j4
+
+make CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " CGIT_SCRIPT_PATH=/usr/share/cgit DESTDIR=${DEST} prefix=/usr install
+
+mv ${DEST}/usr/share/cgit/cgit.cgi ${DEST}/usr/lib/cgit/cgit.cgi
+ln -sf ../../lib/cgit/cgit.cgi ${DEST}/usr/share/cgit/cgit.cgi
+
+popd
+
+rm -rf cgit-${VER}
+
+install -dm755 ${DEST}/etc/httpd/extra ${DEST}/var/cache/cgit
+
+cat > ${DEST}/etc/cgitrc.dist << "EOF"
+# Specify the css url
+css=/cgit-css/cgit.css
+
+# Use a custom logo
+logo=/cgit-css/cgit.png
+
+# do not cache
+nocache=1
+cache-size=0
+
+# don't index site
+robots=noindex, nofollow
+
+# Show extra links for each repository on the index page
+enable-index-links=1
+
+# Enable ASCII art commit history graph on the log pages
+enable-commit-graph=1
+
+# Show number of affected files per commit on the log pages
+enable-log-filecount=1
+
+# Show number of added/removed lines per commit on the log pages
+enable-log-linecount=1
+
+# show number of tags
+summary-tags=10
+
+# Enable statistics per week, month and quarter
+max-stats=week
+
+# Set the title and heading of the repository index page
+root-title=Welcome to Git Central
+
+# Set a subheading for the repository index page
+root-desc=One Source to Track Them All
+
+##
+## List of common mimetypes
+##
+mimetype.gif=image/gif
+mimetype.html=text/html
+mimetype.jpg=image/jpeg
+mimetype.jpeg=image/jpeg
+mimetype.pdf=application/pdf
+mimetype.png=image/png
+mimetype.svg=image/svg+xml
+
+# time-to-live settings: specify how long (in minutes) different pages should
+# be cached. specify 0 for instant expiration and -1 for immortal pages
+
+# ttl for root page (repo listing)
+cache-root-ttl=0
+
+# ttl for repo summary page
+cache-repo-ttl=0
+
+# ttl for other dynamic pages
+cache-dynamic-ttl=0
+
+# ttl for static pages (addressed by SHA-1)
+cache-static-ttl=0
+
+# Show owner on index page
+enable-index-owner=1
+
+# Allow http transport git clone
+enable-git-clone=0
+
+# Enable syntax highlighting (requires the highlight package)
+source-filter=/usr/lib/cgit/filters/syntax-highlighting.sh
+
+# through the right converters
+about-filter=/usr/lib/cgit/filters/about-formatting.sh
+
+readme=:README.md
+readme=:readme.md
+readme=:README.mkd
+readme=:readme.mkd
+readme=:README.rst
+readme=:readme.rst
+readme=:README.html
+readme=:readme.html
+readme=:README.htm
+readme=:readme.htm
+readme=:README.txt
+readme=:readme.txt
+readme=:README
+readme=:readme
+readme=:INSTALL.md
+readme=:install.md
+readme=:INSTALL.mkd
+readme=:install.mkd
+readme=:INSTALL.mkd
+readme=:install.mkd
+readme=:INSTALL.rst
+readme=:install.rst
+readme=:INSTALL.html
+readme=:install.html
+readme=:INSTALL.htm
+readme=:install.htm
+readme=:INSTALL.txt
+readme=:install.txt
+readme=:INSTALL
+readme=:install
+
+##
+## List of repositories.
+## PS: Any repositories listed when section is unset will not be
+##     displayed under a section heading
+## PPS: This list could be kept in a different file (e.g. '/etc/cgitrepos')
+##      and included like this:
+##        include=/etc/cgitrepos
+##
+
+enable-git-config=1
+#enable-gitweb-owner=1
+remove-suffix=1
+project-list=/var/lib/git/projects.list
+scan-path=/var/lib/git/repositories/
+EOF
+
+cat > ${DEST}/etc/httpd/extra/cgit.conf << "EOF"
+ScriptAlias /cgit/ "/usr/lib/cgit/cgit.cgi/"
+
+Alias /cgit-css "/usr/share/cgit/"
+
+<Directory "/usr/share/cgit/">
+	AllowOverride None
+	Options None
+	Require all granted
+</Directory>
+
+<Directory "/usr/lib/cgit/">
+	AllowOverride None
+	Options ExecCGI FollowSymlinks
+	Require all granted
+</Directory>
+EOF
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr var ; do cp -rf --remove-destination $dir / ; done
+
+getent group httpd > /dev/null && getent passwd httpd > /dev/null && chown -R httpd:httpd /var/cache/cgit
+
+if [ ! -e /etc/cgitrc ]; then cp -r /etc/cgitrc.dist /etc/cgitrc ; fi
+EOF
+
+chmod 755 ${DEST}/INSTALL

@@ -1,0 +1,172 @@
+#!/bin/bash -e
+
+export EXTRA="-krejzi"
+export KBUILD_BUILD_USER="krejzi"
+export KBUILD_BUILD_HOST="email.com"
+
+CHECK=$(grep -e "EXTRAVERSION = $EXTRA" Makefile)
+
+if [ $? -gt 0 ]; then
+   sed -i "s@EXTRAVERSION =@& $EXTRA@" Makefile
+fi
+
+if [ ! -f .config ]; then
+   if [ -f ../$(basename $PWD).config ]; then
+      cp ../$(basename $PWD).config .config
+   elif [ -f /boot/config* ]; then
+      cp /boot/config* .config
+   fi
+fi
+
+make prepare
+make scripts
+
+make -j4
+
+sed -i "s:-ltinfo ::g" tools/thermal/tmon/Makefile
+
+for DIR in tools/thermal/tmon tools/power/cpupower tools/power/x86/turbostat
+do
+  make -C ${DIR} -j4
+done
+
+unset DIR
+
+KERNELVERSION=$(make kernelrelease)
+PKGHEADERS=/binary/linux-headers-${KERNELVERSION}
+PKGAPIHDR=/binary/linux-api-headers-$(echo ${KERNELVERSION} | sed "s/$EXTRA//")
+PKGKERNEL=/binary/linux-${KERNELVERSION}
+PKGTOOLS=/binary/linux-tools-$(echo ${KERNELVERSION} | sed "s/$EXTRA//")
+HEADERSDIR=${PKGHEADERS}/usr/src/linux-headers-${KERNELVERSION}
+
+make headers_install INSTALL_HDR_PATH=${PKGAPIHDR}/usr/
+find ${PKGAPIHDR}/usr/include \( -name .install -o -name ..install.cmd \) -delete
+
+rm -rf ${PKGAPIHDR}/usr/include/drm
+
+cat > ${PKGAPIHDR}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 0755 ${PKGAPIHDR}/INSTALL
+
+mkdir -p ${PKGKERNEL}/boot
+
+install -m644 .config ${PKGKERNEL}/boot/config-${KERNELVERSION}
+install -m644 System.map ${PKGKERNEL}/boot/System.map-${KERNELVERSION}
+install -m644 arch/x86/boot/bzImage ${PKGKERNEL}/boot/vmlinuz-${KERNELVERSION}
+
+ln -s vmlinuz-${KERNELVERSION} ${PKGKERNEL}/boot/vmlinuz
+
+make modules_install INSTALL_MOD_PATH=${PKGKERNEL}
+
+rm -rf ${PKGKERNEL}/lib/firmware
+
+rm -f ${PKGKERNEL}/lib/modules/${KERNELVERSION}/{build,source}
+#rm ${PKGKERNEL}/lib/modules/${KERNELVERSION}/*.bin
+#rm ${PKGKERNEL}/lib/modules/${KERNELVERSION}/modules.{alias,dep,devname,softdep,symbols}
+
+#find ${PKGKERNEL}/lib/modules/${KERNELVERSION}/kernel -name "*.ko" | xargs strip --strip-unneeded
+
+cat > ${PKGKERNEL}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in boot lib ; do cp -rf --remove-destination $dir / ; done
+
+EOF
+
+#echo "depmod ${KERNELVERSION}" >> ${PKGKERNEL}/INSTALL
+
+#if [ -x /usr/sbin/grub-mkconfig ]; then
+#   echo -e "\ngrub-mkconfig -o /boot/grub/grub.cfg" >> ${PKGKERNEL}/INSTALL
+#fi
+
+chmod 0755 ${PKGKERNEL}/INSTALL
+
+mkdir -p ${PKGHEADERS}/lib/modules/${KERNELVERSION}
+
+ln -sf /usr/src/linux-headers-${KERNELVERSION} ${PKGHEADERS}/lib/modules/${KERNELVERSION}/build
+ln -sf /usr/src/linux-headers-${KERNELVERSION} ${PKGHEADERS}/lib/modules/${KERNELVERSION}/source
+
+mkdir -p ${HEADERSDIR}/arch/x86/kernel
+mkdir -p ${HEADERSDIR}/scripts/{basic,genksyms,kconfig,mod}
+
+cp -r .config ${HEADERSDIR}/
+cp -r Makefile ${HEADERSDIR}/
+cp -r Module.symvers ${HEADERSDIR}/
+
+cp -r arch/x86/Makefile ${HEADERSDIR}/arch/x86/
+cp -r arch/x86/kernel/asm-offsets.s ${HEADERSDIR}/arch/x86/kernel/
+cp -r arch/x86/include ${HEADERSDIR}/arch/x86/
+
+cp -r include ${HEADERSDIR}/
+
+ln -sf ../generated/uapi/linux/version.h ${HEADERSDIR}/include/linux/version.h
+
+find ${HEADERSDIR}/arch/x86 -name ".*.cmd" -delete
+
+for SCRIPT in Kbuild.include Lindent \
+   Makefile.{build,clean,extrawarn,host,lib,modpost} \
+   check{includes,stack,version}.pl conmakehash \
+   {depmod,gcc-goto,gcc-version,gen_initramfs_list,mkuboot}.sh \
+   gcc-x86_{32,64}-has-stack-protector.sh \
+   kallsyms kernel-doc makelst mksysmap mkuboot.sh mkversion \
+   module-common.lds namespace.pl patch-kernel \
+   setlocalversion ver_linux
+do
+   cp -r scripts/${SCRIPT} ${HEADERSDIR}/scripts/
+done
+
+cp -r scripts/basic/fixdep ${HEADERSDIR}/scripts/basic/
+cp -r scripts/genksyms/genksyms ${HEADERSDIR}/scripts/genksyms/
+cp -r scripts/kconfig/conf ${HEADERSDIR}/scripts/kconfig/
+cp -r scripts/mod/modpost ${HEADERSDIR}/scripts/mod/
+
+find ${HEADERSDIR}/scripts -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+cat > ${PKGHEADERS}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in lib usr ; do cp -rf --remove-destination $dir / ; done
+EOF
+
+chmod 0755 ${PKGHEADERS}/INSTALL
+
+install -dm755 ${PKGTOOLS}/usr/bin ${PKGTOOLS}/usr/share/man/man8
+
+pushd tools/thermal/tmon
+  install -m755 tmon ${PKGTOOLS}/usr/bin
+  install -m644 tmon.8 ${PKGTOOLS}/usr/share/man/man8
+popd
+
+pushd tools/power/cpupower
+  make mandir=/usr/share/man install DESTDIR=${PKGTOOLS}
+  rm -rf ${PKGTOOLS}/usr/share/doc
+popd
+
+pushd tools/power/x86/turbostat
+  make install DESTDIR=${PKGTOOLS}
+popd
+
+find ${PKGTOOLS} -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+cat > ${PKGTOOLS}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 0755 ${PKGTOOLS}/INSTALL

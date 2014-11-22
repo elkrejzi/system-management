@@ -1,0 +1,53 @@
+#!/bin/bash -e
+
+export VER=0.11
+export DEST=/binary/rtkit-${VER}
+
+pushd rtkit-${VER}
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/rtkit.patch
+
+autoreconf -fi
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr \
+            --sysconfdir=/etc \
+            --with-systemdsystemunitdir=/lib/systemd/system
+
+make -j4
+make install DESTDIR=${DEST}
+
+install -dm755 ${DEST}/etc/systemd/system/graphical.target.wants
+install -dm755 ${DEST}/usr/share/dbus-1/interfaces
+
+./rtkit-daemon --introspect > ${DEST}/usr/share/dbus-1/interfaces/org.freedesktop.RealtimeKit1.xml
+
+ln -sf /lib/systemd/system/rtkit-daemon.service ${DEST}/etc/systemd/system/graphical.target.wants/rtkit-daemon.service
+
+popd
+
+rm -rf rtkit-${VER}
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib usr ; do cp -rf --remove-destination $dir / ; done
+
+getent group rtkit > /dev/null || groupadd -g 65 rtkit
+getent passwd rtkit > /dev/null || useradd -c "RealtimeKit" -d /proc -g rtkit -u 65 -s /sbin/nologin rtkit
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

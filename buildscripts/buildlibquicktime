@@ -1,0 +1,48 @@
+#!/bin/bash -e
+
+export VER=1.2.4
+export DEST=/binary/libquicktime-${VER}
+
+pushd libquicktime-${VER}
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/libquicktime-fixes.patch
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr \
+            --enable-gpl  \
+            --with-libdv  \
+            --without-doxygen
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf libquicktime-${VER}
+
+find ${DEST} -name "*.la" -delete
+
+rm -rf ${DEST}/usr/share/doc
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in usr/include usr/lib ; do cp -rf --remove-destination $dir /usr ; done
+
+cp -rf --remove-destination usr/bin/libquicktime_config /usr/bin
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

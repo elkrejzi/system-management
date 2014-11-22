@@ -1,0 +1,35 @@
+#!/bin/bash -e
+
+export VER=1.10.0
+export DEST=/binary/py2cairo-${VER}
+
+pushd py2cairo-${VER}
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./waf configure --prefix=/usr
+
+./waf build -j4
+./waf install --destdir=${DEST}
+
+popd
+
+rm -rf py2cairo-${VER}
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL

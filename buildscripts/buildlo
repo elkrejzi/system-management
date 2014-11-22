@@ -1,0 +1,136 @@
+#!/bin/bash -e
+
+export VER=4.3.4.1
+export DEST=/binary/libreoffice-${VER}
+
+pushd libreoffice-${VER}
+
+install -dm755 external/tarballs
+
+ln -sf ../../../libreoffice-dictionaries-${VER}.tar.xz external/tarballs/
+ln -sf ../../../libreoffice-help-${VER}.tar.xz external/tarballs/
+ln -sf ../../../libreoffice-translations-${VER}.tar.xz external/tarballs/
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/libreoffice-fixes.patch
+
+sed -e "/gzip -f/d"   \
+    -e "s|.1.gz|.1|g" \
+    -i bin/distro-install-desktop-integration
+
+sed -e "/distro-install-file-lists/d" -i Makefile.in
+
+chmod +x bin/unpack-sources
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./autogen.sh --prefix=/usr               \
+             --sysconfdir=/etc           \
+             --with-lang="en-US hr"      \
+             --with-help                 \
+             --with-alloc=system         \
+             --without-java              \
+             --disable-gconf             \
+             --disable-odk               \
+             --disable-opencl            \
+             --enable-avahi              \
+             --enable-dbus               \
+             --enable-gio                \
+             --enable-gstreamer          \
+             --enable-kde4               \
+             --enable-gtk3               \
+             --enable-lockdown           \
+             --enable-opengl             \
+             --enable-python=system      \
+             --enable-release-build      \
+             --enable-vlc                \
+             --with-myspell-dicts        \
+             --with-system-apr           \
+             --with-system-bluez         \
+             --with-system-boost         \
+             --with-system-cairo         \
+             --with-system-clucene       \
+             --with-system-cppunit       \
+             --with-system-curl          \
+             --with-system-expat         \
+             --with-system-glew          \
+             --with-system-graphite      \
+             --with-system-harfbuzz      \
+             --with-system-hunspell      \
+             --with-system-icu           \
+             --with-system-jpeg          \
+             --with-system-lcms2         \
+             --with-system-libabw        \
+             --with-system-libatomic_ops \
+             --with-system-libcdr        \
+             --with-system-libcmis       \
+             --with-system-libebook      \
+             --with-system-libexttextcat \
+             --with-system-libfreehand   \
+             --with-system-liblangtag    \
+             --with-system-libmspub      \
+             --with-system-libmwaw       \
+             --with-system-libodfgen     \
+             --with-system-libpng        \
+             --with-system-librevenge    \
+             --with-system-libvisio      \
+             --with-system-libwpd        \
+             --with-system-libwpg        \
+             --with-system-libwps        \
+             --with-system-libxml        \
+             --with-system-mariadb       \
+             --with-system-mesa-headers  \
+             --with-system-neon          \
+             --with-system-npapi-headers \
+             --with-system-nss           \
+             --with-system-odbc          \
+             --with-system-openldap      \
+             --with-system-openssl       \
+             --with-system-poppler       \
+             --with-system-postgresql    \
+             --with-system-redland       \
+             --with-system-serf          \
+             --with-system-zlib          \
+             --without-system-dicts      \
+             --with-vendor="Krejzi"      \
+             --with-parallelism=4        \
+             --with-build-version="${VER} Krejzi"
+
+eval $(dbus-launch)
+
+make build -j4
+make distro-pack-install DESTDIR=${DEST}
+make distro-pack-install DESTDIR=${PWD}/dest
+
+install -m644 sysui/desktop/appstream-appdata/*.xml ${DEST}/usr/share/appdata
+
+popd
+
+#rm -rf libreoffice-${VER}
+
+find ${DEST} -name "*.la" -delete
+find ${DEST} -name "*.so" -exec chmod 755 {} \;
+
+rm -rf ${DEST}/etc ${DEST}/gid*
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/update-mime-database ] && echo "Processing triggers for shared-mime-info" && /usr/bin/update-mime-database /usr/share/mime
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -q /usr/share/icons/hicolor
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

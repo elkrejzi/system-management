@@ -1,0 +1,93 @@
+#!/bin/bash -e
+
+export VER=1.2.3
+export DEST=/binary/libvirt-${VER}
+
+pushd libvirt-${VER}
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr              \
+            --sysconfdir=/etc          \
+            --localstatedir=/var       \
+            --with-init-script=systemd \
+            --with-qemu-user=nobody    \
+            --with-qemu-group=nogroup
+
+make -j4
+
+sed -i 's|/etc/sysconfig/|/etc/default/|' daemon/libvirtd.service src/virtlockd.service tools/libvirt-guests.service
+sed -i 's|#group =.*|group="kvm"|' src/qemu/qemu.conf
+
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf libvirt-${VER}
+
+find ${DEST} -name "*.la" -delete
+
+rm -rf ${DEST}/etc/logrotate.d ${DEST}/etc/sysconfig ${DEST}/usr/share/doc ${DEST}/var/run
+
+mkdir -p ${DEST}/etc/default ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/lib ${DEST}/usr/lib/tmpfiles.d
+
+mv ${DEST}/usr/lib/systemd ${DEST}/lib
+
+ln -sf /lib/systemd/system/libvirtd.service ${DEST}/etc/systemd/system/multi-user.target.wants/libvirtd.service
+ln -sf /lib/systemd/system/libvirt-guests.service ${DEST}/etc/systemd/system/multi-user.target.wants/libvirt-guests.service
+
+cat > ${DEST}/etc/default/libvirtd << "EOF"
+# Begin /etc/default/libvirtd
+
+LIBVIRTD_CONFIG="/etc/libvirt/libvirtd.conf"
+LIBVIRTD_ARGS="-p /var/run/libvirtd.pid"
+KRB5_KTNAME="/etc/libvirt/krb5.tab"
+
+# End /etc/default/libvirtd
+EOF
+
+cat > ${DEST}/etc/default/libvirt-guests << "EOF"
+# Begin /etc/default/libvirt-guests
+
+LIBVIRTD_STOP_ACTION=suspend
+
+#LIBVIRTD_URI="-c qemu+ssh://user@host/system"
+LIBVIRTD_URI=""
+
+#LIBVIRTD_BYPASS_CACHE="--bypass-cache"
+LIBVIRTD_BYPASS_CACHE=""
+
+LIBVIRTD_START_DELAY=0
+
+LIBVIRTD_SHUTDOWN_TIMEOUT=60
+
+# End /etc/default/libvirt-guests
+EOF
+
+cat > ${DEST}/usr/lib/tmpfiles.d/libvirt.conf << "EOF"
+d /run/libvirt/qemu 0755 root root -
+d /run/libvirt/lxc 0755 root root -
+d /run/libvirt/uml 0755 root root -
+d /run/libvirt/network 0755 root root -
+EOF
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib usr var ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

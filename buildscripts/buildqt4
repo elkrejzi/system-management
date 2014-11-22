@@ -1,0 +1,235 @@
+#!/bin/bash -e
+
+export VER=4.8.6
+export DEST=/binary/qt-${VER}
+
+if [ -e /media/ntfs/Other/Linux/patches/qt4fixes.patch ]; then
+  pushd qt-everywhere-opensource-src-${VER}
+  patch -Np1 -i /media/ntfs/Other/Linux/patches/qt4fixes.patch
+  popd
+fi
+
+export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w"
+export CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w"
+
+cp -a qt-everywhere-opensource-src-${VER} qt-everywhere-opensource-src-${VER}-32
+
+pushd qt-everywhere-opensource-src-${VER}
+
+cp mkspecs/common/linux.conf mkspecs/common/linux32.conf
+sed -i "/^QMAKE_LIBDIR\s/s:=:= /usr/lib32:g" mkspecs/common/linux32.conf
+sed -i "s:common/linux.conf:common/linux32.conf:" mkspecs/linux-g++-32/qmake.conf
+
+sed -i '/CONFIG -/ a\isEmpty(OUTPUT_DIR): OUTPUT_DIR = ../..' \
+     src/3rdparty/webkit/Source/WebKit2/DerivedSources.pro
+
+./configure -confirm-license \
+            -opensource \
+            -release \
+            -prefix /usr \
+            -bindir /usr/lib/qt4/bin \
+            -headerdir /usr/include/qt4 \
+            -datadir /usr/share/qt4 \
+            -plugindir /usr/lib/qt4/plugins \
+            -importdir /usr/lib/qt4/imports \
+            -translationdir /usr/share/qt4/translations \
+            -sysconfdir /etc/xdg \
+            -docdir /usr/share/doc/qt4 \
+            -demosdir /usr/share/doc/qt4/demos \
+            -examplesdir /usr/share/doc/qt4/examples \
+            -dbus-linked \
+            -openssl-linked \
+            -system-sqlite \
+            -no-phonon \
+            -no-phonon-backend \
+            -no-openvg \
+            -nomake demos \
+            -nomake examples \
+            -optimized-qmake
+
+make -j4
+
+install -dm755 ${DEST}/usr/bin ${DEST}/usr/share/applications ${DEST}/usr/share/pixmaps
+
+make install INSTALL_ROOT=${DEST}
+
+for file in 3Support CLucene Core DBus Declarative DesignerComponents \
+           Designer Gui Help Multimedia Network OpenGL Script \
+           ScriptTools Sql Svg Test UiTools WebKit XmlPatterns Xml
+do
+  sed -i -e '/^QMAKE_PRL_BUILD_DIR/d;s/\(QMAKE_PRL_LIBS =\).*/\1/' \
+       ${DEST}/usr/lib/libQt${file}.prl
+  perl -pi -e "s, -L$PWD/?\S+,,g" ${DEST}/usr/lib/pkgconfig/Qt${file}.pc
+done
+unset file
+
+rm -rf ${DEST}/usr/tests ${DEST}/usr/share/doc ${DEST}/usr/lib/*.la
+
+install -Dm644 src/gui/dialogs/images/qtlogo-64.png \
+                  ${DEST}/usr/share/pixmaps/qt4logo.png
+install -Dm644 tools/assistant/tools/assistant/images/assistant-128.png \
+                  ${DEST}/usr/share/pixmaps/assistant-qt4.png
+install -Dm644 tools/designer/src/designer/images/designer.png \
+                  ${DEST}/usr/share/pixmaps/designer-qt4.png
+install -Dm644 tools/linguist/linguist/images/icons/linguist-128-32.png \
+                  ${DEST}/usr/share/pixmaps/linguist-qt4.png
+install -Dm644 tools/qdbus/qdbusviewer/images/qdbusviewer-128.png \
+                  ${DEST}/usr/share/pixmaps/qdbusviewer-qt4.png
+
+for file in ${DEST}/usr/lib/qt4/bin/*
+do
+  ln -sf ../lib/qt4/bin/$(basename $file) ${DEST}/usr/bin/$(basename $file)-qt4
+done
+
+cat > ${DEST}/usr/share/applications/qtconfig-qt4.desktop << "EOF"
+[Desktop Entry]
+Name=Qt4 Config
+Comment=Configure Qt4 behavior, styles, fonts
+Exec=qtconfig-qt4
+Icon=qt4logo
+Terminal=false
+Encoding=UTF-8
+Type=Application
+Categories=Qt;Settings;
+EOF
+cat > ${DEST}/usr/share/applications/assistant-qt4.desktop << "EOF"
+[Desktop Entry]
+Name=Qt4 Assistant
+Comment=Shows Qt4 documentation and examples
+Exec=assistant-qt4
+Icon=assistant-qt4
+Terminal=false
+Encoding=UTF-8
+Type=Application
+Categories=Qt;Development;Documentation;
+EOF
+cat > ${DEST}/usr/share/applications/designer-qt4.desktop << "EOF"
+[Desktop Entry]
+Name=Qt4 Designer
+Comment=Design GUIs for Qt4 applications
+Exec=designer-qt4
+Icon=designer-qt4
+MimeType=application/x-designer;
+Terminal=false
+Encoding=UTF-8
+Type=Application
+Categories=Qt;Development;
+EOF
+cat > ${DEST}/usr/share/applications/linguist-qt4.desktop << "EOF"
+[Desktop Entry]
+Name=Qt4 Linguist
+Comment=Add translations to Qt4 applications
+Exec=linguist-qt4
+Icon=linguist-qt4
+MimeType=text/vnd.trolltech.linguist;application/x-linguist;
+Terminal=false
+Encoding=UTF-8
+Type=Application
+Categories=Qt;Development;
+EOF
+cat > ${DEST}/usr/share/applications/qdbusviewer-qt4.desktop << "EOF"
+[Desktop Entry]
+Name=Qt4 QDbusViewer
+GenericName=D-Bus Debugger
+Comment=Debug D-Bus applications
+Exec=qdbusviewer-qt4
+Icon=qdbusviewer-qt4
+Terminal=false
+Encoding=UTF-8
+Type=Application
+Categories=Qt;Development;Debugger;
+EOF
+
+rm -rf ${DEST}/usr/lib/qt4/plugins/imageformats/libqtga.so
+
+popd
+
+pushd qt-everywhere-opensource-src-${VER}-32
+
+sed -i '/CONFIG -/ a\isEmpty(OUTPUT_DIR): OUTPUT_DIR = ../..' \
+     src/3rdparty/webkit/Source/WebKit2/DerivedSources.pro
+
+sed -i "/^QMAKE_LINK\s/s|g++|g++ -m32|g" mkspecs/common/g++-base.conf
+sed -i "s|-O2|${CXXFLAGS} -m32|" mkspecs/common/g++-base.conf
+sed -i "s|-O2|${CXXFLAGS} -m32|" mkspecs/common/gcc-base.conf
+sed -i "/^QMAKE_LFLAGS_RPATH/s| -Wl,-rpath,||g" mkspecs/common/gcc-base-unix.conf
+sed -i "/^QMAKE_LFLAGS\s/s|+=|+= ${LDFLAGS} -m32|g" mkspecs/common/gcc-base.conf
+sed -i "s|-Wl,-O1|-m32 -Wl,-O1|" mkspecs/common/g++-unix.conf
+sed -e "s|-O2|$CXXFLAGS -m32|" \
+    -e "/^QMAKE_RPATH/s| -Wl,-rpath,||g" \
+    -e "/^QMAKE_LINK\s/s|g++|g++ -m32|g" \
+    -e "/^QMAKE_LFLAGS\s/s|+=|+= ${LDFLAGS}|g" \
+    -i mkspecs/common/g++.conf
+
+PKG_CONFIG_PATH=/usr/lib32/pkgconfig \
+./configure -confirm-license \
+            -opensource \
+            -release \
+            -prefix /usr \
+            -headerdir /usr/include/qt4 \
+            -datadir /usr/share/qt4 \
+            -libdir /usr/lib32 \
+            -plugindir /usr/lib32/qt4/plugins \
+            -importdir /usr/lib32/qt4/imports \
+            -translationdir /usr/share/qt4/translations \
+            -sysconfdir /etc/xdg \
+            -docdir /usr/share/doc/qt4 \
+            -demosdir /usr/share/doc/qt4/demos \
+            -examplesdir /usr/share/doc/qt4/examples \
+            -dbus-linked \
+            -openssl-linked \
+            -system-sqlite \
+            -no-phonon \
+            -no-phonon-backend \
+            -no-openvg \
+            -nomake demos \
+            -nomake docs \
+            -nomake examples \
+            -nomake tools \
+            -optimized-qmake \
+            -platform linux-g++-32
+
+make -j4
+
+make install INSTALL_ROOT=${PWD}/dest
+
+rm -rf dest/usr/lib32/*.la
+
+for file in 3Support Core DBus Declarative Gui Multimedia \
+            Network OpenGL Script  ScriptTools Sql Svg \
+            Test WebKit XmlPatterns Xml
+do
+  sed -i -e '/^QMAKE_PRL_BUILD_DIR/d;s/\(QMAKE_PRL_LIBS =\).*/\1/' \
+       dest/usr/lib32/libQt${file}.prl
+  perl -pi -e "s, -L$PWD/?\S+,,g" dest/usr/lib32/pkgconfig/Qt${file}.pc
+done
+unset file
+
+rm -rf dest/usr/lib32/qt4/plugins/imageformats/libqtga.so
+
+mv dest/usr/lib32 ${DEST}/usr
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+unset VER DEST

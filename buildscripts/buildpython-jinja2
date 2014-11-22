@@ -1,0 +1,30 @@
+#!/bin/bash -e
+
+export VER=2.7.3
+export DEST=/binary/python-jinja2-${VER}
+
+cp -a Jinja2-${VER} Jinja2-${VER}-3
+
+pushd Jinja2-${VER}-3
+
+python3 setup.py build
+python3 setup.py install --root=${DEST} --optimize=1
+
+popd
+
+pushd Jinja2-${VER}
+
+python setup.py build
+python setup.py install --root=${DEST} --optimize=1
+
+popd
+
+rm -rf Jinja2-${VER} Jinja2-${VER}-3
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL

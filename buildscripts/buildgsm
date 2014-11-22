@@ -1,0 +1,66 @@
+#!/bin/bash -e
+
+export VER=1.0.13
+export DEST=/binary/gsm-${VER}
+
+install -dm755 gsm-${VER}
+
+pushd gsm-${VER}
+
+tar xf /media/ntfs/Other/Linux/packages/gsm-1.0.13.tar.gz --strip-components=1
+patch -Np1 -i /media/ntfs/Other/Linux/patches/gsm.patch
+
+popd
+
+cp -a gsm-${VER} gsm-${VER}-32
+
+pushd gsm-${VER}
+
+make CCFLAGS="-c -fPIC -march=native -mtune=native -O2 -pipe -fstack-protector-strong " -j4
+
+install -dm755 ${DEST}/usr/bin ${DEST}/usr/include/gsm ${DEST}/usr/lib ${DEST}/usr/share/man/man1 ${DEST}/usr/share/man/man3
+
+make INSTALL_ROOT=${DEST}/usr \
+     GSM_INSTALL_INC=${DEST}/usr/include/gsm \
+     GSM_INSTALL_MAN=${DEST}/usr/share/man/man3 \
+     TOAST_INSTALL_MAN=${DEST}/usr/share/man/man1 \
+     install
+
+popd
+
+pushd gsm-${VER}-32
+
+sed -i "/-shared/s:-shared:\$(LDFLAGS) &:" Makefile
+
+make CCFLAGS="-m32 -c -fPIC -march=native -mtune=native -O2 -pipe -fstack-protector-strong " LDFLAGS="-m32" -j4
+
+install -dm755 ${DEST}/usr/lib32
+install -m755 lib/libgsm.so.${VER} ${DEST}/usr/lib32
+
+ln -sf libgsm.so.${VER} ${DEST}/usr/lib32/libgsm.so.1
+ln -sf libgsm.so.${VER} ${DEST}/usr/lib32/libgsm.so
+
+popd
+
+rm -rf gsm-${VER} gsm-${VER}-32
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination $dir /usr ; done
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL
+

@@ -1,0 +1,121 @@
+#!/bin/bash -e
+
+export VER=4.11.13
+export DEST=/binary/kde-workspace-${VER}
+
+install -dm755 kde-workspace-${VER}/build
+
+pushd kde-workspace-${VER}/build
+
+cmake -DCMAKE_BUILD_TYPE=Release  \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DKDE4_BUILD_TESTS=OFF      \
+      -DCMAKE_SKIP_RPATH=ON       \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+      -Wno-dev ..
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf kde-workspace-${VER}
+
+install -dm755 ${DEST}/etc/pam.d ${DEST}/lib/systemd/system ${DEST}/usr/share/xsessions
+
+cat > ${DEST}/etc/pam.d/kde << "EOF"
+# Begin /etc/pam.d/kde
+
+auth     requisite      pam_nologin.so
+auth     required       pam_env.so
+
+auth     required       pam_succeed_if.so uid >= 1000 quiet
+auth     include        system-auth
+
+account  include        system-account
+password include        system-password
+
+session  required       pam_limits.so
+session  include        system-session
+
+# End /etc/pam.d/kde
+EOF
+
+cat > ${DEST}/etc/pam.d/kde-np << "EOF"
+# Begin /etc/pam.d/kde-np
+
+auth     requisite      pam_nologin.so
+auth     required       pam_env.so
+
+auth     required       pam_succeed_if.so uid >= 1000 quiet
+auth     required       pam_permit.so
+
+account  include        system-account
+password include        system-password
+
+session  required       pam_limits.so
+session  include        system-session
+
+# End /etc/pam.d/kde-np
+EOF
+
+cat > ${DEST}/etc/pam.d/kscreensaver << "EOF"
+# Begin /etc/pam.d/kscreensaver
+
+auth     include        system-auth
+account  include        system-account
+password include        system-password
+session  include        system-session
+
+# End /etc/pam.d/kscreensaver
+EOF
+
+cat > ${DEST}/lib/systemd/system/kdm.service << "EOF"
+[Unit]
+Description=K Display Manager
+After=systemd-user-sessions.service
+
+[Service]
+ExecStart=/usr/bin/kdm -nodaemon
+
+[Install]
+Alias=display-manager.service
+EOF
+
+for file in kde-plasma.desktop kde-plasma-safe.desktop
+do
+  ln -sf ../apps/kdm/sessions/${file} ${DEST}/usr/share/xsessions/${file}
+done
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib usr ; do cp -rf --remove-destination $dir / ; done
+
+getent group kdm > /dev/null || groupadd -g 37 kdm
+getent passwd kdm > /dev/null || useradd  -u 37 -g kdm -d /var/lib/kdm -s /bin/false kdm
+
+install -d -o kdm -g kdm /var/lib/kdm
+
+chmod 6755 /usr/lib/kde4/libexec/kcheckpass
+chmod 4755 /usr/bin/kwrited
+
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for oxygen-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/oxygen
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

@@ -1,0 +1,54 @@
+#!/bin/bash -e
+
+export VER=0.3.110
+export DEST=/binary/libaio-${VER}
+
+pushd libaio-${VER}
+sed -e "s|-nostdlib -nostartfiles -Wall -I. -fPIC|& -march=native -mtune=native -pipe|g" -i src/Makefile
+popd
+
+cp -a libaio-${VER} libaio-${VER}-32
+
+pushd libaio-${VER}
+
+make -j4
+make install prefix=${DEST}/usr
+
+popd
+
+pushd libaio-${VER}-32
+
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+make -j4
+make install prefix=${PWD}/dest/usr libdir=${PWD}/dest/usr/lib32
+
+mv dest/usr/lib32 ${DEST}/usr
+
+popd
+
+rm -rf libaio-${VER} libaio-${VER}-32
+
+rm -rf ${DEST}/usr/lib*/*.a
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

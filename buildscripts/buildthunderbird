@@ -1,0 +1,186 @@
+#!/bin/bash -e
+
+export VER=31.2.0
+export DEST=/binary/thunderbird-${VER}
+
+pushd comm-esr31
+
+sed -i "s:-\$(MOZ_APP_VERSION)::g" config/baseconfig.mk mozilla/config/baseconfig.mk
+
+cat > mozconfig << "EOF"
+ac_add_options --enable-application=mail
+ac_add_options --prefix=/usr
+
+ac_add_options --with-system-bz2
+ac_add_options --with-system-jpeg
+ac_add_options --with-system-libevent
+ac_add_options --with-system-libvpx
+ac_add_options --with-system-nspr
+ac_add_options --with-system-nss
+ac_add_options --with-system-png
+ac_add_options --with-system-zlib
+
+ac_add_options --enable-system-cairo
+ac_add_options --enable-system-ffi
+ac_add_options --enable-system-hunspell
+ac_add_options --enable-system-pixman
+ac_add_options --enable-system-sqlite
+
+ac_add_options --enable-install-strip
+ac_add_options --enable-strip
+
+ac_add_options --enable-gio
+ac_add_options --enable-official-branding
+ac_add_options --enable-safe-browsing
+ac_add_options --enable-startup-notification
+ac_add_options --enable-url-classifier
+
+ac_add_options --disable-gconf
+ac_add_options --disable-gnomeui
+ac_add_options --disable-gnomevfs
+ac_add_options --disable-gstreamer
+
+ac_add_options --disable-crashreporter
+ac_add_options --disable-debug
+ac_add_options --disable-installer
+ac_add_options --disable-mochitest
+ac_add_options --disable-tests
+ac_add_options --disable-updater
+
+export MOZILLA_OFFICIAL=1
+
+mk_add_options MOZ_MAKE_FLAGS="-j4"
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/thunderbuild
+EOF
+
+mkdir -p mozilla/thunderbuild
+
+LDFLAGS="-Wl,-rpath,/usr/lib/thunderbird" make -f client.mk configure
+
+make -C thunderbuild -j4
+make -C thunderbuild install DESTDIR=${DEST} INSTALL_SDK=
+
+for i in 16x16 22x22 24x24 32x32 48x48 256x256; do
+  install -Dm644 other-licenses/branding/thunderbird/mailicon${i/x*/}.png ${DEST}/usr/share/icons/hicolor/$i/apps/thunderbird.png
+done
+
+popd
+
+rm -rf comm-esr31
+
+install -dm755 ${DEST}/usr/lib/thunderbird/defaults/preferences ${DEST}/usr/share/applications
+
+cat > ${DEST}/usr/share/applications/thunderbird.desktop << "EOF"
+[Desktop Entry]
+Encoding=UTF-8
+Name=Thunderbird Mail
+Name[ast]=Veceru de corréu Thunderbird
+Name[ca]=Client de correu Thunderbird
+Name[cs]=Poštovní klient Thunderbird
+Name[da]=Mozilla Thunderbird - e-post/nyhedsgruppe
+Name[de]=Thunderbird-E-Mail und -Nachrichten
+Name[es]=Cliente de correo Thunderbird
+Name[fi]=Thunderbird-sähköposti
+Name[fr]=Messagerie Thunderbird
+Name[gl]=Cliente de correo Thunderbird
+Name[he]=Mozilla Thunderbird דוא״ל/חדשות
+Name[hr]=Mozilla Thunderbird e-pošta/novosti
+Name[hu]=Thunderbird levelezőkliens
+Name[it]=Email Mozilla Thunderbird
+Name[ko]=Mozilla Thunderbird
+Name[nl]=Mozilla Thunderbird e-mail/nieuws
+Name[pl]=Klient poczty Thunderbird
+Name[pt_BR]=Cliente de E-mail Thunderbird
+Name[ru]=Почтовый клиент Thunderbird
+Name[sk]=Thunderbird - poštový klient a novin
+Name[sv]=E-postklienten Thunderbird
+Name[ug]=Mozilla Thunderbird ئېلخەت/خەۋەر
+Name[zh_CN]=Thunderbird 邮件/新闻
+Name[zh_TW]=Thunderbird 郵件
+Comment=Send and receive mail with Thunderbird
+Comment[ast]=Lleer y escribir corréu electrónicu
+Comment[ca]=Llegiu i escriviu correu
+Comment[cs]=Čtení a psaní pošty
+Comment[da]=Skriv/læs e-post/nyhedsgruppe med Mozilla Thunderbird
+Comment[de]=E-Mails und Nachrichten mit Thunderbird lesen und schreiben
+Comment[es]=Lea y escriba correos y noticias con Thunderbird
+Comment[fi]=Lue ja kirjoita sähköposteja
+Comment[fr]=Lire et écrire des courriels
+Comment[gl]=Lea e escriba correo electrónico
+Comment[he]=קריאה/כתיבה של דוא״ל/חדשות באמצעות Mozilla Thunderbird
+Comment[hr]=Čitajte/šaljite e-poštu s Thunderbird
+Comment[hu]=Levelek írása és olvasása a Thunderbirddel
+Comment[it]=Per leggere e scrivere email
+Comment[ja]=メールの読み書き
+Comment[ko]=Mozilla Thunderbird 메일/뉴스 읽기 및 쓰기 클라이언트
+Comment[nl]=E-mail/nieuws lezen en schrijven met Mozilla Thunderbird
+Comment[pl]=Czytanie i wysyłanie e-maili
+Comment[pt_BR]=Ler e escrever suas mensagens
+Comment[ru]=Читайте и пишите письма
+Comment[sk]=Čítajte a píšte poštu, čítajte novinky pomocou programu Mozilla Thunderbird
+Comment[sv]=Läs och skriv e-post
+Comment[ug]=ئېلخەت ۋە خەۋەرلەرنى Mozilla Thunderbird دا كۆرۈش ۋە يېزىش
+Comment[zh_CN]=阅读邮件或新闻
+Comment[zh_TW]=以 Mozilla Thunderbird 讀寫郵件或新聞
+GenericName=Mail Client
+Exec=thunderbird %u
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+Icon=thunderbird
+Categories=Application;Network;Email;
+MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/vnd.mozilla.xul+xml;application/rss+xml;application/rdf+xml;x-scheme-handler/mailto;
+StartupNotify=true
+GenericName[ast]=Client de correu
+GenericName[ca]=Client de correu
+GenericName[da]=E-postklient
+GenericName[de]=E-Mail-Anwendung
+GenericName[es]=Cliente de correo
+GenericName[fi]=Sähköpostiohjelma
+GenericName[fr]=Client de messagerie
+GenericName[gl]=Cliente de correo electrónico
+GenericName[he]=לקוח דוא״ל
+GenericName[hr]=Klijent e-pošte
+GenericName[hu]=Levelezőkliens
+GenericName[it]=Client email
+GenericName[ko]=메일 클라이언트
+GenericName[nl]=E-mailprogramma
+GenericName[ru]=Почтовый клиент
+GenericName[sk]=Poštový klie
+GenericName[ug]=ئېلخەت دېتالى
+GenericName[zh_CN]=邮件新闻客户端
+GenericName[zh_TW]=郵件用戶端
+EOF
+
+cat > ${DEST}/usr/lib/thunderbird/defaults/preferences/vendor.js << "EOF"
+// Use LANG environment variable to choose locale                                                                                                                                               
+pref("intl.locale.matchOS", true);                                                                                                                                                              
+                                                                                                                                                                                                
+// Disable default mailer checking.                                                                                                                                                             
+pref("mail.shell.checkDefaultMail", false);
+EOF
+
+rm -rf ${DEST}/usr/lib/thunderbird/dictionaries
+
+ln -sf ../../share/hunspell ${DEST}/usr/lib/thunderbird/dictionaries
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+EOF
+
+chmod 755 ${DEST}/INSTALL

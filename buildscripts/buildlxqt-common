@@ -1,0 +1,38 @@
+#!/bin/bash -e
+
+export VER=0.8.0
+export DEST=/binary/lxqt-common-${VER}
+
+pushd lxqt-common-${VER}
+
+cmake -DCMAKE_BUILD_TYPE=Release  \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DUSE_QT5=ON                \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+      -Wno-dev
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf lxqt-common-${VER}
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+EOF
+
+chmod 755 ${DEST}/INSTALL

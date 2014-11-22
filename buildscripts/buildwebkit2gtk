@@ -1,0 +1,45 @@
+#!/bin/bash -e
+
+export VER=2.6.3
+export DEST=/binary/webkitgtk-${VER}
+
+install -dm755 webkitgtk-${VER}/build
+
+pushd webkitgtk-${VER}/build
+
+cmake -DCMAKE_BUILD_TYPE=Release  \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_SKIP_RPATH=ON       \
+      -DPORT=GTK                  \
+      -DLIB_INSTALL_DIR=/usr/lib  \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2"   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2" \
+      -Wno-dev ..
+
+make -j4
+make install DESTDIR=${DEST}
+#make install DESTDIR=$PWD/dest
+
+popd
+
+rm -rf webkitgtk-${VER}
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

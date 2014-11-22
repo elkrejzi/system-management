@@ -1,0 +1,69 @@
+#!/bin/bash -e
+
+export VER=1.900.1
+export DEST=/binary/jasper-${VER}
+
+pushd jasper-${VER}
+  patch -Np1 -i /media/ntfs/Other/Linux/patches/jasper.patch
+popd
+
+cp -a jasper-${VER} jasper-${VER}-32
+
+pushd jasper-${VER}
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr           \
+            --mandir=/usr/share/man \
+            --disable-static        \
+            --enable-shared
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+pushd jasper-${VER}-32
+
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr           \
+            --libdir=/usr/lib32     \
+            --mandir=/usr/share/man \
+            --disable-static        \
+            --enable-shared
+
+make -j4
+make install DESTDIR=${PWD}/dest
+
+mv dest/usr/lib32 ${DEST}/usr
+
+popd
+
+rm -rf jasper-${VER} jasper-${VER}-32
+
+find ${DEST} -name "*.la" -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination $dir /usr ; done
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

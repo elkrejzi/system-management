@@ -1,0 +1,39 @@
+#!/bin/bash -e
+
+export VER=2014j
+export INST=/binary/tzdata-${VER}
+export DEST=${INST}/usr/share/zoneinfo
+
+install -dm755 ${DEST}
+
+mkdir build
+
+pushd build
+
+tar xf ../tzdata${VER}.tar.gz
+tar xf ../tzcode${VER}.tar.gz
+
+timezones=('africa' 'antarctica' 'asia' 'australasia'
+           'europe' 'northamerica' 'southamerica'
+           'pacificnew' 'etcetera' 'backward'
+           'systemv' 'factory')
+
+zic -y ./yearistype -d ${DEST} ${timezones[@]}
+zic -y ./yearistype -d ${DEST}/posix ${timezones[@]}
+awk -f leapseconds.awk leap-seconds.list > leapseconds
+zic -y ./yearistype -d ${DEST}/right -L leapseconds ${timezones[@]}
+zic -y ./yearistype -d ${DEST} -p America/New_York
+
+install -m444 iso3166.tab zone.tab zone1970.tab ${DEST}
+
+popd
+
+rm -rf build
+
+cat > ${INST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${INST}/INSTALL

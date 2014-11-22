@@ -1,0 +1,54 @@
+#!/bin/bash -e
+
+export VER=2.4+git79459a2
+export DEST=/binary/rtmpdump-${VER}
+
+tar xf /media/ntfs/Other/Linux/packages/rtmpdump-${VER}.tar.xz
+
+cp -a rtmpdump-${VER} rtmpdump-${VER}-32
+
+pushd rtmpdump-${VER}
+
+make OPT="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " -j4
+
+make install prefix=/usr mandir=/usr/share/man DESTDIR=${DEST}
+
+popd
+
+pushd rtmpdump-${VER}-32
+
+export CC="gcc -m32"
+
+make CC="gcc -m32" OPT="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " -j4
+make install prefix=/usr libdir=/usr/lib32 mandir=/usr/share/man  DESTDIR=${PWD}/dest
+
+mv dest/usr/lib32 ${DEST}/usr
+
+popd
+
+rm -rf rtmpdump-${VER} rtmpdump-${VER}-32
+
+find ${DEST} -name "*.a" -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination $dir /usr ; done
+
+cp -rf --remove-destination usr/share/man/man3 /usr/share/man
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

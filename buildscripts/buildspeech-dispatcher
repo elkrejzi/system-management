@@ -1,0 +1,60 @@
+#!/bin/bash -e
+
+export VER=0.8.1
+export DEST=/binary/speech-dispatcher-${VER}
+
+pushd speech-dispatcher-${VER}
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr     \
+            --sysconfdir=/etc \
+            --disable-static  \
+            --without-flite
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf speech-dispatcher-${VER}
+
+find ${DEST} -name "*.la" -delete
+
+rm -rf ${DEST}/usr/share/info/dir ${DEST}/usr/share/info/*.gz
+gzip -9 ${DEST}/usr/share/info/*
+
+mkdir -p ${DEST}/lib/systemd/system ${DEST}/var/log/speech-dispatcher
+
+cat > ${DEST}/lib/systemd/system/speech-dispatcherd.service << "EOF"
+[Unit]
+Description=High-level device independent layer for speech synthesis.
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/speech-dispatcher -d
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib usr var ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/install-info ] && echo "Processing triggers for texinfo" && for file in usr/share/info/* ; do /usr/bin/install-info /$file /usr/share/info/dir ; done
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

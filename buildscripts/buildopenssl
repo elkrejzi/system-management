@@ -1,0 +1,93 @@
+#!/bin/bash -e
+
+export VER=1.0.1j
+export DEST=/binary/openssl-${VER}
+
+export CFLAGS="-march=native -mtune=native -g -O2"
+
+pushd openssl-${VER}
+  patch -Np1 -i /media/ntfs/Other/Linux/patches/openssl.patch
+
+  if [ -f /media/ntfs/Other/Linux/patches/openssl-fixes.patch ]; then
+    patch -Np1 -i /media/ntfs/Other/Linux/patches/openssl-fixes.patch
+  fi
+popd
+
+cp -a openssl-${VER} openssl-${VER}-32
+
+pushd openssl-${VER}
+
+./Configure --prefix=/usr \
+            --openssldir=/etc/ssl \
+            --libdir=lib \
+            shared \
+            zlib \
+            enable-ec_nistp_64_gcc_128 \
+            linux-x86_64 \
+            "${CFLAGS}"
+
+make depend
+make -j4
+
+make INSTALL_PREFIX=${DEST} MANDIR=/usr/share/man MANSUFFIX=ssl install
+
+popd
+
+pushd openssl-${VER}-32
+
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+./Configure --prefix=/usr \
+            --openssldir=/etc/ssl \
+            --libdir=lib32 \
+            shared \
+            zlib \
+            "linux-elf" \
+            "${CFLAGS}"
+
+make MAKEDEPPROG="${CC}" depend
+make -j4
+make build-shared
+
+make INSTALL_PREFIX=${PWD}/dest install
+mv dest/usr/lib32 ${DEST}/usr
+
+popd
+
+rm -rf openssl-${VER} openssl-${VER}-32
+
+rm -rf ${DEST}/usr/*/*.a
+
+install -dm755 ${DEST}/lib
+
+mv ${DEST}/usr/lib/libcrypto.so.* ${DEST}/lib
+mv ${DEST}/usr/lib/libssl.so.* ${DEST}/lib
+
+ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libcrypto.so) ${DEST}/usr/lib/libcrypto.so
+ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libssl.so) ${DEST}/usr/lib/libssl.so
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+mkdir -p usr/lib/debug/`dirname ${BUILD_BINARY}`
+objcopy --only-keep-debug ${BUILD_BINARY} usr/lib/debug/${BUILD_BINARY}
+strip --strip-unneeded ${BUILD_BINARY}
+objcopy --add-gnu-debuglink=usr/lib/debug/${BUILD_BINARY} ${BUILD_BINARY}
+esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

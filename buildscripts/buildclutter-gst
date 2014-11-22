@@ -1,0 +1,42 @@
+#!/bin/bash -e
+
+export VER=2.0.12
+export DEST=/binary/clutter-gst-${VER}
+
+pushd clutter-gst-${VER}
+
+CFLAGS="-march=native -mtune=native -g -O2"   \
+CXXFLAGS="-march=native -mtune=native -g -O2" \
+./configure --prefix=/usr
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf clutter-gst-${VER}
+
+find ${DEST} -name "*.la" -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+mkdir -p usr/lib/debug/`dirname ${BUILD_BINARY}`
+objcopy --only-keep-debug ${BUILD_BINARY} usr/lib/debug/${BUILD_BINARY}
+strip --strip-unneeded ${BUILD_BINARY}
+objcopy --add-gnu-debuglink=usr/lib/debug/${BUILD_BINARY} ${BUILD_BINARY}
+esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

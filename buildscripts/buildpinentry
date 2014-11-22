@@ -1,0 +1,44 @@
+#!/bin/bash -e
+
+export VER=0.9.0
+export DEST=/binary/pinentry-${VER}
+
+pushd pinentry-${VER}
+
+rm -f qt4/*.moc
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf pinentry-${VER}
+
+rm -rf ${DEST}/usr/share/info/dir
+gzip -9 ${DEST}/usr/share/info/*
+
+ln -sf pinentry-curses ${DEST}/usr/bin/pinentry
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/install-info ] && echo "Processing triggers for texinfo" && for file in usr/share/info/* ; do /usr/bin/install-info /$file /usr/share/info/dir ; done
+EOF
+
+chmod 755 ${DEST}/INSTALL

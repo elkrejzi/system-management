@@ -1,0 +1,47 @@
+#!/bin/bash -e
+
+export VER=1.4.6
+export DEST=/binary/imlib2-${VER}
+
+pushd imlib2-${VER}
+
+sed -e '/DGifOpen/s:fd:&, NULL:'           \
+    -e '/DGifCloseFile/s:gif:&, NULL:'     \
+    -i src/modules/loaders/loader_gif.c
+
+sed -i 's/@my_libs@//' imlib2-config.in
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr --disable-static
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf imlib2-${VER}
+
+find ${DEST} -name "*.la" -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in usr/include usr/lib usr/share ; do cp -rf --remove-destination $dir /usr ; done
+
+cp -rf --remove-destination usr/bin/imlib2-config /usr/bin
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

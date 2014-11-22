@@ -1,0 +1,34 @@
+#!/bin/bash -e
+
+export VER=0.6.3
+export DEST=/binary/sgml-common-${VER}
+
+pushd sgml-common-${VER}
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/sgml-common.patch
+
+autoreconf -fi
+
+./configure --prefix=/usr --sysconfdir=/etc
+
+make
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf sgml-common-${VER}
+
+rm -rf ${DEST}/usr/doc
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+
+install-catalog --add /etc/sgml/sgml-ent.cat /usr/share/sgml/sgml-iso-entities-8879.1986/catalog
+install-catalog --add /etc/sgml/sgml-docbook.cat /etc/sgml/sgml-ent.cat
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

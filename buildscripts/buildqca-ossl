@@ -1,0 +1,35 @@
+#!/bin/bash -e
+
+export VER=2.0.0-beta3
+export DEST=/binary/qca-ossl-${VER}
+
+pushd qca-ossl-${VER}
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/qca-ossl-fixes.patch
+
+./configure --release --no-separate-debug-info
+
+make -j4
+make install INSTALL_ROOT=${DEST}
+
+popd
+
+rm -rf qca-ossl-${VER}
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL

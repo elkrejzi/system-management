@@ -1,0 +1,37 @@
+#!/bin/bash -e
+
+export VER=2.12
+export DEST=/binary/dmidecode-${VER}
+
+pushd dmidecode-${VER}
+
+sed -i "s:-O2:-march=native -mtune=native -O2 -pipe -fstack-protector-strong :g" Makefile
+
+make prefix=/usr -j4
+make install prefix=/usr DESTDIR=${DEST}
+
+popd
+
+rm -rf dmidecode-${VER}
+
+rm -rf ${DEST}/usr/share/doc
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

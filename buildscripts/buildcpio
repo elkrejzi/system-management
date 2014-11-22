@@ -1,0 +1,47 @@
+#!/bin/bash -e
+
+export VER=2.11
+export DEST=/binary/cpio-${VER}
+
+pushd cpio-${VER}
+
+sed -i -e '/gets is a/d' gnu/stdio.in.h
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr \
+            --bindir=/bin \
+            --enable-mt   \
+            --with-rmt=/usr/libexec/rmt
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf cpio-${VER}
+
+rm -rf ${DEST}/usr/share/doc ${DEST}/usr/share/info/dir
+
+gzip -9 ${DEST}/usr/share/info/*
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in bin usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/install-info ] && echo "Processing triggers for texinfo" && for file in usr/share/info/* ; do /usr/bin/install-info /$file /usr/share/info/dir ; done
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

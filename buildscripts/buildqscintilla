@@ -1,0 +1,72 @@
+#!/bin/bash -e
+
+export VER=2.8.4
+export DEST=/binary/qscintilla-${VER}
+
+pushd QScintilla-gpl-${VER}
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/qscintilla-fixes.patch
+
+popd
+
+cp -a QScintilla-gpl-${VER}/Python QScintilla-gpl-${VER}/Python3
+
+pushd QScintilla-gpl-${VER}/Qt4Qt5
+
+qmake-qt4 qscintilla.pro "QMAKE_CFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong " "QMAKE_CXXFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong "
+
+make -j4
+make install INSTALL_ROOT=${DEST}
+
+popd
+
+pushd QScintilla-gpl-${VER}/designer-Qt4Qt5
+
+qmake-qt4 designer.pro "QMAKE_CFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong " "QMAKE_CXXFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong " INCLUDEPATH+=../Qt4Qt5 QMAKE_LIBDIR+=../Qt4Qt5
+
+make -j4
+make install INSTALL_ROOT=${DEST}
+
+popd
+
+pushd QScintilla-gpl-${VER}/Python
+
+python configure.py -n ../Qt4Qt5/ -o ../Qt4Qt5/ -c --qmake /usr/bin/qmake-qt4
+
+make -j4
+make install DESTDIR=${DEST} INSTALL_ROOT=${DEST}
+
+popd
+
+pushd QScintilla-gpl-${VER}/Python3
+
+python3 configure.py -n ../Qt4Qt5/ -o ../Qt4Qt5/ -c --qmake /usr/bin/qmake-qt4
+
+make -j4
+make install DESTDIR=${DEST} INSTALL_ROOT=${DEST}
+
+popd
+
+rm -rf QScintilla-gpl-${VER}
+
+pushd ${DEST}
+
+find ${DEST} -name "*.so" -exec chmod 755 {} \;
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

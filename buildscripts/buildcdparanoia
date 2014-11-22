@@ -1,0 +1,68 @@
+#!/bin/bash -e
+
+export VER=10.2
+export DEST=/binary/cdparanoia-III-${VER}
+
+pushd cdparanoia-III-${VER}
+  patch -Np1 -i /media/ntfs/Other/Linux/patches/cdparanoia.patch
+  autoreconf -fi
+popd
+
+cp -a cdparanoia-III-${VER} cdparanoia-III-${VER}-32
+
+pushd cdparanoia-III-${VER}
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -fPIC"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -fPIC" \
+./configure --prefix=/usr
+
+make
+make install prefix=${DEST}/usr
+
+popd
+
+pushd cdparanoia-III-${VER}-32
+
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -fPIC"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -fPIC" \
+./configure --prefix=/usr       \
+            --libdir='${prefix}/lib32'
+
+make
+make install prefix=${PWD}/dest/usr
+
+mv dest/usr/lib32 ${DEST}/usr
+
+popd
+
+rm -rf cdparanoia-III-${VER} cdparanoia-III-${VER}-32
+
+find ${DEST} -name "*.la" -delete
+
+rm -rf ${DEST}/usr/*/*.a
+
+chmod 755 ${DEST}/usr/*/*.so
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination $dir /usr ; done
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

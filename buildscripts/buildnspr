@@ -1,0 +1,69 @@
+#!/bin/bash -e
+
+export VER=4.10.7
+export DEST=/binary/nspr-${VER}
+
+pushd nspr-${VER}/nspr
+
+sed -ri 's#^(RELEASE_BINS =).*#\1#' pr/src/misc/Makefile.in
+sed -i 's#$(LIBRARY) ##' config/rules.mk 
+
+popd
+
+cp -a nspr-${VER} nspr-${VER}-32
+
+pushd nspr-${VER}/nspr
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr   \
+            --with-mozilla  \
+            --with-pthreads \
+            --enable-64bit
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+pushd nspr-${VER}-32/nspr
+
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr       \
+            --libdir=/usr/lib32 \
+            --with-mozilla      \
+            --with-pthreads 
+
+make -j4
+make install DESTDIR=${PWD}/dest
+
+mv dest/usr/lib32 ${DEST}/usr
+
+popd
+
+rm -rf nspr-${VER} nspr-${VER}-32
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

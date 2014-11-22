@@ -1,0 +1,45 @@
+#!/bin/bash -e
+
+export VER=0.10.31
+export DEST=/binary/gst-plugins-good-${VER}
+
+pushd gst-plugins-good-${VER}
+
+sed -i -e "/input:/d" sys/v4l2/gstv4l2bufferpool.c
+sed -i -e "/case V4L2_CID_HCENTER/d" -e "/case V4L2_CID_VCENTER/d" sys/v4l2/v4l2_calls.c
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr     \
+            --sysconfdir=/etc \
+            --with-package-name="GStreamer Good Plugins ${VER} BLFS" \
+            --with-package-origin="http://www.linuxfromscratch.org/blfs/view/systemd/"
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf gst-plugins-good-${VER}
+
+find ${DEST} -name "*.la" -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/gconftool-2 ] && echo "Processing triggers for gconf-2" && for schema in etc/gconf/schemas/*.schemas ; do GCONF_CONFIG_SOURCE=xml:merged:/etc/gconf/gconf.xml.defaults /usr/bin/gconftool-2 --makefile-install-rule /$schema > /dev/null ; done
+EOF
+
+chmod 755 ${DEST}/INSTALL

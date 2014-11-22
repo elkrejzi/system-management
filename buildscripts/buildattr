@@ -1,0 +1,72 @@
+#!/bin/bash -e
+
+export VER=2.4.47
+export DEST=/binary/attr-${VER}
+
+cp -a attr-${VER} attr-${VER}-32
+
+pushd attr-${VER}
+
+sed -i -e "/SUBDIRS/s|man2||" man/Makefile
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr --disable-static
+
+make -j4 OPTIMIZER=
+make install install-dev install-lib DIST_ROOT=${DEST}
+
+popd
+
+pushd attr-${VER}-32
+
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr       \
+            --libdir=/usr/lib32 \
+            --disable-static
+
+make -j4 OPTIMIZER=
+make install install-dev install-lib DIST_ROOT=${PWD}/dest
+
+mv dest/usr/lib32 ${DEST}/usr
+
+popd
+
+rm -rf attr-${VER} attr-${VER}-32
+
+install -dm755 ${DEST}/lib
+
+mv ${DEST}/usr/lib/libattr.so.* ${DEST}/lib
+ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libattr.so) ${DEST}/usr/lib/libattr.so
+
+rm -rf ${DEST}/usr/share/doc
+
+find ${DEST} -name "*.la" -delete
+
+chmod 755 ${DEST}/usr/*/*.so
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in lib usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

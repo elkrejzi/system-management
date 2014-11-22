@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+export VER=4.14.3
+export DEST=/binary/oxygen-icons-${VER}
+
+pushd oxygen-icons-${VER}
+
+cmake -DCMAKE_INSTALL_PREFIX=/usr
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf oxygen-icons-${VER}
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for oxygen-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/oxygen
+EOF
+
+chmod 755 ${DEST}/INSTALL

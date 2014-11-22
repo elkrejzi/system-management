@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+export VER=3.12.0
+export DEST=/binary/gnome-icon-theme-${VER}
+
+pushd gnome-icon-theme-${VER}
+
+./configure --prefix=/usr
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf gnome-icon-theme-${VER}
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for gnome-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/gnome
+EOF
+
+chmod 755 ${DEST}/INSTALL

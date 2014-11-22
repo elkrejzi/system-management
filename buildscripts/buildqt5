@@ -1,0 +1,138 @@
+#!/bin/bash -e
+
+export VER=5.3.2
+export DEST=/binary/qt-${VER}
+
+if [ -e /media/ntfs/Other/Linux/patches/qt5fixes.patch ]; then
+  pushd qt-everywhere-opensource-src-${VER}
+  patch -Np1 -i /media/ntfs/Other/Linux/patches/qt5fixes.patch
+  popd
+fi
+
+export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "
+export CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "
+
+pushd qt-everywhere-opensource-src-${VER}
+
+./configure -prefix         /usr               \
+            -sysconfdir     /etc/xdg           \
+            -bindir         /usr/lib/qt5/bin   \
+            -headerdir      /usr/include/qt5   \
+            -archdatadir    /usr/lib/qt5       \
+            -datadir        /usr/share/qt5     \
+            -docdir         /usr/share/doc/qt5 \
+            -translationdir /usr/share/qt5/translations \
+            -examplesdir    /usr/share/doc/qt5/examples \
+            -confirm-license   \
+            -opensource        \
+            -dbus-linked       \
+            -openssl-linked    \
+            -journald          \
+            -system-harfbuzz   \
+            -system-sqlite     \
+            -nomake examples   \
+            -optimized-qmake
+
+make -j4
+
+find . -name "*.pc" -exec perl -pi -e "s, -L$PWD/?\S+,,g" {} \;
+
+install -dm755 ${DEST}/usr/bin ${DEST}/usr/share/applications ${DEST}/usr/share/pixmaps
+
+make install INSTALL_ROOT=${DEST}
+
+rm -rf ${DEST}/usr/share/doc ${DEST}/usr/lib/*.la
+
+install -m644 qttools/src/assistant/assistant/images/assistant-128.png \
+                  ${DEST}/usr/share/pixmaps/assistant-qt5.png
+install -m644 qttools/src/designer/src/designer/images/designer.png \
+                  ${DEST}/usr/share/pixmaps/designer-qt5.png
+install -m644 qttools/src/linguist/linguist/images/icons/linguist-128-32.png \
+                  ${DEST}/usr/share/pixmaps/linguist-qt5.png
+install -m644 qttools/src/qdbus/qdbusviewer/images/qdbusviewer-128.png \
+                  ${DEST}/usr/share/pixmaps/qdbusviewer-qt5.png
+
+sed -i -e "s:$PWD/qtbase:/usr/lib/qt5:g" \
+    ${DEST}/usr/lib/qt5/mkspecs/modules/qt_lib_bootstrap_private.pri
+
+find ${DEST}/usr/lib/lib{qgsttools_p,Qt5*}.prl -exec sed -i -e \
+     '/^QMAKE_PRL_BUILD_DIR/d;s/\(QMAKE_PRL_LIBS =\).*/\1/' {} \;
+
+for file in ${DEST}/usr/lib/qt5/bin/*
+do
+  ln -sf ../lib/qt5/bin/$(basename $file) ${DEST}/usr/bin/$(basename $file)-qt5
+done
+
+cat > ${DEST}/usr/share/applications/assistant-qt5.desktop << "EOF"
+[Desktop Entry]
+Name=Qt5 Assistant
+Comment=Shows Qt5 documentation and examples
+Exec=assistant-qt5
+Icon=assistant-qt5
+Terminal=false
+Encoding=UTF-8
+Type=Application
+Categories=Qt;Development;Documentation;
+EOF
+cat > ${DEST}/usr/share/applications/designer-qt5.desktop << "EOF"
+[Desktop Entry]
+Name=Qt5 Designer
+GenericName=Interface Designer
+Comment=Design GUIs for Qt5 applications
+Exec=designer-qt5
+Icon=designer-qt5
+MimeType=application/x-designer;
+Terminal=false
+Encoding=UTF-8
+Type=Application
+Categories=Qt;Development;
+EOF
+cat > ${DEST}/usr/share/applications/linguist-qt5.desktop << "EOF"
+[Desktop Entry]
+Name=Qt5 Linguist
+Comment=Add translations to Qt5 applications
+Exec=linguist-qt5
+Icon=linguist-qt5
+MimeType=text/vnd.trolltech.linguist;application/x-linguist;
+Terminal=false
+Encoding=UTF-8
+Type=Application
+Categories=Qt;Development;
+EOF
+cat > ${DEST}/usr/share/applications/qdbusviewer-qt5.desktop << "EOF"
+[Desktop Entry]
+Name=Qt5 QDbusViewer
+GenericName=D-Bus Debugger
+Comment=Debug D-Bus applications
+Exec=qdbusviewer-qt5
+Icon=qdbusviewer-qt5
+Terminal=false
+Encoding=UTF-8
+Type=Application
+Categories=Qt;Development;Debugger;
+EOF
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+unset VER DEST

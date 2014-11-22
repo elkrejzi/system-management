@@ -1,0 +1,44 @@
+#!/bin/bash -e
+
+export VER=4.16.4
+export DEST=/binary/python-sip-${VER}
+
+cp -a sip-${VER} sip-${VER}-3
+
+pushd sip-${VER}-3
+
+python3 configure.py CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+pushd sip-${VER}
+
+python configure.py CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf sip-${VER} sip-${VER}-3
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL

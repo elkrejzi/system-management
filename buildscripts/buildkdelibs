@@ -1,0 +1,67 @@
+#!/bin/bash -e
+
+export VER=4.14.3
+export DEST=/binary/kdelibs-${VER}
+
+install -dm755 kdelibs-${VER}/build
+
+sed -i "s:BSD_SOURCE:DEFAULT_SOURCE:g"                  \
+    kdelibs-${VER}/cmake/modules/FindKDE4Internal.cmake \
+    kdelibs-${VER}/kjsembed/qtonly/FindQJSInternal.cmake
+
+sed -i "s:{SYSCONF_INSTALL_DIR}/xdg/menus:& RENAME kde-applications.menu:" \
+    kdelibs-${VER}/kded/CMakeLists.txt
+
+sed -i "s:applications.menu:kde-&:" \
+    kdelibs-${VER}/kded/kbuildsycoca.cpp
+
+pushd kdelibs-${VER}/build
+
+cmake -DCMAKE_BUILD_TYPE=Release  \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DSYSCONF_INSTALL_DIR=/etc  \
+      -DCMAKE_SKIP_RPATH=ON       \
+      -DKDE4_BUILD_TESTS=OFF      \
+      -DWITH_SOLID_UDISKS2=ON     \
+      -DKDE_DISTRIBUTION_TEXT="Krejzi" \
+      -DHTML_INSTALL_DIR=/usr/share/doc/kde4/HTML         \
+      -DLOCALE_INSTALL_DIR=/usr/share/locale/kde4         \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+      -Wno-dev ..
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf kdelibs-${VER}
+
+rm -rf ${DEST}/usr/share/apps/kssl/ca-bundle.crt
+ln -sf /etc/ssl/certs/ca-certificates.crt ${DEST}/usr/share/apps/kssl/ca-bundle.crt
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+
+chmod 4755 /usr/lib/kde4/libexec/fileshareset /usr/lib/kde4/libexec/start_kdeinit
+
+[ -x /usr/bin/update-mime-database ] && echo "Processing triggers for shared-mime-info" && /usr/bin/update-mime-database /usr/share/mime
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

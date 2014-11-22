@@ -1,0 +1,79 @@
+#!/bin/bash -e
+
+export VER=1.14.0
+export DEST=/binary/cairo-${VER}
+
+if [ -f /media/ntfs/Other/Linux/patches/cairo-fixes.patch ]; then
+  pushd cairo-${VER}
+    patch -Np1 -i /media/ntfs/Other/Linux/patches/cairo-fixes.patch
+  popd
+fi
+
+cp -a cairo-${VER} cairo-${VER}-32
+
+pushd cairo-${VER}
+
+CFLAGS="-march=native -mtune=native -g -O2"   \
+CXXFLAGS="-march=native -mtune=native -g -O2" \
+./configure --prefix=/usr    \
+            --disable-lto    \
+            --disable-static \
+            --enable-gl      \
+            --enable-tee
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+pushd cairo-${VER}-32
+
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+CFLAGS="-march=native -mtune=native -g -O2"   \
+CXXFLAGS="-march=native -mtune=native -g -O2" \
+./configure --prefix=/usr       \
+            --libdir=/usr/lib32 \
+            --disable-lto       \
+            --disable-static    \
+            --enable-gl         \
+            --enable-tee
+
+sed -i "/DIST_SUBDIRS/s:boilerplate test::" Makefile
+sed -i "/am__append_1/s:boilerplate test::" Makefile
+
+make -j4
+make install DESTDIR=${PWD}/dest
+
+mv dest/usr/lib32 ${DEST}/usr
+
+popd
+
+rm -rf cairo-${VER} cairo-${VER}-32
+
+find ${DEST} -name "*.la" -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+mkdir -p usr/lib/debug/`dirname ${BUILD_BINARY}`
+objcopy --only-keep-debug ${BUILD_BINARY} usr/lib/debug/${BUILD_BINARY}
+strip --strip-unneeded ${BUILD_BINARY}
+objcopy --add-gnu-debuglink=usr/lib/debug/${BUILD_BINARY} ${BUILD_BINARY}
+esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

@@ -1,0 +1,123 @@
+#!/bin/bash
+
+export DEST=/tmp/initramfs
+
+rm -rf ${DEST}
+
+mkdir -p ${DEST}/bin ${DEST}/etc ${DEST}/lib/udev/rules.d ${DEST}/sbin ${DEST}/usr/lib/plymouth \
+${DEST}/lib/systemd/system/halt.target.wants \
+${DEST}/lib/systemd/system/initrd-switch-root.target.wants \
+${DEST}/lib/systemd/system/kexec.target.wants \
+${DEST}/lib/systemd/system/multi-user.target.wants \
+${DEST}/lib/systemd/system/poweroff.target.wants \
+${DEST}/lib/systemd/system/reboot.target.wants \
+${DEST}/lib/systemd/system/sockets.target.wants \
+${DEST}/lib/systemd/system/sysinit.target.wants
+
+for file in \
+50-udev-default.rules \
+60-persistent-storage.rules \
+80-drivers.rules \
+99-systemd.rules ; do cp -rf /lib/udev/rules.d/${file} ${DEST}/lib/udev/rules.d/ ; done
+
+for file in \
+ata_id \
+scsi_id \
+write_dev_root_rule ; do cp -rf /lib/udev/${file} ${DEST}/lib/udev/ ; done
+
+for file in \
+basic.target \
+ctrl-alt-del.target \
+emergency.service \
+emergency.target \
+final.target \
+initrd-cleanup.service \
+initrd-fs.target \
+initrd-parse-etc.service \
+initrd-root-fs.target \
+initrd-switch-root.service \
+initrd-switch-root.target \
+initrd.target \
+initrd-udevadm-cleanup-db.service \
+kmod-static-nodes.service \
+plymouth-halt.service \
+plymouth-kexec.service \
+plymouth-poweroff.service \
+plymouth-quit.service \
+plymouth-quit-wait.service \
+plymouth-read-write.service \
+plymouth-reboot.service \
+plymouth-start.service \
+plymouth-switch-root.service \
+reboot.target \
+shutdown.target \
+sockets.target \
+sysinit.target \
+systemd-fsck@.service \
+systemd-journald.service \
+systemd-journald.socket \
+systemd-reboot.service \
+systemd-tmpfiles-setup-dev.service \
+systemd-udevd-control.socket \
+systemd-udevd-kernel.socket \
+systemd-udevd.service \
+systemd-udev-trigger.service \
+umount.target ; do cp -rf /lib/systemd/system/${file} ${DEST}/lib/systemd/system/ ; done
+
+for file in \
+/lib/systemd/system/halt.target.wants/plymouth-halt.service \
+/lib/systemd/system/initrd-switch-root.target.wants/plymouth-start.service \
+/lib/systemd/system/initrd-switch-root.target.wants/plymouth-switch-root.service \
+/lib/systemd/system/kexec.target.wants/plymouth-kexec.service \
+/lib/systemd/system/multi-user.target.wants/plymouth-quit.service \
+/lib/systemd/system/multi-user.target.wants/plymouth-quit-wait.service \
+/lib/systemd/system/poweroff.target.wants/plymouth-poweroff.service \
+/lib/systemd/system/reboot.target.wants/plymouth-reboot.service \
+/lib/systemd/system/sockets.target.wants/systemd-journald.socket \
+/lib/systemd/system/sockets.target.wants/systemd-udevd-control.socket \
+/lib/systemd/system/sockets.target.wants/systemd-udevd-kernel.socket \
+/lib/systemd/system/sysinit.target.wants/kmod-static-nodes.service \
+/lib/systemd/system/sysinit.target.wants/plymouth-read-write.service \
+/lib/systemd/system/sysinit.target.wants/plymouth-start.service \
+/lib/systemd/system/sysinit.target.wants/systemd-journald.service \
+/lib/systemd/system/sysinit.target.wants/systemd-tmpfiles-setup-dev.service \
+/lib/systemd/system/sysinit.target.wants/systemd-udevd.service \
+/lib/systemd/system/sysinit.target.wants/systemd-udev-trigger.service ; do cp -rf ${file} ${DEST}${file} ; done
+
+for file in \
+/bin/kmod \
+/bin/mkdir \
+/bin/mount \
+/bin/plymouth \
+/bin/systemctl \
+/bin/systemd-tmpfiles \
+/bin/udevadm \
+/lib/systemd/systemd-fsck \
+/lib/systemd/systemd-journald \
+/lib/systemd/systemd-udevd \
+/lib/systemd/systemd-sysctl \
+/sbin/fsck \
+/sbin/fsck.ext4 \
+/sbin/plymouthd ; do cp -rf ${file} ${DEST}${file} ; done
+
+cp -rf /lib/systemd/systemd ${DEST}/sbin/init
+
+ln -s kmod ${DEST}/bin/modprobe
+ln -s initrd.target ${DEST}/lib/systemd/system/default.target
+
+cp /lib/ld-linux-x86-64.so.2 /lib/libnss_files.so.2 ${DEST}/lib
+
+for file in group passwd nsswitch.conf ; do cp -rf /etc/${file} ${DEST}/etc/ ; done
+
+cp -rf /etc/plymouth ${DEST}/etc
+cp -rf /usr/lib/plymouth/* ${DEST}/usr/lib/plymouth/
+
+rm -rf ${DEST}/usr/lib/plymouth/renderers/x11.so ${DEST}/usr/lib/plymouth/label.so
+
+find ${DEST} -type f -executable | xargs ldd | grep "/lib/" | awk '{print $3}' | uniq | while read file ; do
+if [ -e ${file} ]; then cp ${file} ${DEST}/lib/ 2> /dev/null ; fi
+done
+
+cd ${DEST} ; find . | cpio -o -H newc --quiet | gzip -9 > /boot/initrd.img
+
+rm -rf ${DEST}

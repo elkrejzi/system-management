@@ -1,0 +1,45 @@
+#!/bin/bash -e
+
+export VER=4.0.18
+export DEST=/binary/mtools-${VER}
+
+pushd mtools-${VER}
+
+sed -i '/^SAMPLE FILE$/s:^:# :' mtools.conf
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr --sysconfdir=/etc
+
+make -j4
+make install DESTDIR=${DEST}
+
+install -Dm644 mtools.conf ${DEST}/etc/mtools.conf
+
+popd
+
+rm -rf mtools-${VER}
+
+rm -rf ${DEST}/usr/share/doc ${DEST}/usr/share/info/dir
+gzip -9 ${DEST}/usr/share/info/*
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/install-info ] && echo "Processing triggers for texinfo" && for file in usr/share/info/* ; do /usr/bin/install-info /$file /usr/share/info/dir ; done
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

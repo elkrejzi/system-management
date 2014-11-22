@@ -1,0 +1,77 @@
+#!/bin/bash -e
+
+export VER=4.5
+export DEST=/binary/docbook-${VER}
+
+mkdir docbook
+pushd docbook
+
+tar xf /media/ntfs/Other/Linux/packages/docbook.tar.xz --strip-components=1
+
+for num in 0 1 ; do
+
+mkdir -p ${DEST}/usr/share/sgml/docbook/sgml-dtd-3.${num}
+mkdir sgml-dtd-3.${num}
+cd sgml-dtd-3.${num}
+
+unzip ../docbk3${num}.zip
+install docbook.cat ${DEST}/usr/share/sgml/docbook/sgml-dtd-3.${num}/catalog
+
+ln -sf catalog ${DEST}/usr/share/sgml/docbook/sgml-dtd-3.${num}/docbook.cat
+cp -rf *.dtd *.mod *.dcl ${DEST}/usr/share/sgml/docbook/sgml-dtd-3.${num}
+cd ..
+
+rm -rf sgml-dtd-3.${num}
+
+done
+
+for num in 0 1 ; do
+
+mkdir -p ${DEST}/usr/share/sgml/docbook/sgml-dtd-4.${num}
+mkdir sgml-dtd-4.${num}
+cd sgml-dtd-4.${num}
+
+unzip ../docbk4${num}.zip
+install docbook.cat ${DEST}/usr/share/sgml/docbook/sgml-dtd-4.${num}/catalog
+
+ln -sf catalog ${DEST}/usr/share/sgml/docbook/sgml-dtd-4.${num}/docbook.cat
+cp -rf *.dtd *.mod *.dcl ${DEST}/usr/share/sgml/docbook/sgml-dtd-4.${num}
+cd ..
+
+rm -rf sgml-dtd-4.${num}
+
+done
+
+for num in 2 3 4 5 ; do
+
+mkdir -p ${DEST}/usr/share/sgml/docbook/sgml-dtd-4.${num}
+mkdir sgml-dtd-4.${num}
+cd sgml-dtd-4.${num}
+
+unzip ../docbook-4.${num}.zip
+install docbook.cat ${DEST}/usr/share/sgml/docbook/sgml-dtd-4.${num}/catalog
+
+ln -sf catalog ${DEST}/usr/share/sgml/docbook/sgml-dtd-4.${num}/docbook.cat
+cp -rf *.dtd *.mod *.dcl ${DEST}/usr/share/sgml/docbook/sgml-dtd-4.${num}
+cd ..
+
+rm -rf sgml-dtd-4.${num}
+
+done
+
+popd
+
+rm -rf docbook
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+for version in 3.0 3.1 4.0 4.1 4.2 4.3 4.4 4.5 ; do
+  install-catalog --add /etc/sgml/sgml-docbook-dtd-${version}.cat /usr/share/sgml/docbook/sgml-dtd-${version}/catalog
+  install-catalog --add /etc/sgml/sgml-docbook-dtd-${version}.cat /etc/sgml/sgml-docbook.cat
+done
+EOF
+
+chmod 755 ${DEST}/INSTALL

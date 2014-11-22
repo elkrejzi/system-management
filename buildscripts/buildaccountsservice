@@ -1,0 +1,47 @@
+#!/bin/bash -e
+
+export VER=0.6.39
+export DEST=/binary/accountsservice-${VER}
+
+pushd accountsservice-${VER}
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr        \
+            --sysconfdir=/etc    \
+            --localstatedir=/var \
+            --disable-static     \
+            --enable-admin-group=adm
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf accountsservice-${VER}
+
+find ${DEST} -name "*.la" -delete
+
+install -dm755 ${DEST}/etc/systemd/system/graphical.target.wants
+
+ln -sf /lib/systemd/system/accounts-daemon.service ${DEST}/etc/systemd/system/graphical.target.wants/accounts-daemon.service
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib usr var ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

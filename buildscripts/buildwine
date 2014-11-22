@@ -1,0 +1,97 @@
+#!/bin/bash -e
+
+export VER=1.7.31
+export DEST=/binary/wine-${VER}
+
+install -dm755 wine-${VER}/build64 wine-${VER}/build32
+
+pushd wine-${VER}/build64
+
+../configure --prefix=/usr       \
+             --libdir=/usr/lib   \
+             --enable-win64      \
+             --with-x            \
+             --without-gstreamer
+
+make -j2
+
+popd
+
+pushd wine-${VER}/build32
+
+PKG_CONFIG=/usr/lib32/pkgconfig  \
+../configure --prefix=/usr       \
+             --libdir=/usr/lib32 \
+             --with-x            \
+             --without-gstreamer \
+             --with-wine64=${PWD}/../build64
+
+make -j2
+
+popd
+
+make prefix="${DEST}/usr"            \
+     libdir="${DEST}/usr/lib32"      \
+     dlldir="${DEST}/usr/lib32/wine" \
+     install -C wine-${VER}/build32
+
+make prefix="${DEST}/usr"          \
+     libdir="${DEST}/usr/lib"      \
+     dlldir="${DEST}/usr/lib/wine" \
+     install -C wine-${VER}/build64
+
+rm -rf wine-${VER}
+
+install -dm755 ${DEST}/etc/fonts/conf.avail
+install -dm755 ${DEST}/etc/fonts/conf.d
+
+cat > ${DEST}/etc/fonts/conf.avail/30-win32-aliases.conf << "EOF"
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+  <alias binding="same">
+    <family>MS Shell Dlg</family>
+    <accept><family>Microsoft Sans Serif</family></accept>
+    <default><family>sans-serif</family></default>
+  </alias>
+  <alias binding="same">
+    <family>MS Shell Dlg 2</family>
+    <accept><family>Tahoma</family></accept>
+    <default><family>sans-serif</family></default>
+  </alias>
+
+  <alias binding="same">
+    <family>MS Sans Serif</family>
+    <prefer><family>Microsoft Sans Serif</family></prefer>
+    <default><family>sans-serif</family></default>
+  </alias>
+</fontconfig>
+EOF
+
+ln -sf ../conf.avail/30-win32-aliases.conf ${DEST}/etc/fonts/conf.d/30-win32-aliases.conf
+
+rm -rf ${DEST}/usr/share/man/pl.UTF-8
+rm -rf ${DEST}/usr/share/man/fr.UTF-8
+rm -rf ${DEST}/usr/share/man/de.UTF-8
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

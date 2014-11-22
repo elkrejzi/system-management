@@ -1,0 +1,46 @@
+#!/bin/bash -e
+
+export VER=1.79
+export DEST=/binary/docbook-dsssl-${VER}
+
+pushd docbook-dsssl-${VER}
+
+install -dm755 ${DEST}/usr/bin ${DEST}/usr/share/man/man1
+install -dm755 ${DEST}/usr/share/sgml/docbook/dsssl-stylesheets-${VER}
+
+rm -rf dtds/*/ChangeLog
+rm -rf frames/README
+rm -rf images/callouts/ChangeLog
+
+for dir in common dtds frames html images lib olink print ; do
+  rm -rf ${dir}/ChangeLog
+  cp -rf ${dir} ${DEST}/usr/share/sgml/docbook/dsssl-stylesheets-${VER}
+done
+
+install -m755 bin/collateindex.pl ${DEST}/usr/bin/collateindex.pl
+install -m644 bin/collateindex.pl.1 ${DEST}/usr/share/man/man1/collateindex.pl.1
+install -m644 catalog ${DEST}/usr/share/sgml/docbook/dsssl-stylesheets-${VER}/catalog
+install -m644 VERSION ${DEST}/usr/share/sgml/docbook/dsssl-stylesheets-${VER}/VERSION
+
+popd
+
+rm -rf docbook-dsssl-${VER}
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+install-catalog --add /etc/sgml/dsssl-stylesheets.cat /usr/share/sgml/docbook/dsssl-stylesheets-DBVER/catalog
+install-catalog --add /etc/sgml/dsssl-stylesheets.cat /usr/share/sgml/docbook/dsssl-stylesheets-DBVER/common/catalog
+install-catalog --add /etc/sgml/dsssl-stylesheets.cat /usr/share/sgml/docbook/dsssl-stylesheets-DBVER/html/catalog
+install-catalog --add /etc/sgml/dsssl-stylesheets.cat /usr/share/sgml/docbook/dsssl-stylesheets-DBVER/print/catalog
+install-catalog --add /etc/sgml/sgml-docbook.cat /etc/sgml/dsssl-stylesheets.cat
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+sed -i "s:DBVER:${VER}:g" ${DEST}/INSTALL
+
+chmod 755 ${DEST}/INSTALL
+

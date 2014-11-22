@@ -1,0 +1,96 @@
+#!/bin/bash -e
+
+VER=1.8.10
+DEST=/binary/subversion-${VER}
+
+pushd subversion-${VER}
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr --with-apr=/usr --with-apr-util=/usr \
+            --with-zlib=/usr --with-serf=/usr --with-apxs=/usr/bin/apxs \
+            --with-apache-libexecdir=$(/usr/bin/apxs -q libexecdir) \
+            --with-sqlite=/usr --with-berkeley-db=:::db --enable-bdb6 \
+            --with-gnome-keyring --without-kwallet --disable-static
+
+make LT_LDFLAGS="-L${DEST}/usr/lib" -j4
+
+make swig_pydir=/usr/lib/python2.7/site-packages/libsvn \
+     swig_pydir_extra=/usr/lib/python2.7/site-packages/svn swig-py swig-pl swig-rb
+
+export LD_LIBRARY_PATH=${DEST}/usr/lib:${LD_LIBRARY_PATH}
+
+make DESTDIR=${DEST} INSTALLDIRS=vendor \
+     swig_pydir=/usr/lib/python2.7/site-packages/libsvn \
+     swig_pydir_extra=/usr/lib/python2.7/site-packages/svn \
+     install install-swig-py install-swig-pl install-swig-rb
+
+unset LD_LIBRARY_PATH
+
+popd
+
+rm -rf subversion-${VER}
+
+find ${DEST} -name "*.la" -delete
+find ${DEST} -name ".packlist" -delete
+
+rm -rf ${DEST}/usr/lib/perl
+
+mkdir -p ${DEST}/etc/default/
+mkdir -p ${DEST}/etc/systemd/system/multi-user.target.wants/
+mkdir -p ${DEST}/lib/systemd/system/
+mkdir -p ${DEST}/usr/lib/tmpfiles.d/
+
+cat > ${DEST}/etc/default/svnserve << "EOF"
+# Begin /etc/default/svnserve
+
+# Additional options to pass to svnserve command line
+#
+# Example: -r /srv/svn/repositories
+SVNSERVE_OPTS=""
+
+# End /etc/default/svnserve
+EOF
+
+cat > ${DEST}/usr/lib/tmpfiles.d/svnserve.conf << "EOF"
+d /run/svnserve 0700 root root -
+EOF
+
+cat > ${DEST}/lib/systemd/system/svnserve.service << "EOF"
+[Unit]
+Description=Subversion protocol daemon
+After=network.target
+
+[Service]
+Type=forking
+EnvironmentFile=/etc/default/svnserve
+ExecStart=/usr/bin/svnserve --daemon --pid-file=/run/svnserve/svnserve.pid $SVNSERVE_OPTS
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+ln -s /lib/systemd/system/svnserve.service ${DEST}/etc/systemd/system/multi-user.target.wants/svnserve.service
+
+pushd ${DEST}
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib usr ; do cp -rf --remove-destination $dir / ; done
+
+install -dm700 /run/svnserve
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL
+
+unset DEST VER

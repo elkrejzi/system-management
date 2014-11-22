@@ -1,0 +1,77 @@
+#!/bin/bash -e
+
+export VER=1.12.2
+export DEST=/binary/wireshark-${VER}
+
+pushd wireshark-${VER}
+
+cat > svnversion.h << "EOF"
+#define SVNVERSION "Krejzi"
+#define SVNPATH "source"
+EOF
+
+cat > make-version.pl << "EOF"
+#!/usr/bin/perl
+EOF
+
+sed -i "s:moc;:moc-qt5;:g" configure &&
+sed -i "s:uic;:uic-qt5;:g" configure &&
+sed -i "s:(AM_V_RCC)rcc:&-qt5:g" ui/qt/Makefile.in
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr     \
+            --sysconfdir=/etc \
+            --with-gtk3       \
+            --with-qt
+
+make -j4
+make install DESTDIR=${DEST}
+
+install -Dm644 wireshark.desktop ${DEST}/usr/share/applications/wireshark.desktop
+
+install -Dm644 wireshark.desktop ${DEST}/usr/share/applications/wireshark-qt.desktop
+sed -i "s:Exec.*wireshark:&-qt:g" ${DEST}/usr/share/applications/wireshark-qt.desktop
+sed -i "s:Name.*Wireshark:& (Qt):g" ${DEST}/usr/share/applications/wireshark-qt.desktop
+
+for size in 16 24 32 48 64 128 256 ; do
+    install -Dm644 image/wsicon${size}.png ${DEST}/usr/share/icons/hicolor/${size}x${size}/apps/wireshark.png
+    install -Dm644 image/WiresharkDoc-${size}.png ${DEST}/usr/share/icons/hicolor/${size}x${size}/mimetypes/application-vnd.tcpdump.pcap.png
+done
+
+popd
+
+rm -rf wireshark-${VER}
+
+find ${DEST} -name "*.la" -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+getent group wireshark > /dev/null || groupadd -g 62 wireshark
+
+chown root:wireshark /usr/bin/tshark
+chown root:wireshark /usr/bin/dumpcap
+
+chmod 6550 /usr/bin/tshark
+chmod 6550 /usr/bin/dumpcap
+
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

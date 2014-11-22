@@ -1,0 +1,255 @@
+#!/bin/bash -e
+
+export PKGDIR=`basename ${PWD}`
+export DEST=/binary/${PKGDIR}
+export PKGDEBUG=/binary/${PKGDIR}-debug/usr/lib/
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/systemd-compat.patch
+
+echo "Building native systemd and udev."
+
+mkdir build64
+pushd build64
+
+CFLAGS="-march=native -mtune=native -g -O2 -fno-lto" \
+../configure --prefix=/usr        \
+             --libdir=/usr/lib    \
+             --sysconfdir=/etc    \
+             --localstatedir=/var \
+             --disable-firstboot  \
+             --disable-kdbus      \
+             --disable-ldconfig   \
+             --disable-static     \
+             --disable-sysusers   \
+             --enable-gtk-doc     \
+             --enable-split-usr   \
+             --with-pamlibdir=/lib/security    \
+             --with-rootprefix=                \
+             --with-rootlibdir=/lib            \
+             --with-sysvinit-path=/etc/init.d  \
+             --with-sysvrcnd-path=/etc         \
+             --with-rc-local-script-path-stop= \
+             --with-rc-local-script-path-start=/etc/rc.local         \
+             --with-dbuspolicydir=/etc/dbus-1/system.d               \
+             --with-dbusinterfacedir=/usr/share/dbus-1/interfaces    \
+             --with-dbussessionservicedir=/usr/share/dbus-1/services \
+             --with-dbussystemservicedir=/usr/share/dbus-1/system-services
+
+make -j4
+make install DESTDIR=${DEST} -j4
+
+popd
+
+echo "Building 32 bit libraries."
+
+mkdir build32
+pushd build32
+
+CC="gcc -m32"  \
+CXX="g++ -m32" \
+PKG_CONFIG_PATH=/usr/lib32/pkgconfig                 \
+CFLAGS="-march=native -mtune=native -g -O2 -fno-lto" \
+../configure --prefix=/usr        \
+             --libdir=/usr/lib32  \
+             --sysconfdir=/etc    \
+             --localstatedir=/var \
+             --disable-gnutls     \
+             --disable-kmod       \
+             --disable-networkd   \
+             --disable-pam        \
+             --disable-static     \
+             --without-python
+
+make src/shared/{af,errno}-{from,to}-name.h src/gudev/gudevmarshal.{c,h} src/gudev/gudevenumtypes.c src/libsystemd/libsystemd.sym src/shared/arphrd-{to,from}-name.h
+
+make libsystemd.la libudev.la libgudev-1.0.la libnss_myhostname.la -j4
+
+make install-libLTLIBRARIES DESTDIR=${DEST}
+make install-pkgconfiglibDATA DESTDIR=${DEST}
+
+popd
+
+echo "Packaging systemd and udev."
+
+find ${DEST} -name "*.la" -delete
+
+rm -rf ${DEST}/etc/init.d
+rm -rf ${DEST}/etc/rpm ${DEST}/usr/lib/rpm
+rm -rf ${DEST}/usr/lib/sysctl.d/50-coredump.conf
+rm -rf ${DEST}/usr/share/doc
+
+rm -rf ${DEST}/etc/systemd/system/multi-user.target.wants/systemd-networkd.service
+rm -rf ${DEST}/etc/systemd/system/multi-user.target.wants/systemd-resolved.service
+rm -rf ${DEST}/etc/systemd/system/multi-user.target.wants/systemd-timesyncd.service
+rm -rf ${DEST}/etc/systemd/system/network-online.target.wants
+rm -rf ${DEST}/etc/systemd/system/sysinit.target.wants
+
+#rm -rf ${DEST}/lib/systemd/system/sysinit.target.wants/ldconfig.service
+#rm -rf ${DEST}/lib/systemd/system/sysinit.target.wants/systemd-firstboot.service
+#rm -rf ${DEST}/lib/systemd/system/sysinit.target.wants/systemd-sysusers.service
+rm -rf ${DEST}/lib/systemd/system/sysinit.target.wants/systemd-update-done.service
+
+install -dm755 ${DEST}/etc/profile.d ${DEST}/lib32 ${DEST}/sbin
+
+mv ${DEST}/usr/lib/libnss_*.so.* ${DEST}/lib
+mv ${DEST}/usr/lib32/libnss_*.so.* ${DEST}/lib32
+
+cat > ${DEST}/etc/pam.d/systemd-user << "EOF"
+# Begin /etc/pam.d/systemd-user
+
+account  required pam_access.so
+account  include  system-account
+
+session  required pam_env.so
+session  required pam_limits.so
+session  include  system-session
+
+auth     required pam_deny.so
+password required pam_deny.so
+
+# End /etc/pam.d/systemd-user
+EOF
+
+cat > ${DEST}/etc/profile.d/locale.sh << "EOF"
+# Begin /etc/profile.d/locale.sh
+
+unset LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES \
+      LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT LC_IDENTIFICATION
+
+if [ -n "$XDG_CONFIG_HOME" ] && [ -r "$XDG_CONFIG_HOME/locale.conf" ]; then
+  . "$XDG_CONFIG_HOME/locale.conf"
+elif [ -n $HOME ] && [ -r $HOME/.config/locale.conf ]; then
+  . "$HOME/.config/locale.conf"
+elif [ -r /etc/locale.conf ]; then
+  . /etc/locale.conf
+fi
+
+export LANG="${LANG:-C}"
+[ -n "$LC_CTYPE" ]          && export LC_CTYPE
+[ -n "$LC_NUMERIC" ]        && export LC_NUMERIC
+[ -n "$LC_TIME" ]           && export LC_TIME
+[ -n "$LC_COLLATE" ]        && export LC_COLLATE
+[ -n "$LC_MONETARY" ]       && export LC_MONETARY
+[ -n "$LC_MESSAGES" ]       && export LC_MESSAGES
+[ -n "$LC_PAPER" ]          && export LC_PAPER
+[ -n "$LC_NAME" ]           && export LC_NAME
+[ -n "$LC_ADDRESS" ]        && export LC_ADDRESS
+[ -n "$LC_TELEPHONE" ]      && export LC_TELEPHONE
+[ -n "$LC_MEASUREMENT" ]    && export LC_MEASUREMENT
+[ -n "$LC_IDENTIFICATION" ] && export LC_IDENTIFICATION
+
+# End /etc/profile.d/locale.sh
+EOF
+
+cat > ${DEST}/etc/rc.local.default << "EOF"
+#!/bin/sh -e
+#
+# rc.local
+#
+# By default this script does nothing.
+
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+exit 0
+EOF
+
+chmod 755 ${DEST}/etc/rc.local.default
+
+sed -i "s@root lock@root root@g" ${DEST}/usr/lib/tmpfiles.d/legacy.conf
+sed -i "s@lock 0755@lock 1777@g" ${DEST}/usr/lib/tmpfiles.d/legacy.conf
+
+ln -sf /dev/null ${DEST}/etc/udev/rules.d/80-net-setup-link.rules
+
+unset file
+for file in halt poweroff reboot runlevel shutdown telinit
+do
+  ln -sf ../bin/systemctl ${DEST}/sbin/${file}
+done
+
+ln -sf ../lib/systemd/systemd ${DEST}/sbin/init
+
+for file in ${DEST}/etc/systemd/*.conf
+do
+  mv ${file} ${file}.dist
+done
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in bin etc lib lib32 sbin usr var ; do cp -rf --remove-destination $dir / ; done
+
+getent group systemd-bus-proxy > /dev/null || groupadd -g 72 systemd-bus-proxy
+getent passwd systemd-bus-proxy > /dev/null || useradd -c "systemd Bus Proxy" -d / -g systemd-bus-proxy -s /bin/false -u 72 systemd-bus-proxy
+
+getent group systemd-journal-gateway > /dev/null || groupadd -g 73 systemd-journal-gateway
+getent passwd systemd-journal-gateway > /dev/null || useradd -c "systemd Journal Gateway" -d / -g systemd-journal-gateway -s /bin/false -u 73 systemd-journal-gateway
+
+getent group systemd-journal-remote > /dev/null || groupadd -g 74 systemd-journal-remote
+getent passwd systemd-journal-remote > /dev/null || useradd -c "systemd Journal Remote" -d / -g systemd-journal-remote -s /bin/false -u 74 systemd-journal-remote
+
+getent group systemd-journal-upload > /dev/null || groupadd -g 75 systemd-journal-upload
+getent passwd systemd-journal-upload > /dev/null || useradd -c "systemd Journal Upload" -d / -g systemd-journal-upload -s /bin/false -u 75 systemd-journal-upload
+
+getent group systemd-network > /dev/null || groupadd -g 76 systemd-network
+getent passwd systemd-network > /dev/null || useradd -c "systemd Network Management" -d / -g systemd-network -s /bin/false -u 76 systemd-network
+
+getent group systemd-resolve > /dev/null || groupadd -g 77 systemd-resolve
+getent passwd systemd-resolve > /dev/null || useradd -c "systemd Resolver" -d / -g systemd-resolve -s /bin/false -u 77 systemd-resolve
+
+getent group systemd-timesync > /dev/null || groupadd -g 78 systemd-timesync
+getent passwd systemd-timesync > /dev/null || useradd -c "systemd Time Synchronization" -d / -g systemd-timesync -s /bin/false -u 78 systemd-timesync
+
+journalctl --update-catalog
+udevadm hwdb --update
+
+setfacl -nm g:adm:rx,d:g:adm:rx /var/log/journal/
+
+if [ -e /sys/fs/cgroup/systemd ]; then
+   systemctl --system daemon-reexec
+fi
+
+if [ ! -e /etc/rc.local ]; then
+   mv -f /etc/rc.local.default /etc/rc.local
+fi
+
+if [ ! -e /etc/machine-id ]; then
+   systemd-machine-id-setup
+fi
+
+for file in etc/systemd/*.conf.dist
+do
+  if [ ! -e /${file%.dist} ]
+  then
+    cp -f /${file} /${file%.dist}
+  fi
+  diff -Naur /${file} /${file%.dist} > /dev/null
+  if [ $? -gt 0 ]
+  then
+    echo "Files /${file} and /${file%.dist} differ."
+  fi
+done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL
+
+echo "Creating debug data."
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+mkdir -p usr/lib/debug/`dirname ${BUILD_BINARY}`
+objcopy --only-keep-debug ${BUILD_BINARY} usr/lib/debug/${BUILD_BINARY}
+strip --strip-unneeded ${BUILD_BINARY}
+objcopy --add-gnu-debuglink=usr/lib/debug/${BUILD_BINARY} ${BUILD_BINARY}
+esac
+done
+
+mkdir -p ${PKGDEBUG}
+
+mv usr/lib/debug ${PKGDEBUG}
+
+popd

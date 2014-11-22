@@ -1,0 +1,53 @@
+#!/bin/bash -e
+
+export VER=2014.2.15
+export DEST=/binary/ntfs-3g_ntfsprogs-${VER}
+
+pushd ntfs-3g_ntfsprogs-${VER}
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr    \
+            --disable-static \
+            --with-fuse=external
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf ntfs-3g_ntfsprogs-${VER}
+
+find ${DEST} -name "*.la" -delete
+
+ln -sf ../../lib/$(readlink ${DEST}/lib/libntfs-3g.so) ${DEST}/usr/lib/libntfs-3g.so
+ln -sf ..$(readlink ${DEST}/sbin/mkfs.ntfs) ${DEST}/sbin/mkfs.ntfs
+ln -sf ..$(readlink ${DEST}/sbin/mount.lowntfs-3g) ${DEST}/sbin/mount.lowntfs-3g
+ln -sf ..$(readlink ${DEST}/sbin/mount.ntfs-3g) ${DEST}/sbin/mount.ntfs-3g
+
+ln -sf ../bin/ntfs-3g ${DEST}/sbin/mount.ntfs
+ln -sf ntfs-3g.8 ${DEST}/usr/share/man/man8/mount.ntfs.8
+
+rm -rf ${DEST}/lib/libntfs-3g.so
+rm -rf ${DEST}/usr/share/doc
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in bin lib sbin usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

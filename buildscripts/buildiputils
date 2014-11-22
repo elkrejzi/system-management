@@ -1,0 +1,49 @@
+#!/bin/bash -e
+
+export VER=20121221
+export DEST=/binary/iputils-${VER}
+
+pushd iputils-s${VER}
+
+sed -i "s:-O3:-march=native -mtune=native -O2 -pipe -fstack-protector-strong :g" Makefile
+
+make -j4
+make -C doc man
+
+install -dm755 ${DEST}/bin
+install -dm755 ${DEST}/sbin
+install -dm755 ${DEST}/usr/bin
+install -dm755 ${DEST}/usr/share/man/man8
+
+install -m755 ping ping6 ${DEST}/bin
+install -m755 arping ${DEST}/sbin
+install -m755 tracepath tracepath6 ${DEST}/usr/bin
+
+install -m644 doc/arping.8 doc/tracepath.8 doc/ping.8 ${DEST}/usr/share/man/man8
+
+ln -sf tracepath.8 ${DEST}/usr/share/man/man8/tracepath6.8
+ln -sf ping.8 ${DEST}/usr/share/man/man8/ping6.8
+
+popd
+
+rm -rf iputils-s${VER}
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in bin sbin usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

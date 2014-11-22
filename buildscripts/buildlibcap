@@ -1,0 +1,60 @@
+#!/bin/bash -e
+
+export VER=2.24
+export DEST=/binary/libcap-${VER}
+
+sed -i "s|-D_FILE_OFFSET_BITS=64|& -march=native -mtune=native -O2 -pipe -fstack-protector-strong |" libcap-${VER}/Make.Rules
+
+cp -a libcap-${VER} libcap-${VER}-32
+
+pushd libcap-${VER}
+
+sed -i "s:LIBDIR:PAM_&:g" pam_cap/Makefile
+
+make
+make RAISE_SETFCAP=no PAM_LIBDIR=${DEST}/lib prefix=/usr DESTDIR=${DEST} install
+
+install -dm755 ${DEST}/etc/security
+install -m644 pam_cap/capability.conf ${DEST}/etc/security
+
+popd
+
+pushd libcap-${VER}-32
+
+export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
+
+make -C libcap CC="gcc -m32" prefix=/usr lib=lib32
+make -C libcap CC="gcc -m32" prefix=/usr lib=lib32 DESTDIR=${PWD}/dest install
+
+mv dest/usr/lib32 ${DEST}/usr
+
+popd
+
+rm -rf libcap-${VER} libcap-${VER}-32
+
+rm -rf ${DEST}/usr/*/libcap.a
+chmod 755 ${DEST}/usr/*/libcap.so
+
+mv ${DEST}/usr/lib/libcap.so.* ${DEST}/lib
+ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libcap.so) ${DEST}/usr/lib/libcap.so
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

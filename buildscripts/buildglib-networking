@@ -1,0 +1,39 @@
+#!/bin/bash -e
+
+export VER=2.42.0
+export DEST=/binary/glib-networking-${VER}
+
+pushd glib-networking-${VER}
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+./configure --prefix=/usr --disable-static
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf glib-networking-${VER}
+
+find ${DEST} -name "*.la" -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/gio-querymodules ] && echo "Processing triggers for gio-2.0" && /usr/bin/gio-querymodules /usr/lib/gio/modules
+EOF
+
+chmod 755 ${DEST}/INSTALL

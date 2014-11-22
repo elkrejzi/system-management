@@ -1,0 +1,213 @@
+#!/bin/bash -e
+
+export VER=5.4.0
+export DEST=/binary/kf5
+
+export URL=http://download.kde.org/stable/frameworks/5.4/
+
+frameworks=(
+  attica
+  kapidox
+  karchive
+  kcodecs
+  kconfig
+  kcoreaddons
+  kdbusaddons
+  kdnssd
+  kglobalaccel
+  kguiaddons
+  ki18n
+  kidletime
+  kimageformats
+  kitemmodels
+  kitemviews
+  kplotting
+  kwidgetsaddons
+  kwindowsystem
+  solid
+  sonnet
+  threadweaver
+  kauth
+  kcompletion
+  kcrash
+  kdoctools
+  kpty
+  kunitconversion
+  kconfigwidgets
+  kservice
+  kdesu
+  kemoticons
+  kiconthemes
+  kjobwidgets
+  knotifications
+  ktextwidgets
+  kwallet
+  kxmlgui
+  kbookmarks
+  kcmutils
+  kio
+  frameworkintegration
+  kdeclarative
+  kinit
+  knewstuff
+  knotifyconfig
+  kparts
+  kactivities
+  kded
+  kdewebkit
+  ktexteditor
+  kdesignerplugin
+  plasma-framework )
+
+aids=(
+  kjs
+  kdelibs4support
+  khtml
+  kjsembed
+  kmediaplayer
+  kross
+  krunner )
+
+if [[ ! -e frameworks ]]
+then
+  install -dm755 frameworks
+fi
+
+pushd frameworks
+
+  for framework in ${aids[@]}
+  do
+    if [[ ! -e ${framework}-${VER}.tar.xz ]]
+    then
+      wget -c ${URL}/portingAids/${framework}-${VER}.tar.xz
+    fi
+  done
+
+  for framework in ${frameworks[@]} ${aids[@]}
+  do
+
+    if [[ ! -e ${framework}-${VER}.tar.xz ]]
+    then
+      wget -c ${URL}/${framework}-${VER}.tar.xz
+    fi
+
+    rm -rf ${framework}-${VER}
+
+    tar -xf ${framework}-${VER}.tar.xz
+    install -dm755 ${framework}-${VER}/build
+
+    pushd ${framework}-${VER}/build
+
+    cmake -DCMAKE_INSTALL_PREFIX=/usr             \
+          -DCMAKE_BUILD_TYPE=Release              \
+          -DSYSCONF_INSTALL_DIR=/etc              \
+          -DLIB_INSTALL_DIR=lib                   \
+          -DBUILD_TESTING=OFF                     \
+          -DQML_INSTALL_DIR=lib/qt5/qml           \
+          -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
+          -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules \
+          -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
+          -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+          -Wno-dev ..
+
+    make -j4
+    make install DESTDIR=${DEST}/${framework}-${VER}
+
+    popd
+
+    pushd ${DEST}/${framework}-${VER}
+
+    find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+      case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+        strip --strip-unneeded ${BUILD_BINARY}
+      esac
+    done
+
+    popd
+
+    if [[ -e ${DEST}/${framework}-${VER}/etc ]]
+    then
+
+cat > ${DEST}/${framework}-${VER}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+EOF
+
+    else
+
+cat > ${DEST}/${framework}-${VER}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+    fi
+
+    if [[ ${framework} == "kdesu" ]]
+    then
+
+cat >> ${DEST}/${framework}-${VER}/INSTALL << "EOF"
+
+chgrp nogroup /usr/lib/libexec/kf5/kdesud
+chmod 2755 /usr/lib/libexec/kf5/kdesud
+EOF
+
+    fi
+
+    if [[ ${framework} == "kdelibs4support" ]]
+    then
+
+cat >> ${DEST}/${framework}-${VER}/INSTALL << "EOF"
+
+chmod 4755 /usr/lib/libexec/kf5/fileshareset
+EOF
+
+    fi
+
+    if [[ -e ${DEST}/${framework}-${VER}/usr/share/man ]]
+    then
+
+cat >> ${DEST}/${framework}-${VER}/INSTALL << "EOF"
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+    manpage=1
+
+    fi
+
+    if [[ ${framework} != "kapidox" && ${framework} != "kdesignerplugin" && ${framework} != "kimageformats" ]]
+    then
+
+      if [[ ${manpage} == "1" ]]
+      then
+
+cat >> ${DEST}/${framework}-${VER}/INSTALL << "EOF"
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+      else
+
+cat >> ${DEST}/${framework}-${VER}/INSTALL << "EOF"
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+      fi
+
+    fi
+
+    chmod +x ${DEST}/${framework}-${VER}/INSTALL
+
+    pushd ${DEST}/${framework}-${VER}
+      ./INSTALL
+    popd
+
+    unset manpage
+
+    rm -rf ${framework}-${VER}
+
+  done
+
+popd
