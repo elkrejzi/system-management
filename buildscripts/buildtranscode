@@ -10,8 +10,8 @@ patch -Np1 -i /media/ntfs/Other/Linux/patches/transcode-fixes.patch
 sed -i "s:#include <freetype/ftglyph.h>:#include FT_GLYPH_H:" filter/subtitler/load_font.c
 sed -i "s:av_close_input_file:avformat_close_input:g" import/probe_ffmpeg.c
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr            \
             --enable-libv4l2         \
             --enable-libv4lconvert   \

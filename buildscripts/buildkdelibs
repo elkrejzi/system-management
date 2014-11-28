@@ -26,8 +26,8 @@ cmake -DCMAKE_BUILD_TYPE=Release  \
       -DKDE_DISTRIBUTION_TEXT="Krejzi" \
       -DHTML_INSTALL_DIR=/usr/share/doc/kde4/HTML         \
       -DLOCALE_INSTALL_DIR=/usr/share/locale/kde4         \
-      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
       -Wno-dev ..
 
 make -j4

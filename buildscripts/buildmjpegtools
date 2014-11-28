@@ -5,8 +5,8 @@ export DEST=/binary/mjpegtools-${VER}
 
 pushd mjpegtools-${VER}
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr    \
             --disable-static \
             --enable-largefile

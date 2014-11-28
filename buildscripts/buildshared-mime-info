@@ -6,8 +6,8 @@ export DEST=/binary/shared-mime-info-${VER}
 pushd shared-mime-info-${VER}
 
 ac_cv_func_fdatasync=no \
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr --disable-update-mimedb
 
 make

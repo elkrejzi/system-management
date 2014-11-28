@@ -7,8 +7,8 @@ pushd vlc-${VER}
 
 sed "s:< 56:< 57:g" -i configure
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr     \
             --enable-a52      \
             --enable-aa       \

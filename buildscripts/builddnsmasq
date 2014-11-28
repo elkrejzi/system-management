@@ -5,7 +5,7 @@ export DEST=/binary/dnsmasq-${VER}
 
 pushd dnsmasq-${VER}
 
-make CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " COPTS="-DHAVE_DNSSEC -DHAVE_DBUS" -j4
+make CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" COPTS="-DHAVE_DNSSEC -DHAVE_DBUS" -j4
 make install PREFIX=/usr DESTDIR=${DEST}
 
 install -Dm644 dnsmasq.conf.example ${DEST}/etc/dnsmasq.conf

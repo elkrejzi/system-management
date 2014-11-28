@@ -7,8 +7,8 @@ pushd cpio-${VER}
 
 sed -i -e '/gets is a/d' gnu/stdio.in.h
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr \
             --bindir=/bin \
             --enable-mt   \

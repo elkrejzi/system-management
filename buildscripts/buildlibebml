@@ -5,7 +5,7 @@ export DEST=/binary/libebml-${VER}
 
 pushd libebml-${VER}/make/linux
 
-make CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " -j4
+make CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" -j4
 make prefix=${DEST}/usr install
 
 popd

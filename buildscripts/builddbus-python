@@ -8,8 +8,8 @@ cp -a dbus-python-${VER} dbus-python-${VER}-3
 pushd dbus-python-${VER}-3
 
 PYTHON=/usr/bin/python3 \
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr
 
 make -j4
@@ -20,8 +20,8 @@ popd
 pushd dbus-python-${VER}
 
 PYTHON=/usr/bin/python \
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr
 
 make -j4

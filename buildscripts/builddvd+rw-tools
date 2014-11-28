@@ -7,7 +7,7 @@ pushd dvd+rw-tools-${VER}
 
 patch -Np1 -i /media/ntfs/Other/Linux/patches/dvd+rw-tools-fixes.patch
 
-sed -i "s:-O2:-march=native -mtune=native -O2 -pipe -fstack-protector-strong :g" Makefile.m4
+sed -i "s:-O2:-march=native -mtune=native -O2 -pipe -fstack-protector-strong:g" Makefile.m4
 
 make all rpl8 -j4
 make install prefix=${DEST}/usr

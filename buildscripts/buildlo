@@ -21,8 +21,8 @@ sed -e "/distro-install-file-lists/d" -i Makefile.in
 
 chmod +x bin/unpack-sources
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./autogen.sh --prefix=/usr               \
              --sysconfdir=/etc           \
              --with-lang="en-US hr"      \

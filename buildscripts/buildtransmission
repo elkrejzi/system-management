@@ -5,8 +5,8 @@ export DEST=/binary/transmission-${VER}
 
 pushd transmission-${VER}
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr --without-gtk
 
 make -j4
@@ -16,7 +16,7 @@ install -Dm644 daemon/transmission-daemon.service ${DEST}/lib/systemd/system/tra
 
 pushd qt
 
-qmake-qt5 "QMAKE_CFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong " "QMAKE_CXXFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong "
+qmake-qt5 "QMAKE_CFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong" "QMAKE_CXXFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
 make -j4
 make install INSTALL_ROOT=${DEST}/usr
 

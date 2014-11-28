@@ -5,8 +5,8 @@ export DEST=/binary/SDL_image-${VER}
 
 pushd SDL_image-${VER}
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr        \
             --disable-static     \
             --disable-jpg-shared \

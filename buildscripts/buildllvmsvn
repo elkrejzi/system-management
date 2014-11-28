@@ -31,8 +31,8 @@ sed -e 's:\$(PROJ_prefix)/docs/llvm:$(PROJ_prefix)/share/doc/llvm:' \
 
 sed -i "/ld-linux-x86-64/s/lib64/lib/" tools/clang/lib/Driver/Tools.cpp
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 CC="gcc" CXX="g++" ./configure --prefix=/usr --sysconfdir=/etc  --enable-shared   \
                                --enable-libffi --enable-targets=x86,r600          \
                                --disable-expensive-checks --disable-debug-runtime \
@@ -109,8 +109,8 @@ export CC="gcc -m32"
 export CXX="g++ -m32"
 export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr --sysconfdir=/etc --libdir=/usr/lib32       \
             --enable-shared --enable-libffi --enable-targets=x86,r600 \
             --disable-expensive-checks --disable-debug-runtime        \

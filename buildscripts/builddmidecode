@@ -5,7 +5,7 @@ export DEST=/binary/dmidecode-${VER}
 
 pushd dmidecode-${VER}
 
-sed -i "s:-O2:-march=native -mtune=native -O2 -pipe -fstack-protector-strong :g" Makefile
+sed -i "s:-O2:-march=native -mtune=native -O2 -pipe -fstack-protector-strong:g" Makefile
 
 make prefix=/usr -j4
 make install prefix=/usr DESTDIR=${DEST}

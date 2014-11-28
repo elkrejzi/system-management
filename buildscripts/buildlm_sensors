@@ -10,12 +10,12 @@ patch -Np1 -i /media/ntfs/Other/Linux/patches/lm_sensors-fixes.patch
 make PREFIX=/usr           \
      BUILD_STATIC_LIB=0    \
      MANDIR=/usr/share/man \
-     CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " -j4
+     CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" -j4
 
 make PREFIX=/usr           \
      BUILD_STATIC_LIB=0    \
      MANDIR=/usr/share/man \
-     CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " install DESTDIR=${DEST}
+     CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" install DESTDIR=${DEST}
 
 popd
 

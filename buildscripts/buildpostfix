@@ -25,7 +25,7 @@ make makefiles DEBUG="" \
           -lsqlite3 \
           -lpcre \
           -llber -lldap' \
- OPT='-march=native -mtune=native -O2 -pipe -fstack-protector-strong '
+ OPT='-march=native -mtune=native -O2 -pipe -fstack-protector-strong'
 
 make
 

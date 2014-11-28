@@ -7,8 +7,8 @@ cp -a json-c-${VER} json-c-${VER}-32
 
 pushd json-c-${VER}
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr --disable-static
 
 find . -name "Makefile" -exec sed -i "s:-Werror ::g" {} \;
@@ -24,8 +24,8 @@ export CC="gcc -m32"
 export CXX="g++ -m32"
 export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr       \
             --libdir=/usr/lib32 \
             --disable-static

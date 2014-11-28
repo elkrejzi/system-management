@@ -5,7 +5,7 @@ export DEST=/binary/rfkill-${VER}
 
 pushd rfkill-${VER}
 
-sed -i "s:-O2 -g:-march=native -mtune=native -O2 -pipe -fstack-protector-strong :g" Makefile
+sed -i "s:-O2 -g:-march=native -mtune=native -O2 -pipe -fstack-protector-strong:g" Makefile
 
 make -j4
 make install DESTDIR=${DEST}

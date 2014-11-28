@@ -9,8 +9,8 @@ pushd libmng-${VER}
 
 sed -i "s:#include <jpeg:#include <stdio.h>\n&:" libmng_types.h
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr --disable-static
 
 make -j4
@@ -26,8 +26,8 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
 sed -i "s:#include <jpeg:#include <stdio.h>\n&:" libmng_types.h
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr       \
             --libdir=/usr/lib32 \
             --disable-static

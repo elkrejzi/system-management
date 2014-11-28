@@ -13,8 +13,8 @@ pushd saslauthd
 autoreconf -fi
 popd
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr \
             --sysconfdir=/etc \
             --with-dbpath=/var/lib/sasl/sasldb2 \

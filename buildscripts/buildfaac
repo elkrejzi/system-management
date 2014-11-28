@@ -9,8 +9,8 @@ patch -Np1 -i /media/ntfs/Other/Linux/patches/faac-fixes.patch
 
 sed -i -e '/obj-type/d' -e '/Long Term/d' frontend/main.c
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr --disable-static
 
 make -j4

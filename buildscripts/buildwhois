@@ -5,7 +5,7 @@ export DEST=/binary/whois-${VER}
 
 pushd whois-${VER}
 
-make CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+make CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
      CONFIG_FILE=/etc/whois.conf \
      HAVE_LIBIDN=1 HAVE_ICONV=1 -j4
 

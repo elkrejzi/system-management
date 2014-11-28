@@ -1,13 +1,13 @@
 #!/bin/bash -e
 
-export VER=0.6.2
+export VER=0.7.0
 export DEST=/binary/mpv-${VER}
 
 pushd mpv-${VER}
 
 ./bootstrap.py
 
-CC=clang CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -I/usr/include/samba-4.0" \
+CC=clang CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-I/usr/include/samba-4.0" \
 ./waf configure --prefix=/usr      \
                 --confdir=/etc/mpv \
                 --lua=52           \

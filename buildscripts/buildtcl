@@ -8,8 +8,8 @@ pushd tcl${VER}/unix
 
 rm -rf ../pkgs/sqlite*
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr           \
             --without-tzdata        \
             --mandir=/usr/share/man \

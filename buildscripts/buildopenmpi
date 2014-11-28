@@ -8,8 +8,8 @@ pushd openmpi-${VER}
 rm -rf opal/libltdl
 
 FC=/usr/bin/gfortran                       \
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr             \
             --sysconfdir=/etc/openmpi \
             --with-hwloc=/usr         \

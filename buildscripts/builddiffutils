@@ -7,8 +7,8 @@ pushd diffutils-${VER}
 
 sed -i 's:= @mkdir_p@:= /bin/mkdir -p:' po/Makefile.in.in
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr
 
 make -j4

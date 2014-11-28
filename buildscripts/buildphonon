@@ -14,8 +14,8 @@ cmake -DCMAKE_BUILD_TYPE=Release  \
       -DCMAKE_SKIP_RPATH=ON       \
       -DCMAKE_INSTALL_LIBDIR=lib  \
       -DPHONON_INSTALL_QT_EXTENSIONS_INTO_SYSTEM_QT=ON    \
-      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
       -Wno-dev ..
 
 make -j4
@@ -31,8 +31,8 @@ cmake -DCMAKE_BUILD_TYPE=Release   \
       -DCMAKE_INSTALL_LIBDIR=lib   \
       -DPHONON_BUILD_PHONON4QT5=ON \
       -DPHONON_INSTALL_QT_EXTENSIONS_INTO_SYSTEM_QT=ON    \
-      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
       -Wno-dev ..
 
 make -j4

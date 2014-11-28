@@ -24,8 +24,8 @@ cmake -DCMAKE_BUILD_TYPE=Release       \
       -DXDG_STD=TRUE                   \
       -DwxWidgets_CONFIG_EXECUTABLE=/usr/bin/wx-config32-2.8 \
       -DwxWidgets_wxrc_EXECUTABLE=/usr/bin/wxrc32-2.8        \
-      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w"   \
-      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w" \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-w"   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-w" \
       ..
 
 #      -DSDL2_API=TRUE                  \

@@ -8,7 +8,7 @@ pushd qtchooser-${VER}${EXTRA}
 
 patch -Np1 -i /media/ntfs/Other/Linux/patches/qtchooser-fixes.patch
 
-make CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " -j4
+make CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" -j4
 make install INSTALL_ROOT=${DEST}
 
 popd

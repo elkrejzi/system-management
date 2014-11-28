@@ -9,8 +9,8 @@ rm -rf cups/libs/ expat/ freetype/ ijs/ jpeg/ jpegxr/ lcms/ lcms2/ libpng/ openj
 
 sed -i 's/ZLIBDIR=src/ZLIBDIR=$includedir/' configure.ac configure
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr \
             --enable-dynamic \
             --with-ijs \

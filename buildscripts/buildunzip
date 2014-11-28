@@ -6,7 +6,7 @@ export DEST=/binary/unzip-${VER}
 
 pushd unzip${PKGVER}
 
-sed -i -e 's/CFLAGS="-O -Wall/& -DNO_LCHMOD -march=native -mtune=native -O2 -pipe -fstack-protector-strong /' unix/Makefile
+sed -i -e 's/CFLAGS="-O -Wall/& -DNO_LCHMOD -march=native -mtune=native -O2 -pipe -fstack-protector-strong/' unix/Makefile
 
 make -f unix/Makefile -j4 linux_noasm
 make -f unix/Makefile prefix=${DEST}/usr MANDIR=${DEST}/usr/share/man/man1 install

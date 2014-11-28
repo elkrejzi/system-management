@@ -9,8 +9,8 @@ pushd wxPython-src-${VER}
 
 patch -Np1 -i /media/ntfs/Other/Linux/patches/wxgtk.patch
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w" \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-w"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-w" \
 ./configure --prefix=/usr             \
             --libdir=/usr/lib         \
             --disable-precomp-headers \
@@ -51,8 +51,8 @@ sed -e "/\$(LN_S) wxrc-\$(WX_RELEASE)/d" \
 sed -e "/mv -f/s:wxrc-\$(WX_RELEASE):wxrc32-\$(WX_RELEASE):" \
     -i utils/wxrc/Makefile.in
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w" \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-w"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-w" \
 ./configure --prefix=/usr             \
             --libdir=/usr/lib32       \
             --disable-mediactrl       \

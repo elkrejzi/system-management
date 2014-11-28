@@ -12,7 +12,7 @@ export LIBXAU_VER=1.0.8
 export LIBXDMCP_VER=1.1.1
 export LIBXCB_VER=1.11
 
-export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -I${DEST}/tmp/usr/include -I${DEST}/tmp/usr/include/X11 -I${DEST}/tmp/usr/include/GL"
+export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-I${DEST}/tmp/usr/include -I${DEST}/tmp/usr/include/X11 -I${DEST}/tmp/usr/include/GL"
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:${DEST}/tmp/usr/lib32/pkgconfig:${DEST}/tmp/usr/lib/pkgconfig:${DEST}/tmp/usr/share/pkgconfig"
 export LD_LIBRARY_PATH="${DEST}/tmp/usr/lib:${DEST}/tmp/usr/lib32"
 export LDFLAGS="-L${DEST}/tmp/usr/lib32 -L${DEST}/tmp/usr/lib"

@@ -6,8 +6,8 @@ export DEST=/binary/gnuplot-${VER}
 pushd gnuplot-${VER}
 
 WX_CONFIG=/usr/bin/wx-config-2.8           \
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr \
             --enable-qt   \
             --libexecdir=/usr/bin

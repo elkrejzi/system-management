@@ -6,8 +6,8 @@ export DEST=/binary/groff-${VER}
 pushd groff-${VER}
 
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 PAGE=A4 ./configure --prefix=/usr
 
 make # -j4

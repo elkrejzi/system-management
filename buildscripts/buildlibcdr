@@ -1,12 +1,12 @@
 #!/bin/bash -e
 
-export VER=0.1.0
+export VER=0.1.1
 export DEST=/binary/libcdr-${VER}
 
 pushd libcdr-${VER}
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr --disable-static
 
 make -j4

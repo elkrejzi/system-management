@@ -1,20 +1,21 @@
 #!/bin/bash -e
 
-export VER=1.2.5
+export VER=1.2.6
 export DEST=/binary/colord-${VER}
 
 pushd colord-${VER}
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
-./configure --prefix=/usr             \
-            --sysconfdir=/etc         \
-            --localstatedir=/var      \
-            --with-daemon-user=colord \
-            --enable-vala             \
-            --disable-bash-completion \
-            --disable-static          \
-            --enable-sane
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+./configure --prefix=/usr              \
+            --sysconfdir=/etc          \
+            --localstatedir=/var       \
+            --with-daemon-user=colord  \
+            --enable-sane              \
+            --enable-vala              \
+            --disable-bash-completion  \
+            --disable-argyllcms-sensor \
+            --disable-static
 
 make -j4
 make install DESTDIR=${DEST}

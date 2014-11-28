@@ -12,7 +12,7 @@ export DEST=/binary/qtwayland-${VER}
 sed -i "/PKGCONFIG/s:xcomposite:& xrender:" src/hardwareintegration/client/xcomposite-glx/xcomposite-glx.pri
 sed -i "/LIBS/s:-lXcomposite:& -lXrender:" src/hardwareintegration/client/xcomposite-glx/xcomposite-glx.pri
 
-qmake-qt5 "QMAKE_CFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong " "QMAKE_CXXFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong "
+qmake-qt5 "QMAKE_CFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong" "QMAKE_CXXFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
 
 make -j4
 make install INSTALL_ROOT=${DEST}

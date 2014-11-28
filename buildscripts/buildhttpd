@@ -11,8 +11,8 @@ sed -e "s@/srv/www@/var/www@" -i config.layout
 sed -e "s@User apache@User httpd@" -i docs/conf/httpd.conf.in
 sed -e "s@Group apache@Group httpd@" -i docs/conf/httpd.conf.in
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --enable-layout=BLFS \
             --enable-mods-shared="all cgi" \
             --enable-mpms-shared=all \

@@ -7,8 +7,8 @@ pushd dirmngr-${VER}
 
 patch -Np0 -i /media/ntfs/Other/Linux/patches/dirmngr-pth-fix.patch
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr     \
             --sysconfdir=/etc \
             --localstatedir=/var

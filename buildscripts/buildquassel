@@ -12,8 +12,8 @@ cmake -DCMAKE_BUILD_TYPE=Release  \
       -DWANT_QTCLIENT=ON          \
       -DWITH_KDE=1                \
       -DWITH_OPENSSL=ON           \
-      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
       -Wno-dev
 
 make -j4

@@ -1,12 +1,12 @@
 #!/bin/bash -e
 
-export VER=3.14.2
+export VER=3.14.2.2
 export DEST=/binary/gnome-themes-standard-${VER}
 
 pushd gnome-themes-standard-${VER}
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr
 
 make -j4

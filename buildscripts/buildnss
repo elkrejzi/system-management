@@ -5,7 +5,7 @@ export VER=3.17.2
 
 export TARBALL=nss-${VER}${EXTRA}.tar.gz
 
-export XCFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "
+export XCFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
 
 tar xf ${TARBALL}
 

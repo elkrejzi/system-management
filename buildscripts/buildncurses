@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.9-20141101
+export VER=5.9-20141115
 export DEST=/binary/ncurses-${VER}
 
 cd ncurses-${VER}
@@ -9,8 +9,8 @@ mkdir buildncursesw6{,-32} buildncursesw{,-32} buildncurses{,-32}
 
 pushd buildncursesw6
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ../configure --prefix=/usr \
              --mandir=/usr/share/man \
              --with-shared \
@@ -27,8 +27,8 @@ popd
 
 pushd buildncursesw
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ../configure --prefix=/usr \
              --mandir=/usr/share/man \
              --with-shared \
@@ -47,8 +47,8 @@ popd
 
 pushd buildncurses
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ../configure --prefix=/usr \
              --mandir=/usr/share/man \
              --with-shared \
@@ -71,8 +71,8 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
 pushd buildncursesw6-32
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ../configure --prefix=/usr \
              --libdir=/usr/lib32 \
              --with-pkg-config-libdir=/usr/lib32/pkgconfig \
@@ -95,8 +95,8 @@ popd
 
 pushd buildncursesw-32
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ../configure --prefix=/usr \
              --libdir=/usr/lib32 \
              --with-pkg-config-libdir=/usr/lib32/pkgconfig \
@@ -117,8 +117,8 @@ popd
 
 pushd buildncurses-32
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ../configure --prefix=/usr \
              --libdir=/usr/lib32 \
              --with-pkg-config-libdir=/usr/lib32/pkgconfig \

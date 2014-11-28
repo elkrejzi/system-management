@@ -14,8 +14,8 @@ rm -r Modules/expat
 rm -r Modules/zlib
 rm -r Modules/_ctypes/{darwin,libffi}*
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr         \
             --enable-shared       \
             --with-system-expat   \

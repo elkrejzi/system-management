@@ -9,8 +9,8 @@ sed -e '/#include <sys\/capability.h>/ d' \
     -e '/#include "virtio-9p-marshal.h"/ i#include <sys\/capability.h>' \
     -i fsdev/virtfs-proxy-helper.c
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr        \
             --sysconfdir=/etc    \
             --localstatedir=/var \

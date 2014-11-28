@@ -9,8 +9,8 @@ if [ -e /media/ntfs/Other/Linux/patches/qt4fixes.patch ]; then
   popd
 fi
 
-export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w"
-export CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w"
+export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-w"
+export CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-w"
 
 cp -a qt-everywhere-opensource-src-${VER} qt-everywhere-opensource-src-${VER}-32
 

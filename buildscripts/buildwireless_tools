@@ -7,7 +7,7 @@ export DEST=/binary/wireless_tools-${VER}
 pushd wireless_tools.${PKGVER}
 
 sed -i "s:BUILD_STATIC:# &:" Makefile
-sed -i "s:-Os:& -march=native -mtune=native -O2 -pipe -fstack-protector-strong :g" Makefile
+sed -i "s:-Os:& -march=native -mtune=native -O2 -pipe -fstack-protector-strong:g" Makefile
 
 make
 make PREFIX=${DEST}/usr INSTALL_MAN=${DEST}/usr/share/man install

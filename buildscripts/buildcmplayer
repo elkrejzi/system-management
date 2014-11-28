@@ -1,0 +1,44 @@
+#!/bin/bash -e
+
+export VER=0.8.16
+export DEST=/binary/cmplayer-${VER}
+
+pushd cmplayer-${VER}
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+./configure --prefix=/usr       \
+            --enable-cdda       \
+            --enable-jack       \
+            --enable-portaudio  \
+            --enable-pulseaudio \
+            --parallel=4        \
+            --qmake=/usr/bin/qmake-qt5
+
+make
+make install DEST_DIR=${DEST}
+
+popd
+
+rm -rf cmplayer-${VER}
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+EOF
+
+chmod 755 ${DEST}/INSTALL

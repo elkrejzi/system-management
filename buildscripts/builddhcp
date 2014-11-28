@@ -10,7 +10,7 @@ patch -Np1 -i /media/ntfs/Other/Linux/patches/dhclient-script.patch
 CFLAGS="-D_PATH_DHCLIENT_SCRIPT='\"/sbin/dhclient-script\"'         \
         -D_PATH_DHCPD_CONF='\"/etc/dhcp/dhcpd.conf\"'               \
         -D_PATH_DHCLIENT_CONF='\"/etc/dhcp/dhclient.conf\"'         \
-        -march=native -mtune=native -O2 -pipe -fstack-protector-strong "                            \
+        -march=native -mtune=native -O2 -pipe -fstack-protector-strong"                            \
 ./configure --prefix=/usr                                           \
             --sysconfdir=/etc/dhcp                                  \
             --localstatedir=/var                                    \

@@ -7,7 +7,7 @@ pushd qoauth-${VER}-src
 
 sed -i 's|lib64|lib|' src/src.pro
 
-qmake-qt4 "QMAKE_CFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong " "QMAKE_CXXFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong "
+qmake-qt4 "QMAKE_CFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong" "QMAKE_CXXFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
 
 make -j4
 make install INSTALL_ROOT=${DEST}

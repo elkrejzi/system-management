@@ -7,8 +7,8 @@ pushd octave-${VER}
 
 patch -Np1 -i /media/ntfs/Other/Linux/patches/octave-fixes.patch
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr --with-umfpack="-lumfpack -lsuitesparseconfig" \
             LEXLIB=/usr/lib/libfl.a \
             MOC=moc-qt4 UIC=uic-qt4

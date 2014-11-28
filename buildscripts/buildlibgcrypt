@@ -7,8 +7,8 @@ cp -a libgcrypt-${VER} libgcrypt-${VER}-32
 
 pushd libgcrypt-${VER}
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr    \
             --disable-static \
             --disable-padlock-support
@@ -26,8 +26,8 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
 sed 's:path="amd64":path="i586 i386":' -i mpi/config.links
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr       \
             --libdir=/usr/lib32 \
             --disable-static    \

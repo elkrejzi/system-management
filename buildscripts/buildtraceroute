@@ -5,7 +5,7 @@ export DEST=/binary/traceroute-${VER}
 
 pushd traceroute-${VER}
 
-sed -i "s:-O2:-march=native -mtune=native -O2 -pipe -fstack-protector-strong :g" Make.rules
+sed -i "s:-O2:-march=native -mtune=native -O2 -pipe -fstack-protector-strong:g" Make.rules
 
 make -j4
 make install prefix=${DEST}/usr

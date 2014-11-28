@@ -7,8 +7,8 @@ pushd gst-plugins-bad-${VER}
 
 sed "s:stdafx:libmodplug/&:g" -i ext/modplug/gstmodplug.cc
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr      \
             --disable-examples \
             --disable-static   \

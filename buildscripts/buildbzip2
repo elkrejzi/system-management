@@ -3,7 +3,7 @@
 export VER=1.0.6
 export DEST=/binary/bzip2-${VER}
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
 
 cp -a bzip2-${VER} bzip2-${VER}-32
 

@@ -14,7 +14,7 @@ export VER=${MAJOR_VER}.${MINOR_VER}
 
 export DEST=/binary/perl-${VER}
 
-export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "
+export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
 
 pushd perl-${VER}
 

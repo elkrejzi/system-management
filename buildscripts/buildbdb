@@ -5,8 +5,8 @@ export DEST=/binary/db-${VER}
 
 pushd db-${VER}/build_unix
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ../dist/configure --prefix=/usr      \
                   --disable-static   \
                   --enable-compat185 \

@@ -1,12 +1,12 @@
 #!/bin/bash -e
 
-export VER=1.5.1
+export VER=1.5.2
 export DEST=/binary/gpgme-${VER}
 
 pushd gpgme-${VER}
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr        \
             --disable-fd-passing \
             --disable-gpgsm-test

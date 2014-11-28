@@ -8,8 +8,8 @@ pushd gstreamer-vaapi-${VER}
 mkdir build1.0
 pushd build1.0
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ../configure --prefix=/usr    \
              --disable-static \
              --disable-builtin-libvpx
@@ -22,8 +22,8 @@ popd
 mkdir build0.10
 pushd build0.10
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ../configure --prefix=/usr             \
              --disable-static          \
              --disable-wayland         \

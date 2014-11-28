@@ -26,8 +26,8 @@ sed -e "s/target\.mk/langlist\.mk/"                \
     -e "/tar -x/s/lo_src_dir/start_dir/"           \
     -i bin/unpack-sources
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./autogen.sh --prefix=/usr               \
              --sysconfdir=/etc           \
              --with-lang="en-US hr"      \

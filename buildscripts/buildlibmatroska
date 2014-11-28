@@ -5,7 +5,7 @@ export DEST=/binary/libmatroska-${VER}
 
 pushd libmatroska-${VER}/make/linux
 
-make CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " -j4
+make CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" -j4
 make prefix=${DEST}/usr install
 
 popd

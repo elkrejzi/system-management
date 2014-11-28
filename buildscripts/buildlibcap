@@ -3,7 +3,7 @@
 export VER=2.24
 export DEST=/binary/libcap-${VER}
 
-sed -i "s|-D_FILE_OFFSET_BITS=64|& -march=native -mtune=native -O2 -pipe -fstack-protector-strong |" libcap-${VER}/Make.Rules
+sed -i "s|-D_FILE_OFFSET_BITS=64|& -march=native -mtune=native -O2 -pipe -fstack-protector-strong|" libcap-${VER}/Make.Rules
 
 cp -a libcap-${VER} libcap-${VER}-32
 

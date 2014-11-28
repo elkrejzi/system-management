@@ -7,7 +7,7 @@ export DEST=/binary/sqlite-${VER}
 pushd sqlite-autoconf-${PKGVER}
 
 ./configure --prefix=/usr --disable-static \
-            CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong \
+            CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong\
            -DSQLITE_ENABLE_FTS3=1 \
            -DSQLITE_ENABLE_COLUMN_METADATA=1 \
            -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 \
@@ -18,8 +18,8 @@ make install DESTDIR=${DEST}
 
 pushd tea
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr        \
             --with-system-sqlite \
             --with-tcl=/usr/lib
@@ -38,7 +38,7 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 ./configure --prefix=/usr       \
             --libdir=/usr/lib32 \
             --disable-static    \
-            CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong \
+            CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong\
             -DSQLITE_ENABLE_FTS3=1 \
             -DSQLITE_ENABLE_COLUMN_METADATA=1 \
             -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 \

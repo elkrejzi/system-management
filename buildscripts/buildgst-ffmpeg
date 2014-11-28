@@ -7,8 +7,8 @@ pushd gst-ffmpeg-${VER}
 
 patch -Np1 -i /media/ntfs/Other/Linux/patches/gst-ffmpeg-fixes.patch
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr \
             --with-package-name="GStreamer FFMpeg Plugins ${VER} BLFS" \
             --with-package-origin="http://www.linuxfromscratch.org/blfs/view/systemd/"

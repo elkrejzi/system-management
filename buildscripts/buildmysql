@@ -35,8 +35,8 @@ cmake -DCMAKE_BUILD_TYPE=Release                    \
       -DWITH_EXTRA_CHARSETS=complex                 \
       -DWITH_READLINE=system                        \
       -DWITH_SSL=system                             \
-      -DCMAKE_C_FLAGS="-fPIC -march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-      -DCMAKE_CXX_FLAGS="-fPIC -march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+      -DCMAKE_C_FLAGS="-fPIC -march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-fPIC -march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
       ..
 
 make -j4

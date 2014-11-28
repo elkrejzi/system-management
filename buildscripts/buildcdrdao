@@ -7,8 +7,8 @@ pushd cdrdao-${VER}
 
 patch -Np1 -i /media/ntfs/Other/Linux/patches/cdrdao-fixes.patch
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong " \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr --mandir=/usr/share/man
 
 make -j4

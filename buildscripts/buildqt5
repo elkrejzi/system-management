@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.3.2
+export VER=5.4.0-rc
 export DEST=/binary/qt-${VER}
 
 if [ -e /media/ntfs/Other/Linux/patches/qt5fixes.patch ]; then
@@ -9,8 +9,8 @@ if [ -e /media/ntfs/Other/Linux/patches/qt5fixes.patch ]; then
   popd
 fi
 
-export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "
-export CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong "
+export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
+export CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
 
 pushd qt-everywhere-opensource-src-${VER}
 
@@ -23,15 +23,18 @@ pushd qt-everywhere-opensource-src-${VER}
             -docdir         /usr/share/doc/qt5 \
             -translationdir /usr/share/qt5/translations \
             -examplesdir    /usr/share/doc/qt5/examples \
-            -confirm-license   \
-            -opensource        \
-            -dbus-linked       \
-            -openssl-linked    \
-            -journald          \
-            -system-harfbuzz   \
-            -system-sqlite     \
-            -nomake examples   \
-            -optimized-qmake
+            -confirm-license    \
+            -opensource         \
+            -dbus-linked        \
+            -openssl-linked     \
+            -journald           \
+            -system-harfbuzz    \
+            -system-sqlite      \
+            -nomake examples    \
+            -no-rpath           \
+            -optimized-qmake    \
+            -no-use-gold-linker \
+            -skip qtwebengine
 
 make -j4
 

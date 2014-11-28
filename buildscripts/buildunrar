@@ -5,7 +5,7 @@ export DEST=/binary/unrar-${VER}
 
 pushd unrar
 
-sed -i "s:-O2:-march=native -mtune=native -O2 -pipe -fstack-protector-strong :g" makefile
+sed -i "s:-O2:-march=native -mtune=native -O2 -pipe -fstack-protector-strong:g" makefile
 
 make -j4
 
