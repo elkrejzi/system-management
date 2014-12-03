@@ -7,7 +7,7 @@ pushd mpv-${VER}
 
 ./bootstrap.py
 
-CC=clang CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-I/usr/include/samba-4.0" \
+CC=clang CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -I/usr/include/samba-4.0" \
 ./waf configure --prefix=/usr      \
                 --confdir=/etc/mpv \
                 --lua=52           \

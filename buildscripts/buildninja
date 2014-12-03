@@ -5,7 +5,7 @@ export DEST=/binary/ninja-${VER}
 
 pushd ninja-${VER}
 
-python ./bootstrap.py
+python ./configure.py --bootstrap
 
 install -Dm755 ninja ${DEST}/usr/bin/ninja
 

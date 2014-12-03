@@ -1,22 +1,27 @@
 #!/bin/bash -e
 
-export VER=5.0
-export SHLIBVER=${VER}
+export VER=5.99.1
+#export SHLIBVER=${VER}
+export SHLIBVER=5.99
 export DEST=/binary/pulseaudio-${VER}
 
 cp -a pulseaudio-${VER} pulseaudio-${VER}-32
 
 pushd pulseaudio-${VER}
 
+sed -i "s#; flat-volumes = yes#flat-volumes = no#" src/daemon/daemon.conf.in
+
 find . -name "Makefile.in" | xargs sed -i "s|(libdir)/@PACKAGE@|(libdir)/pulse|"
 
 CFLAGS="-march=native -mtune=native -g -O2"   \
 CXXFLAGS="-march=native -mtune=native -g -O2" \
-./configure --prefix=/usr         \
-            --sysconfdir=/etc     \
-            --localstatedir=/var  \
-            --disable-bluez4      \
-            --disable-rpath       \
+./configure --prefix=/usr            \
+            --sysconfdir=/etc        \
+            --localstatedir=/var     \
+            --disable-bluez4         \
+            --disable-rpath          \
+            --disable-samplerate     \
+            --disable-systemd-daemon \
             --with-module-dir=/usr/lib/pulse/modules
 
 make -j4
@@ -34,12 +39,14 @@ find . -name "Makefile.in" | xargs sed -i "s|(libdir)/@PACKAGE@|(libdir)/pulse|"
 
 CFLAGS="-march=native -mtune=native -g -O2"   \
 CXXFLAGS="-march=native -mtune=native -g -O2" \
-./configure --prefix=/usr             \
-            --sysconfdir=/etc         \
-            --localstatedir=/var      \
-            --libdir=/usr/lib32       \
-            --disable-bluez4          \
-            --disable-rpath           \
+./configure --prefix=/usr            \
+            --sysconfdir=/etc        \
+            --localstatedir=/var     \
+            --libdir=/usr/lib32      \
+            --disable-bluez4         \
+            --disable-rpath          \
+            --disable-samplerate     \
+            --disable-systemd-daemon \
             --with-module-dir=/usr/lib/pulse/modules
 
 _libs="libpulse.la libpulse-simple.la libpulse-mainloop-glib.la"

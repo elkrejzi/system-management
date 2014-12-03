@@ -1,12 +1,12 @@
 #!/bin/bash -e
 
-export VER=3.19
+export VER=3.20
 export DEST=/binary/highlight-${VER}
 
 pushd highlight-${VER}
 
-make CFLAGS="-Wall -O2 -pipe -fstack-protector-strong-march=native -mtune=native -DNDEBUG" -j4
-make CFLAGS="-Wall -O2 -pipe -fstack-protector-strong-march=native -mtune=native -DNDEBUG" -j4 gui
+make CFLAGS="-Wall -O2 -pipe -fstack-protector-strong -march=native -mtune=native -DNDEBUG" -j4
+make CFLAGS="-Wall -O2 -pipe -fstack-protector-strong -march=native -mtune=native -DNDEBUG" -j4 gui
 
 make install DESTDIR=${DEST}
 make install-gui DESTDIR=${DEST}

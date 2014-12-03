@@ -1,0 +1,60 @@
+#!/bin/bash -e
+
+export VER=0.2.2
+export DEST=/binary/rpcbind-${VER}
+
+pushd rpcbind-${VER}
+
+sed -i "/servname/s:rpcbind:sunrpc:" src/rpcbind.c &&
+sed -i "/error = getaddrinfo/s:rpcbind:sunrpc:" src/rpcinfo.c
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+./configure --prefix=/usr --bindir=/sbin --with-rpcuser=root
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf rpcbind-${VER}
+
+install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/lib/systemd/system
+
+cat > ${DEST}/lib/systemd/system/rpcbind.service << "EOF"
+[Unit]
+Description=RPC Bind
+After=network.target
+Wants=rpcbind.target
+Before=rpcbind.target
+
+[Service]
+Type=forking
+ExecStart=/sbin/rpcbind
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+ln -sf /lib/systemd/system/rpcbind.service ${DEST}/etc/systemd/system/multi-user.target.wants/rpcbind.service
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib sbin usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

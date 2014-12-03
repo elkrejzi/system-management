@@ -16,6 +16,8 @@ popd
 
 rm -rf gnome-photos-${VER}
 
+rm -rf ${DEST}/usr/share/doc
+
 pushd ${DEST}
 
 find * -type f 2>/dev/null | while read BUILD_BINARY ; do

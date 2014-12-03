@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=33.1.1
+export VER=34.0.5
 export DEST=/binary/firefox-${VER}
 
 pushd mozilla-release
@@ -53,9 +53,9 @@ export MOZILLA_OFFICIAL=1
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/firefox-build-dir
 EOF
 
-LDFLAGS="-Wl,-rpath,/usr/lib/firefox" make -f client.mk configure
+make -f client.mk configure
 
-make -C firefox-build-dir -j3
+make -C firefox-build-dir -j4
 make -C firefox-build-dir install DESTDIR=${DEST} INSTALL_SDK=
 make -C firefox-build-dir install DESTDIR=${PWD}/dest INSTALL_SDK=
 

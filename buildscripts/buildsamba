@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.1.13
+export VER=4.1.14
 export DEST=/binary/samba-${VER}
 
 pushd samba-${VER}

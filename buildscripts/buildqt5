@@ -14,6 +14,8 @@ export CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
 
 pushd qt-everywhere-opensource-src-${VER}
 
+sed -i "/^QMAKE_LFLAGS_RPATH/s| -Wl,-rpath,||g" qtbase/mkspecs/common/gcc-base-unix.conf
+
 ./configure -prefix         /usr               \
             -sysconfdir     /etc/xdg           \
             -bindir         /usr/lib/qt5/bin   \

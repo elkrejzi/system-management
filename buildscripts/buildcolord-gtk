@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.1.25
+export VER=0.1.26
 export DEST=/binary/colord-gtk-${VER}
 
 pushd colord-gtk-${VER}

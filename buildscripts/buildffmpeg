@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.4.3
+export VER=2.4.4
 export DEST=/binary/ffmpeg-${VER}
 
 pushd ffmpeg-${VER}
