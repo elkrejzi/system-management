@@ -1,20 +1,20 @@
 #!/bin/bash -e
 
-export VER=3.14.2
-export DEST=/binary/gedit-${VER}
+export VER=0.28.2
+export DEST=/binary/vte-${VER}
 
-pushd gedit-${VER}
+pushd vte-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr
+./configure --prefix=/usr --disable-static
 
 make -j4
 make install DESTDIR=${DEST}
 
 popd
 
-rm -rf gedit-${VER}
+rm -rf vte-${VER}
 
 find ${DEST} -name "*.la" -delete
 
@@ -33,9 +33,10 @@ cat > ${DEST}/INSTALL << "EOF"
 
 cp -rf --remove-destination usr /
 
-[ -x /usr/bin/glib-compile-schemas ] && echo "Processing triggers for glib-2.0" && /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas
-[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
-[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+chgrp utmp /usr/libexec/gnome-pty-helper
+chmod 2755 /usr/libexec/gnome-pty-helper
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 
 chmod 755 ${DEST}/INSTALL

@@ -1,37 +1,24 @@
 #!/bin/bash -e
 
-export VER=5.32
-export DEST=/binary/xscreensaver-${VER}
+export VER=1.8.1
+export DEST=/binary/mate-terminal-${VER}
 
-pushd xscreensaver-${VER}
+pushd mate-terminal-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr
+./configure --prefix=/usr    \
+            --with-gtk=2.0   \
+            --disable-static \
 
 make -j4
-make install install_prefix=${DEST}
+make install DESTDIR=${DEST}
 
 popd
 
-rm -rf xscreensaver-${VER}
+rm -rf mate-terminal-${VER}
 
-echo "NotShowIn=KDE;GNOME;MATE;" >> ${DEST}/usr/share/applications/xscreensaver-properties.desktop
-
-install -dm755 ${DEST}/etc/pam.d
-
-cat > ${DEST}/etc/pam.d/xscreensaver << "EOF"
-# Begin /etc/pam.d/xscreensaver
-
-auth     include        system-auth
--auth    optional       pam_gnome_keyring.so
-
-account  include        system-account
-password include        system-password
-session  include        system-session
-
-# End /etc/pam.d/xscreensaver
-EOF
+find ${DEST} -name "*.la" -delete
 
 pushd ${DEST}
 
@@ -46,8 +33,9 @@ popd
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
-for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+cp -rf --remove-destination usr /
 
+[ -x /usr/bin/glib-compile-schemas ] && echo "Processing triggers for glib-2.0" && /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas
 [ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
 [ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
 EOF

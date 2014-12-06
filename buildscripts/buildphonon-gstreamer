@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.8.0
+export VER=4.8.1
 export DEST=/binary/phonon-backend-gstreamer-${VER}
 
 install -dm755 phonon-backend-gstreamer-${VER}/build4 phonon-backend-gstreamer-${VER}/build5

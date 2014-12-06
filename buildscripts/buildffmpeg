@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.4.4
+export VER=2.5
 export DEST=/binary/ffmpeg-${VER}
 
 pushd ffmpeg-${VER}
@@ -34,7 +34,6 @@ pushd ffmpeg-${VER}
             --enable-libpulse          \
             --enable-librtmp           \
             --enable-libschroedinger   \
-            --enable-libsmbclient      \
             --enable-libspeex          \
             --enable-libssh            \
             --enable-libtheora         \

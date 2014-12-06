@@ -1,20 +1,22 @@
 #!/bin/bash -e
 
-export VER=3.14.2
-export DEST=/binary/gedit-${VER}
+export VER=2.21.0
+export DEST=/binary/gtk-engines-${VER}
 
-pushd gedit-${VER}
+tar xf /media/ntfs/Other/Linux/packages/gtk-engines-${VER}.tar.gz
+
+pushd gtk-engines-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr
+./configure --prefix=/usr --enable-animation
 
 make -j4
 make install DESTDIR=${DEST}
 
 popd
 
-rm -rf gedit-${VER}
+rm -rf gtk-engines-${VER}
 
 find ${DEST} -name "*.la" -delete
 
@@ -32,10 +34,6 @@ cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
 cp -rf --remove-destination usr /
-
-[ -x /usr/bin/glib-compile-schemas ] && echo "Processing triggers for glib-2.0" && /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas
-[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
-[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
 EOF
 
 chmod 755 ${DEST}/INSTALL

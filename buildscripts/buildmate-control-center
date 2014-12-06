@@ -1,20 +1,23 @@
 #!/bin/bash -e
 
-export VER=3.14.2
-export DEST=/binary/gedit-${VER}
+export VER=1.8.3
+export DEST=/binary/mate-control-center-${VER}
 
-pushd gedit-${VER}
+pushd mate-control-center-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr
+./configure --prefix=/usr     \
+            --sysconfdir=/etc \
+            --with-gtk=2.0    \
+            --disable-static
 
 make -j4
 make install DESTDIR=${DEST}
 
 popd
 
-rm -rf gedit-${VER}
+rm -rf mate-control-center-${VER}
 
 find ${DEST} -name "*.la" -delete
 
@@ -31,11 +34,14 @@ popd
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
-cp -rf --remove-destination usr /
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
 
 [ -x /usr/bin/glib-compile-schemas ] && echo "Processing triggers for glib-2.0" && /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas
+[ -x /usr/bin/update-mime-database ] && echo "Processing triggers for shared-mime-info" && /usr/bin/update-mime-database /usr/share/mime
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
 [ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
 [ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 
 chmod 755 ${DEST}/INSTALL
