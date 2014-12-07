@@ -1,20 +1,22 @@
 #!/bin/bash -e
 
-export VER=0.7.0
-export DEST=/binary/libinput-${VER}
+export VER=0.3.0
+export DEST=/binary/garcon-${VER}
 
-pushd libinput-${VER}
+pushd garcon-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr --disable-static
+./configure --prefix=/usr     \
+            --sysconfdir=/etc \
+            --disable-static
 
 make -j4
 make install DESTDIR=${DEST}
 
 popd
 
-rm -rf libinput-${VER}
+rm -rf garcon-${VER}
 
 find ${DEST} -name "*.la" -delete
 
@@ -31,7 +33,7 @@ popd
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
-cp -rf --remove-destination usr /
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
 
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF

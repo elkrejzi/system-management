@@ -1,22 +1,27 @@
 #!/bin/bash -e
 
-export VER=0.7.0
-export DEST=/binary/libinput-${VER}
+export VER=4.10.0
+export DEST=/binary/xfconf-${VER}
 
-pushd libinput-${VER}
+pushd xfconf-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr --disable-static
+./configure --prefix=/usr    \
+            --disable-static \
+            --with-perl-options=INSTALLDIRS=vendor
 
 make -j4
 make install DESTDIR=${DEST}
 
 popd
 
-rm -rf libinput-${VER}
+rm -rf xfconf-${VER}
+
+rm -rf ${DEST}/usr/lib/perl
 
 find ${DEST} -name "*.la" -delete
+find ${DEST} -name .packlist -delete
 
 pushd ${DEST}
 
@@ -33,6 +38,7 @@ cat > ${DEST}/INSTALL << "EOF"
 
 cp -rf --remove-destination usr /
 
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 

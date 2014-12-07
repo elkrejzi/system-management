@@ -1,20 +1,22 @@
 #!/bin/bash -e
 
-export VER=0.7.0
-export DEST=/binary/libinput-${VER}
+export VER=1.2.5
+export DEST=/binary/xfce4-sensors-plugin-${VER}
 
-pushd libinput-${VER}
+pushd xfce4-sensors-plugin-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr --disable-static
+./configure --prefix=/usr         \
+            --libexecdir=/usr/lib \
+            --disable-static
 
 make -j4
 make install DESTDIR=${DEST}
 
 popd
 
-rm -rf libinput-${VER}
+rm -rf xfce4-sensors-plugin-${VER}
 
 find ${DEST} -name "*.la" -delete
 
@@ -33,7 +35,8 @@ cat > ${DEST}/INSTALL << "EOF"
 
 cp -rf --remove-destination usr /
 
-[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
 EOF
 
 chmod 755 ${DEST}/INSTALL

@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
-export VER=0.7.0
-export DEST=/binary/libinput-${VER}
+export VER=4.10.0
+export DEST=/binary/libxfcegui4-${VER}
 
-pushd libinput-${VER}
+pushd libxfcegui4-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
@@ -14,7 +14,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf libinput-${VER}
+rm -rf libxfcegui4-${VER}
 
 find ${DEST} -name "*.la" -delete
 
@@ -33,6 +33,7 @@ cat > ${DEST}/INSTALL << "EOF"
 
 cp -rf --remove-destination usr /
 
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 

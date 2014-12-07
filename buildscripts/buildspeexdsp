@@ -1,20 +1,15 @@
 #!/bin/bash -e
 
-export VER=2.5.4
-export DEST=/binary/freetype-${VER}
+export VER=1.2rc2
+export DEST=/binary/speexdsp-${VER}
 
-pushd freetype-${VER}
-  sed -i  -e "/AUX.*.gxvalid/s@^# @@" \
-          -e "/AUX.*.otvalid/s@^# @@" \
-          modules.cfg
-
-  sed -ri -e 's:.*(#.*SUBPIXEL.*) .*:\1:' \
-          include/config/ftoption.h
+pushd speexdsp-${VER}
+  patch -Np1 -i /media/ntfs/Other/Linux/patches/speexdsp-fixes.patch
 popd
 
-cp -a freetype-${VER} freetype-${VER}-32
+cp -a speexdsp-${VER} speexdsp-${VER}-32
 
-pushd freetype-${VER}
+pushd speexdsp-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
@@ -25,7 +20,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-pushd freetype-${VER}-32
+pushd speexdsp-${VER}-32
 
 export CC="gcc -m32"
 export CXX="g++ -m32"
@@ -44,9 +39,11 @@ mv dest/usr/lib32 ${DEST}/usr
 
 popd
 
-rm -rf freetype-${VER} freetype-${VER}-32
+rm -rf speexdsp-${VER} speexdsp-${VER}-32
 
 find ${DEST} -name "*.la" -delete
+
+rm -rf ${DEST}/usr/share
 
 pushd ${DEST}
 
@@ -63,7 +60,6 @@ cat > ${DEST}/INSTALL << "EOF"
 
 cp -rf --remove-destination usr /
 
-[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 

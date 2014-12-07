@@ -1,20 +1,23 @@
 #!/bin/bash -e
 
-export VER=0.7.0
-export DEST=/binary/libinput-${VER}
+export VER=4.11.1
+export DEST=/binary/libxfce4ui-${VER}
 
-pushd libinput-${VER}
+pushd libxfce4ui-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr --disable-static
+./configure --prefix=/usr     \
+            --sysconfdir=/etc \
+            --disable-static  \
+            --with-vendor-info=Krejzi
 
 make -j4
 make install DESTDIR=${DEST}
 
 popd
 
-rm -rf libinput-${VER}
+rm -rf libxfce4ui-${VER}
 
 find ${DEST} -name "*.la" -delete
 
@@ -31,8 +34,10 @@ popd
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
-cp -rf --remove-destination usr /
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
 
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 

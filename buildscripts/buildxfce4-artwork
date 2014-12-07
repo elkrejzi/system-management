@@ -1,0 +1,23 @@
+#!/bin/bash -e
+
+export VER=0.1.1a
+export DEST=/binary/xfce4-artwork-${VER}
+
+pushd xfce4-artwork-${VER}
+
+./configure --prefix=/usr
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf xfce4-artwork-${VER}
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL

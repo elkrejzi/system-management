@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.2rc1
+export VER=1.2rc2
 export DEST=/binary/speex-${VER}
 
 cp -a speex-${VER} speex-${VER}-32
@@ -56,7 +56,6 @@ cat > ${DEST}/INSTALL << "EOF"
 
 cp -rf --remove-destination usr /
 
-[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 

@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
-export VER=0.7.0
-export DEST=/binary/libinput-${VER}
+export VER=4.11.2
+export DEST=/binary/xfwm4-${VER}
 
-pushd libinput-${VER}
+pushd xfwm4-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
@@ -14,7 +14,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf libinput-${VER}
+rm -rf xfwm4-${VER}
 
 find ${DEST} -name "*.la" -delete
 
@@ -33,7 +33,8 @@ cat > ${DEST}/INSTALL << "EOF"
 
 cp -rf --remove-destination usr /
 
-[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
 EOF
 
 chmod 755 ${DEST}/INSTALL

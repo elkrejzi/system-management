@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
-export VER=0.7.0
-export DEST=/binary/libinput-${VER}
+export VER=3.0.1
+export DEST=/binary/gtk-xfce-engine-${VER}
 
-pushd libinput-${VER}
+pushd gtk-xfce-engine-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
@@ -14,7 +14,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf libinput-${VER}
+rm -rf gtk-xfce-engine-${VER}
 
 find ${DEST} -name "*.la" -delete
 
@@ -32,8 +32,6 @@ cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
 cp -rf --remove-destination usr /
-
-[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 
 chmod 755 ${DEST}/INSTALL

@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
-export VER=0.7.0
-export DEST=/binary/libinput-${VER}
+export VER=0.2.2
+export DEST=/binary/lxappearance-obconf-${VER}
 
-pushd libinput-${VER}
+pushd lxappearance-obconf-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
@@ -14,7 +14,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf libinput-${VER}
+rm -rf lxappearance-obconf-${VER}
 
 find ${DEST} -name "*.la" -delete
 
@@ -32,8 +32,6 @@ cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
 cp -rf --remove-destination usr /
-
-[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 
 chmod 755 ${DEST}/INSTALL
