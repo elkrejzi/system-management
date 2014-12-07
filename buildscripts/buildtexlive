@@ -52,6 +52,11 @@ rm -rf texlive-${VER}-source
 
 tar --exclude=*/texmf-dist/doc --exclude=*/texmf-dist/source --strip-components=1 -xf texlive-${VER}-texmf.tar.xz -C ${DEST}/usr/share
 
+sed -i "s@TEXMFROOT = \$SELFAUTOPARENT@TEXMFROOT = /usr/share@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
+sed -i "s@TEXMFSYSVAR = \$TEXMFROOT/texmf-var@TEXMFSYSVAR = /var/lib/texmf@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
+sed -i "s@TEXMFSYSCONFIG = \$TEXMFROOT/texmf-config@TEXMFSYSCONFIG = /etc/texmf@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
+sed -i "s@TEXMFHOME = ~/texmf@TEXMFHOME = ~/.texmf@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
+
 find ${DEST} -name "*.la" -delete
 
 rm -rf ${DEST}/usr/share/info/dir
@@ -71,6 +76,9 @@ cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
 cp -rf --remove-destination usr /
+
+/usr/bin/mktexlsr
+/usr/bin/fmtutil-sys --all 1>/dev/null
 
 [ -x /usr/bin/install-info ] && echo "Processing triggers for texinfo" && for file in usr/share/info/* ; do /usr/bin/install-info /$file /usr/share/info/dir ; done
 [ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
