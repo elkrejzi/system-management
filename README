@@ -1,0 +1,105 @@
+[blfs-support] Revealing my LFS/BLFS cookbook
+Armin K. krejzi at email.com
+Fri Nov 21 16:56:36 PST 2014
+
+Hi everyone,
+
+I was kinda bored and decided to go over my system management stuff for
+LFS. I was able to get all of it in one place, so I decided to create a
+git repository with all the stuff I use to manage main LFS system. It
+can be found on my github:
+
+https://github.com/elkrejzi/system-management
+
+Few notes about it:
+
+buildscripts directory contains (like the name says) the scripts used to
+build packages on my system. But - all of them were written to be ran as
+root (too lazy) given that I build most if not all of them before I
+reboot into my final system.
+
+All buildscripts build a kind of "binary package" which installs to
+/binary/$packagename-$packageversion most of the time, with an ./INSTALL
+scripts which is used to copy files to the rootfs.
+
+The scripts directory contain some files that operate on such
+directories, like makedebug or pkgremove. The latter is used to remove a
+package from your system, but it has to be run from
+/binary/$packagename-$packageversion since I was too lazy to implement
+anything else. checkdeps script is used to check what is linked to a
+given library, ie "checkdeps libavcodec.so.56" is used to check what's
+linked against ffmpeg's avcodec library so you can check what needs to
+be rebuilt after updating the package.
+
+Some packages were written with multilib in mind, which requires
+additional configuration in the "Creating essential files and symlinks"
+stage (no script does that), but most of my "root skeleton" is available
+in "rootfs" directory. git didn't allow me to keep empty directories, so
+I created a tarball that contains all of the rootfs tree.
+
+Besides additional configuration needed for multilib, the multilib
+capable compiler is needed too. There is a file named "multilib
+toolchain.txt" in the root directory which contains instructions (which
+I am not sure that work anymore) I used to build my toolchain in the
+past. The instructions were written against an older version of gcc
+(4.9.0) and glibc (2.19) but could be easily made to work with latest
+development LFS.
+
+If that fails, there's a file named "glibc 32 bit.txt" which contains
+instructions on how to build a 32 bit glibc using another cross compiler
+on an already built system (the instructions used when I first time
+bootstrapped multilib toolchain) but that would need adjusting some of
+the scripts (namely glibc and gcc ones) - the former to avoid build of
+the 32 bit glibc since it would fail without 32 bit capable gcc in
+/tools and gcc for --enable-bootstrap so it could cross compile itself
+to work on 32 bit when only 32 bit glibc is present.
+
+In the build scripts, you will ocassionally see a hardcoded path -
+/media/ntfs/Other/Linux. The files in git repository are from that path,
+so the hierarchy of the git repository is actually hierarchy of
+/media/ntfs/Other/Linux on my system, which is a hardcoded path in many
+scripts. Simple sed works fine.
+
+The packages directory contains few tarballs that don't change often (or
+are git snapshots) that make my life easier during the builds. Some of
+them may be additionally patched and recreated as tarballs. Use at your
+own risk (not that there's any malicious code).
+
+The patches subdirectory contains like the name says - patches. Some of
+them are just patches from LFS/BLFS while others are either expanded,
+not available in the books or for packages not in the books.
+
+The root directory contains some scripts and additional text files, but
+the most interesting one may be the "order.txt" one. The file contains
+my order of how I build packages and what packages I build. Note that
+all buildscripts and order were made so that they would install almost
+everything a package can offer. No script runs a test suite, so the
+order is slightly different. It's what I call a LFS/BLFS in one go.
+
+I don't know how useful this may be to someone, but I suppose one could
+find some interesting stuff there. The repository content is provided
+as-is, without any warranty or whatsoever. Everything you use from there
+you do so at your own risk and I don't want to be held responsible for
+any damage that the content of a git repository may inflict on an users'
+system.
+
+Don't hesitate to ask about anything that's provided there, either on
+mailing lists or off lists.
+
+I don't have any license, but I suppose any that covers what I said
+above should suffice (MIT Like License).
+
+Cheers.
+
+-- 
+Note: My last name is not Krejzi.
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: signature.asc
+Type: application/pgp-signature
+Size: 819 bytes
+Desc: OpenPGP digital signature
+URL: <http://lists.linuxfromscratch.org/pipermail/blfs-support/attachments/20141122/2c7114c8/attachment.sig>
+
+Too lazy to write a normal README file. Improvements welcome.
