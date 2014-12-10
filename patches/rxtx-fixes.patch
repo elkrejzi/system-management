@@ -1,0 +1,86 @@
+diff -Naur a/src/gnu/io/RXTXCommDriver.java b/src/gnu/io/RXTXCommDriver.java
+--- a/src/gnu/io/RXTXCommDriver.java	2008-11-14 01:44:01.000000000 +0100
++++ b/src/gnu/io/RXTXCommDriver.java	2014-12-09 23:53:08.075979750 +0100
+@@ -574,20 +574,7 @@
+ 					if(osName.equals("Linux"))
+ 					{
+ 						String[] Temp = {
+-						"ttyS", // linux Serial Ports
+ 						"ttySA", // for the IPAQs
+-						"ttyUSB", // for USB frobs
+-						"rfcomm",       // bluetooth serial device
+-						"ttyircomm", // linux IrCommdevices (IrDA serial emu)
+-						};
+-						CandidatePortPrefixes=Temp;
+-					}
+-					else if(osName.equals("Linux-all-ports"))
+-					{
+-					/* if you want to enumerate all ports ~5000
+-					   possible, then replace the above with this
+-					*/
+-						String[] Temp = {
+ 						"comx",      // linux COMMX synchronous serial card
+ 						"holter",    // custom card for heart monitoring
+ 						"modem",     // linux symbolic link to modem.
+diff -Naur a/src/I2CImp.c b/src/I2CImp.c
+--- a/src/I2CImp.c	2007-04-26 07:26:05.000000000 +0200
++++ b/src/I2CImp.c	2014-12-09 23:52:58.484745049 +0100
+@@ -125,7 +125,7 @@
+ 	sigaction( SIGIO, NULL, &handler );
+ 	if( !handler.sa_handler ) signal( SIGIO, SIG_IGN );
+ #endif /* !__FreeBSD__ */
+-#if defined(__linux__) 
++#if defined(DEBUG) && defined(__linux__) && defined(UTS_RELEASE) 
+ 	/* Lets let people who upgraded kernels know they may have problems */
+ 	if (uname (&name) == -1)
+ 	{
+diff -Naur a/src/RawImp.c b/src/RawImp.c
+--- a/src/RawImp.c	2007-11-18 23:32:42.000000000 +0100
++++ b/src/RawImp.c	2014-12-09 23:52:58.485745073 +0100
+@@ -270,7 +270,7 @@
+ 	sigaction( SIGIO, NULL, &handler );
+ 	if( !handler.sa_handler ) signal( SIGIO, SIG_IGN );
+ #endif /* !__FreeBSD__ */
+-#if defined(__linux__) 
++#if defined(DEBUG) && defined(__linux__) && defined(UTS_RELEASE) 
+ 	/* Lets let people who upgraded kernels know they may have problems */
+ 	if (uname (&name) == -1)
+ 	{
+diff -Naur a/src/RS485Imp.c b/src/RS485Imp.c
+--- a/src/RS485Imp.c	2007-04-26 07:26:05.000000000 +0200
++++ b/src/RS485Imp.c	2014-12-09 23:52:58.485745073 +0100
+@@ -125,7 +125,7 @@
+ 	sigaction( SIGIO, NULL, &handler );
+ 	if( !handler.sa_handler ) signal( SIGIO, SIG_IGN );
+ #endif /* !__FreeBSD__ */
+-#if defined(__linux__) 
++#if defined(DEBUG) && defined(__linux__) && defined(UTS_RELEASE) 
+ 	/* Lets let people who upgraded kernels know they may have problems */
+ 	if (uname (&name) == -1)
+ 	{
+diff -Naur a/src/SerialImp.c b/src/SerialImp.c
+--- a/src/SerialImp.c	2009-02-04 23:06:16.000000000 +0100
++++ b/src/SerialImp.c	2014-12-09 23:52:35.694182053 +0100
+@@ -5336,8 +5336,8 @@
+ 	 *
+ 	 */
+ 	int fd,j;
+-	char lockinfo[12], message[80];
+-	char file[80], *p;
++	char lockinfo[12], message[200];
++	char file[200], *p;
+ 
+ 	j = strlen( filename );
+ 	p = ( char * ) filename + j;
+diff -Naur a/src/SerialImp.h b/src/SerialImp.h
+--- a/src/SerialImp.h	2009-02-04 23:01:36.000000000 +0100
++++ b/src/SerialImp.h	2014-12-09 23:52:47.871483811 +0100
+@@ -157,7 +157,7 @@
+ #	endif /* CMSPAR */
+ #	
+ #	define DEVICEDIR "/dev/"
+-#	define LOCKDIR "/var/lock"
++#	define LOCKDIR "/var/lock/lockdev"
+ #	define LOCKFILEPREFIX "LCK.."
+ #	define FHS
+ #endif /* __linux__ */

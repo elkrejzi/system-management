@@ -1,0 +1,76 @@
+#!/bin/bash -e
+
+export VER=2.24
+export DEST=/binary/avr-binutils-${VER}
+
+mv binutils-${VER} src
+
+pushd src
+
+if [ -f /media/ntfs/Other/Linux/patches/binutils-avr-fixes.patch ]; then
+   patch -Np0 -i /media/ntfs/Other/Linux/patches/binutils-avr-fixes.patch
+fi
+
+sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
+
+popd
+
+mkdir build
+
+pushd build
+
+CFLAGS="-O2 -pipe"   \
+CXXFLAGS="-O2 -pipe" \
+../src/configure --prefix=/usr --with-pkgversion="Krejzi ${VER}"    \
+                 --enable-gold --enable-ld=default --enable-plugins \
+                 --enable-shared --enable-threads --disable-werror  \
+                 --disable-multilib --with-pic --build=$(../src/config.guess) \
+                 --target=avr --with-lib-path=/usr/lib:/usr/local/lib
+
+make configure-host
+make tooldir=/usr -j4
+
+make install tooldir=/usr DESTDIR=${DEST}
+
+popd
+
+rm -rf src build
+
+find ${DEST} -name "*.la" -delete
+
+for bin in ar as nm objcopy objdump ranlib strip
+do
+    rm -f ${DEST}/usr/bin/${bin}
+done
+
+rm -rf ${DEST}/usr/share/man/man1/avr-{dlltool,nlmconv,windres,windmc}.1
+rm -rf ${DEST}/usr/share/info/{configure,standards}.info
+
+for info in as bfd binutils gprof ld
+do
+    mv ${DEST}/usr/share/info/${info}.info ${DEST}/usr/share/info/avr-${info}.info
+done
+
+rm -rf ${DEST}/usr/share/info/dir ${DEST}/usr/share/info/*.gz ${DEST}/usr/share/locale
+gzip -9 ${DEST}/usr/share/info/*
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/install-info ] && echo "Processing triggers for texinfo" && for file in usr/share/info/* ; do /usr/bin/install-info /$file /usr/share/info/dir ; done
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

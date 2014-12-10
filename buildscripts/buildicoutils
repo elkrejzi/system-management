@@ -1,25 +1,20 @@
 #!/bin/bash -e
 
-export VER=1.16.1
-export DEST=/binary/wget-${VER}
+export VER=0.31.0
+export DEST=/binary/icoutils-${VER}
 
-pushd wget-${VER}
+pushd icoutils-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr      \
-            --sysconfdir=/etc  \
-            --with-ssl=openssl 
+./configure --prefix=/usr
 
 make -j4
 make install DESTDIR=${DEST}
 
 popd
 
-rm -rf wget-${VER}
-
-rm -rf ${DEST}/usr/share/info/dir ${DEST}/usr/share/man/fr
-gzip -9 ${DEST}/usr/share/info/*
+rm -rf icoutils-${VER}
 
 pushd ${DEST}
 
@@ -34,9 +29,8 @@ popd
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
-for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+cp -rf --remove-destination usr /
 
-[ -x /usr/bin/install-info ] && echo "Processing triggers for texinfo" && for file in usr/share/info/* ; do /usr/bin/install-info /$file /usr/share/info/dir ; done
 [ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
 EOF
 

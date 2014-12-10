@@ -1,0 +1,26 @@
+#!/bin/bash -e
+
+export VER=0.3.5
+export DEST=/binary/dblatex-${VER}
+
+pushd dblatex-${VER}
+
+python setup.py install --prefix=/usr  \
+                        --optimize=1   \
+                        --root=${DEST}
+
+popd
+
+rm -rf dblatex-${VER}
+
+rm -rf ${DEST}/usr/share/doc
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

@@ -1,0 +1,75 @@
+#!/bin/bash
+
+export MAJOR=1.8.0
+export PATCH=25
+export VER="${MAJOR}"u"${PATCH}"
+export DIR=jdk"${MAJOR}"_"${PATCH}"
+export DEST=/binary/jdk-${VER}
+
+if [[ $(uname -m) = "x86_64" ]]
+then
+   export ARCH=amd64
+else
+   export ARCH=x86
+fi
+
+rm -rf ${DIR}/jre/lib/fontconfig.*
+rm -rf ${DIR}/jre/plugin ${DIR}/man/ja ${DIR}/man/ja_JP.UTF-8
+rm -rf ${DIR}/jre/Welcome.html ${DIR}/README.html
+rm -rf ${DIR}/db ${DIR}/javafx-src.zip ${DIR}/src.zip
+
+rm -rf ${DIR}{,/jre}/{COPYRIGHT,LICENSE}
+rm -rf ${DIR}{,/jre}/{README,release}
+rm -rf ${DIR}{,/jre}/THIRDPARTYLICENSEREADME{,-JAVAFX}.txt
+
+find ${DIR}/lib -name "*.so" | xargs chmod 755
+
+install -dm755 ${DEST}/etc/profile.d \
+               ${DEST}/usr/bin/ \
+               ${DEST}/usr/lib/mozilla/plugins/ \
+               ${DEST}/usr/share/fonts/truetype/
+
+mv ${DIR}/jre/lib/desktop/* ${DEST}/usr/share/
+mv ${DIR}/jre/lib/fonts ${DEST}/usr/share/fonts/truetype/lucida
+mv ${DIR}/man ${DEST}/usr/share/
+
+rmdir ${DIR}/jre/lib/desktop
+
+mv ${DIR} ${DEST}/usr/lib/java
+
+for file in ${DEST}/usr/lib/java/bin/*
+do
+  ln -sf ../lib/java/bin/$(basename $file) ${DEST}/usr/bin/$(basename $file)
+done
+
+for file in ${DEST}/usr/lib/java/jre/bin/*
+do
+  ln -sf ../lib/java/jre/bin/$(basename $file) ${DEST}/usr/bin/$(basename $file)
+done
+
+ln -sf ../../../../share/fonts/truetype/lucida ${DEST}/usr/lib/java/jre/lib/fonts
+ln -sf ../../java/jre/lib/${ARCH}/libnpjp2.so ${DEST}/usr/lib/mozilla/plugins/libnpjp2.so
+
+sed s:.png:: -i ${DEST}/usr/share/applications/*.desktop
+
+cat > ${DEST}/etc/profile.d/jre.sh << "EOF"
+# Begin /etc/profile.d/jre.sh
+
+export JAVA_HOME=/usr/lib/java
+
+# End /etc/profile.d/jre.sh
+EOF
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/update-mime-database ] && echo "Processing triggers for shared-mime-info" && /usr/bin/update-mime-database /usr/share/mime
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -q /usr/share/icons/hicolor
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+[ -x /usr/bin/fc-cache ] && echo "Processing triggers for fontconfig" && /usr/bin/fc-cache /usr/share/fonts/truetype/lucida
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
-export VER=3.8.7.3
-export PKGVER=3080703
+export VER=3.8.7.4
+export PKGVER=3080704
 export DEST=/binary/sqlite-${VER}
 
 pushd sqlite-autoconf-${PKGVER}

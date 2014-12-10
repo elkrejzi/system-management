@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.4.0-rc
+export VER=5.4.0
 export DEST=/binary/qt-${VER}
 
 if [ -e /media/ntfs/Other/Linux/patches/qt5fixes.patch ]; then
@@ -35,8 +35,7 @@ sed -i "/^QMAKE_LFLAGS_RPATH/s| -Wl,-rpath,||g" qtbase/mkspecs/common/gcc-base-u
             -nomake examples    \
             -no-rpath           \
             -optimized-qmake    \
-            -no-use-gold-linker \
-            -skip qtwebengine
+            -no-use-gold-linker
 
 make -j4
 

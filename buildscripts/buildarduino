@@ -1,0 +1,101 @@
+#!/bin/bash -e
+
+export VER=1.0.6
+export DEST=/binary/arduino-${VER}
+
+pushd arduino-${VER}
+
+install -dm755 ${DEST}/usr/bin ${DEST}/usr/lib/arduino ${DEST}/usr/share/applications ${DEST}/usr/share/mime
+
+cp -a . ${DEST}/usr/lib/arduino
+
+icotool -x -o . lib/arduino_icon.ico
+
+ln -sf /usr/lib/librxtxSerial.so ${DEST}/usr/lib/arduino/lib/librxtxSerial.so
+ln -sf /usr/lib/librxtxSerial.so ${DEST}/usr/lib/arduino/lib/librxtxSerial64.so
+ln -sf /usr/share/java/rxtx/RXTXcomm.jar ${DEST}/usr/lib/arduino/lib/RXTXcomm.jar
+
+ln -sf /usr/lib/arduino/arduino ${DEST}/usr/bin/arduino
+
+for size in 16 32 48 256; do
+    install -Dm644 arduino_icon_*_${size}x${size}x32.png ${DEST}/usr/share/icons/hicolor/${size}x${size}/apps/arduino.png
+done
+
+popd
+
+rm -rf arduino-${VER}
+
+rm -rf ${DEST}/usr/lib/arduino/hardware/tools/avr
+
+cat > ${DEST}/usr/share/applications/arduino.desktop << "EOF"
+[Desktop Entry]
+Name=Arduino
+GenericName=Arduino IDE
+Comment=The open-source Arduino environment
+TryExec=arduino
+Exec=arduino %U
+Icon=arduino
+Type=Application
+Terminal=false
+MimeType=text/x-arduino;
+Categories=Development;
+EOF
+
+cat > ${DEST}/usr/share/mime/arduino.xml << "EOF"
+<?xml version='1.0' encoding='utf-8'?>
+<!-- Copied from the Ubuntu package -->
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+    <mime-type type="text/x-arduino">
+        <comment>Arduino source code</comment>
+        <comment xml:lang="ara">شفرة مصدر Arduino</comment>
+        <comment xml:lang="be@latin">Kryničny kod Arduino</comment>
+        <comment xml:lang="bg">Изходен код на Arduino</comment>
+        <comment xml:lang="ca">codi font en Arduino</comment>
+        <comment xml:lang="da">Arduinokildekode</comment>
+        <comment xml:lang="de">Arduino-Quelltext</comment>
+        <comment xml:lang="el">πηγαίος κώδικας Arduino</comment>
+        <comment xml:lang="en_GB">Arduino source code</comment>
+        <comment xml:lang="eo">Arduino-fontkodo</comment>
+        <comment xml:lang="es">código fuente en Arduino</comment>
+        <comment xml:lang="eu">Arduino iturburu-kodea</comment>
+        <comment xml:lang="fi">Arduino-lähdekoodi</comment>
+        <comment xml:lang="fr">code source Arduino</comment>
+        <comment xml:lang="ga">cód foinseach Arduino</comment>
+        <comment xml:lang="hu">Arduino-forráskód</comment>
+        <comment xml:lang="id">Kode program Arduino</comment>
+        <comment xml:lang="it">Codice sorgente Arduino</comment>
+        <comment xml:lang="ja">Arduino ソースコード</comment>
+        <comment xml:lang="lt">Arduino pradinis kodas</comment>
+        <comment xml:lang="lv">Arduino pirmkods</comment>
+        <comment xml:lang="ms">Kod sumber Arduino</comment>
+        <comment xml:lang="nb">Arduino-kildekode</comment>
+        <comment xml:lang="nl">Arduino-broncode</comment>
+        <comment xml:lang="nn">Arduino-kjeldekode</comment>
+        <comment xml:lang="pl">Kod źródłowy Arduino</comment>
+        <comment xml:lang="pt">código fonte Arduino</comment>
+        <comment xml:lang="pt_BR">Código fonte Arduino</comment>
+        <comment xml:lang="ru">исходный код Arduino</comment>
+        <comment xml:lang="sq">Kod burues Arduino</comment>
+        <comment xml:lang="sv">Arduino-källkod</comment>
+        <comment xml:lang="uk">Вихідний код на мові Arduino</comment>
+        <comment xml:lang="vi">Mã nguồn Arduino</comment>
+        <comment xml:lang="zh_CN">Arduino 源代码</comment>
+        <comment xml:lang="zh_TW">Arduino 源代碼</comment>
+        <sub-class-of type="text/x-c++src"/>
+        <glob pattern="*.ino"/>
+        <glob pattern="*.pde"/>
+    </mime-type>
+</mime-info>
+EOF
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/update-mime-database ] && echo "Processing triggers for shared-mime-info" && /usr/bin/update-mime-database /usr/share/mime
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+EOF
+
+chmod 755 ${DEST}/INSTALL
