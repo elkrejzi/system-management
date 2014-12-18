@@ -1,7 +1,6 @@
-diff -Naur a/Makefile.am b/Makefile.am
---- a/Makefile.am	2014-10-28 18:49:51.860848669 +0100
-+++ b/Makefile.am	2014-10-29 22:13:32.367028216 +0100
-@@ -2677,7 +2677,11 @@
+--- a/Makefile.am	2014-12-10 23:20:36.230456730 +0100
++++ b/Makefile.am	2014-12-11 12:57:29.628553382 +0100
+@@ -2782,7 +2782,11 @@
  UNINSTALL_EXEC_HOOKS += libsystemd-uninstall-hook
  
  pkgconfiglib_DATA += \
@@ -14,7 +13,7 @@ diff -Naur a/Makefile.am b/Makefile.am
  
  pkginclude_HEADERS += \
  	src/systemd/sd-login.h \
-@@ -5672,12 +5676,6 @@
+@@ -5801,12 +5805,6 @@
  	libsystemd-id128.la \
  	libsystemd-daemon.la
  
@@ -27,187 +26,186 @@ diff -Naur a/Makefile.am b/Makefile.am
  # move lib from $(libdir) to $(rootlibdir) and update devel link, if needed
  compat-lib-install-hook:
  	libname=libsystemd-login.so && $(move-to-rootlibdir)
-diff -Naur a/Makefile.in b/Makefile.in
---- a/Makefile.in	2014-10-28 18:50:14.527941307 +0100
-+++ b/Makefile.in	2014-10-29 22:13:32.373028297 +0100
-@@ -1342,21 +1342,18 @@
+--- a/Makefile.in	2014-12-10 23:21:07.050383310 +0100
++++ b/Makefile.in	2014-12-11 12:57:29.632553440 +0100
+@@ -1369,21 +1369,18 @@
  @ENABLE_COMPAT_LIBS_TRUE@	libsystemd-id128.la \
  @ENABLE_COMPAT_LIBS_TRUE@	libsystemd-daemon.la
  
--@ENABLE_COMPAT_LIBS_TRUE@am__append_302 = \
+-@ENABLE_COMPAT_LIBS_TRUE@am__append_311 = \
 -@ENABLE_COMPAT_LIBS_TRUE@	src/compat-libs/libsystemd-journal.pc \
 -@ENABLE_COMPAT_LIBS_TRUE@	src/compat-libs/libsystemd-login.pc \
 -@ENABLE_COMPAT_LIBS_TRUE@	src/compat-libs/libsystemd-id128.pc \
 -@ENABLE_COMPAT_LIBS_TRUE@	src/compat-libs/libsystemd-daemon.pc
 -
--@ENABLE_COMPAT_LIBS_TRUE@am__append_303 = compat-lib-install-hook
--@ENABLE_COMPAT_LIBS_TRUE@am__append_304 = compat-lib-uninstall-hook
--@ENABLE_MANPAGES_TRUE@am__append_305 = \
-+@ENABLE_COMPAT_LIBS_TRUE@am__append_302 = compat-lib-install-hook
-+@ENABLE_COMPAT_LIBS_TRUE@am__append_303 = compat-lib-uninstall-hook
-+@ENABLE_MANPAGES_TRUE@am__append_304 = \
+-@ENABLE_COMPAT_LIBS_TRUE@am__append_312 = compat-lib-install-hook
+-@ENABLE_COMPAT_LIBS_TRUE@am__append_313 = compat-lib-uninstall-hook
+-@ENABLE_MANPAGES_TRUE@am__append_314 = \
++@ENABLE_COMPAT_LIBS_TRUE@am__append_311 = compat-lib-install-hook
++@ENABLE_COMPAT_LIBS_TRUE@am__append_312 = compat-lib-uninstall-hook
++@ENABLE_MANPAGES_TRUE@am__append_313 = \
  @ENABLE_MANPAGES_TRUE@	man/custom-entities.ent
- 
--@HAVE_SYSV_COMPAT_TRUE@am__append_306 = \
-+@HAVE_SYSV_COMPAT_TRUE@am__append_305 = \
- @HAVE_SYSV_COMPAT_TRUE@	docs/sysvinit/README \
- @HAVE_SYSV_COMPAT_TRUE@	docs/var-log/README
- 
-+@HAVE_SYSV_COMPAT_TRUE@@HAVE_UTMP_TRUE@am__append_306 = \
-+@HAVE_SYSV_COMPAT_TRUE@@HAVE_UTMP_TRUE@	systemd-update-utmp-runlevel.service
-+
- @HAVE_SYSV_COMPAT_TRUE@@HAVE_UTMP_TRUE@am__append_307 = \
- @HAVE_SYSV_COMPAT_TRUE@@HAVE_UTMP_TRUE@	systemd-update-utmp-runlevel.service
- 
-@@ -1369,13 +1366,10 @@
- @HAVE_SYSV_COMPAT_TRUE@@HAVE_UTMP_TRUE@am__append_310 = \
- @HAVE_SYSV_COMPAT_TRUE@@HAVE_UTMP_TRUE@	systemd-update-utmp-runlevel.service
- 
--@HAVE_SYSV_COMPAT_TRUE@@HAVE_UTMP_TRUE@am__append_311 = \
--@HAVE_SYSV_COMPAT_TRUE@@HAVE_UTMP_TRUE@	systemd-update-utmp-runlevel.service
--
--@HAVE_UTMP_TRUE@am__append_312 = \
-+@HAVE_UTMP_TRUE@am__append_311 = \
- @HAVE_UTMP_TRUE@	systemd-update-utmp.service
- 
--@HAVE_SYSV_COMPAT_TRUE@am__append_313 = \
-+@HAVE_SYSV_COMPAT_TRUE@am__append_312 = \
- @HAVE_SYSV_COMPAT_TRUE@	poweroff.target runlevel0.target \
- @HAVE_SYSV_COMPAT_TRUE@	rescue.target runlevel1.target \
- @HAVE_SYSV_COMPAT_TRUE@	multi-user.target runlevel2.target \
-@@ -1384,28 +1378,28 @@
- @HAVE_SYSV_COMPAT_TRUE@	graphical.target runlevel5.target \
- @HAVE_SYSV_COMPAT_TRUE@	reboot.target runlevel6.target
- 
--@ENABLE_KDBUS_TRUE@am__append_314 = \
-+@ENABLE_KDBUS_TRUE@am__append_313 = \
- @ENABLE_KDBUS_TRUE@	$(systemunitdir)/busnames.target busnames.target
  
 -@HAVE_SYSV_COMPAT_TRUE@am__append_315 = \
 +@HAVE_SYSV_COMPAT_TRUE@am__append_314 = \
+ @HAVE_SYSV_COMPAT_TRUE@	docs/sysvinit/README \
+ @HAVE_SYSV_COMPAT_TRUE@	docs/var-log/README
+ 
++@HAVE_SYSV_COMPAT_TRUE@@HAVE_UTMP_TRUE@am__append_315 = \
++@HAVE_SYSV_COMPAT_TRUE@@HAVE_UTMP_TRUE@	systemd-update-utmp-runlevel.service
++
+ @HAVE_SYSV_COMPAT_TRUE@@HAVE_UTMP_TRUE@am__append_316 = \
+ @HAVE_SYSV_COMPAT_TRUE@@HAVE_UTMP_TRUE@	systemd-update-utmp-runlevel.service
+ 
+@@ -1396,13 +1393,10 @@
+ @HAVE_SYSV_COMPAT_TRUE@@HAVE_UTMP_TRUE@am__append_319 = \
+ @HAVE_SYSV_COMPAT_TRUE@@HAVE_UTMP_TRUE@	systemd-update-utmp-runlevel.service
+ 
+-@HAVE_SYSV_COMPAT_TRUE@@HAVE_UTMP_TRUE@am__append_320 = \
+-@HAVE_SYSV_COMPAT_TRUE@@HAVE_UTMP_TRUE@	systemd-update-utmp-runlevel.service
+-
+-@HAVE_UTMP_TRUE@am__append_321 = \
++@HAVE_UTMP_TRUE@am__append_320 = \
+ @HAVE_UTMP_TRUE@	systemd-update-utmp.service
+ 
+-@HAVE_SYSV_COMPAT_TRUE@am__append_322 = \
++@HAVE_SYSV_COMPAT_TRUE@am__append_321 = \
+ @HAVE_SYSV_COMPAT_TRUE@	poweroff.target runlevel0.target \
+ @HAVE_SYSV_COMPAT_TRUE@	rescue.target runlevel1.target \
+ @HAVE_SYSV_COMPAT_TRUE@	multi-user.target runlevel2.target \
+@@ -1411,28 +1405,28 @@
+ @HAVE_SYSV_COMPAT_TRUE@	graphical.target runlevel5.target \
+ @HAVE_SYSV_COMPAT_TRUE@	reboot.target runlevel6.target
+ 
+-@ENABLE_KDBUS_TRUE@am__append_323 = \
++@ENABLE_KDBUS_TRUE@am__append_322 = \
+ @ENABLE_KDBUS_TRUE@	$(systemunitdir)/busnames.target busnames.target
+ 
+-@HAVE_SYSV_COMPAT_TRUE@am__append_324 = \
++@HAVE_SYSV_COMPAT_TRUE@am__append_323 = \
  @HAVE_SYSV_COMPAT_TRUE@	$(systemunitdir)/runlevel1.target.wants \
  @HAVE_SYSV_COMPAT_TRUE@	$(systemunitdir)/runlevel2.target.wants \
  @HAVE_SYSV_COMPAT_TRUE@	$(systemunitdir)/runlevel3.target.wants \
  @HAVE_SYSV_COMPAT_TRUE@	$(systemunitdir)/runlevel4.target.wants \
  @HAVE_SYSV_COMPAT_TRUE@	$(systemunitdir)/runlevel5.target.wants
  
--@HAVE_SYSV_COMPAT_TRUE@am__append_316 = \
-+@HAVE_SYSV_COMPAT_TRUE@am__append_315 = \
+-@HAVE_SYSV_COMPAT_TRUE@am__append_325 = \
++@HAVE_SYSV_COMPAT_TRUE@am__append_324 = \
  @HAVE_SYSV_COMPAT_TRUE@	--with-sysvinit-path=$$dc_install_base/$(sysvinitdir) \
  @HAVE_SYSV_COMPAT_TRUE@	--with-sysvrcnd-path=$$dc_install_base/$(sysvrcnddir)
  
--@HAVE_SYSV_COMPAT_FALSE@am__append_317 = \
-+@HAVE_SYSV_COMPAT_FALSE@am__append_316 = \
+-@HAVE_SYSV_COMPAT_FALSE@am__append_326 = \
++@HAVE_SYSV_COMPAT_FALSE@am__append_325 = \
  @HAVE_SYSV_COMPAT_FALSE@	--with-sysvinit-path= \
  @HAVE_SYSV_COMPAT_FALSE@	--with-sysvrcnd-path=
  
--@HAVE_PYTHON_TRUE@am__append_318 = \
-+@HAVE_PYTHON_TRUE@am__append_317 = \
+-@HAVE_PYTHON_TRUE@am__append_327 = \
++@HAVE_PYTHON_TRUE@am__append_326 = \
  @HAVE_PYTHON_TRUE@	--with-python
  
--@ENABLE_GTK_DOC_TRUE@am__append_319 = \
-+@ENABLE_GTK_DOC_TRUE@am__append_318 = \
+-@ENABLE_GTK_DOC_TRUE@am__append_328 = \
++@ENABLE_GTK_DOC_TRUE@am__append_327 = \
  @ENABLE_GTK_DOC_TRUE@	--enable-gtk-doc
  
  subdir = .
-@@ -5050,8 +5044,8 @@
- 	$(am__append_274) $(am__append_297) $(nodist_systemunit_DATA) \
+@@ -5053,8 +5047,8 @@
+ 	$(am__append_306) $(nodist_systemunit_DATA) \
  	$(nodist_userunit_DATA) $(pkgconfigdata_DATA) \
  	$(pkgconfiglib_DATA) $(nodist_polkitpolicy_DATA) \
--	$(am__append_306) defined undefined
--DISTCLEANFILES = $(am__append_305)
-+	$(am__append_305) defined undefined
-+DISTCLEANFILES = $(am__append_304)
+-	$(am__append_315) defined undefined
+-DISTCLEANFILES = $(am__append_314)
++	$(am__append_314) defined undefined
++DISTCLEANFILES = $(am__append_313)
  
  # Really, do not edit this file.
  EXTRA_DIST = shell-completion/bash/systemctl.in \
-@@ -5277,10 +5271,10 @@
- 	systemd-detect-virt-install-hook $(am__append_105) \
- 	bus-proxyd-install-hook libsystemd-install-hook \
- 	libudev-install-hook $(am__append_140) journal-install-hook \
--	$(am__append_303)
-+	$(am__append_302)
- UNINSTALL_EXEC_HOOKS = $(am__append_106) bus-proxyd-uninstall-hook \
+@@ -5313,10 +5307,10 @@
+ 	systemd-detect-virt-install-hook $(am__append_106) \
+ 	bus-proxyd-install-hook $(am__append_113) \
+ 	libsystemd-install-hook libudev-install-hook $(am__append_144) \
+-	journal-install-hook $(am__append_312)
++	journal-install-hook $(am__append_311)
+ UNINSTALL_EXEC_HOOKS = $(am__append_107) bus-proxyd-uninstall-hook \
  	libsystemd-uninstall-hook libudev-uninstall-hook \
--	journal-uninstall-hook $(am__append_304)
-+	journal-uninstall-hook $(am__append_303)
+-	journal-uninstall-hook $(am__append_313)
++	journal-uninstall-hook $(am__append_312)
  INSTALL_DATA_HOOKS = units-install-hook hwdb-update-hook \
  	catalog-update-hook
  UNINSTALL_DATA_HOOKS = units-uninstall-hook catalog-remove-hook
-@@ -5320,7 +5314,11 @@
+@@ -5353,7 +5347,11 @@
  include_HEADERS = src/libudev/libudev.h
- noinst_DATA = $(am__append_57) $(am__append_59) $(am__append_122)
+ noinst_DATA = $(am__append_59) $(am__append_61) $(am__append_124)
  pkgconfiglib_DATA = src/libsystemd/libsystemd.pc \
--	src/libudev/libudev.pc $(am__append_131) $(am__append_302)
+-	src/libudev/libudev.pc $(am__append_133) $(am__append_311)
 +	src/compat-libs/libsystemd-journal.pc \
 +	src/compat-libs/libsystemd-login.pc \
 +	src/compat-libs/libsystemd-id128.pc \
 +	src/compat-libs/libsystemd-daemon.pc src/libudev/libudev.pc \
-+	$(am__append_131)
++	$(am__append_133)
  polkitpolicy_in_in_files =  \
  	src/core/org.freedesktop.systemd1.policy.in.in
  polkitpolicy_in_files =  \
-@@ -5460,7 +5458,7 @@
+@@ -5498,7 +5496,7 @@
  # ------------------------------------------------------------------------------
- INSTALL_DIRS = $(am__append_83) $(am__append_89) \
+ INSTALL_DIRS = $(am__append_84) $(am__append_90) \
  	$(sysconfdir)/udev/rules.d $(sysconfdir)/udev/hwdb.d \
--	$(am__append_178) $(am__append_291) $(am__append_315) \
-+	$(am__append_178) $(am__append_291) $(am__append_314) \
+-	$(am__append_182) $(am__append_300) $(am__append_324) \
++	$(am__append_182) $(am__append_300) $(am__append_323) \
  	$(prefix)/lib/modules-load.d $(sysconfdir)/modules-load.d \
  	$(prefix)/lib/systemd/network $(sysconfdir)/systemd/network \
  	$(prefix)/lib/sysctl.d $(sysconfdir)/sysctl.d \
-@@ -5471,11 +5469,11 @@
+@@ -5509,11 +5507,11 @@
  	$(pkgsysconfdir)/system/getty.target.wants \
  	$(pkgsysconfdir)/user $(dbussessionservicedir) \
  	$(sysconfdir)/xdg/systemd
--RUNLEVEL1_TARGET_WANTS = $(am__append_307)
--RUNLEVEL2_TARGET_WANTS = $(am__append_308)
--RUNLEVEL3_TARGET_WANTS = $(am__append_309)
--RUNLEVEL4_TARGET_WANTS = $(am__append_310)
--RUNLEVEL5_TARGET_WANTS = $(am__append_311)
-+RUNLEVEL1_TARGET_WANTS = $(am__append_306)
-+RUNLEVEL2_TARGET_WANTS = $(am__append_307)
-+RUNLEVEL3_TARGET_WANTS = $(am__append_308)
-+RUNLEVEL4_TARGET_WANTS = $(am__append_309)
-+RUNLEVEL5_TARGET_WANTS = $(am__append_310)
+-RUNLEVEL1_TARGET_WANTS = $(am__append_316)
+-RUNLEVEL2_TARGET_WANTS = $(am__append_317)
+-RUNLEVEL3_TARGET_WANTS = $(am__append_318)
+-RUNLEVEL4_TARGET_WANTS = $(am__append_319)
+-RUNLEVEL5_TARGET_WANTS = $(am__append_320)
++RUNLEVEL1_TARGET_WANTS = $(am__append_315)
++RUNLEVEL2_TARGET_WANTS = $(am__append_316)
++RUNLEVEL3_TARGET_WANTS = $(am__append_317)
++RUNLEVEL4_TARGET_WANTS = $(am__append_318)
++RUNLEVEL5_TARGET_WANTS = $(am__append_319)
  SHUTDOWN_TARGET_WANTS = 
  LOCAL_FS_TARGET_WANTS = systemd-remount-fs.service tmp.mount
- MULTI_USER_TARGET_WANTS = $(am__append_292) getty.target \
-@@ -5487,7 +5485,7 @@
- 	systemd-journald.service systemd-journal-flush.service \
- 	systemd-journal-catalog-update.service $(am__append_179) \
- 	$(am__append_182) $(am__append_189) $(am__append_197) \
--	$(am__append_312) systemd-update-done.service \
-+	$(am__append_311) systemd-update-done.service \
+ MULTI_USER_TARGET_WANTS = $(am__append_301) getty.target \
+@@ -5526,7 +5524,7 @@
+ 	systemd-journal-flush.service \
+ 	systemd-journal-catalog-update.service $(am__append_183) \
+ 	$(am__append_187) $(am__append_198) $(am__append_206) \
+-	$(am__append_321) systemd-update-done.service \
++	$(am__append_320) systemd-update-done.service \
  	dev-hugepages.mount dev-mqueue.mount sys-kernel-config.mount \
  	sys-kernel-debug.mount sys-fs-fuse-connections.mount \
  	systemd-sysctl.service systemd-ask-password-console.path
-@@ -5505,7 +5503,7 @@
+@@ -5544,7 +5542,7 @@
  USER_BUSNAMES_TARGET_WANTS = 
- SYSTEM_UNIT_ALIASES = $(am__append_204) $(am__append_215) \
- 	$(am__append_227) $(am__append_250) $(am__append_261) \
--	$(am__append_293) $(am__append_313) graphical.target \
-+	$(am__append_293) $(am__append_312) graphical.target \
+ SYSTEM_UNIT_ALIASES = $(am__append_213) $(am__append_224) \
+ 	$(am__append_236) $(am__append_259) $(am__append_270) \
+-	$(am__append_302) $(am__append_322) graphical.target \
++	$(am__append_302) $(am__append_321) graphical.target \
  	default.target reboot.target ctrl-alt-del.target \
  	getty@.service autovt@.service
  USER_UNIT_ALIASES = $(systemunitdir)/shutdown.target shutdown.target \
-@@ -5516,7 +5514,7 @@
+@@ -5555,7 +5553,7 @@
  	$(systemunitdir)/printer.target printer.target \
  	$(systemunitdir)/sound.target sound.target \
  	$(systemunitdir)/smartcard.target smartcard.target \
--	$(am__append_314)
-+	$(am__append_313)
- GENERAL_ALIASES = $(am__append_236) $(am__append_263) \
- 	$(am__append_272) $(systemunitdir)/remote-fs.target \
+-	$(am__append_323)
++	$(am__append_322)
+ GENERAL_ALIASES = $(am__append_245) $(am__append_272) \
+ 	$(am__append_281) $(systemunitdir)/remote-fs.target \
  	$(pkgsysconfdir)/system/multi-user.target.wants/remote-fs.target \
-@@ -8898,8 +8896,8 @@
+@@ -9047,8 +9045,8 @@
  	--with-pamlibdir=$$dc_install_base/$(pamlibdir) \
  	--with-pamconfdir=$$dc_install_base/$(pamconfdir) \
  	--with-rootprefix=$$dc_install_base --disable-split-usr \
--	--enable-kdbus --enable-compat-libs $(am__append_316) \
--	$(am__append_317) $(am__append_318) $(am__append_319)
-+	--enable-kdbus --enable-compat-libs $(am__append_315) \
-+	$(am__append_316) $(am__append_317) $(am__append_318)
+-	--enable-kdbus --enable-compat-libs $(am__append_325) \
+-	$(am__append_326) $(am__append_327) $(am__append_328)
++	--enable-kdbus --enable-compat-libs $(am__append_324) \
++	$(am__append_325) $(am__append_326) $(am__append_327)
  www_target = www.freedesktop.org:/srv/www.freedesktop.org/www/software/systemd
  OBJECT_VARIABLES := $(filter %_OBJECTS,$(.VARIABLES))
  ALL_OBJECTS := $(foreach v,$(OBJECT_VARIABLES),$($(v)))
