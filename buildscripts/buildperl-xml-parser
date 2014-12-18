@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.41
+export VER=2.43
 export DEST=/binary/perl-xml-parser-${VER}
 
 pushd XML-Parser-${VER}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.13.80-972-g0b35526
+export VER=14.12.0
 export DEST=/binary/kate-${VER}
 
 pushd kate-${VER}

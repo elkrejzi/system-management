@@ -1,23 +1,24 @@
 #!/bin/bash -e
 
-export VER=14.12.0
-export DEST=/binary/libkcddb-${VER}
+export VER=0.3.0
+export DEST=/binary/keybinder-${VER}
 
-pushd libkcddb-${VER}
+pushd keybinder-${VER}
 
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
-      -DKDE4_BUILD_TESTS=OFF      \
-      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-      -Wno-dev
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+./configure --prefix=/usr \
+            --disable-lua \
+            --disable-static
 
 make -j4
 make install DESTDIR=${DEST}
 
 popd
 
-rm -rf libkcddb-${VER}
+rm -rf keybinder-${VER}
+
+find ${DEST} -name "*.la" -delete
 
 pushd ${DEST}
 

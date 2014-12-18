@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.1.1
+export VER=5.1.2
 export DEST=/binary/milou-${VER}
 
 pushd milou-${VER}

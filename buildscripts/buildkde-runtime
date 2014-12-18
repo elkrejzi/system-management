@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.14.3
+export VER=14.12.0
 export DEST=/binary/kde-runtime-${VER}
 
 install -dm755 kde-runtime-${VER}/build
@@ -11,7 +11,7 @@ cmake -DCMAKE_BUILD_TYPE=Release  \
       -DCMAKE_INSTALL_PREFIX=/usr \
       -DCMAKE_SKIP_RPATH=ON       \
       -DKDE4_BUILD_TESTS=OFF      \
-      -DSAMBA_INCLUDE_DIR=/usr/include/samba-4.0          \
+      -DSAMBA_INCLUDE_DIR=/usr/include/samba-4.0 \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
       -Wno-dev ..

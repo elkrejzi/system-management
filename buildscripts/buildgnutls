@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.3.10
+export VER=3.3.11
 export DEST=/binary/gnutls-${VER}
 
 cp -a gnutls-${VER} gnutls-${VER}-32

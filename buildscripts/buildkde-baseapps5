@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.14.2-409-g7c465ab
+export VER=4.14.2-427-gc2a0d3e
 export DEST=/binary/kde-baseapps-${VER}
 
 pushd kde-baseapps-${VER}

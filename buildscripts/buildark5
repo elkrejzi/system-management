@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.14.2-65-g8a32ddf
+export VER=14.12.0-58-gc4d31c3
 export DEST=/binary/ark-${VER}
 
 pushd ark-${VER}

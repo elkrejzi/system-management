@@ -11,7 +11,7 @@ echo "Building native systemd and udev."
 mkdir build64
 pushd build64
 
-CFLAGS="-march=native -mtune=native -g -O2 -fno-lto" \
+CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong -fno-lto" \
 ../configure --prefix=/usr        \
              --libdir=/usr/lib    \
              --sysconfdir=/etc    \
@@ -48,7 +48,7 @@ pushd build32
 CC="gcc -m32"  \
 CXX="g++ -m32" \
 PKG_CONFIG_PATH=/usr/lib32/pkgconfig                 \
-CFLAGS="-march=native -mtune=native -g -O2 -fno-lto" \
+CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong -fno-lto" \
 ../configure --prefix=/usr        \
              --libdir=/usr/lib32  \
              --sysconfdir=/etc    \
@@ -60,9 +60,9 @@ CFLAGS="-march=native -mtune=native -g -O2 -fno-lto" \
              --disable-static     \
              --without-python
 
-make src/shared/{af,errno}-{from,to}-name.h src/gudev/gudevmarshal.{c,h} src/gudev/gudevenumtypes.c src/libsystemd/libsystemd.sym src/shared/arphrd-{to,from}-name.h
+make src/shared/{af,cap,errno}-{from,to}-name.h src/gudev/gudevmarshal.{c,h} src/gudev/gudevenumtypes.c src/libsystemd/libsystemd.sym src/shared/arphrd-{to,from}-name.h
 
-make libsystemd.la libudev.la libgudev-1.0.la libnss_myhostname.la -j4
+make libsystemd.la libudev.la libgudev-1.0.la libnss_myhostname.la libnss_mymachines.la libnss_resolve.la -j4
 
 make install-libLTLIBRARIES DESTDIR=${DEST}
 make install-pkgconfiglibDATA DESTDIR=${DEST}
