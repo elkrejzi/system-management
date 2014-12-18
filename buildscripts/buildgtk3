@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.14.5
+export VER=3.14.6
 export DEST=/binary/gtk+-${VER}
 
 pushd gtk+-${VER}

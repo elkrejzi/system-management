@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=10.4.0-rc3
+export VER=10.4.0
 
 pushd Mesa-${VER}
 
@@ -18,25 +18,21 @@ CFLAGS="-march=native -mtune=native -g -O2"   \
 CXXFLAGS="-march=native -mtune=native -g -O2" \
 ./configure --prefix=/usr             \
             --sysconfdir=/etc         \
-            --disable-gallium-egl     \
-            --disable-gallium-gbm     \
             --disable-xvmc            \
             --enable-texture-float    \
             --enable-gles1            \
             --enable-gles2            \
-            --enable-osmesa           \
             --enable-gbm              \
             --enable-vdpau            \
             --enable-omx              \
+            --enable-va               \
             --enable-opencl           \
             --enable-opencl-icd       \
-            --enable-gallium-llvm     \
             --enable-glx-tls          \
             --enable-llvm-shared-libs \
             --with-dri-drivers="i965" \
             --with-egl-platforms="drm,x11,wayland" \
-            --with-gallium-drivers="r600,swrast"   \
-            --enable-debug
+            --with-gallium-drivers="r600,swrast"
 
 make -j4
 make -C xdemos
@@ -58,16 +54,12 @@ CXXFLAGS="-march=native -mtune=native -g -O2" \
 ./configure --prefix=/usr             \
             --sysconfdir=/etc         \
             --libdir=/usr/lib32       \
-            --disable-gallium-egl     \
-            --disable-gallium-gbm     \
+            --disable-va              \
             --disable-xvmc            \
-            --enable-32-bit           \
             --enable-texture-float    \
             --enable-gles1            \
             --enable-gles2            \
-            --enable-osmesa           \
             --enable-vdpau            \
-            --enable-gallium-llvm     \
             --enable-glx-tls          \
             --enable-llvm-shared-libs \
             --with-dri-drivers="i965" \

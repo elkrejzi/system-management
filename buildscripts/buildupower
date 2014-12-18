@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.99.1
+export VER=0.99.2
 export DEST=/binary/upower-${VER}
 
 pushd upower-${VER}
