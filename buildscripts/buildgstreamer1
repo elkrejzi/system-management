@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.4.4
+export VER=1.4.5
 export DEST=/binary/gstreamer-${VER}
 
 pushd gstreamer-${VER}

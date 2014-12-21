@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.99.1
+export VER=5.99.2
 #export SHLIBVER=${VER}
 export SHLIBVER=5.99
 export DEST=/binary/pulseaudio-${VER}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.12.91-106-gd397a04
+export VER=1.12.91-132-gd006a0f
 export DEST=/binary/akonadi-${VER}
 
 pushd akonadi-${VER}

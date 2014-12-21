@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.16.2
+export VER=1.16.3
 export DEST=/binary/xorg-server-${VER}
 
 pushd xorg-server-${VER}

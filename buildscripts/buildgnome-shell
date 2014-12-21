@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.14.2
+export VER=3.14.3
 export DEST=/binary/gnome-shell-${VER}
 
 pushd gnome-shell-${VER}
