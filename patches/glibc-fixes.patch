@@ -1,17 +1,801 @@
-diff -Naur a/libio/wfileops.c b/libio/wfileops.c
+--- a/ChangeLog	2014-09-07 10:09:09.000000000 +0200
++++ b/ChangeLog	2014-12-27 21:59:47.952743357 +0100
+@@ -1,3 +1,109 @@
++2014-12-16  Florian Weimer  <fweimer@redhat.com>
++
++	[BZ #17630]
++	* resolv/nss_dns/dns-network.c (getanswer_r): Iterate over alias
++	names.
++
++2014-12-15  Jeff Law  <law@redhat.com>
++
++	[BZ #16617]
++	* stdio-common/vfprintf.c (vfprintf): Allocate large specs array
++	on the heap.  (CVE-2012-3406)
++	* stdio-common/bug23-2.c, stdio-common/bug23-3.c: New file.
++	* stdio-common/bug23-4.c: New file.  Test case by Joseph Myers.
++	* stdio-common/Makefile (tests): Add bug23-2, bug23-3, bug23-4.
++
++2014-11-24  Siddhesh Poyarekar  <siddhesh@redhat.com>
++
++	[BZ #17266]
++	* misc/sys/cdefs.h: Define __extern_always_inline for clang
++	4.2 and newer.
++
++2014-11-19  Carlos O'Donell  <carlos@redhat.com>
++	    Florian Weimer  <fweimer@redhat.com>
++	    Joseph Myers  <joseph@codesourcery.com>
++	    Adam Conrad  <adconrad@0c3.net>
++	    Andreas Schwab  <schwab@suse.de>
++	    Brooks  <bmoses@google.com>
++
++	[BZ #17625]
++	* wordexp-test.c (__dso_handle): Add prototype.
++	(__register_atfork): Likewise.
++	(__app_register_atfork): New function.
++	(registered_forks): New global.
++	(register_fork): New function.
++	(test_case): Add 3 new tests for WRDE_CMDSUB.
++	(main): Call __app_register_atfork.
++	(testit): If WRDE_NOCMD set registered_forks to zero, run test, and if
++	fork count is non-zero fail the test.
++	* posix/wordexp.c (exec_comm): Return WRDE_CMDSUB if WRDE_NOCMD flag
++	is set.
++	(parse_dollars): Remove check for WRDE_NOCMD.
++	(parse_dquote): Likewise.
++
++2014-11-10  Renlin Li  <Renlin.Li@arm.com>
++
++	[BZ #17555]
++	* sysdeps/aarch64/start.S (_start): Delete x29 overwritten assignment.
++
++2014-10-22  Maciej W. Rozycki  <macro@codesourcery.com>
++
++	[BZ #17485]
++	* sysdeps/unix/sysv/linux/mips/vfork.S (__libc_vfork): Define.
++
++2014-10-08  Roland McGrath  <roland@hack.frob.com>
++
++	[BZ #17460]
++	* nscd/nscd.c (more_help): Rewrite list of tables collection
++	using xstrdup and asprintf.
++
++	* nscd/nscd_conf.c: Remove local xstrdup declaration.
++
++2014-10-09  Allan McRae  <allan@archlinux.org>
++
++	* po/fr.po: Update French translation from translation project.
++
++2014-09-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
++
++	[BZ #17370]
++	* libio/wfileops.c (do_ftell_wide): Free OUT on error path.
++
++2014-09-11  Tim Lammens  <tim.lammens@gmail.com>
++
++	[BZ #17370]
++	* libio/wfileops (do_ftell_wide): Free OUT.
++
++2014-09-16  Siddhesh Poyarekar  <siddhesh@redhat.com>
++	    Jakub Jelinek  <jakub@redhat.com>
++
++	[BZ #17266]
++	* libio/stdio.h: Check definition of __fortify_function
++	instead of __extern_always_inline to include bits/stdio2.h.
++	* math/bits/math-finite.h [__USE_XOPEN || __USE_ISOC99]: Also
++	check if __extern_always_inline is defined.
++	[__USE_MISC || __USE_XOPEN]: Likewise.
++	[__USE_ISOC99] Likewise.
++	* misc/sys/cdefs.h (__fortify_function): Define only if
++	__extern_always_inline is defined.
++	[!__cplusplus || __GNUC_PREREQ (4,3)]: Revert to defining
++	__extern_always_inline and __extern_inline only for g++-4.3
++	and newer or a compatible gcc.
++
++2014-09-15  Andreas Schwab  <schwab@linux-m68k.org>
++
++	[BZ #17371]
++	* sysdeps/unix/sysv/linux/ifaddrs.c (getifaddrs_internal): Fix
++	last change to handle zero prefix length.
++
++2014-09-12  Joseph Myers  <joseph@codesourcery.com>
++
++	* sysdeps/gnu/netinet/udp.h (UDP_NO_CHECK6_TX): New macro.
++	(UDP_NO_CHECK6_RX): Likewise.
++
++2014-09-13  Allan McRae  <allan@archlinux.org>
++
++	* po/ru.po: Update Russian translation from translation project.
++
+ 2014-09-07  Allan McRae  <allan@archlinux.org
+ 
+ 	* version.h (RELEASE): Set to "stable".
+--- a/libio/stdio.h	2014-09-07 10:09:09.000000000 +0200
++++ b/libio/stdio.h	2014-12-27 21:59:47.953743372 +0100
+@@ -932,7 +932,7 @@
+ #ifdef __USE_EXTERN_INLINES
+ # include <bits/stdio.h>
+ #endif
+-#if __USE_FORTIFY_LEVEL > 0 && defined __extern_always_inline
++#if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function
+ # include <bits/stdio2.h>
+ #endif
+ #ifdef __LDBL_COMPAT
 --- a/libio/wfileops.c	2014-09-07 10:09:09.000000000 +0200
-+++ b/libio/wfileops.c	2014-09-15 20:12:20.300167273 +0200
-@@ -711,6 +711,7 @@
- 		return WEOF;
++++ b/libio/wfileops.c	2014-12-27 21:59:47.954743387 +0100
+@@ -708,9 +708,13 @@
+ 		 sequences must be complete since they are accepted as
+ 		 wchar_t; if not, then that is an error.  */
+ 	      if (__glibc_unlikely (status != __codecvt_ok))
+-		return WEOF;
++		{
++		  free (out);
++		  return WEOF;
++		}
  
  	      offset += outstop - out;
 +	      free (out);
  	    }
  
  	  /* We don't trust _IO_read_end to represent the current file offset
-diff -Naur a/sysdeps/gnu/netinet/udp.h b/sysdeps/gnu/netinet/udp.h
+--- a/math/bits/math-finite.h	2014-09-07 10:09:09.000000000 +0200
++++ b/math/bits/math-finite.h	2014-12-27 21:59:47.954743387 +0100
+@@ -251,7 +251,8 @@
+ # endif
+ #endif
+ 
+-#if defined __USE_XOPEN || defined __USE_ISOC99
++#if ((defined __USE_XOPEN || defined __USE_ISOC99) \
++     && defined __extern_always_inline)
+ /* lgamma.  */
+ __extern_always_inline double __NTH (lgamma (double __d))
+ {
+@@ -284,7 +285,8 @@
+ # endif
+ #endif
+ 
+-#if defined __USE_MISC || defined __USE_XOPEN
++#if ((defined __USE_MISC || defined __USE_XOPEN) \
++     && defined __extern_always_inline)
+ /* gamma.  */
+ __extern_always_inline double __NTH (gamma (double __d))
+ {
+@@ -422,7 +424,7 @@
+ # endif
+ #endif
+ 
+-#ifdef __USE_ISOC99
++#if defined __USE_ISOC99 && defined __extern_always_inline
+ /* tgamma.  */
+ extern double __gamma_r_finite (double, int *);
+ __extern_always_inline double __NTH (tgamma (double __d))
+--- a/misc/sys/cdefs.h	2014-09-07 10:09:09.000000000 +0200
++++ b/misc/sys/cdefs.h	2014-12-27 21:59:47.954743387 +0100
+@@ -131,7 +131,6 @@
+ /* Fortify support.  */
+ #define __bos(ptr) __builtin_object_size (ptr, __USE_FORTIFY_LEVEL > 1)
+ #define __bos0(ptr) __builtin_object_size (ptr, 0)
+-#define __fortify_function __extern_always_inline __attribute_artificial__
+ 
+ #if __GNUC_PREREQ (4,3)
+ # define __warndecl(name, msg) \
+@@ -318,12 +317,19 @@
+ # define __attribute_artificial__ /* Ignore */
+ #endif
+ 
+-#ifdef __GNUC__
+-/* One of these will be defined if the __gnu_inline__ attribute is
+-   available.  In C++, __GNUC_GNU_INLINE__ will be defined even though
+-   __inline does not use the GNU inlining rules.  If neither macro is
+-   defined, this version of GCC only supports GNU inline semantics. */
+-# if defined __GNUC_STDC_INLINE__ || defined __GNUC_GNU_INLINE__
++/* GCC 4.3 and above with -std=c99 or -std=gnu99 implements ISO C99
++   inline semantics, unless -fgnu89-inline is used.  Using __GNUC_STDC_INLINE__
++   or __GNUC_GNU_INLINE is not a good enough check for gcc because gcc versions
++   older than 4.3 may define these macros and still not guarantee GNU inlining
++   semantics.
++
++   clang++ identifies itself as gcc-4.2, but has support for GNU inlining
++   semantics, that can be checked fot by using the __GNUC_STDC_INLINE_ and
++   __GNUC_GNU_INLINE__ macro definitions.  */
++#if (!defined __cplusplus || __GNUC_PREREQ (4,3) \
++     || (defined __clang__ && (defined __GNUC_STDC_INLINE__ \
++			       || defined __GNUC_GNU_INLINE__)))
++# if defined __GNUC_STDC_INLINE__ || defined __cplusplus
+ #  define __extern_inline extern __inline __attribute__ ((__gnu_inline__))
+ #  define __extern_always_inline \
+   extern __always_inline __attribute__ ((__gnu_inline__))
+@@ -331,9 +337,10 @@
+ #  define __extern_inline extern __inline
+ #  define __extern_always_inline extern __always_inline
+ # endif
+-#else /* Not GCC.  */
+-# define __extern_inline  /* Ignore */
+-# define __extern_always_inline /* Ignore */
++#endif
++
++#ifdef __extern_always_inline
++# define __fortify_function __extern_always_inline __attribute_artificial__
+ #endif
+ 
+ /* GCC 4.3 and above allow passing all anonymous arguments of an
+--- a/NEWS	2014-09-07 10:09:09.000000000 +0200
++++ b/NEWS	2014-12-27 21:59:47.953743372 +0100
+@@ -5,6 +5,25 @@
+ Please send GNU C library bug reports via <http://sourceware.org/bugzilla/>
+ using `glibc' in the "product" field.
+ 
++Version 2.20.1
++
++* The following bugs are resolved with this release:
++
++  16617, 17266, 17370, 17371, 17460, 17485, 17555, 17625, 17630.
++
++* CVE-2104-7817 The wordexp function could ignore the WRDE_NOCMD flag
++  under certain input conditions resulting in the execution of a shell for
++  command substitution when the applicaiton did not request it. The
++  implementation now checks WRDE_NOCMD immediately before executing the
++  shell and returns the error WRDE_CMDSUB as expected.
++
++* CVE-2012-3406 printf-style functions could run into a stack overflow when
++  processing format strings with a large number of format specifiers.
++
++* CVE-2014-9402 The nss_dns implementation of getnetbyname could run into an
++  infinite loopif the DNS response contained a PTR record of an unexpected
++  format.
++
+ Version 2.20
+ 
+ * The following bugs are resolved with this release:
+--- a/nscd/nscd.c	2014-09-07 10:09:09.000000000 +0200
++++ b/nscd/nscd.c	2014-12-27 21:59:47.954743387 +0100
+@@ -451,33 +451,36 @@
+ static char *
+ more_help (int key, const char *text, void *input)
+ {
+-  char *tables, *tp = NULL;
+-
+   switch (key)
+     {
+     case ARGP_KEY_HELP_EXTRA:
+       {
+-	dbtype cnt;
++	/* We print some extra information.  */
+ 
+-	tables = xmalloc (sizeof (dbnames) + 1);
+-	for (cnt = 0; cnt < lastdb; cnt++)
++	char *tables = xstrdup (dbnames[0]);
++	for (dbtype i = 1; i < lastdb; ++i)
+ 	  {
+-	    strcat (tables, dbnames[cnt]);
+-	    strcat (tables, " ");
++	    char *more_tables;
++	    if (asprintf (&more_tables, "%s %s", tables, dbnames[i]) < 0)
++	      more_tables = NULL;
++	    free (tables);
++	    if (more_tables == NULL)
++	      return NULL;
++	    tables = more_tables;
+ 	  }
+-      }
+ 
+-      /* We print some extra information.  */
+-      if (asprintf (&tp, gettext ("\
++	char *tp;
++	if (asprintf (&tp, gettext ("\
+ Supported tables:\n\
+ %s\n\
+ \n\
+ For bug reporting instructions, please see:\n\
+ %s.\n\
+ "), tables, REPORT_BUGS_TO) < 0)
+-	tp = NULL;
+-      free (tables);
+-      return tp;
++	  tp = NULL;
++	free (tables);
++	return tp;
++      }
+ 
+     default:
+       break;
+@@ -622,15 +625,15 @@
+ 	}
+ 
+       if (WIFEXITED (status))
+-        {
+-          child_ret = WEXITSTATUS (status);
+-          fprintf (stderr, _("child exited with status %d\n"), child_ret);
+-        }
++	{
++	  child_ret = WEXITSTATUS (status);
++	  fprintf (stderr, _("child exited with status %d\n"), child_ret);
++	}
+       if (WIFSIGNALED (status))
+-        {
+-          child_ret = WTERMSIG (status);
+-          fprintf (stderr, _("child terminated by signal %d\n"), child_ret);
+-        }
++	{
++	  child_ret = WTERMSIG (status);
++	  fprintf (stderr, _("child terminated by signal %d\n"), child_ret);
++	}
+     }
+ 
+   /* We have the child status, so exit with that code.  */
+--- a/nscd/nscd_conf.c	2014-09-07 10:09:09.000000000 +0200
++++ b/nscd/nscd_conf.c	2014-12-27 21:59:47.955743402 +0100
+@@ -32,9 +32,6 @@
+ #include "dbg_log.h"
+ #include "nscd.h"
+ 
+-/* Wrapper functions with error checking for standard functions.  */
+-extern char *xstrdup (const char *s);
+-
+ 
+ /* Names of the databases.  */
+ const char *const dbnames[lastdb] =
+--- a/po/fr.po	2014-09-07 10:09:09.000000000 +0200
++++ b/po/fr.po	2014-12-27 21:59:47.957743433 +0100
+@@ -6673,11 +6673,11 @@
+ 
+ #: sysdeps/gnu/errlist.c:1399
+ msgid "No medium found"
+-msgstr "Aucun medium trouvé"
++msgstr "Aucun médium trouvé"
+ 
+ #: sysdeps/gnu/errlist.c:1407
+ msgid "Wrong medium type"
+-msgstr "Mauvais type de medium"
++msgstr "Mauvais type de médium"
+ 
+ #: sysdeps/gnu/errlist.c:1415
+ msgid "Required key not available"
+--- a/po/ru.po	2014-09-07 10:09:09.000000000 +0200
++++ b/po/ru.po	2014-12-27 21:59:47.959743463 +0100
+@@ -13,7 +13,7 @@
+ msgstr ""
+ "Project-Id-Version: libc 2.19.90\n"
+ "POT-Creation-Date: 2014-08-09 17:06+1000\n"
+-"PO-Revision-Date: 2014-08-21 14:55+0400\n"
++"PO-Revision-Date: 2014-09-10 16:38+0400\n"
+ "Last-Translator: Yuri Kozlov <yuray@komyakino.ru>\n"
+ "Language-Team: Russian <gnu@mx.ru>\n"
+ "Language: ru\n"
+@@ -76,7 +76,7 @@
+ #: iconv/iconv_prog.c:60 iconv/iconv_prog.c:61 nscd/nscd.c:105
+ #: nss/makedb.c:120
+ msgid "NAME"
+-msgstr "ФАЙЛ"
++msgstr "ИМЯ"
+ 
+ #: argp/argp-parse.c:104
+ msgid "Set the program name"
+@@ -123,7 +123,7 @@
+ 
+ #: catgets/gencat.c:110
+ msgid "Create C header file NAME containing symbol definitions"
+-msgstr "Создает заголовочный ФАЙЛ на Си, содержащий определения символов."
++msgstr "Создает заголовочный файл с ИМЕНЕМ на Си, содержащий определения символов."
+ 
+ #: catgets/gencat.c:112
+ msgid "Do not use existing catalog, force new output file"
+@@ -131,7 +131,7 @@
+ 
+ #: catgets/gencat.c:113 nss/makedb.c:120
+ msgid "Write output to file NAME"
+-msgstr "Записать вывод в ФАЙЛ"
++msgstr "Записать вывод в файл с ИМЕНЕМ"
+ 
+ #: catgets/gencat.c:118
+ msgid ""
+@@ -4098,7 +4098,7 @@
+ 
+ #: nscd/nscd.c:106
+ msgid "Read configuration data from NAME"
+-msgstr "Читать конфигурационные данные из ФАЙЛА"
++msgstr "Читать конфигурационные данные из файла с ИМЕНЕМ"
+ 
+ #: nscd/nscd.c:108
+ msgid "Do not fork and display messages on the current tty"
+--- a/posix/wordexp.c	2014-09-07 10:09:09.000000000 +0200
++++ b/posix/wordexp.c	2014-12-27 21:59:47.960743478 +0100
+@@ -893,6 +893,10 @@
+   pid_t pid;
+   int noexec = 0;
+ 
++  /* Do nothing if command substitution should not succeed.  */
++  if (flags & WRDE_NOCMD)
++    return WRDE_CMDSUB;
++
+   /* Don't fork() unless necessary */
+   if (!comm || !*comm)
+     return 0;
+@@ -2082,9 +2086,6 @@
+ 	    }
+ 	}
+ 
+-      if (flags & WRDE_NOCMD)
+-	return WRDE_CMDSUB;
+-
+       (*offset) += 2;
+       return parse_comm (word, word_length, max_length, words, offset, flags,
+ 			 quoted? NULL : pwordexp, ifs, ifs_white);
+@@ -2196,9 +2197,6 @@
+ 	  break;
+ 
+ 	case '`':
+-	  if (flags & WRDE_NOCMD)
+-	    return WRDE_CMDSUB;
+-
+ 	  ++(*offset);
+ 	  error = parse_backtick (word, word_length, max_length, words,
+ 				  offset, flags, NULL, NULL, NULL);
+@@ -2357,12 +2355,6 @@
+ 	break;
+ 
+       case '`':
+-	if (flags & WRDE_NOCMD)
+-	  {
+-	    error = WRDE_CMDSUB;
+-	    goto do_error;
+-	  }
+-
+ 	++words_offset;
+ 	error = parse_backtick (&word, &word_length, &max_length, words,
+ 				&words_offset, flags, pwordexp, ifs,
+--- a/posix/wordexp-test.c	2014-09-07 10:09:09.000000000 +0200
++++ b/posix/wordexp-test.c	2014-12-27 21:59:47.959743463 +0100
+@@ -27,6 +27,25 @@
+ 
+ #define IFS " \n\t"
+ 
++extern void *__dso_handle __attribute__ ((__weak__, __visibility__ ("hidden")));
++extern int __register_atfork (void (*) (void), void (*) (void), void (*) (void), void *);
++
++static int __app_register_atfork (void (*prepare) (void), void (*parent) (void), void (*child) (void))
++{
++  return __register_atfork (prepare, parent, child,
++			    &__dso_handle == NULL ? NULL : __dso_handle);
++}
++
++/* Number of forks seen.  */
++static int registered_forks;
++
++/* For each fork increment the fork count.  */
++static void
++register_fork (void)
++{
++  registered_forks++;
++}
++
+ struct test_case_struct
+ {
+   int retval;
+@@ -206,6 +225,12 @@
+     { WRDE_SYNTAX, NULL, "$((2+))", 0, 0, { NULL, }, IFS },
+     { WRDE_SYNTAX, NULL, "`", 0, 0, { NULL, }, IFS },
+     { WRDE_SYNTAX, NULL, "$((010+4+))", 0, 0, { NULL }, IFS },
++    /* Test for CVE-2014-7817. We test 3 combinations of command
++       substitution inside an arithmetic expression to make sure that
++       no commands are executed and error is returned.  */
++    { WRDE_CMDSUB, NULL, "$((`echo 1`))", WRDE_NOCMD, 0, { NULL, }, IFS },
++    { WRDE_CMDSUB, NULL, "$((1+`echo 1`))", WRDE_NOCMD, 0, { NULL, }, IFS },
++    { WRDE_CMDSUB, NULL, "$((1+$((`echo 1`))))", WRDE_NOCMD, 0, { NULL, }, IFS },
+ 
+     { -1, NULL, NULL, 0, 0, { NULL, }, IFS },
+   };
+@@ -258,6 +283,15 @@
+ 	  return -1;
+     }
+ 
++  /* If we are not allowed to do command substitution, we install
++     fork handlers to verify that no forks happened.  No forks should
++     happen at all if command substitution is disabled.  */
++  if (__app_register_atfork (register_fork, NULL, NULL) != 0)
++    {
++      printf ("Failed to register fork handler.\n");
++      return -1;
++    }
++
+   for (test = 0; test_case[test].retval != -1; test++)
+     if (testit (&test_case[test]))
+       ++fail;
+@@ -367,6 +401,9 @@
+ 
+   printf ("Test %d (%s): ", ++tests, tc->words);
+ 
++  if (tc->flags & WRDE_NOCMD)
++    registered_forks = 0;
++
+   if (tc->flags & WRDE_APPEND)
+     {
+       /* initial wordexp() call, to be appended to */
+@@ -378,6 +415,13 @@
+     }
+   retval = wordexp (tc->words, &we, tc->flags);
+ 
++  if ((tc->flags & WRDE_NOCMD)
++      && (registered_forks > 0))
++    {
++	  printf ("FAILED fork called for WRDE_NOCMD\n");
++	  return 1;
++    }
++
+   if (tc->flags & WRDE_DOOFFS)
+       start_offs = sav_we.we_offs;
+ 
+--- a/resolv/nss_dns/dns-network.c	2014-09-07 10:09:09.000000000 +0200
++++ b/resolv/nss_dns/dns-network.c	2014-12-27 21:59:47.960743478 +0100
+@@ -398,8 +398,8 @@
+ 
+ 	case BYNAME:
+ 	  {
+-	    char **ap = result->n_aliases++;
+-	    while (*ap != NULL)
++	    char **ap;
++	    for (ap = result->n_aliases; *ap != NULL; ++ap)
+ 	      {
+ 		/* Check each alias name for being of the forms:
+ 		   4.3.2.1.in-addr.arpa		= net 1.2.3.4
+--- a/stdio-common/bug23-2.c	1970-01-01 01:00:00.000000000 +0100
++++ b/stdio-common/bug23-2.c	2014-12-27 21:59:47.960743478 +0100
+@@ -0,0 +1,70 @@
++#include <stdio.h>
++#include <string.h>
++#include <stdlib.h>
++
++static const char expected[] = "\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55\
++\n\
++a\n\
++abbcd55%%%%%%%%%%%%%%%%%%%%%%%%%%\n";
++
++static int
++do_test (void)
++{
++  char *buf = malloc (strlen (expected) + 1);
++  snprintf (buf, strlen (expected) + 1,
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++	    "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n",
++	    "a", "b", "c", "d", 5);
++  return strcmp (buf, expected) != 0;
++}
++
++#define TEST_FUNCTION do_test ()
++#include "../test-skeleton.c"
+--- a/stdio-common/bug23-3.c	1970-01-01 01:00:00.000000000 +0100
++++ b/stdio-common/bug23-3.c	2014-12-27 21:59:47.960743478 +0100
+@@ -0,0 +1,50 @@
++#include <stdio.h>
++#include <string.h>
++#include <stdlib.h>
++
++int
++do_test (void)
++{
++  size_t instances = 16384;
++#define X0 "\n%1$s\n" "%1$s" "%2$s" "%2$s" "%3$s" "%4$s" "%5$d" "%5$d"
++  const char *item = "\na\nabbcd55";
++#define X3 X0 X0 X0 X0 X0 X0 X0 X0
++#define X6 X3 X3 X3 X3 X3 X3 X3 X3
++#define X9 X6 X6 X6 X6 X6 X6 X6 X6
++#define X12 X9 X9 X9 X9 X9 X9 X9 X9
++#define X14 X12 X12 X12 X12
++#define TRAILER "%%%%%%%%%%%%%%%%%%%%%%%%%%"
++#define TRAILER2 TRAILER TRAILER
++  size_t length = instances * strlen (item) + strlen (TRAILER) + 1;
++
++  char *buf = malloc (length + 1);
++  snprintf (buf, length + 1,
++	    X14 TRAILER2 "\n",
++	    "a", "b", "c", "d", 5);
++
++  const char *p = buf;
++  size_t i;
++  for (i = 0; i < instances; ++i)
++    {
++      const char *expected;
++      for (expected = item; *expected; ++expected)
++	{
++	  if (*p != *expected)
++	    {
++	      printf ("mismatch at offset %zu (%zu): expected %d, got %d\n",
++		      (size_t) (p - buf), i, *expected & 0xFF, *p & 0xFF);
++	      return 1;
++	    }
++	  ++p;
++	}
++    }
++  if (strcmp (p, TRAILER "\n") != 0)
++    {
++      printf ("mismatch at trailer: [%s]\n", p);
++      return 1;
++    }
++  free (buf);
++  return 0;
++}
++#define TEST_FUNCTION do_test ()
++#include "../test-skeleton.c"
+--- a/stdio-common/bug23-4.c	1970-01-01 01:00:00.000000000 +0100
++++ b/stdio-common/bug23-4.c	2014-12-27 21:59:47.961743493 +0100
+@@ -0,0 +1,31 @@
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/resource.h>
++
++#define LIMIT 1000000
++
++int
++main (void)
++{
++  struct rlimit lim;
++  getrlimit (RLIMIT_STACK, &lim);
++  lim.rlim_cur = 1048576;
++  setrlimit (RLIMIT_STACK, &lim);
++  char *fmtstr = malloc (4 * LIMIT + 1);
++  if (fmtstr == NULL)
++    abort ();
++  char *output = malloc (LIMIT + 1);
++  if (output == NULL)
++    abort ();
++  for (size_t i = 0; i < LIMIT; i++)
++    memcpy (fmtstr + 4 * i, "%1$d", 4);
++  fmtstr[4 * LIMIT] = '\0';
++  int ret = snprintf (output, LIMIT + 1, fmtstr, 0);
++  if (ret != LIMIT)
++    abort ();
++  for (size_t i = 0; i < LIMIT; i++)
++    if (output[i] != '0')
++      abort ();
++  return 0;
++}
+--- a/stdio-common/Makefile	2014-09-07 10:09:09.000000000 +0200
++++ b/stdio-common/Makefile	2014-12-27 21:59:47.960743478 +0100
+@@ -57,7 +57,7 @@
+ 	 bug19 bug19a tst-popen2 scanf13 scanf14 scanf15 bug20 bug21 bug22 \
+ 	 scanf16 scanf17 tst-setvbuf1 tst-grouping bug23 bug24 \
+ 	 bug-vfprintf-nargs tst-long-dbl-fphex tst-fphex-wide tst-sprintf3 \
+-	 bug25 tst-printf-round bug26
++	 bug25 tst-printf-round bug23-2 bug23-3 bug23-4 bug26
+ 
+ test-srcs = tst-unbputc tst-printf
+ 
+--- a/stdio-common/vfprintf.c	2014-09-07 10:09:09.000000000 +0200
++++ b/stdio-common/vfprintf.c	2014-12-27 21:59:47.962743508 +0100
+@@ -263,6 +263,12 @@
+   /* For the argument descriptions, which may be allocated on the heap.  */
+   void *args_malloced = NULL;
+ 
++  /* For positional argument handling.  */
++  struct printf_spec *specs;
++
++  /* Track if we malloced the SPECS array and thus must free it.  */
++  bool specs_malloced = false;
++
+   /* This table maps a character into a number representing a
+      class.  In each step there is a destination label for each
+      class.  */
+@@ -1679,8 +1685,8 @@
+     size_t nspecs = 0;
+     /* A more or less arbitrary start value.  */
+     size_t nspecs_size = 32 * sizeof (struct printf_spec);
+-    struct printf_spec *specs = alloca (nspecs_size);
+ 
++    specs = alloca (nspecs_size);
+     /* The number of arguments the format string requests.  This will
+        determine the size of the array needed to store the argument
+        attributes.  */
+@@ -1721,11 +1727,39 @@
+ 	if (nspecs * sizeof (*specs) >= nspecs_size)
+ 	  {
+ 	    /* Extend the array of format specifiers.  */
++	    if (nspecs_size * 2 < nspecs_size)
++	      {
++		__set_errno (ENOMEM);
++		done = -1;
++		goto all_done;
++	      }
+ 	    struct printf_spec *old = specs;
+-	    specs = extend_alloca (specs, nspecs_size, 2 * nspecs_size);
++	    if (__libc_use_alloca (2 * nspecs_size))
++	      specs = extend_alloca (specs, nspecs_size, 2 * nspecs_size);
++	    else
++	      {
++		nspecs_size *= 2;
++		specs = malloc (nspecs_size);
++		if (specs == NULL)
++		  {
++		    __set_errno (ENOMEM);
++		    specs = old;
++		    done = -1;
++		    goto all_done;
++		  }
++	      }
+ 
+ 	    /* Copy the old array's elements to the new space.  */
+ 	    memmove (specs, old, nspecs * sizeof (*specs));
++
++	    /* If we had previously malloc'd space for SPECS, then
++	       release it after the copy is complete.  */
++	    if (specs_malloced)
++	      free (old);
++
++	    /* Now set SPECS_MALLOCED if needed.  */
++	    if (!__libc_use_alloca (nspecs_size))
++	      specs_malloced = true;
+ 	  }
+ 
+ 	/* Parse the format specifier.  */
+@@ -2046,6 +2080,8 @@
+   }
+ 
+ all_done:
++  if (specs_malloced)
++    free (specs);
+   if (__glibc_unlikely (args_malloced != NULL))
+     free (args_malloced);
+   if (__glibc_unlikely (workstart != NULL))
+--- a/sysdeps/aarch64/start.S	2014-09-07 10:09:09.000000000 +0200
++++ b/sysdeps/aarch64/start.S	2014-12-27 21:59:47.962743508 +0100
+@@ -47,7 +47,6 @@
+ 	/* Create an initial frame with 0 LR and FP */
+ 	mov	x29, #0
+ 	mov	x30, #0
+-	mov	x29, sp
+ 
+ 	/* Setup rtld_fini in argument register */
+ 	mov	x5, x0
 --- a/sysdeps/gnu/netinet/udp.h	2014-09-07 10:09:09.000000000 +0200
-+++ b/sysdeps/gnu/netinet/udp.h	2014-09-15 20:12:42.460450986 +0200
++++ b/sysdeps/gnu/netinet/udp.h	2014-12-27 21:59:47.962743508 +0100
 @@ -78,6 +78,10 @@
  #define UDP_CORK	1	/* Never send partially complete segments.  */
  #define UDP_ENCAP	100	/* Set the socket to accept
@@ -23,9 +807,8 @@ diff -Naur a/sysdeps/gnu/netinet/udp.h b/sysdeps/gnu/netinet/udp.h
  
  /* UDP encapsulation types */
  #define UDP_ENCAP_ESPINUDP_NON_IKE 1	/* draft-ietf-ipsec-nat-t-ike-00/01 */
-diff -Naur a/sysdeps/unix/sysv/linux/ifaddrs.c b/sysdeps/unix/sysv/linux/ifaddrs.c
 --- a/sysdeps/unix/sysv/linux/ifaddrs.c	2014-09-07 10:09:09.000000000 +0200
-+++ b/sysdeps/unix/sysv/linux/ifaddrs.c	2014-09-15 20:12:31.986982667 +0200
++++ b/sysdeps/unix/sysv/linux/ifaddrs.c	2014-12-27 21:59:47.963743523 +0100
 @@ -770,20 +770,17 @@
  
  		  if (cp != NULL)
@@ -51,3 +834,10 @@ diff -Naur a/sysdeps/unix/sysv/linux/ifaddrs.c b/sysdeps/unix/sysv/linux/ifaddrs
  		    }
  		}
  	    }
+--- a/sysdeps/unix/sysv/linux/mips/vfork.S	2014-09-07 10:09:09.000000000 +0200
++++ b/sysdeps/unix/sysv/linux/mips/vfork.S	2014-12-27 21:59:47.963743523 +0100
+@@ -108,3 +108,4 @@
+ 
+ libc_hidden_def(__vfork)
+ weak_alias (__vfork, vfork)
++strong_alias (__vfork, __libc_vfork)

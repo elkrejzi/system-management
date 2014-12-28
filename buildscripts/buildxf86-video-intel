@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.99.916
+export VER=2.99.917
 export DEST=/binary/xf86-video-intel-${VER}
 
 pushd xf86-video-intel-${VER}
@@ -9,7 +9,7 @@ CFLAGS="-march=native -mtune=native -g -O2"   \
 CXXFLAGS="-march=native -mtune=native -g -O2" \
 ./configure --prefix=/usr     \
             --enable-kms-only \
-            --disable-dri3
+            --disable-sna
 
 make -j4
 make install DESTDIR=${DEST}

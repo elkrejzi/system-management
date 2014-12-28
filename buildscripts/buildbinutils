@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.24
+export VER=2.25
 export DEST=/binary/binutils-${VER}
 
 mv binutils-${VER} src
@@ -39,7 +39,6 @@ rm -rf ${DEST}/usr/lib/lib{bfd,opcodes}.so ${DEST}/usr/lib/*.la
 rm -rf ${DEST}/usr/lib64
 
 rm -rf ${DEST}/usr/share/man/man1/{dlltool,nlmconv,windres,windmc}.1
-rm -rf ${DEST}/usr/share/info/{configure,standards}.info
 
 rm -rf ${DEST}/usr/share/info/dir ${DEST}/usr/share/info/*.gz
 gzip -9 ${DEST}/usr/share/info/*

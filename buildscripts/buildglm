@@ -1,0 +1,22 @@
+#!/bin/bash -e
+
+export VER=0.9.6.1
+export DEST=/binary/glm-${VER}
+
+pushd glm
+
+cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib
+
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf glm
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL

@@ -637,11 +637,11 @@ kiconthemes-5.4.0
 kjobwidgets-5.4.0
 knotifications-5.4.0
 ktextwidgets-5.4.0
-kwallet-5.4.0                                                                                                                                                                                   
-kxmlgui-5.4.0                                                                                                                                                                                   
-kbookmarks-5.4.0                                                                                                                                                                                
-kcmutils-5.4.0                                                                                                                                                                                  
-kio-5.4.0                                                                                                                                                                                       
+kwallet-5.4.0
+kxmlgui-5.4.0
+kbookmarks-5.4.0
+kcmutils-5.4.0
+kio-5.4.0
 frameworkintegration-5.4.0
 kdeclarative-5.4.0
 kinit-5.4.0
@@ -742,10 +742,10 @@ libdvdcss-1.3.0
 libmusicbrainz-2.1.5
 libmusicbrainz-5.1.0
 libnice-0.1.8
-gst-plugins-bad-0.10.23
-gst-plugins-bad-1.4.4
 gst-plugins-good-0.10.31
 gst-plugins-good-1.4.4
+gst-plugins-bad-0.10.23
+gst-plugins-bad-1.4.4
 gst-plugins-ugly-0.10.19
 gst-plugins-ugly-1.4.4
 gst-ffmpeg-0.10.13
@@ -1018,7 +1018,7 @@ akonadi-1.12.91-106-gd397a04 Qt5 version
 baloo-widgets-4.13.80-49-g7a85453 Qt5 version
 grantlee-5.0.0 Qt5 version
 kde-baseapps-4.14.2-409-g7c465ab Qt5 version
-kdepimlibs-4.14.3-1478-g87fc3d1
+kdepimlibs-4.14.3-1478-g87fc3d1 Qt5 version
 syslinux-6.03
 
 Rebuild nautilus-3.14.1 against tracker-1.2.2
@@ -1095,3 +1095,575 @@ xdg-user-dirs-gtk-0.10
 yelp-3.14.1
 
 # End Thu Nov 20 13:22:12 UTC 2014
+
+# Begin Sat Nov 22 13:41:34 UTC 2014
+
+libieee1284-0.2.11
+net-snmp-5.7.2.1
+enscript-1.6.6
+sane-backends-1.0.24
+foomatic-db-engine-4.0-20141029
+foomatic-db-4.0-20141029
+python-reportlab-3.1.8 Python 2 and Python 3 Modules
+hplip-3.4.10
+simple-scan-3.14.2
+
+Rebuild colord-1.2.5 with SANE support
+
+# End Sat Nov 22 15:12:18 UTC 2014
+
+# Begin Sat Nov 22 20:23:21 UTC 2014
+
+Updated to eog-3.14.3
+Updated to gnome-user-share-3.14.1
+Updated to harfbuzz-0.9.36
+Updated to ImageMagick-6.9.0-0
+Updated to kmod-19
+Updated to libgusb-0.2.0
+Updated to libpng-1.6.15
+Updated to libwebp-0.4.2
+Updated to Mesa-10.3.4
+Updated to python-astroid-1.3.2
+Updated to python-lxml-3.4.1
+Updated to sddm-0.11.0
+Updated to sqlite-3.8.7.2
+Updated to totem-3.14.1
+Updated to webkitgtk-2.6.4
+Updated to xkbcomp-1.3.0
+Updated to xscreensaver-5.32
+
+# End Sat Nov 22 23:06:43 UTC 2014
+
+# Begin Tue Nov 25 13:09:42 UTC 2014
+
+libchardet-1.0.4
+cmplayer-0.8.16
+
+Updated to gpgme-1.5.2
+Updated to grep-2.21
+Updated to ncurses-5.9-20141115
+Updated to pidgin-2.10.11
+Updated to python-pylint-1.4.0
+
+# End Tue Nov 25 13:28:43 UTC 2014
+
+# Begin Thu Nov 27 17:28:59 UTC 2014
+
+Removed qtwayland-v5.0.0-beta1-484-ga6d8c05
+
+Updated to qt-5.4.0-rc
+
+Rebuild frameworkintegration-5.4.0 against qt-5.4.0-rc
+Rebuild kdelibs4support-5.4.0 against qt-5.4.0-rc
+
+# End Thu Nov 27 19:09:58 UTC 2014
+
+# Begin Fri Nov 28 18:44:51 UTC 2014
+
+Updated to caribou-0.4.16
+Updated to colord-1.2.6
+Updated to dbus-1.8.12
+Updated to flac-1.3.1
+Updated to fontforge-2.0-20141126
+Updated to git-2.2.0
+Updated to gnome-themes-standard-3.14.2.2
+Updated to libcdr-0.1.1
+Updated to libgusb-0.2.2
+Updated to libksba-1.3.2
+Updated to libodfgen-0.1.2
+Updated to libwnck-3.14.0
+Updated to linux-3.17.4-krejzi
+Updated to LVM2-2.02.113
+Updated to Mesa-10.4.0-rc3
+Updated to mpv-0.7.0
+Updated to nautilus-3.14.2
+Updated to ninja-1.5.3
+Updated to pulseaudio-5.99.1
+Updated to valgrind-3.10.1
+Updated to xf86-input-evdev-2.9.1
+
+# End Fri Nov 28 19:55:47 UTC 2014
+
+# Begin Tue Dec  2 14:05:02 UTC 2014
+
+Updated to firefox-34.0.5
+Updated to thunderbird-31.3.0
+
+# End Tue Dec  2 16:47:43 UTC 2014
+
+# Begin Wed Dec  3 18:19:27 UTC 2014
+
+Updated to colord-1.2.7
+Updated to colord-gtk-0.1.26
+Updated to ffmpeg-2.4.4
+Updated to gnome-themes-standard-3.14.2.3
+Updated to highlight-3.20
+Updated to libgusb-0.2.3
+Updated to librsvg-2.40.6
+Updated to libtool-2.4.4
+Updated to LVM2-2.02.114
+Updated to mysql-5.6.22
+Updated to nss-3.17.3
+Updated to powertop-2.7
+Updated to samba-4.1.14
+Updated to unrar-5.2.3
+
+# End Wed Dec  3 19:08:06 UTC 2014
+
+# Begin Fri Dec  5 15:38:54 UTC 2014
+
+Updated to ffmpeg-2.5
+Updated to gedit-3.14.2
+Updated to libevdev-1.3.2
+Updated to mpv-0.7.1
+Updated to phonon-4.8.3
+Updated to phonon-backend-gstreamer-4.8.1
+Updated to phonon-backend-vlc-0.8.2
+Updated to poppler-0.29.0
+
+# End Fri Dec  5 15:49:59 UTC 2014
+
+# Begin Sat Dec  6 20:39:43 UTC 2014
+
+gtk-engines-2.21.0.tar.xz
+gtksourceview-2.10.5
+libwnck-2.30.7
+murrine-0.98.2
+vte-0.28.2
+libmatekbd-1.8.0
+libmateweather-1.8.0
+mate-backgrounds-1.8.0
+mate-dialogs-1.8.0
+mate-icon-theme-1.8.0
+mate-icon-theme-faenza-1.8.0
+mate-menus-1.8.0
+mate-themes-1.8.1
+marco-1.8.2
+mate-panel-1.8.1
+mate-settings-daemon-1.8.2
+mate-control-center-1.8.3
+mate-applets-1.8.1
+mate-media-1.8.0
+mate-notification-daemon-1.8.1
+mate-polkit-1.8.0
+mate-power-manager-1.8.1
+mate-screensaver-1.8.1
+mate-screensaver-hacks-5.32
+mate-sensors-applet-1.8.0
+mate-session-manager-1.8.1
+mate-terminal-1.8.1
+mate-utils-1.8.1
+atril-1.8.1
+caja-extensions-1.8.0
+engrampa-1.8.1
+mate-system-monitor-1.8.0
+pluma-1.8.1
+
+# End Sat Dec  6 22:02:24 UTC 2014
+
+# Begin Sun Dec  7 13:21:54 UTC 2014
+
+ffmpegthumbnailer-2.0.9
+libstatgrab-0.91
+perl-extutils-depends-0.402
+perl-extutils-pkgconfig-1.15
+perl-glib-1.306
+perl-uri-1.65
+libxfce4util-4.11.0
+xfconf-4.10.0
+libxfce4ui-4.11.1
+exo-0.10.2
+garcon-0.3.0
+gtk-xfce-engine-3.0.1
+libxfcegui4-4.10.0
+xfce4-panel-4.11.1
+Thunar-1.6.3
+thunar-volman-0.8.0
+tumbler-0.1.30
+xfce4-appfinder-4.11.0
+xfce4-power-manager-1.4.2
+xfce4-settings-4.11.3
+xfdesktop-4.11.8
+xfwm4-4.11.2
+xfwm4-themes-4.10.0
+xfce4-artwork-0.1.1a
+xfce4-session-4.11.1
+xfce4-mixer-4.11.0
+xfce4-notifyd-0.2.4
+xfce4-screenshooter-1.8.1
+xfce4-terminal-0.6.3
+xfce4-netload-plugin-1.2.4
+xfce4-sensors-plugin-1.2.5
+xfce4-systemload-plugin-1.1.2
+xfce4-weather-plugin-0.8.4
+lxmenu-data-0.1.4
+lxde-icon-theme-0.5.1
+libfm-extra-1.2.3
+menu-cache-1.0.0
+libfm-1.2.3
+pcmanfm-1.2.3
+lxpanel-0.7.2
+lxappearance-0.6.1
+openbox-3.5.2
+lxappearance-obconf-0.2.2
+lxinput-0.3.4
+lxrandr-0.3.0
+lxterminal-0.2.0
+libqtxdg-1.0.0
+liblxqt-0.8.0
+liblxqt-mount-0.8.0
+libsysstat-0.2.0
+lxqt-globalkeys-0.8.0
+lxqt-qtplugin-0.8.0
+lxqt-panel-0.8.0
+lxqt-session-0.8.0
+pcmanfm-qt-0.8.0
+lxqt-about-0.8.0
+lxqt-config-0.8.0
+lxqt-notificationd-0.8.0
+lxqt-policykit-0.8.0
+lxqt-powermanagement-0.8.0
+lxqt-runner-0.8.0
+lxqt-common-0.8.0
+
+Updated to freetype-2.5.4
+Updated to glib-networking-2.42.1
+Updated to kile-2.1-396-g668abf7 Qt5 version
+Updated to libinput-0.7.0
+Updated to libsoup-2.48.1
+Updated to speex-1.2rc2
+Updated to sqlite-3.8.7.3
+
+libpaper-1.1.24+nmu4
+speexdsp-1.2rc2
+zziplib-0.13.62
+
+Removed libkpathsea-20140525
+
+texlive-20140525
+dblatex-0.3.5
+
+# End Sun Dec  7 17:15:28 UTC 2014
+
+# Begin Tue Dec  9 22:48:25 UTC 2014
+
+Removed jre-1.8.0u25
+
+jdk-1.8.0u25
+java-rxtx-2.2pre2
+icoutils-0.31.0
+avr-binutils-2.24
+avr-gcc-4.9.2
+avr-libc-1.8.1
+arduino-1.0.6
+
+Updated to bind-9.10.1-P1
+Updated to linux-3.17.6-krejzi
+Updated to sqlite-3.8.7.4
+Updated to wget-1.16.1
+
+# End Wed Dec 10 02:32:41 UTC 2014
+
+# Begin Wed Dec 10 11:53:02 UTC 2014
+
+keybinder-0.3.0
+
+Updated to evolution-data-server-3.12.9
+Updated to evolution-3.12.9
+Updated to lxpanel-0.8.0
+Updated to qt-5.4.0
+Updated to tracker-1.2.5
+
+# End Wed Dec 10 16:47:40 UTC 2014
+
+# Begin Thu Dec 11 12:45:17 UTC 2014
+
+Updated to dosfstools-3.0.27
+Updated to file-5.21
+Updated to systemd-218
+
+# End Thu Dec 11 12:51:53 UTC 2014
+
+# Begin Fri Dec 12 15:36:30 UTC 2014
+
+Updated to bluez-5.26
+Updated to chromium-pepper-flash-16.0.0.235
+Updated to flashplayer-11.2.202.425
+Updated to gnutls-3.3.11
+Updated to gpgme-1.5.3
+Updated to libassuan-2.2.0
+Updated to perl-xml-parser-2.43
+Updated to Python-2.7.9
+Updated to wine-1.7.33
+Updated to extra-cmake-modules-1.5.0
+Updated to attica-5.5.0
+Updated to kapidox-5.5.0
+Updated to karchive-5.5.0
+Updated to kcodecs-5.5.0
+Updated to kconfig-5.5.0
+Updated to kcoreaddons-5.5.0
+Updated to kdbusaddons-5.5.0
+Updated to kdnssd-5.5.0
+Updated to kglobalaccel-5.5.0
+Updated to kguiaddons-5.5.0
+Updated to ki18n-5.5.0
+Updated to kidletime-5.5.0
+Updated to kimageformats-5.5.0
+Updated to kitemmodels-5.5.0
+Updated to kitemviews-5.5.0
+Updated to kplotting-5.5.0
+Updated to kwidgetsaddons-5.5.0
+Updated to kwindowsystem-5.5.0
+Updated to solid-5.5.0
+Updated to sonnet-5.5.0
+Updated to threadweaver-5.5.0
+Updated to kauth-5.5.0
+Updated to kcompletion-5.5.0
+Updated to kcrash-5.5.0
+Updated to kdoctools-5.5.0
+Updated to kpty-5.5.0
+Updated to kunitconversion-5.5.0
+Updated to kconfigwidgets-5.5.0
+Updated to kservice-5.5.0
+Updated to kdesu-5.5.0
+Updated to kemoticons-5.5.0
+Updated to kiconthemes-5.5.0
+Updated to kjobwidgets-5.5.0
+Updated to knotifications-5.5.0
+Updated to ktextwidgets-5.5.0
+Updated to kwallet-5.5.0
+Updated to kxmlgui-5.5.0
+Updated to kbookmarks-5.5.0
+Updated to kcmutils-5.5.0
+Updated to kio-5.5.0
+Updated to frameworkintegration-5.5.0
+Updated to kdeclarative-5.5.0
+Updated to kinit-5.5.0
+Updated to knewstuff-5.5.0
+Updated to knotifyconfig-5.5.0
+Updated to kparts-5.5.0
+Updated to kactivities-5.5.0
+Updated to kded-5.5.0
+Updated to kdewebkit-5.5.0
+Updated to ktexteditor-5.5.0
+Updated to kdesignerplugin-5.5.0
+Updated to plasma-framework-5.5.0
+Updated to kjs-5.5.0
+Updated to kdelibs4support-5.5.0
+Updated to khtml-5.5.0
+Updated to kjsembed-5.5.0
+Updated to kmediaplayer-5.5.0
+Updated to kross-5.5.0
+Updated to krunner-5.5.0
+
+Removed im-chooser-1.6.4
+Removed imsettings-1.6.7
+Removed keybinder-0.3.0
+Removed libgxim-0.5.0
+Removed libfm-1.2.3
+Removed libfm-extra-1.2.3
+Removed liblxqt-0.8.0
+Removed liblxqt-mount-0.8.0
+Removed libqtxdg-1.0.0
+Removed libsysstat-0.2.0
+Removed lxappearance-0.6.1
+Removed lxappearance-obconf-0.2.2
+Removed lxde-common-0.99.0
+Removed lxde-icon-theme-0.5.1
+Removed lxinput-0.3.4
+Removed lxmenu-data-0.1.4
+Removed lxpanel-0.8.0
+Removed lxqt-about-0.8.0
+Removed lxqt-common-0.8.0
+Removed lxqt-config-0.8.0
+Removed lxqt-globalkeys-0.8.0
+Removed lxqt-notificationd-0.8.0
+Removed lxqt-panel-0.8.0
+Removed lxqt-policykit-0.8.0
+Removed lxqt-powermanagement-0.8.0
+Removed lxqt-qtplugin-0.8.0
+Removed lxqt-runner-0.8.0
+Removed lxqt-session-0.8.0
+Removed lxrandr-0.3.0
+Removed lxsession-0.5.2
+Removed lxterminal-0.2.0
+Removed menu-cache-1.0.0
+Removed openbox-3.5.2
+Removed pcmanfm-1.2.3
+Removed pcmanfm-qt-0.8.0
+
+# End Fri Dec 12 18:03:13 UTC 2014
+
+# Begin Wed Dec 17 23:30:50 UTC 2014
+
+Removed akonadi-1.12.91-106-gd397a04
+Removed kdepimlibs-4.14.3-1478-g87fc3d1
+Removed akonadi-search-59da8ad
+Removed grantlee-5.0.0
+Removed libkfbapi-1.0-39-g5ab2d99
+Removed libkgapi-2.2.0-70-g2f7ca42
+Removed prison-1.1.1-22-g8f25e5a
+Removed kdepim-runtime-4.14.3-669-g26d8ba5
+Removed kdepim-4.14.3-2050-g1dda1c6
+Removed kde-baseapps-4.14.3
+Removed konsole-4.14.3
+
+Updated to oxygen-icons-14.12.0
+Updated to kdegraphics-mobipocket-14.12.0
+Updated to kde-runtime-14.12.0
+Updated to libkcddb-14.12.0
+Updated to kde-baseapps-4.14.2-427-gc2a0d3e
+Updated to libkdcraw-4.13.3-102-g24dce9d
+Updated to libkexiv2-4.14.1-108-g9ceebc1
+Updated to ark-14.12.0-58-gc4d31c3
+Updated to gwenview-14.11.97-25-gbe0da0e
+Updated to kate-14.12.0
+Updated to ksnapshot-14.12.0-101-g87a7c2a
+Updated to okular-14.11.97-175-g78d8b1f
+Updated to polkit-kde-agent-0.99.1-27-gb0163f5
+
+konsole-14.12.0 Qt5 version
+
+Updated to kfilemetadata-5.1.2
+Updated to kwayland-5.1.2
+Updated to oxygen-fonts-5.1.2
+Updated to baloo-5.1.2
+Updated to breeze-5.1.2
+Updated to kde-cli-tools-5.1.2
+Updated to kinfocenter-5.1.2
+Updated to kio-extras-5.1.2
+Updated to kwin-5.1.2
+Updated to kwrited-5.1.2
+Updated to libkscreen-5.1.2
+Updated to libksysguard-5.1.2
+Updated to libmm-qt-5.1.2
+Updated to libnm-qt-5.1.2
+Updated to milou-5.1.2
+Updated to systemsettings-5.1.2
+Updated to ksysguard-5.1.2
+Updated to oxygen-5.1.2
+Updated to plasma-workspace-5.1.2
+Updated to plasma-workspace-wallpapers-5.1.2
+Updated to khotkeys-5.1.2
+Updated to kmenuedit-5.1.2
+Updated to plasma-nm-5.1.2
+Updated to powerdevil-5.1.2
+Updated to plasma-desktop-5.1.2
+Updated to kdeplasma-addons-5.1.2
+
+# End Thu Dec 18 01:33:33 UTC 2014
+
+# Begin Thu Dec 18 14:19:29 UTC 2014
+
+Updated to cmake-3.1.0
+Updated to ffmpeg-2.5.1
+Updated to gnome-online-miners-3.14.1
+Updated to gtk+-3.14.6
+Updated to harfbuzz-0.9.37
+Updated to less-471
+Updated to Mesa-10.4.0
+Updated to NetworkManager-0.995.0.0
+Updated to network-manager-applet-0.995.0.0
+Updated to orc-0.4.23
+Updated to python-setuptools-8.0.4
+Updated to rasqal-0.9.33
+Updated to subversion-1.8.11
+Updated to tdb-1.3.3
+Updated to ldb-1.1.18
+Updated to udisks-2.1.4
+Updated to upower-0.99.2
+Updated to vinagre-3.14.3
+Updated to vte-0.38.3
+
+# End Thu Dec 18 16:52:07 UTC 2014
+
+# Begin Sun Dec 21 10:26:54 UTC 2014
+
+Removed sddm-0.11.0
+
+broadcom-wl-6.30.223.248
+lightdm-1.12.2
+lightdm-gtk-greeter-1.9.0
+
+Rebuild cups-filters-1.0.61 against poppler-0.29.0
+Rebuild inkscape-0.48.5 against poppler-0.29.0
+Rebuild qtchooser-39 to add Qt 5.4 support
+
+Updated to appstream-glib-0.3.3
+Updated to elfutils-0.161
+Updated to git-2.2.1
+Updated to gnome-user-share-3.14.2
+Updated to gstreamer-1.4.5
+Updated to gst-plugins-base-1.4.5
+Updated to gst-plugins-good-1.4.5
+Updated to gst-plugins-bad-1.4.5
+Updated to gst-plugins-ugly-1.4.5
+Updated to gst-libav-1.4.5
+Updated to libreoffice-4.3.5.2
+Updated to libvdpau-0.9
+Updated to linux-3.17.7-krejzi
+Updated to mpv-0.7.2
+Updated to mutter-3.14.3
+Updated to gnome-shell-3.14.3
+Updated to gnome-shell-extensions-3.14.3
+Updated to NetworkManager-1.0.0
+Updated to network-manager-applet-1.0.0
+Updated to openmpi-1.8.4
+Updated to php-5.6.4
+Updated to postgresql-9.4.0
+Updated to pulseaudio-5.99.2
+Updated to python-setuptools-8.2.1
+Updated to xorg-server-1.16.3
+Updated to xf86-video-intel-2.99.917
+
+# End Sun Dec 21 15:27:24 UTC 2014
+
+# Begin Sat Dec 27 20:31:08 UTC 2014
+
+Updated to bluez-5.27
+Updated to doxygen-1.8.9
+Updated to ffmpeg-2.5.2
+Updated to gettext-0.19.4
+Updated to libabw-0.1.1
+Updated to libgphoto2-2.5.6
+Updated to libgweather-3.14.2
+Updated to libpng-1.6.16
+Updated to librevenge-0.0.2
+Updated to perl-extutils-depends-0.403
+Updated to python-sip-4.16.5
+Updated to ruby-2.2.0
+Updated to whois-5.2.3
+Updated to xz-5.2.0
+Updated to linux-api-headers-3.18.1
+Updated to binutils-2.25
+
+Rebuild glibc-2.20 with binutils-2.25
+Rebuild gcc-4.9.2 with binutils-2.25
+
+Rebuild gvfs-1.22.2 against libgphoto2-2.5.6
+Rebuild sane-backends-1.0.24 against libgphoto2-2.5.6
+Rebuild shotwell-0.20.2 against libgphoto2-2.5.6
+
+Rebuild graphviz-2.38.0 against ruby-2.2.0
+Rebuild subversion-1.8.11 against ruby-2.2.0
+
+Removed arduino-1.0.6
+Removed avr-binutils-2.24
+Removed avr-gcc-4.9.2
+Removed avr-libc-1.8.1
+Removed icoutils-0.31.0
+Removed java-rxtx-2.2pre2
+
+glm-0.9.6.1
+libixion-0.7.0
+mdds-0.11.2
+firebird-2.5.3.26780
+hyphen-2.8.8
+libetonyek-0.1.1
+libgltf-0.0.2
+liborcus-0.7.0
+lpsolve-5.5.2.0
+mythes-1.2.4
+vigra-1.10.0
+
+# End Sat Dec 27 23:46:18 UTC 2014

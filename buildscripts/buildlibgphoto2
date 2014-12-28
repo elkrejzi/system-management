@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.5.5.1
+export VER=2.5.6
 export DEST=/binary/libgphoto2-${VER}
 
 pushd libgphoto2-${VER}
@@ -22,11 +22,17 @@ rm -rf ${DEST}/usr/lib/udev
 rm -rf ${DEST}/usr/share/doc
 
 install -dm755 ${DEST}/lib/udev/hwdb.d
+install -dm755 ${DEST}/lib/udev/rules.d
 
 LD_LIBRARY_PATH=${DEST}/usr/lib${LD_LIBRARY_PATH:+:}$LD_LIBRARY_PATH \
 CAMLIBS=${DEST}/usr/lib/libgphoto2/${VER} \
     ${DEST}/usr/lib/libgphoto2/print-camera-list hwdb > \
     ${DEST}/lib/udev/hwdb.d/20-gphoto2.hwdb
+
+LD_LIBRARY_PATH=${DEST}/usr/lib${LD_LIBRARY_PATH:+:}$LD_LIBRARY_PATH \
+CAMLIBS=${DEST}/usr/lib/libgphoto2/${VER} \
+    ${DEST}/usr/lib/libgphoto2/print-camera-list udev-rules version 201 > \
+    ${DEST}/lib/udev/rules.d/40-gphoto.rules
 
 pushd ${DEST}
 

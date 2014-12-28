@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.402
+export VER=0.403
 export DEST=/binary/perl-extutils-depends-${VER}
 
 pushd ExtUtils-Depends-${VER}

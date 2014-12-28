@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
-export VER=0.0.2
-export DEST=/binary/librevenge-${VER}
+export VER=2.8.8
+export DEST=/binary/hyphen-${VER}
 
-pushd librevenge-${VER}
+pushd hyphen-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
@@ -14,11 +14,9 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf librevenge-${VER}
+rm -rf hyphen-${VER}
 
 find ${DEST} -name "*.la" -delete
-
-rm -rf ${DEST}/usr/share
 
 pushd ${DEST}
 

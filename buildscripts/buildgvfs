@@ -9,7 +9,8 @@ CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr     \
             --sysconfdir=/etc \
-            --disable-static
+            --disable-static  \
+            --disable-goa
 
 make -j4
 make install DESTDIR=${DEST}

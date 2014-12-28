@@ -1,0 +1,61 @@
+#!/bin/bash -e
+
+export VER=2.5.3.26780
+export DEST=/binary/firebird-${VER}
+
+pushd Firebird-${VER}-0
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+./configure --prefix=/usr         \
+            --with-system-icu     \
+            --without-fbudf       \
+            --without-fbsbin      \
+            --without-fbconf      \
+            --without-fbdoc       \
+            --without-fbsample    \
+            --without-fbsample-db \
+            --without-fbintl      \
+            --without-fbmisc      \
+            --without-fbhelp      \
+            --without-fbsecure-db \
+            --without-fblog       \
+            --without-fbglock     \
+            --without-fbplugins   \
+            --with-fbmsg=/usr/share/firebird
+
+make
+
+install -dm755 ${DEST}/usr/bin ${DEST}/usr/share/firebird
+
+cp -rf gen/firebird/{lib,include} ${DEST}/usr
+rm -rf ${DEST}/usr/lib/libedit.a
+
+install -m644 gen/firebird/*.msg ${DEST}/usr/share/firebird
+install -m755 gen/firebird/bin/fb_config ${DEST}/usr/bin
+
+popd
+
+rm -rf Firebird-${VER}-0
+
+find ${DEST} -name "*.la" -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

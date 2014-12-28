@@ -30,7 +30,10 @@ if [ -e /usr/bin/tclsh ]; then
   export TCLDEST=/usr/lib/tcl${TCLVER}
 fi
 
-sed -i "s:ruby-1.9:ruby-2.1:g" -i configure
+sed -i "s:ruby-1.9:ruby-2.2:g" -i configure
+
+export C_INCLUDE_PATH=/usr/lib/java/include:/usr/lib/java/include/linux
+export CPLUS_INCLUDE_PATH=$C_INCLUDE_PATH
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
@@ -45,7 +48,7 @@ rm -rf graphviz-${VER}
 
 find ${DEST} -name "*.la" -delete
 
-rm -rf ${DEST}/usr/lib64 
+rm -rf ${DEST}/usr/lib64
 rm -rf ${DEST}/usr/lib/lua*
 rm -rf ${DEST}/usr/lib/perl*
 rm -rf ${DEST}/usr/lib/php*

@@ -29,6 +29,8 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
              --with-help                 \
              --with-alloc=system         \
              --without-java              \
+             --disable-coinmp            \
+             --disable-collada           \
              --disable-gconf             \
              --disable-odk               \
              --disable-opencl            \
@@ -44,6 +46,7 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
              --enable-release-build      \
              --enable-vlc                \
              --with-myspell-dicts        \
+             --with-system-altlinuxhyph  \
              --with-system-apr           \
              --with-system-bluez         \
              --with-system-boost         \
@@ -52,7 +55,9 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
              --with-system-cppunit       \
              --with-system-curl          \
              --with-system-expat         \
+             --with-system-firebird      \
              --with-system-glew          \
+             --with-system-glm           \
              --with-system-graphite      \
              --with-system-harfbuzz      \
              --with-system-hunspell      \
@@ -64,8 +69,10 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
              --with-system-libcdr        \
              --with-system-libcmis       \
              --with-system-libebook      \
+             --with-system-libetonyek    \
              --with-system-libexttextcat \
              --with-system-libfreehand   \
+             --with-system-libgltf       \
              --with-system-liblangtag    \
              --with-system-libmspub      \
              --with-system-libmwaw       \
@@ -77,18 +84,24 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
              --with-system-libwpg        \
              --with-system-libwps        \
              --with-system-libxml        \
+             --with-system-lpsolve       \
              --with-system-mariadb       \
+             --with-system-mdds          \
              --with-system-mesa-headers  \
+             --with-system-mythes        \
              --with-system-neon          \
              --with-system-npapi-headers \
              --with-system-nss           \
              --with-system-odbc          \
              --with-system-openldap      \
              --with-system-openssl       \
+             --with-system-orcus         \
              --with-system-poppler       \
              --with-system-postgresql    \
              --with-system-redland       \
+             --with-system-sane          \
              --with-system-serf          \
+             --with-system-vigra         \
              --with-system-zlib          \
              --without-system-dicts      \
              --with-vendor="Krejzi"      \

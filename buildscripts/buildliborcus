@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
-export VER=0.0.2
-export DEST=/binary/librevenge-${VER}
+export VER=0.7.0
+export DEST=/binary/liborcus-${VER}
 
-pushd librevenge-${VER}
+pushd liborcus-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
@@ -14,11 +14,9 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf librevenge-${VER}
+rm -rf liborcus-${VER}
 
 find ${DEST} -name "*.la" -delete
-
-rm -rf ${DEST}/usr/share
 
 pushd ${DEST}
 
@@ -33,7 +31,7 @@ popd
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
-cp -rf --remove-destination usr /
+for dir in usr/include usr/lib ; do cp -rf --remove-destination $dir /usr ; done
 
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF

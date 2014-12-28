@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.26
+export VER=5.27
 export DEST=/binary/bluez-${VER}
 
 pushd bluez-${VER}

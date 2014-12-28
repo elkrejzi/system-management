@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.12.0
+export VER=1.12.2
 export DEST=/binary/lightdm-${VER}
 
 pushd lightdm-${VER}

@@ -1,24 +1,24 @@
 #!/bin/bash -e
 
-export VER=0.0.2
-export DEST=/binary/librevenge-${VER}
+export VER=1.9.0
+export DEST=/binary/lightdm-gtk-greeter-${VER}
 
-pushd librevenge-${VER}
+pushd lightdm-gtk-greeter-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr --disable-static
+./configure --prefix=/usr     \
+            --sysconfdir=/etc \
+            --with-libxklavier
 
 make -j4
 make install DESTDIR=${DEST}
 
 popd
 
-rm -rf librevenge-${VER}
+rm -rf lightdm-gtk-greeter-${VER}
 
-find ${DEST} -name "*.la" -delete
-
-rm -rf ${DEST}/usr/share
+rm -rf ${DEST}/usr/share/doc
 
 pushd ${DEST}
 
@@ -33,9 +33,9 @@ popd
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
-cp -rf --remove-destination usr /
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
 
-[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
 EOF
 
 chmod 755 ${DEST}/INSTALL

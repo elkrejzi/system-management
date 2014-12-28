@@ -1,0 +1,24 @@
+#!/bin/bash -e
+
+export VER=0.11.2
+export DEST=/binary/mdds-${VER}
+
+pushd mdds_${VER}
+
+./configure --prefix=/usr
+
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf mdds_${VER}
+
+rm -rf ${DEST}/usr/share/doc
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL
