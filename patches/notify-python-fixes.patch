@@ -1,0 +1,61 @@
+diff -Naur a/src/__init__.py b/src/__init__.py
+--- a/src/__init__.py	2006-04-25 07:53:58.000000000 +0200
++++ b/src/__init__.py	2014-12-29 22:30:21.406022903 +0100
+@@ -1 +1,21 @@
++"""
++Fedora's libnotify.so is not linked against GTK2 or GTK3. The idea
++was to support being linked against different parallel-installable
++GTK stacks.
++
++Unfortunately, python needs to jump through some special hoops in order
++to share symbols with extension modules, specifically, pygtk, which does
++link against GTK2.
++
++Without using sys.setdlopenflags(sys.getdlopenflags() | ctypes.RTLD_GLOBAL),
++the result is:
++libnotify-WARNING **: Missing symbol 'gdk_screen_make_display_name'
++
++Thanks to David Malcolm for figuring out the workaround.
++"""
++import ctypes
++import sys
++sys.setdlopenflags(sys.getdlopenflags() | ctypes.RTLD_GLOBAL)
++import gtk
++
+ from _pynotify import *
+diff -Naur a/src/pynotify.defs b/src/pynotify.defs
+--- a/src/pynotify.defs	2006-09-05 09:00:20.000000000 +0200
++++ b/src/pynotify.defs	2014-12-29 22:30:10.286685715 +0100
+@@ -38,7 +38,6 @@
+     '("const-gchar*" "summary")
+     '("const-gchar*" "message" (null-ok) (default "NULL"))
+     '("const-gchar*" "icon" (null-ok) (default "NULL"))
+-    '("GtkWidget*" "attach" (null-ok) (default "NULL"))
+   )
+ )
+ 
+@@ -53,24 +52,6 @@
+   )
+ )
+ 
+-(define-method attach_to_widget
+-  (of-object "NotifyNotification")
+-  (c-name "notify_notification_attach_to_widget")
+-  (return-type "none")
+-  (parameters
+-    '("GtkWidget*" "attach")
+-  )
+-)
+-
+-(define-method attach_to_status_icon
+-  (of-object "NotifyNotification")
+-  (c-name "notify_notification_attach_to_status_icon")
+-  (return-type "none")
+-  (parameters
+-    '("GtkStatusIcon*" "attach")
+-  )
+-)
+-
+ (define-method show
+   (of-object "NotifyNotification")
+   (c-name "notify_notification_show")
