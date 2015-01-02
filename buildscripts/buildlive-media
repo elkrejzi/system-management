@@ -1,11 +1,11 @@
 #!/bin/bash -e
 
-export VER=2014.11.12
+export VER=2014.12.17
 export DEST=/binary/live-media-${VER}
 
 pushd live
 
-sed -e 's/$(INCLUDES) -I. -O2 -DSOCKLEN_T/$(INCLUDES) -I. -O2 -pipe -fstack-protector-strong-march=native -mtune=native -I. -fPIC -DSOCKLEN_T/g' \
+sed -e 's/$(INCLUDES) -I. -O2 -DSOCKLEN_T/$(INCLUDES) -I. -O2 -pipe -fstack-protector-strong -march=native -mtune=native -I. -fPIC -DSOCKLEN_T/g' \
     -i config.linux
 
 ./genMakefiles linux

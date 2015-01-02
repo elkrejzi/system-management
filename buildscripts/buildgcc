@@ -28,8 +28,8 @@ mkdir build
 pushd build
 
 SED=sed \
-CFLAGS="-march=native -mtune=native -g -O2"   \
-CXXFLAGS="-march=native -mtune=native -g -O2" \
+CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
 ../src/configure --prefix=/usr \
                  --libdir=/usr/lib \
                  --disable-bootstrap \

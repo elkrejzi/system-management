@@ -12,8 +12,8 @@ cp -a cdparanoia-III-${VER} cdparanoia-III-${VER}-32
 
 pushd cdparanoia-III-${VER}
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-fPIC"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-fPIC" \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -fPIC"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -fPIC" \
 ./configure --prefix=/usr
 
 make
@@ -27,8 +27,8 @@ export CC="gcc -m32"
 export CXX="g++ -m32"
 export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-fPIC"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-fPIC" \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -fPIC"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -fPIC" \
 ./configure --prefix=/usr       \
             --libdir='${prefix}/lib32'
 

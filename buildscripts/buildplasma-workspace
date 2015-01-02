@@ -25,6 +25,21 @@ rm -rf plasma-workspace-${VER}
 
 sed -i "s:qtpaths:&-qt5:g" ${DEST}/usr/bin/startkde
 
+install -dm755 ${DEST}/etc/pam.d
+
+cat > ${DEST}/etc/pam.d/kde << "EOF"
+# Begin /etc/pam.d/kde
+
+auth     include        system-auth
+-auth    optional       pam_gnome_keyring.so
+
+account  include        system-account
+password include        system-password
+session  include        system-session
+
+# End /etc/pam.d/kde
+EOF
+
 pushd ${DEST}
 
 find * -type f 2>/dev/null | while read BUILD_BINARY ; do

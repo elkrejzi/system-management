@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.1.1
+export VER=0.1.2
 export DEST=/binary/libmspub-${VER}
 
 pushd libmspub-${VER}

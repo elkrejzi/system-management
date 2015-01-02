@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=10.4.0
+export VER=10.4.1
 
 pushd Mesa-${VER}
 
@@ -14,8 +14,8 @@ cp -a Mesa-${VER} Mesa-${VER}-32
 
 pushd Mesa-${VER}
 
-CFLAGS="-march=native -mtune=native -g -O2"   \
-CXXFLAGS="-march=native -mtune=native -g -O2" \
+CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr             \
             --sysconfdir=/etc         \
             --disable-xvmc            \
@@ -49,8 +49,8 @@ export CXX="g++ -m32"
 export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 export LLVM_CONFIG=/usr/bin/llvm-config32
 
-CFLAGS="-march=native -mtune=native -g -O2"   \
-CXXFLAGS="-march=native -mtune=native -g -O2" \
+CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr             \
             --sysconfdir=/etc         \
             --libdir=/usr/lib32       \

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.2.2
+export VER=3.2.3
 export DEST=/binary/eigen-${VER}
 
 install -dm755 eigen-${VER}/build

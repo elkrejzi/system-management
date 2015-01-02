@@ -9,8 +9,8 @@ if [ -e /media/ntfs/Other/Linux/patches/qt4fixes.patch ]; then
   popd
 fi
 
-export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-w"
-export CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-w"
+export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w"
+export CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w"
 
 cp -a qt-everywhere-opensource-src-${VER} qt-everywhere-opensource-src-${VER}-32
 
@@ -210,6 +210,8 @@ rm -rf dest/usr/lib32/qt4/plugins/imageformats/libqtga.so
 mv dest/usr/lib32 ${DEST}/usr
 
 popd
+
+rm -rf qt-everywhere-opensource-src-${VER} qt-everywhere-opensource-src-${VER}-32
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash

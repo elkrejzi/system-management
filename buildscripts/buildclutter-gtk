@@ -7,8 +7,8 @@ pushd clutter-gtk-${VER}
 
 #patch -Np1 -i /media/ntfs/Other/Linux/patches/clutter-gtk-fixes.patch
 
-CFLAGS="-march=native -mtune=native -g -O2"   \
-CXXFLAGS="-march=native -mtune=native -g -O2" \
+CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr
 
 make -j4

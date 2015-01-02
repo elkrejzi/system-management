@@ -1,0 +1,71 @@
+#!/bin/bash -e
+
+export VER=2.7.0
+export DEST=/binary/python-pillow-${VER}
+
+PY3VER=$(pkg-config --modversion python3)
+PY2VER=$(pkg-config --modversion python2)
+
+cp -a Pillow-${VER} Pillow-${VER}-3
+
+pushd Pillow-${VER}-3
+
+python3 setup.py build
+python3 setup.py install --root=${DEST} --optimize=1
+
+#pushd Sane
+#  python3 setup.py build
+#  python3 setup.py install --root=${DEST} --optimize=1
+#popd
+
+for file in ${DEST}/usr/bin/*.py
+do
+  mv ${file} ${file%.py}3
+done
+
+install -dm755 ${DEST}/usr/include/python${PY3VER}m
+
+cp -rf libImaging/*.h ${DEST}/usr/include/python${PY3VER}m
+
+popd
+
+pushd Pillow-${VER}
+
+python setup.py build
+python setup.py install --root=${DEST} --optimize=1
+
+#pushd Sane
+#  python setup.py build
+#  python setup.py install --root=${DEST} --optimize=1
+#popd
+
+for file in ${DEST}/usr/bin/*.py
+do
+  mv ${file} ${file%.py}
+done
+
+install -dm755 ${DEST}/usr/include/python${PY2VER}
+
+cp -rf libImaging/*.h ${DEST}/usr/include/python${PY2VER}
+
+popd
+
+rm -rf Pillow-${VER} Pillow-${VER}-3
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL

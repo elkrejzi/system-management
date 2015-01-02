@@ -6,7 +6,7 @@ export XORG_HTTP=http://xorg.freedesktop.org/archive/individual
 
 export XCB_HTTP=${XORG_HTTP}/xcb
 
-export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-I${DEST}/tmp/usr/include -I${DEST}/tmp/usr/include/X11 -I${DEST}/tmp/usr/include/GL"
+export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -I${DEST}/tmp/usr/include -I${DEST}/tmp/usr/include/X11 -I${DEST}/tmp/usr/include/GL"
 export PKG_CONFIG_PATH="${DEST}/tmp/usr/lib/pkgconfig:${DEST}/tmp/usr/share/pkgconfig"
 export LD_LIBRARY_PATH="${DEST}/tmp/usr/lib"
 export LDFLAGS="-L${DEST}/tmp/usr/lib"

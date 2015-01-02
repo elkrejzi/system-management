@@ -1,22 +1,24 @@
 #!/bin/bash -e
 
-export VER=20141218
-export DEST=/binary/x264-${VER}
+export VER=1.4
+export DEST=/binary/libcerf-${VER}
 
-pushd x264-snapshot-${VER}-2245
+pushd libcerf-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr    \
-            --enable-shared  \
-            --system-libx264
+./configure --prefix=/usr --disable-static
 
 make -j4
 make install DESTDIR=${DEST}
 
 popd
 
-rm -rf x264-snapshot-${VER}-2245
+rm -rf libcerf-${VER}
+
+rm -rf ${DEST}/usr/share/doc
+
+find ${DEST} -name "*.la" -delete
 
 pushd ${DEST}
 
@@ -33,6 +35,7 @@ cat > ${DEST}/INSTALL << "EOF"
 
 cp -rf --remove-destination usr /
 
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 

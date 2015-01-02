@@ -43,6 +43,7 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
              --with-banner-add=" - BLFS"
 
 make -j4
+
 make install DESTDIR=${DEST}
 make texlinks DESTDIR=${DEST}
 
@@ -64,7 +65,7 @@ gzip -9 ${DEST}/usr/share/info/*
 
 pushd ${DEST}
 
-find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+find usr/bin usr/lib -type f 2>/dev/null | while read BUILD_BINARY ; do
   case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
     strip --strip-unneeded ${BUILD_BINARY}
   esac

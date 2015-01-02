@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.11.06
+export VER=2.11.05
 export DEST=/binary/nasm-${VER}
 
 pushd nasm-${VER}

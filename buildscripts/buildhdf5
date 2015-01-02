@@ -7,8 +7,8 @@ pushd hdf5-${VER}
 
 sed -i "s:BSD_SOURCE:DEFAULT_SOURCE:g" configure configure.ac
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w" \
 ./configure --prefix=/usr       \
             --enable-production \
             --enable-threadsafe \

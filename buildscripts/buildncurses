@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.9-20141115
+export VER=5.9-20141227
 export DEST=/binary/ncurses-${VER}
 
 cd ncurses-${VER}
@@ -12,6 +12,8 @@ pushd buildncursesw6
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ../configure --prefix=/usr \
+             --libdir=/usr/lib \
+             --with-pkg-config-libdir=/usr/lib/pkgconfig \
              --mandir=/usr/share/man \
              --with-shared \
              --without-debug \
@@ -30,10 +32,10 @@ pushd buildncursesw
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ../configure --prefix=/usr \
+             --libdir=/usr/lib \
              --mandir=/usr/share/man \
              --with-shared \
              --without-debug \
-             --enable-pc-files \
              --enable-widec
 
 make -j4
@@ -50,10 +52,10 @@ pushd buildncurses
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ../configure --prefix=/usr \
+             --libdir=/usr/lib \
              --mandir=/usr/share/man \
              --with-shared \
              --without-debug \
-             --enable-pc-files \
              --with-chtype=long
 
 make -j4
@@ -99,11 +101,9 @@ CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ../configure --prefix=/usr \
              --libdir=/usr/lib32 \
-             --with-pkg-config-libdir=/usr/lib32/pkgconfig \
              --mandir=/usr/share/man \
              --with-shared \
              --without-debug \
-             --enable-pc-files \
              --enable-widec
 
 make -j4
@@ -121,11 +121,9 @@ CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ../configure --prefix=/usr \
              --libdir=/usr/lib32 \
-             --with-pkg-config-libdir=/usr/lib32/pkgconfig \
              --mandir=/usr/share/man \
              --with-shared \
              --without-debug \
-             --enable-pc-files \
              --with-chtype=long
 
 make -j4

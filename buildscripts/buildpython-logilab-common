@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.63.0
+export VER=0.63.2
 export DEST=/binary/python-logilab-common-${VER}
 
 cp -a logilab-common-${VER} logilab-common-${VER}-3

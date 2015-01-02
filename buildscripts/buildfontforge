@@ -5,9 +5,9 @@ export DEST=/binary/fontforge-2.0-${VER}
 
 pushd fontforge-${VER}
 
-rm -rf libltdl
+#rm -rf libltdl m4
 
-./bootstrap
+#./bootstrap
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \

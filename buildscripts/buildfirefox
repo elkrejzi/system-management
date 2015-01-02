@@ -57,7 +57,7 @@ make -f client.mk configure
 
 make -C firefox-build-dir -j4
 make -C firefox-build-dir install DESTDIR=${DEST} INSTALL_SDK=
-make -C firefox-build-dir install DESTDIR=${PWD}/dest INSTALL_SDK=
+#make -C firefox-build-dir install DESTDIR=${PWD}/dest INSTALL_SDK=
 
 for i in 16 22 24 32 48 256; do
   install -Dm644 browser/branding/official/default$i.png ${DEST}/usr/share/icons/hicolor/${i}x${i}/apps/firefox.png
@@ -70,7 +70,7 @@ install -Dm644 browser/branding/official/content/about-logo@2x.png ${DEST}/usr/s
 
 popd
 
-#rm -rf mozilla-release
+rm -rf mozilla-release
 
 install -dm755 ${DEST}/usr/lib/firefox/browser/defaults/preferences ${DEST}/usr/share/applications
 

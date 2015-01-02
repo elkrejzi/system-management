@@ -1,11 +1,11 @@
 #!/bin/bash
 
-export VER=5.7.2.1
+export VER=5.7.3
 export DEST=/binary/net-snmp-${VER}
 
 pushd net-snmp-${VER}
 
-patch -Np1 -i /media/ntfs/Other/Linux/patches/net-snmp-fixes.patch
+#patch -Np1 -i /media/ntfs/Other/Linux/patches/net-snmp-fixes.patch
 
 autoreconf -fi
 
@@ -29,7 +29,7 @@ make -j4
 
 sed -i "s:install --basedir=\$\$dir:install --basedir=\$\$dir --root=${DEST}:" Makefile
 
-make install DESTDIR=${DEST}
+make -j4 install DESTDIR=${DEST}
 
 popd
 

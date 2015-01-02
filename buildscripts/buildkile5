@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.1-396-g668abf7
+export VER=2.1-406-g2cdf9b2
 export DEST=/binary/kile-${VER}
 
 pushd kile-${VER}

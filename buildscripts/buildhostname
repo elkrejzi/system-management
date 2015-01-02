@@ -5,7 +5,7 @@ export DEST=/binary/hostname-${VER}
 
 pushd hostname
 
-make CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-Wall" -j4
+make CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -Wall" -j4
 
 make install BASEDIR=${DEST}
 

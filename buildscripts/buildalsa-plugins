@@ -3,6 +3,8 @@
 export VER=1.0.28
 export DEST=/binary/alsa-plugins-${VER}
 
+sed -i "/speex_preprocess/i#include <stdint.h>" alsa-plugins-${VER}/speex/pcm_speex.c
+
 cp -a alsa-plugins-${VER} alsa-plugins-${VER}-32
 
 pushd alsa-plugins-${VER}

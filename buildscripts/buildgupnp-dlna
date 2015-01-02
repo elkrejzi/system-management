@@ -1,22 +1,22 @@
 #!/bin/bash -e
 
-export VER=20141218
-export DEST=/binary/x264-${VER}
+export VER=0.10.2
+export DEST=/binary/gupnp-dlna-${VER}
 
-pushd x264-snapshot-${VER}-2245
+pushd gupnp-dlna-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr    \
-            --enable-shared  \
-            --system-libx264
+./configure --prefix=/usr --disable-static
 
 make -j4
 make install DESTDIR=${DEST}
 
 popd
 
-rm -rf x264-snapshot-${VER}-2245
+rm -rf gupnp-dlna-${VER}
+
+find ${DEST} -name "*.la" -delete
 
 pushd ${DEST}
 

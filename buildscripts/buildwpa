@@ -5,8 +5,8 @@ export DEST=/binary/wpa_supplicant-${VER}
 
 pushd wpa_supplicant-${VER}
 
-export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-MMD"
-export CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-MMD"
+export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -MMD"
+export CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -MMD"
 
 cat > wpa_supplicant/.config << "EOF"
 CONFIG_BACKEND=file

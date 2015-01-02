@@ -11,8 +11,8 @@ sed -i 's#l \(gtk-.*\).sgml#& -o \1#' docs/{faq,tutorial}/Makefile.in
 sed -i 's#.*@man_#man_#' docs/reference/gtk/Makefile.in
 sed -i -e 's#pltcheck.sh#$(NULL)#g' gtk/Makefile.in
 
-CFLAGS="-march=native -mtune=native -g -O2"   \
-CXXFLAGS="-march=native -mtune=native -g -O2" \
+CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr --sysconfdir=/etc
 
 make -j4
@@ -30,8 +30,8 @@ sed -i 's#l \(gtk-.*\).sgml#& -o \1#' docs/{faq,tutorial}/Makefile.in
 sed -i 's#.*@man_#man_#' docs/reference/gtk/Makefile.in
 sed -i -e 's#pltcheck.sh#$(NULL)#g' gtk/Makefile.in
 
-CFLAGS="-march=native -mtune=native -g -O2"   \
-CXXFLAGS="-march=native -mtune=native -g -O2" \
+CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr       \
             --libdir=/usr/lib32 \
             --sysconfdir=/etc   \

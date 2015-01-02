@@ -5,7 +5,10 @@ export DEST=/binary/qca-${VER}
 
 install -dm755 qca-${VER}/build4 qca-${VER}/build5
 
-sed -i "/BSD_SOURCE/d" qca-${VER}/CMakeLists.txt
+pushd qca-${VER}
+  sed -i "/BSD_SOURCE/d" CMakeLists.txt
+  patch -Np1 -i /media/ntfs/Other/Linux/patches/qca-fixes.patch
+popd
 
 pushd qca-${VER}/build4
 

@@ -63,7 +63,7 @@ cat > ${DEST}/etc/pam.d/system-auth << "EOF"
 # Begin /etc/pam.d/system-auth
 
 auth      required       pam_unix.so nullok_secure
--auth      optional       pam_cap.so
+-auth     optional       pam_cap.so
 
 # End /etc/pam.d/system-auth
 EOF
@@ -72,7 +72,7 @@ cat > ${DEST}/etc/pam.d/system-password << "EOF"
 # Begin /etc/pam.d/system-password
 
 password  required       pam_unix.so sha512
--password  optional       pam_gnome_keyring.so
+-password optional       pam_gnome_keyring.so
 
 # End /etc/pam.d/system-password
 EOF
@@ -82,7 +82,7 @@ cat > ${DEST}/etc/pam.d/system-session << "EOF"
 
 session   required       pam_unix.so
 session   required       pam_loginuid.so
--session   optional       pam_systemd.so
+-session  optional       pam_systemd.so
 
 # End /etc/pam.d/system-session
 EOF

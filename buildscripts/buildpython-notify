@@ -1,22 +1,30 @@
 #!/bin/bash -e
 
-export VER=20141218
-export DEST=/binary/x264-${VER}
+export VER=0.1.1
+export DEST=/binary/python-notify-${VER}
 
-pushd x264-snapshot-${VER}-2245
+pushd notify-python-${VER}
 
+patch -Np1 -i /media/ntfs/Other/Linux/patches/notify-python-fixes.patch
+
+PYTHON=/usr/bin/python \
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr    \
-            --enable-shared  \
-            --system-libx264
+./configure --prefix=/usr
 
+touch src/pynotify.override
+
+make clean
 make -j4
 make install DESTDIR=${DEST}
 
 popd
 
-rm -rf x264-snapshot-${VER}-2245
+rm -rf notify-python-${VER}
+
+find ${DEST} -name "*.la" -delete
+
+rm -rf ${DEST}/usr/share
 
 pushd ${DEST}
 
@@ -32,8 +40,6 @@ cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
 cp -rf --remove-destination usr /
-
-[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 
 chmod 755 ${DEST}/INSTALL

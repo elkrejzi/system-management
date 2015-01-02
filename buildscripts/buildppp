@@ -11,7 +11,7 @@ sed -i "s:^#FILTER=y:FILTER=y:" pppd/Makefile.linux
 sed -i "s:^#HAVE_INET6=y:HAVE_INET6=y:" pppd/Makefile.linux
 sed -i "s:^#CBCP=y:CBCP=y:" pppd/Makefile.linux
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-D_GNU_SOURCE" ./configure --prefix=/usr
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -D_GNU_SOURCE" ./configure --prefix=/usr
 
 make -j4
 make install INSTROOT=${DEST}

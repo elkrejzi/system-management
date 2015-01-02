@@ -7,8 +7,8 @@ pushd gegl-${VER}
 
 patch -Np1 -i /media/ntfs/Other/Linux/patches/gegl-fixes.patch
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-fPIC"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong-fPIC" \
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -fPIC"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -fPIC" \
 ./configure --prefix=/usr
 
 make -j4

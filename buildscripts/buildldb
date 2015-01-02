@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.1.18
+export VER=1.1.19
 export DEST=/binary/ldb-${VER}
 
 pushd ldb-${VER}

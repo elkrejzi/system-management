@@ -41,7 +41,7 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
             --disable-expensive-checks --disable-debug-runtime \
             --disable-assertions --enable-optimized
 
-make -j4
+make -j2
 make -C docs -f Makefile.sphinx man
 
 make install DESTDIR=/binary/llvm-${VER}
@@ -121,7 +121,7 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
             --disable-assertions --enable-optimized                   \
             --host=i686-pc-linux-gnu --target=i686-pc-linux-gnu
 
-make -j4
+make -j2
 make install DESTDIR=${PWD}/dest
 
 rm -rf dest/usr/lib32/LLVMHello.so

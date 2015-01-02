@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.6.6
+export VER=5.0.0
 export DEST=/binary/gnuplot-${VER}
 
 pushd gnuplot-${VER}
@@ -9,7 +9,7 @@ WX_CONFIG=/usr/bin/wx-config-2.8           \
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr \
-            --enable-qt   \
+            --with-qt=qt4 \
             --libexecdir=/usr/bin
 
 make pkglibexecdir=/usr/bin -j4

@@ -7,8 +7,8 @@ pushd xf86-input-synaptics-${VER}
 
 sed -i "/unistd/i #include <xorg-server.h>" src/synproto.h
 
-CFLAGS="-march=native -mtune=native -g -O2"   \
-CXXFLAGS="-march=native -mtune=native -g -O2" \
+CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr
 
 make -j4
