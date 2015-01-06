@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.8.9
+export VER=1.8.9.1
 export DEST=/binary/doxygen-${VER}
 
 pushd doxygen-${VER}

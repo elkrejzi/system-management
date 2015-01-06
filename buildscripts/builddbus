@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.8.12
+export VER=1.8.14
 export DEST=/binary/dbus-${VER}
 
 cp -a dbus-${VER} dbus-${VER}-32

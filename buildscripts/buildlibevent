@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.0.21
+export VER=2.0.22
 export DEST=/binary/libevent-${VER}
 
 pushd libevent-${VER}-stable

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.14.1
+export VER=1.15
 export DEST=/binary/automake-${VER}
 
 pushd automake-${VER}
