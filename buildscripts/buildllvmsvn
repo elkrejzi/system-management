@@ -2,9 +2,10 @@
 
 tar xf git/llvm.tar.xz
 tar xf git/clang.tar.xz
+tar xf git/clang-tools-extra.tar.xz
 tar xf git/compiler-rt.tar.xz
 
-for dir in llvm clang compiler-rt
+for dir in llvm clang clang-tools-extra compiler-rt
 do
   pushd $dir
   svn up
@@ -12,39 +13,46 @@ do
 done
 
 pushd llvm
-export VER=$(svn info | grep "Revision:" | awk '{print $2}')
+  export VER=$(svn info | grep "Revision:" | awk '{print $2}')
 popd
 
 rm -rf llvm/tools/clang
 rm -rf llvm/projects/compiler-rt
 
 mv compiler-rt llvm/projects/compiler-rt
+mv clang llvm/tools/clang
 
 cp -a llvm llvm-32
 
-mv clang llvm/tools/clang
+mv clang-tools-extra llvm/tools/clang/tools/extra
 
-cd llvm
+pushd llvm
 
-sed -e 's:\$(PROJ_prefix)/docs/llvm:$(PROJ_prefix)/share/doc/llvm:' \
-    -i Makefile.config.in
+sed -i 's:$(PROJ_prefix)/docs/llvm:$(PROJ_prefix)/share/doc/llvm:' Makefile.config.in
+sed -i '/@LLVM_CONFIG_CMAKE_DIR@/s:$(PROJ_cmake):$(PROJ_prefix)/share/llvm/cmake:' cmake/modules/Makefile
 
 sed -i "/ld-linux-x86-64/s/lib64/lib/" tools/clang/lib/Driver/Tools.cpp
 
+export CC="gcc"
+export CXX="g++"
+
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-CC="gcc" CXX="g++" ./configure --prefix=/usr --sysconfdir=/etc  --enable-shared   \
-                               --enable-libffi --enable-targets=x86,r600          \
-                               --disable-expensive-checks --disable-debug-runtime \
-                               --disable-assertions --enable-optimized
+./configure --prefix=/usr --sysconfdir=/etc  --enable-shared   \
+            --enable-libffi --enable-targets=x86,r600          \
+            --disable-expensive-checks --disable-debug-runtime \
+            --disable-assertions --enable-optimized
 
-make -j4
+make -j3
 make -C docs -f Makefile.sphinx man
 
 make install DESTDIR=/binary/llvm-${VER}
 
 rm -rf /binary/llvm-${VER}/usr/lib/LLVMHello.so
 rm -rf /binary/llvm-${VER}/usr/share/doc
+
+#install -dm755 /binary/llvm-${VER}/usr/lib/bfd-plugins
+#ln -sf ../LLVMgold.so /binary/llvm-${VER}/usr/lib/bfd-plugins/LLVMgold.so
 
 chmod 644 /binary/llvm-${VER}/usr/lib/*.a
 chmod 755 /binary/llvm-${VER}/usr/lib/*.so
@@ -92,15 +100,17 @@ mv /binary/llvm-${VER}/usr/lib/clang-analyzer/scan-build/scan-build.1 /binary/ll
 python -m compileall /binary/llvm-${VER}/usr/lib/clang-analyzer
 python -O -m compileall /binary/llvm-${VER}/usr/lib/clang-analyzer
 
-cd ..
+popd
 
-rm -rf llvm
-
-cd llvm-32
+pushd llvm-32
 
 sed -e 's:\$(PROJ_prefix)/lib:$(PROJ_prefix)/lib32:' \
     -e 's:\$(PROJ_prefix)/docs/llvm:$(PROJ_prefix)/share/doc/llvm:' \
     -i Makefile.config.in
+
+sed -e 's:LLVM_LIBDIR="${prefix}/lib":LLVM_LIBDIR="${prefix}/lib32":' \
+    -i autoconf/configure.ac \
+    -i configure
 
 sed -e '/ActiveLibDir = ActivePrefix/s:lib:lib32:' \
     -i tools/llvm-config/llvm-config.cpp
@@ -115,30 +125,27 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
             --enable-shared --enable-libffi --enable-targets=x86,r600 \
             --disable-expensive-checks --disable-debug-runtime        \
             --disable-assertions --enable-optimized                   \
-            --host=i386-pc-linux-gnu --target=i386-pc-linux-gnu
+            --host=i686-pc-linux-gnu --target=i686-pc-linux-gnu
 
-make -j4
-make install DESTDIR=/binary/llvm32
+make -j3
+make install DESTDIR=${PWD}/dest
 
-rm -rf /binary/llvm32/usr/lib32/LLVMHello.so
+rm -rf dest/usr/lib32/LLVMHello.so
 
-chmod 644 /binary/llvm32/usr/lib32/*.a
-chmod 755 /binary/llvm32/usr/lib32/*.so
+chmod 644 dest/usr/lib32/*.a
+chmod 755 dest/usr/lib32/*.so
 
-mv /binary/llvm32/usr/bin/i386-pc-linux-gnu-llvm-config /binary/llvm-${VER}/usr/bin/llvm-config32
+mv dest/usr/bin/i686-pc-linux-gnu-llvm-config /binary/llvm-${VER}/usr/bin/llvm-config32
 
-mv /binary/llvm32/usr/include/llvm/Config/config.h /binary/llvm-${VER}/usr/include/llvm/Config/config-32.h
-mv /binary/llvm32/usr/include/llvm/Config/llvm-config.h /binary/llvm-${VER}/usr/include/llvm/Config/llvm-config-32.h
+mv dest/usr/include/llvm/Config/config.h /binary/llvm-${VER}/usr/include/llvm/Config/config-32.h
+mv dest/usr/include/llvm/Config/llvm-config.h /binary/llvm-${VER}/usr/include/llvm/Config/llvm-config-32.h
 
-mv /binary/llvm32/usr/lib32 /binary/llvm-${VER}/usr/
+mv dest/usr/lib32 /binary/llvm-${VER}/usr/
+mv dest/usr/lib/* /binary/llvm-${VER}/usr/lib32/
 
-rm -rf /binary/llvm32
+popd
 
-cd ..
-
-rm -rf llvm-32
-
-unset CC CXX PKG_CONFIG_PATH
+rm -rf llvm llvm-32
 
 pushd /binary/llvm-${VER}/
 find * -type f 2>/dev/null | while read BUILD_BINARY ; do
@@ -161,5 +168,3 @@ cp -rf --remove-destination usr /
 EOF
 
 chmod 755 /binary/llvm-${VER}/INSTALL
-
-unset VER

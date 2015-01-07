@@ -4,10 +4,13 @@ export VER=0.9.3
 export DEST=/binary/libomxil-bellagio-${VER}
 
 pushd libomxil-bellagio-${VER}
+  patch -Np1 -i /media/ntfs/Other/Linux/patches/libomxil-bellagio-fixes.patch
+  autoreconf -fi
+popd
 
-patch -Np1 -i /media/ntfs/Other/Linux/patches/libomxil-bellagio-fixes.patch
+cp -a libomxil-bellagio-${VER} libomxil-bellagio-${VER}-32
 
-autoreconf -fi
+pushd libomxil-bellagio-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
@@ -18,11 +21,31 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf libomxil-bellagio-${VER}
+pushd libomxil-bellagio-${VER}-32
 
-find ${DEST} -name "*.la" -delete
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+./configure --prefix=/usr       \
+            --libdir=/usr/lib32 \
+            --disable-static
+
+make -j4
+make install DESTDIR=${PWD}/dest
+
+mv dest/usr/lib32 ${DEST}/usr
+mv dest/usr/bin/omxregister-bellagio ${DEST}/usr/bin/omxregister-bellagio-32
+
+popd
+
+rm -rf libomxil-bellagio-${VER} libomxil-bellagio-${VER}-32
 
 rm -rf ${DEST}/usr/share/doc
+
+find ${DEST} -name "*.la" -delete
 
 pushd ${DEST}
 

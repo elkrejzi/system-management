@@ -14,20 +14,18 @@ rm -rf llvm-${VER}.src/tools/clang
 rm -rf cfe-${VER}.src/tools/extra
 
 mv compiler-rt-${VER}.src llvm-${VER}.src/projects/compiler-rt
+mv cfe-${VER}.src llvm-${VER}.src/tools/clang
 
 cp -a llvm-${VER}.src llvm-${VER}.src-32
 
-mv cfe-${VER}.src llvm-${VER}.src/tools/clang
 mv clang-tools-extra-${VER}.src llvm-${VER}.src/tools/clang/tools/extra
 
 pushd llvm-${VER}.src
 
-sed -e 's:$(PROJ_prefix)/docs/llvm:$(PROJ_prefix)/share/doc/llvm:' \
-    -i Makefile.config.in
-
-sed "/ld-linux-x86-64/s/lib64/lib/" -i tools/clang/lib/Driver/Tools.cpp
-
+sed -i 's:$(PROJ_prefix)/docs/llvm:$(PROJ_prefix)/share/doc/llvm:' Makefile.config.in
 sed -i '/@LLVM_CONFIG_CMAKE_DIR@/s:$(PROJ_cmake):$(PROJ_prefix)/share/llvm/cmake:' cmake/modules/Makefile
+
+sed -i "/ld-linux-x86-64/s/lib64/lib/" tools/clang/lib/Driver/Tools.cpp
 
 patch -Np0 -i /media/ntfs/Other/Linux/patches/llvm-fixes.patch
 
@@ -41,7 +39,7 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
             --disable-expensive-checks --disable-debug-runtime \
             --disable-assertions --enable-optimized
 
-make -j2
+make -j3
 make -C docs -f Makefile.sphinx man
 
 make install DESTDIR=/binary/llvm-${VER}
@@ -89,10 +87,10 @@ mkdir -p /binary/llvm-${VER}/usr/lib/clang-analyzer
 
 for _tool in scan-build scan-view; do
    cp -rf tools/clang/tools/$_tool /binary/llvm-${VER}/usr/lib/clang-analyzer/
-   ln -s ../lib/clang-analyzer/$_tool/$_tool /binary/llvm-${VER}//usr/bin/
+   ln -sf ../lib/clang-analyzer/$_tool/$_tool /binary/llvm-${VER}//usr/bin/
 done
 
-ln -s /usr/bin/clang /binary/llvm-${VER}/usr/lib/clang-analyzer/scan-build/
+ln -sf /usr/bin/clang /binary/llvm-${VER}/usr/lib/clang-analyzer/scan-build/
 mv /binary/llvm-${VER}/usr/lib/clang-analyzer/scan-build/scan-build.1 /binary/llvm-${VER}/usr/share/man/man1/
 
 python -m compileall /binary/llvm-${VER}/usr/lib/clang-analyzer
@@ -105,6 +103,10 @@ pushd llvm-${VER}.src-32
 sed -e 's:\$(PROJ_prefix)/lib:$(PROJ_prefix)/lib32:' \
     -e 's:\$(PROJ_prefix)/docs/llvm:$(PROJ_prefix)/share/doc/llvm:' \
     -i Makefile.config.in
+
+sed -e 's:LLVM_LIBDIR="${prefix}/lib":LLVM_LIBDIR="${prefix}/lib32":' \
+    -i autoconf/configure.ac \
+    -i configure
 
 sed -e '/ActiveLibDir = ActivePrefix/s:lib:lib32:' \
     -i tools/llvm-config/llvm-config.cpp
@@ -121,7 +123,7 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
             --disable-assertions --enable-optimized                   \
             --host=i686-pc-linux-gnu --target=i686-pc-linux-gnu
 
-make -j2
+make -j3
 make install DESTDIR=${PWD}/dest
 
 rm -rf dest/usr/lib32/LLVMHello.so
@@ -135,6 +137,7 @@ mv dest/usr/include/llvm/Config/config.h /binary/llvm-${VER}/usr/include/llvm/Co
 mv dest/usr/include/llvm/Config/llvm-config.h /binary/llvm-${VER}/usr/include/llvm/Config/llvm-config-32.h
 
 mv dest/usr/lib32 /binary/llvm-${VER}/usr/
+mv dest/usr/lib/* /binary/llvm-${VER}/usr/lib32/
 
 popd
 

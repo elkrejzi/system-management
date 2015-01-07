@@ -3,9 +3,9 @@
 export VER=1.5.0
 export DEST=/binary/libva-${VER}
 
-pushd libva-${VER}
+cp -a libva-${VER} libva-${VER}-32
 
-#patch -Np1 -i /media/ntfs/Other/Linux/patches/libva-fixes.patch
+pushd libva-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
@@ -16,11 +16,30 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf libva-${VER}
+pushd libva-${VER}-32
+
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+./configure --prefix=/usr       \
+            --libdir=/usr/lib32 \
+            --disable-static
+
+make -j4
+make install DESTDIR=${PWD}/dest
+
+mv dest/usr/lib32 ${DEST}/usr
+
+popd
+
+rm -rf libva-${VER} libva-${VER}-32
+
+rm -rf ${DEST}/usr/lib/dri ${DEST}/usr/lib32/dri
 
 find ${DEST} -name "*.la" -delete
-
-rm -rf ${DEST}/usr/lib/dri
 
 pushd ${DEST}
 

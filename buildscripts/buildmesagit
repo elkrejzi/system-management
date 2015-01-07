@@ -20,68 +20,66 @@ mv mesa Mesa-${VER}
 
 cp -a Mesa-${VER} Mesa-${VER}-32
 
-cd Mesa-${VER}
+pushd Mesa-${VER}
 
-CFLAGS="-march=native -mtune=native -g -O2"   \
-CXXFLAGS="-march=native -mtune=native -g -O2" \
+CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr             \
             --sysconfdir=/etc         \
-            --disable-gallium-egl     \
             --disable-xvmc            \
             --enable-texture-float    \
             --enable-gles1            \
             --enable-gles2            \
-            --enable-osmesa           \
             --enable-gbm              \
             --enable-vdpau            \
             --enable-omx              \
+            --enable-va               \
             --enable-opencl           \
             --enable-opencl-icd       \
-            --enable-gallium-gbm      \
-            --enable-gallium-llvm     \
             --enable-glx-tls          \
             --enable-llvm-shared-libs \
             --with-dri-drivers="i965" \
             --with-egl-platforms="drm,x11,wayland" \
             --with-gallium-drivers="r600,swrast"
 
-make -j3
+make -j4
 make -C xdemos
 
 make install DESTDIR=/binary/Mesa-${VER}
 make -C xdemos install DESTDIR=/binary/Mesa-${VER}
 
-cd ../Mesa-${VER}-32
+popd
 
-rm -rf ../Mesa-${VER}
+pushd Mesa-${VER}-32
 
 export CC="gcc -m32"
 export CXX="g++ -m32"
 export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 export LLVM_CONFIG=/usr/bin/llvm-config32
 
-CFLAGS="-march=native -mtune=native -g -O2"   \
-CXXFLAGS="-march=native -mtune=native -g -O2" \
+CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr             \
             --sysconfdir=/etc         \
             --libdir=/usr/lib32       \
-            --disable-gallium-egl     \
             --disable-xvmc            \
-            --enable-32-bit           \
             --enable-texture-float    \
             --enable-gles1            \
             --enable-gles2            \
-            --enable-osmesa           \
             --enable-vdpau            \
-            --enable-gallium-gbm      \
-            --enable-gallium-llvm     \
+            --enable-omx              \
+            --enable-va               \
+            --enable-opencl           \
+            --enable-opencl-icd       \
             --enable-glx-tls          \
             --enable-llvm-shared-libs \
             --with-dri-drivers="i965" \
             --with-egl-platforms="drm,x11,wayland" \
-            --with-gallium-drivers="r600,swrast"
+            --with-gallium-drivers="r600,swrast"   \
+            --build=i686-pc-linux-gnu \
+            --host=i686-pc-linux-gnu
 
-make -j3
+make -j4
 make -C xdemos EXT=32 CC="${CC}"
 
 make install DESTDIR=${PWD}/dest
@@ -91,9 +89,9 @@ mv dest/usr/lib32 /binary/Mesa-${VER}/usr/
 install -m755 xdemos/glxinfo32 /binary/Mesa-${VER}/usr/bin/
 install -m755 xdemos/glxgears32 /binary/Mesa-${VER}/usr/bin/
 
-cd ..
+popd
 
-rm -rf Mesa-${VER}-32
+rm -rf Mesa-${VER} Mesa-${VER}-32
 
 find /binary/Mesa-${VER} -name "*.la" -delete
 

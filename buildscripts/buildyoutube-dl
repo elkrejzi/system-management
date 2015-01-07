@@ -1,0 +1,24 @@
+#!/bin/bash -e
+
+export VER=2015.01.07.2
+export DEST=/binary/youtube-dl-${VER}
+
+pushd youtube-dl
+
+python setup.py install --prefix=/usr --root=${DEST} --optimize=1
+
+popd
+
+rm -rf youtube-dl
+
+rm -rf ${DEST}/usr/etc ${DEST}/usr/share/doc
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

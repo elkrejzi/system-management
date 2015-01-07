@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.1.0
+export VER=5.1.1
 export DEST=/binary/giflib-${VER}
 
 cp -a giflib-${VER} giflib-${VER}-32

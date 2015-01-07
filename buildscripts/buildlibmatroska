@@ -3,17 +3,20 @@
 export VER=1.4.2
 export DEST=/binary/libmatroska-${VER}
 
-pushd libmatroska-${VER}/make/linux
+pushd libmatroska-${VER}
 
-make CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" -j4
-make prefix=${DEST}/usr install
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+./configure --prefix=/usr --disable-static
+
+make -j4
+make install DESTDIR=${DEST}
 
 popd
 
 rm -rf libmatroska-${VER}
 
-rm -rf ${DEST}/usr/lib/*.a
-chmod 755 ${DEST}/usr/lib/*.so
+find ${DEST} -name "*.la" -delete
 
 pushd ${DEST}
 

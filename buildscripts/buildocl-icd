@@ -3,6 +3,8 @@
 export VER=2.2.3
 export DEST=/binary/ocl-icd-${VER}
 
+cp -a ocl-icd-${VER} ocl-icd-${VER}-32
+
 pushd ocl-icd-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
@@ -14,11 +16,30 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf ocl-icd-${VER}
+pushd ocl-icd-${VER}-32
 
-find ${DEST} -name "*.la" -delete
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+./configure --prefix=/usr       \
+            --sysconfdir=/etc   \
+            --libdir=/usr/lib32
+
+make -j4
+make install DESTDIR=${PWD}/dest
+
+mv dest/usr/lib32 ${DEST}/usr
+
+popd
+
+rm -rf ocl-icd-${VER} ocl-icd-${VER}-32
 
 rm -rf ${DEST}/usr/share
+
+find ${DEST} -name "*.la" -delete
 
 pushd ${DEST}
 

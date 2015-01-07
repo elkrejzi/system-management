@@ -40,9 +40,9 @@ make -C xdemos
 make install DESTDIR=/binary/Mesa-${VER}
 make -C xdemos install DESTDIR=/binary/Mesa-${VER}
 
-cd ../Mesa-${VER}-32
+popd
 
-rm -rf ../Mesa-${VER}
+pushd Mesa-${VER}-32
 
 export CC="gcc -m32"
 export CXX="g++ -m32"
@@ -54,12 +54,15 @@ CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr             \
             --sysconfdir=/etc         \
             --libdir=/usr/lib32       \
-            --disable-va              \
             --disable-xvmc            \
             --enable-texture-float    \
             --enable-gles1            \
             --enable-gles2            \
             --enable-vdpau            \
+            --enable-omx              \
+            --enable-va               \
+            --enable-opencl           \
+            --enable-opencl-icd       \
             --enable-glx-tls          \
             --enable-llvm-shared-libs \
             --with-dri-drivers="i965" \
@@ -78,9 +81,9 @@ mv dest/usr/lib32 /binary/Mesa-${VER}/usr/
 install -m755 xdemos/glxinfo32 /binary/Mesa-${VER}/usr/bin/
 install -m755 xdemos/glxgears32 /binary/Mesa-${VER}/usr/bin/
 
-cd ..
+popd
 
-rm -rf Mesa-${VER}-32
+rm -rf Mesa-${VER} Mesa-${VER}-32
 
 find /binary/Mesa-${VER} -name "*.la" -delete
 

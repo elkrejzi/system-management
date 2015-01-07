@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=224991
+export VER=225355
 export DEST=/binary/libclc-${VER}
 
 pushd libclc-${VER}
