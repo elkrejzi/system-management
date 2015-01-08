@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.4.7
+export VER=2.4.8
 export DEST=/binary/webkitgtk-${VER}
 
 pushd webkitgtk-${VER}
