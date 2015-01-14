@@ -1,0 +1,53 @@
+#!/bin/bash -e
+
+export PLASMA_VERSION=$(grep "ENTITY plasma-version " kde5/kde5.ent | cut -d \" -f 2)
+export KF5APP_VERSION=$(grep "ENTITY kf5apps-version " kde5/kde5.ent | cut -d \" -f 2)
+export SDDM_VERSION=$(grep "ENTITY sddm-version " kde5/kde5.ent | cut -d \" -f 2)
+
+export KF5APP_DOWNLOAD=$(grep "ENTITY kf5apps-download-http " kde5/kde5.ent | cut -d \" -f 2 | sed "s:\&kf5apps-version\;:$KF5APP_VERSION:g")
+export PLASMA_DOWNLOAD=$(grep "ENTITY plasma-download-http " kde5/kde5.ent | cut -d \" -f 2 | sed "s:\&plasma-version\;:$PLASMA_VERSION:g")
+
+rm -rf $HOME/plasma-download.txt $HOME/plasma-md5.txt $HOME/plasma-order.txt
+
+grep "ENTITY .*-download-http " kde5/kde5.ent | cut -d \" -f 2 > $HOME/plasma-download.txt
+
+sed -i $HOME/plasma-download.txt \
+    -e "/oxygen-icons/s:\&kf5apps-version\;:$KF5APP_VERSION:g" \
+    -e "/oxygen-icons/s|\&kf5apps-download-http\;|$KF5APP_DOWNLOAD|g"
+
+sed -i $HOME/plasma-download.txt \
+    -e "/kf5apps-download-http/d" \
+    -e "/kf5apps-version/d" \
+    -e "/kf5-download-http/d" \
+    -e "/kf5-version/d" \
+    -e "/demo-url/d" \
+    -e "/extra-cmake-modules/d" \
+    -e "/grantlee.org/d" \
+    -e "/libdbusmenu-qt/d" \
+    -e "/phonon/d" \
+    -e "/polkit-qt/d" \
+    -e "/qca/d" \
+    -e "1,2d"
+
+cat $HOME/plasma-download.txt | sed "s:\/: :g" | grep -o '[^ ,]\+.tar.*' | while read file
+do
+  file2=$(echo $file | sed -e "s:-\&.*-version\;.tar.*::g")
+  FILE_MD5=$(grep "ENTITY ${file2}-md5sum " kde5/kde5.ent | cut -d \" -f 2)
+  test -z $FILE_MD5 && FILE_MD5=$(grep "ENTITY ${file2}5-md5sum " kde5/kde5.ent | cut -d \" -f 2)
+  test -z $FILE_MD5 || echo "${FILE_MD5}  ${file}" >> $HOME/plasma-md5.txt
+done
+
+sed -i $HOME/plasma-download.txt  \
+    -i $HOME/plasma-md5.txt \
+    -e "s:\&sddm-version\;:$SDDM_VERSION:g" \
+    -e "s:\&plasma-version\;:$PLASMA_VERSION:g" \
+    -e "s|\&plasma-download-http\;|$PLASMA_DOWNLOAD|g"
+
+grep include kde5/plasma/plasma.xml | cut -d \" -f 4 | sed -e "s:\.xml::g" -e "/intro/d" -e "/starting/d" | while read file
+do
+  echo "$file-$PLASMA_VERSION" >> $HOME/plasma-order.txt
+done
+
+sed -i $HOME/plasma-order.txt \
+    -e "s:sddm-$PLASMA_VERSION:sddm-$SDDM_VERSION:g" \
+    -e "s:oxygen-icons-$PLASMA_VERSION:oxygen-icons-$KF5APP_VERSION:g"

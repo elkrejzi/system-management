@@ -15,11 +15,15 @@ rm -rf $HOME/frameworks-download.txt $HOME/frameworks-md5.txt $HOME/frameworks-o
 grep "ENTITY .*-download-http " kde5/kde5.ent | cut -d \" -f 2 > $HOME/frameworks-download.txt
 
 sed -i $HOME/frameworks-download.txt \
+    -e "/kf5apps-download-http/d" \
+    -e "/kf5apps-version/d" \
     -e "/plasma-download-http/d" \
     -e "/plasma-version/d" \
     -e "/oxygen-icons/d" \
     -e "/demo-url/d" \
     -e "/grantlee.org/d" \
+    -e "/qca/d" \
+    -e "/sddm/d" \
     -e "1,2d"
 
 cat $HOME/frameworks-download.txt | sed "s:\/: :g" | grep -o '[^ ,]\+.tar.*' | while read file
