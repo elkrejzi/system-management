@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.10.2
+export VER=1.12.0
 export DEST=/binary/libmbim-${VER}
 
 pushd libmbim-${VER}

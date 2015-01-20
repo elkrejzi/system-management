@@ -3,6 +3,8 @@
 export PLASMA_VERSION=$(grep "ENTITY plasma-version " kde5/kde5.ent | cut -d \" -f 2)
 export KF5APP_VERSION=$(grep "ENTITY kf5apps-version " kde5/kde5.ent | cut -d \" -f 2)
 export SDDM_VERSION=$(grep "ENTITY sddm-version " kde5/kde5.ent | cut -d \" -f 2)
+export BALOO_VERSION=$(grep "ENTITY baloo5-version " kde5/kde5.ent | cut -d \" -f 2)
+export KFILEMETADATA_VERSION=$(grep "ENTITY kfilemetadata5-version " kde5/kde5.ent | cut -d \" -f 2)
 
 export KF5APP_DOWNLOAD=$(grep "ENTITY kf5apps-download-http " kde5/kde5.ent | cut -d \" -f 2 | sed "s:\&kf5apps-version\;:$KF5APP_VERSION:g")
 export PLASMA_DOWNLOAD=$(grep "ENTITY plasma-download-http " kde5/kde5.ent | cut -d \" -f 2 | sed "s:\&plasma-version\;:$PLASMA_VERSION:g")
@@ -40,6 +42,8 @@ done
 sed -i $HOME/plasma-download.txt  \
     -i $HOME/plasma-md5.txt \
     -e "s:\&sddm-version\;:$SDDM_VERSION:g" \
+    -e "s:\&baloo5-version\;:$BALOO_VERSION:g" \
+    -e "s:\&kfilemetadata5-version\;:$KFILEMETADATA_VERSION:g" \
     -e "s:\&plasma-version\;:$PLASMA_VERSION:g" \
     -e "s|\&plasma-download-http\;|$PLASMA_DOWNLOAD|g"
 

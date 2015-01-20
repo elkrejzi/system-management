@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.14.3
+export VER=4.14.4
 export DEST=/binary/kdepimlibs-${VER}
 
 pushd kdepimlibs-${VER}

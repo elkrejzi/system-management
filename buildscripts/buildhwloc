@@ -18,7 +18,7 @@ rm -rf hwloc-${VER}
 
 find ${DEST} -name "*.la" -delete
 
-rm -rf ${DEST}/usr/share/doc
+rm -rf ${DEST}/usr/share/applications ${DEST}/usr/share/doc
 
 pushd ${DEST}
 

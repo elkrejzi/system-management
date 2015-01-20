@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.14.10
+export VER=0.14.11
 export DEST=/binary/gssdp-${VER}
 
 pushd gssdp-${VER}

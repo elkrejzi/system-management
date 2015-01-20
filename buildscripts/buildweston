@@ -1,16 +1,18 @@
 #!/bin/bash -e
 
-export VER=1.6.0
+export VER=1.6.90
 export DEST=/binary/weston-${VER}
 
 pushd weston-${VER}
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/weston.patch
 
 CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr    \
             --disable-static \
             --with-cairo=gl  \
-            --enable-demo-clients-install
+            --enable-demo-clients-install --disable-ivi-shell
 
 make -j4
 make install DESTDIR=${DEST}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.99.1-27-gb0163f5
+export VER=5.1.95
 export DEST=/binary/polkit-kde-agent-${VER}
 
 pushd polkit-kde-agent-1-${VER}

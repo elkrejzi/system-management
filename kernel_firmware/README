@@ -1,0 +1,7 @@
+The firmware in this directory comes from the linux-firmware git repository available at:
+
+https://git.kernel.org/cgit/linux/kernel/git/firmware/linux-firmware.git/
+
+In order to comply with the LICENSE files for firmware available in this directory, I am
+distributing their LICENSE files here too, although they are not used in any of my build
+scripts anywhere.

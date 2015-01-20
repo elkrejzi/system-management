@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.20.12
+export VER=0.20.13
 export DEST=/binary/gupnp-${VER}
 
 pushd gupnp-${VER}

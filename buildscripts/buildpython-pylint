@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.4.0
+export VER=1.4.1
 export DEST=/binary/python-pylint-${VER}
 
 cp -a pylint-${VER} pylint-${VER}-3

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=14.11.90
+export VER=14.12.1
 export DEST=/binary/kmix-${VER}
 
 pushd kmix-${VER}

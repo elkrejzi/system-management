@@ -1,0 +1,48 @@
+#!/bin/bash -e
+
+export VER=2.1.0.3
+export DEST=/binary/qca-qt5-${VER}
+
+pushd qca-qt5-${VER}
+
+sed -i "/BSD_SOURCE/d" CMakeLists.txt
+
+cmake -DCMAKE_INSTALL_PREFIX=/usr   \
+      -DCMAKE_BUILD_TYPE=Release    \
+      -DBUILD_TESTS=OFF             \
+      -DQCA_SUFFIX=qt5              \
+      -DQCA_INSTALL_IN_QT_PREFIX=ON \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+      -Wno-dev
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf qca-qt5-${VER}
+
+install -dm755 ${DEST}/usr/bin
+
+for file in ${DEST}/usr/lib/qt5/bin/* ; do ln -sfr ${file} ${DEST}/usr/bin/$(basename ${file}) ; done
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

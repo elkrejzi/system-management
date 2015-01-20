@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.12.9
+export VER=3.12.10
 export DEST=/binary/evolution-${VER}
 
 pushd evolution-${VER}

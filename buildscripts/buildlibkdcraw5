@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.13.3-102-g24dce9d
+export VER=4.13.3-116-gf3f4eed
 export DEST=/binary/libkdcraw-${VER}
 
 pushd libkdcraw-${VER}

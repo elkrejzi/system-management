@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=14.12.0
+export VER=14.12.1
 export DEST=/binary/kde-runtime-${VER}
 
 install -dm755 kde-runtime-${VER}/build

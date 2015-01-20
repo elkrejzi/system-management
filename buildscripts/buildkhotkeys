@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.1.2
+export VER=5.1.95
 export DEST=/binary/khotkeys-${VER}
 
 pushd khotkeys-${VER}

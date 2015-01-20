@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=14.12.0-101-g87a7c2a
+export VER=14.12.1-104-g9a015dd
 export DEST=/binary/ksnapshot-${VER}
 
 pushd ksnapshot-${VER}

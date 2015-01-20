@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=7.8.1
+export VER=7.8.2
 export DEST=/binary/gdb-${VER}
 
 pushd gdb-${VER}

@@ -1,0 +1,81 @@
+#!/bin/bash -e
+
+export VER=0.8.0
+export DEST=/binary/xonotic-${VER}
+
+unzip xonotic-${VER}-source.zip
+
+pushd Xonotic/source/d0_blind_id
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+./configure --prefix=/usr --disable-rijndael --disable-static
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+pushd Xonotic/source/darkplaces
+
+sed -i "s:-fno-signaling-nans -fno-trapping-math:& -march=native -mtune=native -O2 -pipe -fstack-protector-strong:g" makefile.inc
+
+make DP_FS_BASEDIR=/usr/share/xonotic/ DP_LINK_TO_LIBJPEG=1 cl-release
+make DP_FS_BASEDIR=/usr/share/xonotic/ DP_LINK_TO_LIBJPEG=1 sdl2-release
+make DP_FS_BASEDIR=/usr/share/xonotic/ DP_LINK_TO_LIBJPEG=1 sv-release
+
+install -Dm755 darkplaces-dedicated ${DEST}/usr/bin/xonotic-dedicated
+install -Dm755 darkplaces-glx ${DEST}/usr/bin/xonotic-glx
+install -Dm755 darkplaces-sdl ${DEST}/usr/bin/xonotic-sdl
+
+popd
+
+pushd Xonotic/misc/logos
+
+sed -i "s:/usr/bin/::g;s:/usr/share/pixmaps/::g;s:\.png::g" *.desktop
+
+install -dm755 ${DEST}/usr/share/applications
+install -m644 *.desktop ${DEST}/usr/share/applications
+
+for size in 16 22 24 32 48 64 128 256 512
+do
+  install -Dm644 icons_png/xonotic_${size}.png ${DEST}/usr/share/icons/hicolor/${size}x${size}/apps/xonotic.png
+done
+
+popd
+
+rm -rf Xonotic
+
+unzip xonotic-${VER}.zip
+
+install -dm755 ${DEST}/usr/share/xonotic
+
+cp -rf Xonotic/data ${DEST}/usr/share/xonotic
+cp -rf Xonotic/server ${DEST}/usr/share/xonotic
+
+install -m644 Xonotic/key_0.d0pk ${DEST}/usr/share/xonotic
+
+rm -rf Xonotic
+
+find ${DEST} -name "*.la" -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+EOF
+
+chmod 755 ${DEST}/INSTALL

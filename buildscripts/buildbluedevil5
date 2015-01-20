@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.0-rc1-61-gc06b1c3
+export VER=5.1.95
 export DEST=/binary/bluedevil-${VER}
 
 pushd bluedevil-${VER}

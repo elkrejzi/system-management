@@ -1,0 +1,952 @@
+--- a/src/video/wayland/pointer-lock-client-protocol.h	1970-01-01 01:00:00.000000000 +0100
++++ b/src/video/wayland/pointer-lock-client-protocol.h	2015-01-16 18:36:29.768183568 +0100
+@@ -0,0 +1,259 @@
++/* 
++ * Copyright © 2014      Jonas Ådahl
++ * 
++ * Permission to use, copy, modify, distribute, and sell this
++ * software and its documentation for any purpose is hereby granted
++ * without fee, provided that the above copyright notice appear in
++ * all copies and that both that copyright notice and this permission
++ * notice appear in supporting documentation, and that the name of
++ * the copyright holders not be used in advertising or publicity
++ * pertaining to distribution of the software without specific,
++ * written prior permission.  The copyright holders make no
++ * representations about the suitability of this software for any
++ * purpose.  It is provided "as is" without express or implied
++ * warranty.
++ * 
++ * THE COPYRIGHT HOLDERS DISCLAIM ALL WARRANTIES WITH REGARD TO THIS
++ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
++ * FITNESS, IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY
++ * SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
++ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN
++ * AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
++ * ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
++ * THIS SOFTWARE.
++ */
++
++#ifndef POINTER_LOCK_CLIENT_PROTOCOL_H
++#define POINTER_LOCK_CLIENT_PROTOCOL_H
++
++#ifdef  __cplusplus
++extern "C" {
++#endif
++
++#include <stdint.h>
++#include <stddef.h>
++#include "wayland-client.h"
++
++struct wl_client;
++struct wl_resource;
++
++struct _wl_pointer_lock;
++struct _wl_locked_pointer;
++struct _wl_confined_pointer;
++
++extern const struct wl_interface _wl_pointer_lock_interface;
++extern const struct wl_interface _wl_locked_pointer_interface;
++extern const struct wl_interface _wl_confined_pointer_interface;
++
++#define _WL_POINTER_LOCK_LOCK_POINTER	0
++#define _WL_POINTER_LOCK_CONFINE_POINTER	1
++
++static inline void
++_wl_pointer_lock_set_user_data(struct _wl_pointer_lock *_wl_pointer_lock, void *user_data)
++{
++	wl_proxy_set_user_data((struct wl_proxy *) _wl_pointer_lock, user_data);
++}
++
++static inline void *
++_wl_pointer_lock_get_user_data(struct _wl_pointer_lock *_wl_pointer_lock)
++{
++	return wl_proxy_get_user_data((struct wl_proxy *) _wl_pointer_lock);
++}
++
++static inline void
++_wl_pointer_lock_destroy(struct _wl_pointer_lock *_wl_pointer_lock)
++{
++	wl_proxy_destroy((struct wl_proxy *) _wl_pointer_lock);
++}
++
++static inline struct _wl_locked_pointer *
++_wl_pointer_lock_lock_pointer(struct _wl_pointer_lock *_wl_pointer_lock, struct wl_surface *surface, struct wl_seat *seat, struct wl_region *region)
++{
++	struct wl_proxy *id;
++
++	id = wl_proxy_marshal_constructor((struct wl_proxy *) _wl_pointer_lock,
++			 _WL_POINTER_LOCK_LOCK_POINTER, &_wl_locked_pointer_interface, NULL, surface, seat, region);
++
++	return (struct _wl_locked_pointer *) id;
++}
++
++static inline struct _wl_locked_pointer *
++_wl_pointer_lock_confine_pointer(struct _wl_pointer_lock *_wl_pointer_lock, struct wl_surface *surface, struct wl_seat *seat, struct wl_region *region)
++{
++	struct wl_proxy *id;
++
++	id = wl_proxy_marshal_constructor((struct wl_proxy *) _wl_pointer_lock,
++			 _WL_POINTER_LOCK_CONFINE_POINTER, &_wl_locked_pointer_interface, NULL, surface, seat, region);
++
++	return (struct _wl_locked_pointer *) id;
++}
++
++/**
++ * _wl_locked_pointer - receive relative pointer motion events
++ * @locked: enter event
++ * @unlocked: leave event
++ *
++ * The wl_locked_pointer interface represents a locked pointer state.
++ *
++ * While the lock of this object is active, the pointer of the associated
++ * seat will not move.
++ *
++ * This object will send the event 'locked' when the lock is activated.
++ * Whenever the lock is activated, it is guaranteed that the locked surface
++ * will already have received pointer focus and that the pointer will be
++ * within the region passed to the request creating this object. It is up
++ * to the compositor to decide whether this requires some user interaction
++ * and if the pointer will warp to within the passed region if outside.
++ *
++ * To unlock the pointer, send the destroy request. This will also destroy
++ * the wl_locked_pointer object.
++ *
++ * If the compositor decides to unlock the pointer the unlocked event is
++ * sent. The wl_locked_pointer object is at this point defunct and may be
++ * destoryed.
++ *
++ * When unlocking, the compositor may or may not take the cursor position
++ * hint provided using the set_cursor_position_hint request and warp the
++ * pointer. If it does, it will not result in any relative motion events.
++ */
++struct _wl_locked_pointer_listener {
++	/**
++	 * locked - enter event
++	 * @serial: (none)
++	 *
++	 * Notification that the pointer lock of this seat's pointer is
++	 * locked.
++	 */
++	void (*locked)(void *data,
++		       struct _wl_locked_pointer *_wl_locked_pointer,
++		       uint32_t serial);
++	/**
++	 * unlocked - leave event
++	 *
++	 * Notification that the pointer lock of seat's pointer is no
++	 * longer active. This object is no defunct and should be
++	 * destroyed.
++	 */
++	void (*unlocked)(void *data,
++			 struct _wl_locked_pointer *_wl_locked_pointer);
++};
++
++static inline int
++_wl_locked_pointer_add_listener(struct _wl_locked_pointer *_wl_locked_pointer,
++				const struct _wl_locked_pointer_listener *listener, void *data)
++{
++	return wl_proxy_add_listener((struct wl_proxy *) _wl_locked_pointer,
++				     (void (**)(void)) listener, data);
++}
++
++#define _WL_LOCKED_POINTER_SET_CURSOR_POSITION_HINT	0
++#define _WL_LOCKED_POINTER_DESTROY	1
++
++static inline void
++_wl_locked_pointer_set_user_data(struct _wl_locked_pointer *_wl_locked_pointer, void *user_data)
++{
++	wl_proxy_set_user_data((struct wl_proxy *) _wl_locked_pointer, user_data);
++}
++
++static inline void *
++_wl_locked_pointer_get_user_data(struct _wl_locked_pointer *_wl_locked_pointer)
++{
++	return wl_proxy_get_user_data((struct wl_proxy *) _wl_locked_pointer);
++}
++
++static inline void
++_wl_locked_pointer_set_cursor_position_hint(struct _wl_locked_pointer *_wl_locked_pointer, uint32_t serial, wl_fixed_t surface_x, wl_fixed_t surface_y)
++{
++	wl_proxy_marshal((struct wl_proxy *) _wl_locked_pointer,
++			 _WL_LOCKED_POINTER_SET_CURSOR_POSITION_HINT, serial, surface_x, surface_y);
++}
++
++static inline void
++_wl_locked_pointer_destroy(struct _wl_locked_pointer *_wl_locked_pointer)
++{
++	wl_proxy_marshal((struct wl_proxy *) _wl_locked_pointer,
++			 _WL_LOCKED_POINTER_DESTROY);
++
++	wl_proxy_destroy((struct wl_proxy *) _wl_locked_pointer);
++}
++
++/**
++ * _wl_confined_pointer - confined pointer object
++ * @confined: enter event
++ * @unconfined: leave event
++ *
++ * The wl_confined_pointer interface represents a confined pointer state.
++ *
++ * This object will send the event 'confined' when the confinement is
++ * activated. Whenever the confinement is activated, it is guaranteed that
++ * the surface the pointer is confined to will already have received
++ * pointer focus and that the pointer will be within the region passed to
++ * the request creating this object. It is up to the compositor to decide
++ * whether this requires some user interaction and if the pointer will warp
++ * to within the passed region if outside.
++ *
++ * To unconfine the pointer, send the destroy request. This will also
++ * destroy the wl_confined_pointer object.
++ *
++ * If the compositor decides to unconfine the pointer the unconfined event
++ * is sent. The wl_confined_pointer object is at this point defunct and may
++ * be destoryed.
++ */
++struct _wl_confined_pointer_listener {
++	/**
++	 * confined - enter event
++	 * @serial: (none)
++	 *
++	 * Notification that the pointer confinement of this seat's
++	 * pointer is activated.
++	 */
++	void (*confined)(void *data,
++			 struct _wl_confined_pointer *_wl_confined_pointer,
++			 uint32_t serial);
++	/**
++	 * unconfined - leave event
++	 *
++	 * Notification that the pointer confinement of seat's pointer is
++	 * no longer active. This object is no defunct and should be
++	 * destroyed.
++	 */
++	void (*unconfined)(void *data,
++			   struct _wl_confined_pointer *_wl_confined_pointer);
++};
++
++static inline int
++_wl_confined_pointer_add_listener(struct _wl_confined_pointer *_wl_confined_pointer,
++				  const struct _wl_confined_pointer_listener *listener, void *data)
++{
++	return wl_proxy_add_listener((struct wl_proxy *) _wl_confined_pointer,
++				     (void (**)(void)) listener, data);
++}
++
++#define _WL_CONFINED_POINTER_DESTROY	0
++
++static inline void
++_wl_confined_pointer_set_user_data(struct _wl_confined_pointer *_wl_confined_pointer, void *user_data)
++{
++	wl_proxy_set_user_data((struct wl_proxy *) _wl_confined_pointer, user_data);
++}
++
++static inline void *
++_wl_confined_pointer_get_user_data(struct _wl_confined_pointer *_wl_confined_pointer)
++{
++	return wl_proxy_get_user_data((struct wl_proxy *) _wl_confined_pointer);
++}
++
++static inline void
++_wl_confined_pointer_destroy(struct _wl_confined_pointer *_wl_confined_pointer)
++{
++	wl_proxy_marshal((struct wl_proxy *) _wl_confined_pointer,
++			 _WL_CONFINED_POINTER_DESTROY);
++
++	wl_proxy_destroy((struct wl_proxy *) _wl_confined_pointer);
++}
++
++#ifdef  __cplusplus
++}
++#endif
++
++#endif
+--- a/src/video/wayland/pointer-lock-protocol.c	1970-01-01 01:00:00.000000000 +0100
++++ b/src/video/wayland/pointer-lock-protocol.c	2015-01-16 18:36:29.768183568 +0100
+@@ -0,0 +1,90 @@
++/* 
++ * Copyright © 2014      Jonas Ådahl
++ * 
++ * Permission to use, copy, modify, distribute, and sell this
++ * software and its documentation for any purpose is hereby granted
++ * without fee, provided that the above copyright notice appear in
++ * all copies and that both that copyright notice and this permission
++ * notice appear in supporting documentation, and that the name of
++ * the copyright holders not be used in advertising or publicity
++ * pertaining to distribution of the software without specific,
++ * written prior permission.  The copyright holders make no
++ * representations about the suitability of this software for any
++ * purpose.  It is provided "as is" without express or implied
++ * warranty.
++ * 
++ * THE COPYRIGHT HOLDERS DISCLAIM ALL WARRANTIES WITH REGARD TO THIS
++ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
++ * FITNESS, IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY
++ * SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
++ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN
++ * AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
++ * ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
++ * THIS SOFTWARE.
++ */
++
++#include <stdlib.h>
++#include <stdint.h>
++#include "wayland-util.h"
++
++extern const struct wl_interface _wl_locked_pointer_interface;
++extern const struct wl_interface wl_region_interface;
++extern const struct wl_interface wl_seat_interface;
++extern const struct wl_interface wl_surface_interface;
++
++static const struct wl_interface *types[] = {
++	NULL,
++	NULL,
++	NULL,
++	&_wl_locked_pointer_interface,
++	&wl_surface_interface,
++	&wl_seat_interface,
++	&wl_region_interface,
++	&_wl_locked_pointer_interface,
++	&wl_surface_interface,
++	&wl_seat_interface,
++	&wl_region_interface,
++};
++
++static const struct wl_message _wl_pointer_lock_requests[] = {
++	{ "lock_pointer", "noo?o", types + 3 },
++	{ "confine_pointer", "noo?o", types + 7 },
++};
++
++WL_EXPORT const struct wl_interface _wl_pointer_lock_interface = {
++	"_wl_pointer_lock", 1,
++	2, _wl_pointer_lock_requests,
++	0, NULL,
++};
++
++static const struct wl_message _wl_locked_pointer_requests[] = {
++	{ "set_cursor_position_hint", "uff", types + 0 },
++	{ "destroy", "", types + 0 },
++};
++
++static const struct wl_message _wl_locked_pointer_events[] = {
++	{ "locked", "u", types + 0 },
++	{ "unlocked", "", types + 0 },
++};
++
++WL_EXPORT const struct wl_interface _wl_locked_pointer_interface = {
++	"_wl_locked_pointer", 1,
++	2, _wl_locked_pointer_requests,
++	2, _wl_locked_pointer_events,
++};
++
++static const struct wl_message _wl_confined_pointer_requests[] = {
++	{ "destroy", "", types + 0 },
++};
++
++static const struct wl_message _wl_confined_pointer_events[] = {
++	{ "confined", "u", types + 0 },
++	{ "unconfined", "", types + 0 },
++};
++
++WL_EXPORT const struct wl_interface _wl_confined_pointer_interface = {
++	"_wl_confined_pointer", 1,
++	1, _wl_confined_pointer_requests,
++	2, _wl_confined_pointer_events,
++};
++
+--- a/src/video/wayland/relative-pointer-client-protocol.h	1970-01-01 01:00:00.000000000 +0100
++++ b/src/video/wayland/relative-pointer-client-protocol.h	2015-01-16 18:36:29.768183568 +0100
+@@ -0,0 +1,161 @@
++/* 
++ * Copyright © 2014      Jonas Ådahl
++ * 
++ * Permission to use, copy, modify, distribute, and sell this
++ * software and its documentation for any purpose is hereby granted
++ * without fee, provided that the above copyright notice appear in
++ * all copies and that both that copyright notice and this permission
++ * notice appear in supporting documentation, and that the name of
++ * the copyright holders not be used in advertising or publicity
++ * pertaining to distribution of the software without specific,
++ * written prior permission.  The copyright holders make no
++ * representations about the suitability of this software for any
++ * purpose.  It is provided "as is" without express or implied
++ * warranty.
++ * 
++ * THE COPYRIGHT HOLDERS DISCLAIM ALL WARRANTIES WITH REGARD TO THIS
++ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
++ * FITNESS, IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY
++ * SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
++ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN
++ * AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
++ * ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
++ * THIS SOFTWARE.
++ */
++
++#ifndef RELATIVE_POINTER_CLIENT_PROTOCOL_H
++#define RELATIVE_POINTER_CLIENT_PROTOCOL_H
++
++#ifdef  __cplusplus
++extern "C" {
++#endif
++
++#include <stdint.h>
++#include <stddef.h>
++#include "wayland-client.h"
++
++struct wl_client;
++struct wl_resource;
++
++struct _wl_relative_pointer_manager;
++struct _wl_relative_pointer;
++
++extern const struct wl_interface _wl_relative_pointer_manager_interface;
++extern const struct wl_interface _wl_relative_pointer_interface;
++
++#define _WL_RELATIVE_POINTER_MANAGER_GET_RELATIVE_POINTER	0
++
++static inline void
++_wl_relative_pointer_manager_set_user_data(struct _wl_relative_pointer_manager *_wl_relative_pointer_manager, void *user_data)
++{
++	wl_proxy_set_user_data((struct wl_proxy *) _wl_relative_pointer_manager, user_data);
++}
++
++static inline void *
++_wl_relative_pointer_manager_get_user_data(struct _wl_relative_pointer_manager *_wl_relative_pointer_manager)
++{
++	return wl_proxy_get_user_data((struct wl_proxy *) _wl_relative_pointer_manager);
++}
++
++static inline void
++_wl_relative_pointer_manager_destroy(struct _wl_relative_pointer_manager *_wl_relative_pointer_manager)
++{
++	wl_proxy_destroy((struct wl_proxy *) _wl_relative_pointer_manager);
++}
++
++static inline struct _wl_relative_pointer *
++_wl_relative_pointer_manager_get_relative_pointer(struct _wl_relative_pointer_manager *_wl_relative_pointer_manager, struct wl_seat *seat)
++{
++	struct wl_proxy *id;
++
++	id = wl_proxy_marshal_constructor((struct wl_proxy *) _wl_relative_pointer_manager,
++			 _WL_RELATIVE_POINTER_MANAGER_GET_RELATIVE_POINTER, &_wl_relative_pointer_interface, NULL, seat);
++
++	return (struct _wl_relative_pointer *) id;
++}
++
++/**
++ * _wl_relative_pointer - relative pointer object
++ * @relative_motion: relative pointer motion
++ *
++ * A wl_relative_pointer object is an extension to the wl_pointer
++ * interface only used for emitting relative pointer events. It will only
++ * emit events when the parent pointer has focus.
++ */
++struct _wl_relative_pointer_listener {
++	/**
++	 * relative_motion - relative pointer motion
++	 * @time: timestamp with millisecond granularity
++	 * @dx: x component of the motion vector
++	 * @dy: y component of the motion vector
++	 * @dx_noaccel: x component of the nonaccelerated motion vector
++	 * @dy_noaccel: y component of the nonaccelerated motion vector
++	 *
++	 * Relative pointer motion from the pointer of the seat
++	 * associated with this object.
++	 *
++	 * This event contains both the accelerated motion delta and the
++	 * non-accelerated motion delta. The non-accelerated delta is, when
++	 * applicable, the regular pointer motion delta as it was before
++	 * having applied motion acceleration transformations. Note that it
++	 * does not represent 'raw' events as they were read from some
++	 * device. What acceleration corresponds to is device specific and
++	 * may be identical to non-accelerated for some devices, while for
++	 * others not.
++	 *
++	 * Relative motions are not coupled to wl_pointer.motion events,
++	 * and can be sent in combination with such events, but also
++	 * independently. There may also be scenarious where
++	 * wl_pointer.motion is sent, but there is no relative motion.
++	 */
++	void (*relative_motion)(void *data,
++				struct _wl_relative_pointer *_wl_relative_pointer,
++				uint32_t time,
++				wl_fixed_t dx,
++				wl_fixed_t dy,
++				wl_fixed_t dx_noaccel,
++				wl_fixed_t dy_noaccel);
++};
++
++static inline int
++_wl_relative_pointer_add_listener(struct _wl_relative_pointer *_wl_relative_pointer,
++				  const struct _wl_relative_pointer_listener *listener, void *data)
++{
++	return wl_proxy_add_listener((struct wl_proxy *) _wl_relative_pointer,
++				     (void (**)(void)) listener, data);
++}
++
++#define _WL_RELATIVE_POINTER_RELEASE	0
++
++static inline void
++_wl_relative_pointer_set_user_data(struct _wl_relative_pointer *_wl_relative_pointer, void *user_data)
++{
++	wl_proxy_set_user_data((struct wl_proxy *) _wl_relative_pointer, user_data);
++}
++
++static inline void *
++_wl_relative_pointer_get_user_data(struct _wl_relative_pointer *_wl_relative_pointer)
++{
++	return wl_proxy_get_user_data((struct wl_proxy *) _wl_relative_pointer);
++}
++
++static inline void
++_wl_relative_pointer_destroy(struct _wl_relative_pointer *_wl_relative_pointer)
++{
++	wl_proxy_destroy((struct wl_proxy *) _wl_relative_pointer);
++}
++
++static inline void
++_wl_relative_pointer_release(struct _wl_relative_pointer *_wl_relative_pointer)
++{
++	wl_proxy_marshal((struct wl_proxy *) _wl_relative_pointer,
++			 _WL_RELATIVE_POINTER_RELEASE);
++
++	wl_proxy_destroy((struct wl_proxy *) _wl_relative_pointer);
++}
++
++#ifdef  __cplusplus
++}
++#endif
++
++#endif
+--- a/src/video/wayland/relative-pointer-protocol.c	1970-01-01 01:00:00.000000000 +0100
++++ b/src/video/wayland/relative-pointer-protocol.c	2015-01-16 18:36:29.768183568 +0100
+@@ -0,0 +1,66 @@
++/* 
++ * Copyright © 2014      Jonas Ådahl
++ * 
++ * Permission to use, copy, modify, distribute, and sell this
++ * software and its documentation for any purpose is hereby granted
++ * without fee, provided that the above copyright notice appear in
++ * all copies and that both that copyright notice and this permission
++ * notice appear in supporting documentation, and that the name of
++ * the copyright holders not be used in advertising or publicity
++ * pertaining to distribution of the software without specific,
++ * written prior permission.  The copyright holders make no
++ * representations about the suitability of this software for any
++ * purpose.  It is provided "as is" without express or implied
++ * warranty.
++ * 
++ * THE COPYRIGHT HOLDERS DISCLAIM ALL WARRANTIES WITH REGARD TO THIS
++ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
++ * FITNESS, IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY
++ * SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
++ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN
++ * AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
++ * ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
++ * THIS SOFTWARE.
++ */
++
++#include <stdlib.h>
++#include <stdint.h>
++#include "wayland-util.h"
++
++extern const struct wl_interface _wl_relative_pointer_interface;
++extern const struct wl_interface wl_seat_interface;
++
++static const struct wl_interface *types[] = {
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	NULL,
++	&_wl_relative_pointer_interface,
++	&wl_seat_interface,
++};
++
++static const struct wl_message _wl_relative_pointer_manager_requests[] = {
++	{ "get_relative_pointer", "no", types + 5 },
++};
++
++WL_EXPORT const struct wl_interface _wl_relative_pointer_manager_interface = {
++	"_wl_relative_pointer_manager", 1,
++	1, _wl_relative_pointer_manager_requests,
++	0, NULL,
++};
++
++static const struct wl_message _wl_relative_pointer_requests[] = {
++	{ "release", "", types + 0 },
++};
++
++static const struct wl_message _wl_relative_pointer_events[] = {
++	{ "relative_motion", "uffff", types + 0 },
++};
++
++WL_EXPORT const struct wl_interface _wl_relative_pointer_interface = {
++	"_wl_relative_pointer", 1,
++	1, _wl_relative_pointer_requests,
++	1, _wl_relative_pointer_events,
++};
++
+--- a/src/video/wayland/SDL_waylandevents.c	2014-03-16 03:31:42.000000000 +0100
++++ b/src/video/wayland/SDL_waylandevents.c	2015-01-16 18:36:29.768183568 +0100
+@@ -34,6 +34,9 @@
+ #include "SDL_waylandevents_c.h"
+ #include "SDL_waylandwindow.h"
+ 
++#include "pointer-lock-client-protocol.h"
++#include "relative-pointer-client-protocol.h"
++
+ #include "SDL_waylanddyn.h"
+ 
+ #include <linux/input.h>
+@@ -52,6 +55,9 @@
+     SDL_WindowData *pointer_focus;
+     SDL_WindowData *keyboard_focus;
+ 
++    wl_fixed_t dx_frac;
++    wl_fixed_t dy_frac;
++
+     struct {
+         struct xkb_keymap *keymap;
+         struct xkb_state *state;
+@@ -127,10 +133,9 @@
+ }
+ 
+ static void
+-pointer_handle_button(void *data, struct wl_pointer *pointer, uint32_t serial,
+-                      uint32_t time, uint32_t button, uint32_t state_w)
++pointer_handle_button_common(struct SDL_WaylandInput *input, uint32_t serial,
++                             uint32_t time, uint32_t button, uint32_t state_w)
+ {
+-    struct SDL_WaylandInput *input = data;
+     SDL_WindowData *window = input->pointer_focus;
+     enum wl_pointer_button_state state = state_w;
+     uint32_t sdl_button;
+@@ -162,10 +167,18 @@
+ }
+ 
+ static void
+-pointer_handle_axis(void *data, struct wl_pointer *pointer,
+-                    uint32_t time, uint32_t axis, wl_fixed_t value)
++pointer_handle_button(void *data, struct wl_pointer *pointer, uint32_t serial,
++                      uint32_t time, uint32_t button, uint32_t state_w)
+ {
+     struct SDL_WaylandInput *input = data;
++
++    pointer_handle_button_common(input, serial, time, button, state_w);
++}
++
++static void
++pointer_handle_axis_common(struct SDL_WaylandInput *input,
++                           uint32_t time, uint32_t axis, wl_fixed_t value)
++{
+     SDL_WindowData *window = input->pointer_focus;
+     enum wl_pointer_axis a = axis;
+     int x, y;
+@@ -188,6 +201,15 @@
+     }
+ }
+ 
++static void
++pointer_handle_axis(void *data, struct wl_pointer *pointer,
++                    uint32_t time, uint32_t axis, wl_fixed_t value)
++{
++    struct SDL_WaylandInput *input = data;
++
++    pointer_handle_axis_common(input, time, axis, value);
++}
++
+ static const struct wl_pointer_listener pointer_listener = {
+     pointer_handle_enter,
+     pointer_handle_leave,
+@@ -399,6 +421,174 @@
+     d->input = NULL;
+ }
+ 
++void Wayland_display_add_relative_pointer_manager(SDL_VideoData *d, uint32_t id)
++{
++    d->relative_pointer_manager =
++        wl_registry_bind(d->registry, id,
++                         &_wl_relative_pointer_manager_interface, 1);
++}
++
++void Wayland_display_destroy_relative_pointer_manager(SDL_VideoData *d)
++{
++    if (d->relative_pointer_manager)
++        _wl_relative_pointer_manager_destroy(d->relative_pointer_manager);
++}
++
++void Wayland_display_add_pointer_lock(SDL_VideoData *d, uint32_t id)
++{
++    d->pointer_lock = wl_registry_bind(d->registry, id,
++                                       &_wl_pointer_lock_interface, 1);
++}
++
++void Wayland_display_destroy_pointer_lock(SDL_VideoData *d)
++{
++    if (d->pointer_lock)
++        _wl_pointer_lock_destroy(d->pointer_lock);
++}
++
++static void
++relative_pointer_handle_relative_motion(void *data,
++                                        struct _wl_relative_pointer *pointer,
++                                        uint32_t time,
++                                        wl_fixed_t dx_w,
++                                        wl_fixed_t dy_w,
++                                        wl_fixed_t dx_noaccel_w,
++                                        wl_fixed_t dy_noaccel_w)
++{
++    struct SDL_WaylandInput *input = data;
++    SDL_VideoData *d = input->display;
++    SDL_WindowData *window = input->pointer_focus;
++    int dx;
++    int dy;
++
++    /* Add left over fraction from last event. */
++    dx_noaccel_w += input->dx_frac;
++    dy_noaccel_w += input->dy_frac;
++
++    dx = wl_fixed_to_int(dx_noaccel_w);
++    dy = wl_fixed_to_int(dy_noaccel_w);
++
++    input->dx_frac = dx_noaccel_w - wl_fixed_from_int(dx);
++    input->dy_frac = dy_noaccel_w - wl_fixed_from_int(dy);
++
++    if (input->pointer_focus && d->relative_mouse_mode) {
++        SDL_SendMouseMotion(window->sdlwindow, 0, 1, dx, dy);
++    }
++}
++
++static const struct _wl_relative_pointer_listener relative_pointer_listener = {
++    relative_pointer_handle_relative_motion,
++};
++
++static void
++pointer_lock_locked(void *data,
++                    struct _wl_locked_pointer *locked_pointer,
++                    uint32_t serial)
++{
++}
++
++static void
++lock_pointer_to_window(SDL_Window *window,
++                       struct SDL_WaylandInput *input);
++
++static void
++pointer_lock_unlocked(void *data,
++                      struct _wl_locked_pointer *locked_pointer)
++{
++    SDL_Window *window = data;
++    SDL_WindowData *w = window->driverdata;
++    SDL_VideoData *d = w->waylandData;
++    struct SDL_WaylandInput *input =
++        _wl_relative_pointer_get_user_data(d->relative_pointer);
++
++    _wl_locked_pointer_destroy(locked_pointer);
++    w->locked_pointer = NULL;
++
++    if (d->relative_mouse_mode)
++        lock_pointer_to_window(window, input);
++}
++
++static const struct _wl_locked_pointer_listener locked_pointer_listener = {
++    pointer_lock_locked,
++    pointer_lock_unlocked,
++};
++
++static void
++lock_pointer_to_window(SDL_Window *window,
++                       struct SDL_WaylandInput *input)
++{
++    SDL_WindowData *w = window->driverdata;
++    SDL_VideoData *d = input->display;
++    struct wl_seat *seat = input->seat;
++    struct _wl_locked_pointer *locked_pointer;
++
++    locked_pointer =
++        _wl_pointer_lock_lock_pointer(d->pointer_lock,
++                                      w->surface,
++                                      seat,
++                                      NULL);
++    _wl_locked_pointer_add_listener(locked_pointer,
++                                    &locked_pointer_listener,
++                                    window);
++
++    w->locked_pointer = locked_pointer;
++}
++
++int Wayland_input_lock_pointer(struct SDL_WaylandInput *input)
++{
++    SDL_VideoDevice *vd = SDL_GetVideoDevice();
++    SDL_VideoData *d = input->display;
++    SDL_Window *window;
++    struct wl_seat *seat = input->seat;
++    struct _wl_relative_pointer *rel_pointer;
++
++    if (!d->relative_pointer_manager)
++        return -1;
++
++    if (!d->pointer_lock)
++        return -1;
++
++    if (!d->relative_pointer) {
++        rel_pointer =
++            _wl_relative_pointer_manager_get_relative_pointer(
++                d->relative_pointer_manager,
++                seat);
++        _wl_relative_pointer_add_listener(rel_pointer,
++                                          &relative_pointer_listener,
++                                          input);
++        d->relative_pointer = rel_pointer;
++    }
++
++    for (window = vd->windows; window; window = window->next)
++        lock_pointer_to_window(window, input);
++
++    d->relative_mouse_mode = 1;
++
++    return 0;
++}
++
++int Wayland_input_unlock_pointer(struct SDL_WaylandInput *input)
++{
++    SDL_VideoDevice *vd = SDL_GetVideoDevice();
++    SDL_VideoData *d = input->display;
++    SDL_Window *window;
++    SDL_WindowData *w;
++
++    for (window = vd->windows; window; window = window->next) {
++        w = window->driverdata;
++        if (w->locked_pointer)
++            _wl_locked_pointer_destroy(w->locked_pointer);
++        w->locked_pointer = NULL;
++    }
++
++    _wl_relative_pointer_release(d->relative_pointer);
++    d->relative_pointer = NULL;
++
++    d->relative_mouse_mode = 0;
++
++    return 0;
++}
++
+ #endif /* SDL_VIDEO_DRIVER_WAYLAND */
+ 
+ /* vi: set ts=4 sw=4 expandtab: */
+--- a/src/video/wayland/SDL_waylandevents_c.h	2014-03-16 03:31:43.000000000 +0100
++++ b/src/video/wayland/SDL_waylandevents_c.h	2015-01-16 18:36:29.768183568 +0100
+@@ -32,6 +32,12 @@
+ extern void Wayland_display_add_input(SDL_VideoData *d, uint32_t id);
+ extern void Wayland_display_destroy_input(SDL_VideoData *d);
+ 
++extern void Wayland_display_add_pointer_lock(SDL_VideoData *d, uint32_t id);
++extern void Wayland_display_destroy_pointer_lock(SDL_VideoData *d);
++
++extern int Wayland_input_lock_pointer(struct SDL_WaylandInput *input);
++extern int Wayland_input_unlock_pointer(struct SDL_WaylandInput *input);
++
+ #endif /* _SDL_waylandevents_h */
+ 
+ /* vi: set ts=4 sw=4 expandtab: */
+--- a/src/video/wayland/SDL_waylandmouse.c	2014-03-16 03:31:43.000000000 +0100
++++ b/src/video/wayland/SDL_waylandmouse.c	2015-01-16 18:36:29.769183597 +0100
+@@ -367,8 +367,13 @@
+ static int
+ Wayland_SetRelativeMouseMode(SDL_bool enabled)
+ {
+-    SDL_Unsupported();
+-    return -1;
++    SDL_VideoDevice *vd = SDL_GetVideoDevice();
++    SDL_VideoData *data = (SDL_VideoData *) vd->driverdata;
++
++    if (enabled)
++        return Wayland_input_lock_pointer(data->input);
++    else
++        return Wayland_input_unlock_pointer(data->input);
+ }
+ 
+ void
+--- a/src/video/wayland/SDL_waylandvideo.c	2014-03-16 03:31:43.000000000 +0100
++++ b/src/video/wayland/SDL_waylandvideo.c	2015-01-16 18:36:44.679615449 +0100
+@@ -130,6 +130,9 @@
+     return device;
+ }
+ 
++void Wayland_display_add_relative_pointer_manager(SDL_VideoData *d, uint32_t id);
++void Wayland_display_destroy_relative_pointer_manager(SDL_VideoData *d);
++
+ VideoBootStrap Wayland_bootstrap = {
+     WAYLANDVID_DRIVER_NAME, "SDL Wayland video driver",
+     Wayland_Available, Wayland_CreateDevice
+@@ -257,6 +260,10 @@
+         d->default_cursor = WAYLAND_wl_cursor_theme_get_cursor(d->cursor_theme, "left_ptr");
+         wl_shm_add_listener(d->shm, &shm_listener, d);
+     
++    } else if (strcmp(interface, "_wl_relative_pointer_manager") == 0) {
++        Wayland_display_add_relative_pointer_manager(d, id);
++    } else if (strcmp(interface, "_wl_pointer_lock") == 0) {
++        Wayland_display_add_pointer_lock(d, id);
+ #ifdef SDL_VIDEO_DRIVER_WAYLAND_QT_TOUCH
+     } else if (strcmp(interface, "qt_touch_extension") == 0) {
+         Wayland_touch_create(d, id);
+@@ -390,6 +397,8 @@
+         wl_output_destroy(data->output);
+ 
+     Wayland_display_destroy_input(data);
++    Wayland_display_destroy_pointer_lock(data);
++    Wayland_display_destroy_relative_pointer_manager(data);
+ 
+     if (data->xkb_context) {
+         WAYLAND_xkb_context_unref(data->xkb_context);
+--- a/src/video/wayland/SDL_waylandvideo.h	2014-03-16 03:31:43.000000000 +0100
++++ b/src/video/wayland/SDL_waylandvideo.h	2015-01-16 18:36:29.769183597 +0100
+@@ -46,6 +46,9 @@
+     struct wl_cursor *default_cursor;
+     struct wl_pointer *pointer;
+     struct wl_shell *shell;
++    struct _wl_relative_pointer_manager *relative_pointer_manager;
++    struct _wl_relative_pointer *relative_pointer;
++    struct _wl_pointer_lock *pointer_lock;
+ 
+     struct {
+         int32_t x, y, width, height;
+@@ -67,6 +70,8 @@
+ #endif /* SDL_VIDEO_DRIVER_WAYLAND_QT_TOUCH */
+ 
+     uint32_t shm_formats;
++
++    int relative_mouse_mode;
+ } SDL_VideoData;
+ 
+ #endif /* _SDL_nullvideo_h */
+--- a/src/video/wayland/SDL_waylandwindow.c	2014-03-16 03:31:43.000000000 +0100
++++ b/src/video/wayland/SDL_waylandwindow.c	2015-01-16 18:36:29.769183597 +0100
+@@ -26,6 +26,7 @@
+ #include "../SDL_sysvideo.h"
+ #include "../../events/SDL_windowevents_c.h"
+ #include "../SDL_egl_c.h"
++#include "SDL_waylandevents_c.h"
+ #include "SDL_waylandwindow.h"
+ #include "SDL_waylandvideo.h"
+ #include "SDL_waylandtouch.h"
+@@ -194,6 +195,10 @@
+     wl_surface_set_opaque_region(data->surface, region);
+     wl_region_destroy(region);
+ 
++    if (c->relative_mouse_mode) {
++        Wayland_input_lock_pointer(c->input);
++    }
++
+     WAYLAND_wl_display_flush(c->display);
+ 
+     return 0;
+--- a/src/video/wayland/SDL_waylandwindow.h	2014-03-16 03:31:43.000000000 +0100
++++ b/src/video/wayland/SDL_waylandwindow.h	2015-01-16 18:36:29.769183597 +0100
+@@ -39,6 +39,7 @@
+     struct wl_egl_window *egl_window;
+     struct SDL_WaylandInput *keyboard_device;
+     EGLSurface egl_surface;
++    struct _wl_locked_pointer *locked_pointer;
+ 
+ #ifdef SDL_VIDEO_DRIVER_WAYLAND_QT_TOUCH
+     struct qt_extended_surface *extended_surface;

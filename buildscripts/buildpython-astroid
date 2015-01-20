@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.3.2
+export VER=1.3.4
 export DEST=/binary/python-astroid-${VER}
 
 cp -a astroid-${VER} astroid-${VER}-3

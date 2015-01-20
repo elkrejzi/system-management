@@ -1,9 +1,11 @@
 #!/bin/bash -e
 
-export VER=5.1.2
+export VER=5.1.95
 export DEST=/binary/kwin-${VER}
 
 pushd kwin-${VER}
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/kwin.patch
 
 cmake -DCMAKE_BUILD_TYPE=Release    \
       -DCMAKE_INSTALL_PREFIX=/usr   \

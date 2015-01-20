@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.1-8-g2319d35
+export VER=5.1.95
 export DEST=/binary/kcm-touchpad-${VER}
 
 pushd kcm-touchpad-${VER}
