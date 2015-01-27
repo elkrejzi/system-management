@@ -1,25 +1,20 @@
 #!/bin/bash -e
 
-export VER=1.21.4
-export DEST=/binary/clutter-${VER}
+export VER=3.0.4
+export DEST=/binary/clutter-gst-${VER}
 
-pushd clutter-${VER}
+pushd clutter-gst-${VER}
 
 CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr               \
-            --sysconfdir=/etc           \
-            --enable-egl-backend        \
-            --enable-wayland-backend    \
-            --enable-wayland-compositor \
-            --enable-evdev-input
+./configure --prefix=/usr
 
 make -j4
 make install DESTDIR=${DEST}
 
 popd
 
-rm -rf clutter-${VER}
+rm -rf clutter-gst-${VER}
 
 find ${DEST} -name "*.la" -delete
 

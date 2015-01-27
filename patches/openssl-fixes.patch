@@ -1,7 +1,6 @@
-diff -Naur a/crypto/Makefile b/crypto/Makefile
---- a/crypto/Makefile	2014-06-05 11:44:46.000000000 +0200
-+++ b/crypto/Makefile	2014-06-05 16:49:15.926371642 +0200
-@@ -88,11 +88,11 @@
+--- a/crypto/Makefile	2015-01-22 17:12:09.000000000 +0100
++++ b/crypto/Makefile	2015-01-23 16:42:13.460175569 +0100
+@@ -85,11 +85,11 @@
  	@if [ -z "$(THIS)" ]; then $(MAKE) -f $(TOP)/Makefile reflect THIS=$@; fi
  
  subdirs:
@@ -9,22 +8,22 @@ diff -Naur a/crypto/Makefile b/crypto/Makefile
 +	+@target=all; $(RECURSIVE_MAKE)
  
  files:
- 	$(PERL) $(TOP)/util/files.pl Makefile >> $(TOP)/MINFO
+ 	$(PERL) $(TOP)/util/files.pl "CPUID_OBJ=$(CPUID_OBJ)" Makefile >> $(TOP)/MINFO
 -	@target=files; $(RECURSIVE_MAKE)
 +	+@target=files; $(RECURSIVE_MAKE)
  
  links:
  	@$(PERL) $(TOP)/util/mklink.pl ../include/openssl $(EXHEADER)
-@@ -103,7 +103,7 @@
+@@ -100,7 +100,7 @@
  # lib: $(LIB): are splitted to avoid end-less loop
  lib:	$(LIB)
  	@touch lib
 -$(LIB):	$(LIBOBJ)
 +$(LIB):	$(LIBOBJ) | subdirs
  	$(AR) $(LIB) $(LIBOBJ)
- 	[ -z "$(FIPSLIBDIR)" ] || $(AR) $(LIB) $(FIPSLIBDIR)fipscanister.o
+ 	test -z "$(FIPSLIBDIR)" || $(AR) $(LIB) $(FIPSLIBDIR)fipscanister.o
  	$(RANLIB) $(LIB) || echo Never mind.
-@@ -114,7 +114,7 @@
+@@ -111,7 +111,7 @@
  	fi
  
  libs:
@@ -33,7 +32,7 @@ diff -Naur a/crypto/Makefile b/crypto/Makefile
  
  install:
  	@[ -n "$(INSTALLTOP)" ] # should be set by top Makefile...
-@@ -123,7 +123,7 @@
+@@ -120,7 +120,7 @@
  	(cp $$i $(INSTALL_PREFIX)$(INSTALLTOP)/include/openssl/$$i; \
  	chmod 644 $(INSTALL_PREFIX)$(INSTALLTOP)/include/openssl/$$i ); \
  	done;
@@ -42,9 +41,8 @@ diff -Naur a/crypto/Makefile b/crypto/Makefile
  
  lint:
  	@target=lint; $(RECURSIVE_MAKE)
-diff -Naur a/engines/Makefile b/engines/Makefile
---- a/engines/Makefile	2014-06-05 16:49:10.615270795 +0200
-+++ b/engines/Makefile	2014-06-05 16:49:15.926371642 +0200
+--- a/engines/Makefile	2015-01-22 17:12:24.000000000 +0100
++++ b/engines/Makefile	2015-01-23 16:42:13.461175596 +0100
 @@ -72,7 +72,7 @@
  
  all:	lib subdirs
@@ -64,7 +62,7 @@ diff -Naur a/engines/Makefile b/engines/Makefile
  files:
  	$(PERL) $(TOP)/util/files.pl Makefile >> $(TOP)/MINFO
 @@ -128,7 +128,7 @@
- 			  mv -f $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/openssl/engines/$$pfx$$l$$sfx.new $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/openssl/engines/$$pfx$$l$$sfx ); \
+ 			  mv -f $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines/$$pfx$$l$$sfx.new $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines/$$pfx$$l$$sfx ); \
  		done; \
  	fi
 -	@target=install; $(RECURSIVE_MAKE)
@@ -72,10 +70,9 @@ diff -Naur a/engines/Makefile b/engines/Makefile
  
  tags:
  	ctags $(SRC)
-diff -Naur a/Makefile.org b/Makefile.org
---- a/Makefile.org	2014-06-05 16:49:10.615270795 +0200
-+++ b/Makefile.org	2014-06-05 16:49:15.927371667 +0200
-@@ -273,17 +273,17 @@
+--- a/Makefile.org	2015-01-22 15:58:06.000000000 +0100
++++ b/Makefile.org	2015-01-23 16:42:13.461175596 +0100
+@@ -274,17 +274,17 @@
  build_libs: build_crypto build_ssl build_engines
  
  build_crypto:
@@ -104,7 +101,7 @@ diff -Naur a/Makefile.org b/Makefile.org
  
  all_testapps: build_libs build_testapps
  build_testapps:
-@@ -538,9 +538,9 @@
+@@ -536,9 +536,9 @@
  dist_pem_h:
  	(cd crypto/pem; $(MAKE) -e $(BUILDENV) pem.h; $(MAKE) clean)
  
@@ -115,8 +112,8 @@ diff -Naur a/Makefile.org b/Makefile.org
 +install_dirs:
  	@$(PERL) $(TOP)/util/mkdir-p.pl $(INSTALL_PREFIX)$(INSTALLTOP)/bin \
  		$(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR) \
- 		$(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/openssl/engines \
-@@ -549,12 +549,19 @@
+ 		$(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines \
+@@ -547,12 +547,19 @@
  		$(INSTALL_PREFIX)$(OPENSSLDIR)/misc \
  		$(INSTALL_PREFIX)$(OPENSSLDIR)/certs \
  		$(INSTALL_PREFIX)$(OPENSSLDIR)/private
@@ -137,7 +134,7 @@ diff -Naur a/Makefile.org b/Makefile.org
  	@set -e; liblist="$(LIBS)"; for i in $$liblist ;\
  	do \
  		if [ -f "$$i" ]; then \
-@@ -634,12 +641,7 @@
+@@ -636,12 +643,7 @@
  		done; \
  	done
  
@@ -151,9 +148,8 @@ diff -Naur a/Makefile.org b/Makefile.org
  	@pod2man="`cd ./util; ./pod2mantest $(PERL)`"; \
  	here="`pwd`"; \
  	filecase=; \
-diff -Naur a/Makefile.shared b/Makefile.shared
---- a/Makefile.shared	2014-06-05 16:49:10.616270813 +0200
-+++ b/Makefile.shared	2014-06-05 16:49:15.927371667 +0200
+--- a/Makefile.shared	2015-01-20 13:33:36.000000000 +0100
++++ b/Makefile.shared	2015-01-23 16:42:13.461175596 +0100
 @@ -105,6 +105,7 @@
      SHAREDFLAGS="$${SHAREDFLAGS:-$(CFLAGS) $(SHARED_LDFLAGS)}"; \
      LIBPATH=`for x in $$LIBDEPS; do echo $$x; done | sed -e 's/^ *-L//;t' -e d | uniq`; \
@@ -170,10 +166,9 @@ diff -Naur a/Makefile.shared b/Makefile.shared
  			( $(SET_X); rm -f $$SHLIB$$SHLIB_SUFFIX; \
  			  ln -s $$prev $$SHLIB$$SHLIB_SUFFIX ); \
  		fi; \
-diff -Naur a/test/Makefile b/test/Makefile
---- a/test/Makefile	2014-06-05 11:45:00.000000000 +0200
-+++ b/test/Makefile	2014-06-05 16:49:15.927371667 +0200
-@@ -127,7 +127,7 @@
+--- a/test/Makefile	2015-01-22 17:12:26.000000000 +0100
++++ b/test/Makefile	2015-01-23 16:42:13.461175596 +0100
+@@ -132,7 +132,7 @@
  tags:
  	ctags $(SRC)
  
@@ -182,7 +177,7 @@ diff -Naur a/test/Makefile b/test/Makefile
  
  apps:
  	@(cd ..; $(MAKE) DIRS=apps all)
-@@ -371,109 +371,109 @@
+@@ -398,109 +398,109 @@
  		link_app.$${shlib_target}
  
  $(RSATEST)$(EXE_EXT): $(RSATEST).o $(DLIBCRYPTO)
@@ -325,9 +320,9 @@ diff -Naur a/test/Makefile b/test/Makefile
 -	@target=$(SRPTEST); $(BUILD_CMD)
 +	+@target=$(SRPTEST); $(BUILD_CMD)
  
- $(HEARTBEATTEST)$(EXE_EXT): $(HEARTBEATTEST).o $(DLIBCRYPTO)
- 	@target=$(HEARTBEATTEST); $(BUILD_CMD)
-@@ -489,7 +489,7 @@
+ $(V3NAMETEST)$(EXE_EXT): $(V3NAMETEST).o $(DLIBCRYPTO)
+ 	@target=$(V3NAMETEST); $(BUILD_CMD)
+@@ -522,7 +522,7 @@
  #	fi
  
  dummytest$(EXE_EXT): dummytest.o $(DLIBCRYPTO)

@@ -1,0 +1,92 @@
+#!/bin/bash -e
+
+XSERVER_VERSION=$(pkg-config --modversion xorg-server | cut -d . -f 1,2 | sed "s:\.::g")
+
+if [[ $(uname -m) == "x86_64" ]]
+then
+  ARCH=amd64
+else
+  ARCH=x86
+fi
+
+if [[ -z "$1" ]]
+then
+   echo "Usage: $0 /path/to/cdrom/mountpoint destination (optional)"
+   exit 1
+fi
+
+if [[ ! -z "$2" ]]
+then
+  DEST=$2
+else
+  DEST=
+fi
+
+rm -rf vboxguest
+
+$1/VBoxLinuxAdditions.run --keep --noexec --nox11 --target vboxguest
+
+tar xf vboxguest/VBoxGuestAdditions-${ARCH}.tar.bz2 -C vboxguest
+
+if [[ ! -e vboxguest/lib/VBoxGuestAdditions/vboxvideo_drv_${XSERVER_VERSION}.so ]]
+then
+  echo "Xorg Server version not supported. Exiting."
+  exit 1
+fi
+
+install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/etc/xdg/autostart ${DEST}/lib/security ${DEST}/lib/systemd/system ${DEST}/lib/udev/rules.d ${DEST}/sbin
+install -dm755 ${DEST}/usr/bin ${DEST}/usr/lib/dri ${DEST}/usr/lib/xorg/modules/drivers ${DEST}/usr/sbin ${DEST}/usr/share/VBoxGuestAdditions ${DEST}/usr/src/virtualbox-guest
+
+install -m755 vboxguest/lib/VBoxGuestAdditions/mount.vboxsf ${DEST}/sbin
+install -m755 vboxguest/lib/VBoxGuestAdditions/pam_vbox.so ${DEST}/lib/security
+
+install -m755 vboxguest/bin/VBoxClient ${DEST}/usr/bin
+install -m755 vboxguest/bin/VBoxClient-all ${DEST}/usr/bin
+install -m755 vboxguest/bin/VBoxControl ${DEST}/usr/bin
+
+install -m755 vboxguest/lib/*.so ${DEST}/usr/lib
+install -m755 vboxguest/lib/VBoxGuestAdditions/vboxvideo_drv_${XSERVER_VERSION}.so ${DEST}/usr/lib/xorg/modules/drivers/vboxvideo.so
+
+ln -sf ../VBoxOGL.so ${DEST}/usr/lib/dri/vboxvideo_dri.so
+
+install -m755 vboxguest/sbin/VBoxService ${DEST}/usr/sbin
+
+install -m644 vboxguest/share/VBoxGuestAdditions/vbox_accel.pp ${DEST}/usr/share/VBoxGuestAdditions
+install -m644 vboxguest/share/VBoxGuestAdditions/vboxvideo.ids ${DEST}/usr/share/VBoxGuestAdditions
+install -m644 vboxguest/share/VBoxGuestAdditions/vbox_x11.pp ${DEST}/usr/share/VBoxGuestAdditions
+
+mv vboxguest/src/vboxguest*/Makefile ${DEST}/usr/src/virtualbox-guest
+mv vboxguest/src/vboxguest*/vboxguest ${DEST}/usr/src/virtualbox-guest
+mv vboxguest/src/vboxguest*/vboxsf ${DEST}/usr/src/virtualbox-guest
+mv vboxguest/src/vboxguest*/vboxvideo ${DEST}/usr/src/virtualbox-guest
+
+install -m644 vboxguest/share/VBoxGuestAdditions/vboxclient.desktop ${DEST}/etc/xdg/autostart
+
+cat > ${DEST}/lib/systemd/system/vboxservice.service << "EOF"
+[Unit]
+Description=VirtualBox Guest Service
+ConditionVirtualization=oracle
+
+[Service]
+ExecStartPre=-/sbin/modprobe vboxguest
+ExecStartPre=-/sbin/modprobe vboxvideo
+ExecStartPre=-/sbin/modprobe vboxsf
+ExecStart=/usr/sbin/VBoxService -f
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > ${DEST}/lib/udev/rules.d/60-vboxguest.rules << "EOF"
+ACTION=="add", KERNEL=="vboxguest", SUBSYSTEM=="misc", OWNER="root", MODE="0600"
+ACTION=="add", KERNEL=="vboxuser", SUBSYSTEM=="misc", OWNER="root", MODE="0666"
+EOF
+
+ln -sf /lib/systemd/system/vboxservice.service ${DEST}/etc/systemd/system/multi-user.target.wants/vboxservice.service
+
+groupadd --system -g 101 vboxsf
+
+rm -rf vboxguest
+
+echo "Done!"
+exit 0

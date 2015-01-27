@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.1.95
+export VER=5.2.0
 export DEST=/binary/oxygen-${VER}
 
 install -dm755 oxygen-${VER}/kde5 oxygen-${VER}/kde4

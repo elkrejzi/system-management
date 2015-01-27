@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.14.7
+export VER=3.15.4
 export DEST=/binary/gtk+-${VER}
 
 pushd gtk+-${VER}
@@ -11,8 +11,7 @@ CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
             --sysconfdir=/etc         \
             --enable-broadway-backend \
             --enable-wayland-backend  \
-            --enable-x11-backend      \
-            --enable-gtk2-dependency
+            --enable-x11-backend
 
 make -j4
 make install DESTDIR=${DEST}
@@ -23,7 +22,7 @@ rm -rf gtk+-${VER}
 
 find ${DEST} -name "*.la" -delete
 
-rm -rf ${DEST}/usr/share/man/man1/gtk-update-icon-cache.1
+rm -rf ${DEST}/usr/bin/gtk-update-icon-cache ${DEST}/usr/share/man/man1/gtk-update-icon-cache.1
 
 cat > ${DEST}/usr/share/gtk-3.0/settings.ini << "EOF"
 [Settings]

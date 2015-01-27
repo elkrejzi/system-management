@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.6.39
+export VER=0.6.40
 export DEST=/binary/accountsservice-${VER}
 
 pushd accountsservice-${VER}

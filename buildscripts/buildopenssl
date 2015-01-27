@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.0.1l
+export VER=1.0.2
 export DEST=/binary/openssl-${VER}
 
 export CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"
@@ -67,6 +67,8 @@ mv ${DEST}/usr/lib/libssl.so.* ${DEST}/lib
 
 ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libcrypto.so) ${DEST}/usr/lib/libcrypto.so
 ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libssl.so) ${DEST}/usr/lib/libssl.so
+
+find ${DEST} -name "*.so" -exec chmod 755 {} \;
 
 pushd ${DEST}
 

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.42.1
+export VER=2.43.3
 export DEST=/binary/glib-${VER}
 
 cp -a glib-${VER} glib-${VER}-32

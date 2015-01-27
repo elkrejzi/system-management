@@ -213,3 +213,21 @@ make -j4
 make install
 
 ln -sv gcc /tools/bin/cc
+
+#################
+#################
+### IMPORTANT ###
+#################
+#################
+
+### In the chapter "6.5. Creating Directories" it is necessary to run the following
+### command along the ones already present there:
+
+mkdir -pv {,/usr}/lib32
+
+### In the chapter "6.6. Creating Essential Files and Symlinks" it is necessary to
+### run the following command along the ones already present there:
+
+ln -sv /tools/lib32/libgcc_s.so{,.1} /usr/lib32
+ln -sv /tools/lib32/libstdc++.so{,.6} /usr/lib32
+sed 's/tools/usr/' /tools/lib32/libstdc++.la > /usr/lib32/libstdc++.la

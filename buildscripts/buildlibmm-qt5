@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.1.95
+export VER=5.2.0
 export DEST=/binary/libmm-qt-${VER}
 
 pushd libmm-qt-${VER}

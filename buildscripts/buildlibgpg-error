@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.17
+export VER=1.18
 export DEST=/binary/libgpg-error-${VER}
 
 cp -a libgpg-error-${VER} libgpg-error-${VER}-32

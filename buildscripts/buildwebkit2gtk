@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.6.5
+export VER=2.7.4
 export DEST=/binary/webkitgtk-${VER}
 
 install -dm755 webkitgtk-${VER}/build

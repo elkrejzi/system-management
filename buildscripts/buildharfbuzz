@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.9.37
+export VER=0.9.38
 export DEST=/binary/harfbuzz-${VER}
 
 cp -a harfbuzz-${VER} harfbuzz-${VER}-32

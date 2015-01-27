@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+export VER=2.0.2
+export DEST=/binary/sparsehash-${VER}
+
+pushd sparsehash-${VER}
+
+./configure --prefix=/usr
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf sparsehash-${VER}
+
+rm -rf ${DEST}/usr/share
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL
