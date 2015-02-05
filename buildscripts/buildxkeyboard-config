@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.13
+export VER=2.14
 export DEST=/binary/xkeyboard-config-${VER}
 
 pushd xkeyboard-config-${VER}

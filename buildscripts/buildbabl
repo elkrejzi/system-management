@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.1.10
+export VER=0.1.12
 export DEST=/binary/babl-${VER}
 
 pushd babl-${VER}

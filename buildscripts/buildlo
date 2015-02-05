@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.3.5.2
+export VER=4.4.0.3
 export DEST=/binary/libreoffice-${VER}
 
 pushd libreoffice-${VER}
@@ -11,13 +11,13 @@ ln -sf ../../../libreoffice-dictionaries-${VER}.tar.xz external/tarballs/
 ln -sf ../../../libreoffice-help-${VER}.tar.xz external/tarballs/
 ln -sf ../../../libreoffice-translations-${VER}.tar.xz external/tarballs/
 
-patch -Np1 -i /media/ntfs/Other/Linux/patches/libreoffice-fixes.patch
-
 sed -e "/gzip -f/d"   \
     -e "s|.1.gz|.1|g" \
     -i bin/distro-install-desktop-integration
 
 sed -e "/distro-install-file-lists/d" -i Makefile.in
+
+sed -e "/ustrbuf/a #include <algorithm>" -i svl/source/misc/gridprinter.cxx
 
 chmod +x bin/unpack-sources
 
@@ -33,15 +33,12 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
              --disable-collada           \
              --disable-gconf             \
              --disable-odk               \
-             --disable-opencl            \
              --enable-avahi              \
              --enable-dbus               \
              --enable-gio                \
-             --enable-gstreamer          \
              --enable-kde4               \
              --enable-gtk3               \
              --enable-lockdown           \
-             --enable-opengl             \
              --enable-python=system      \
              --enable-release-build      \
              --enable-vlc                \
@@ -77,6 +74,7 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
              --with-system-libmspub      \
              --with-system-libmwaw       \
              --with-system-libodfgen     \
+             --with-system-libpagemaker  \
              --with-system-libpng        \
              --with-system-librevenge    \
              --with-system-libvisio      \

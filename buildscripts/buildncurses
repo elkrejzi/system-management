@@ -1,11 +1,12 @@
 #!/bin/bash -e
 
-export VER=5.9-20141227
+export VER=5.9-20150131
 export DEST=/binary/ncurses-${VER}
 
-cd ncurses-${VER}
+pushd ncurses-${VER}
 
-mkdir buildncursesw6{,-32} buildncursesw{,-32} buildncurses{,-32}
+install -dm755 buildncursesw6 buildncursesw buildncurses
+install -dm755 buildncursesw6-32 buildncursesw-32 buildncurses-32
 
 pushd buildncursesw6
 
@@ -42,7 +43,7 @@ make -j4
 
 for lib in ncursesw formw panelw menuw; do
   install -m755 lib/lib${lib}.so.5.9 ${DEST}/usr/lib
-  ln -s lib${lib}.so.5.9 ${DEST}/usr/lib/lib${lib}.so.5
+  ln -sf lib${lib}.so.5.9 ${DEST}/usr/lib/lib${lib}.so.5
 done
 
 popd
@@ -62,7 +63,7 @@ make -j4
 
 for lib in ncurses form panel menu; do
   install -m755 lib/lib${lib}.so.5.9 ${DEST}/usr/lib
-  ln -s lib${lib}.so.5.9 ${DEST}/usr/lib/lib${lib}.so.5
+  ln -sf lib${lib}.so.5.9 ${DEST}/usr/lib/lib${lib}.so.5
 done
 
 popd
@@ -87,11 +88,9 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
              --enable-ext-mouse
 
 make -j4
-make install DESTDIR=/binary/ncurses32
+make install DESTDIR=${PWD}/dest
 
-mv /binary/ncurses32/usr/lib32 ${DEST}/usr
-
-rm -rf /binary/ncurses32
+mv dest/usr/lib32 ${DEST}/usr
 
 popd
 
@@ -110,7 +109,7 @@ make -j4
 
 for lib in ncursesw formw panelw menuw; do
   install -m755 lib/lib${lib}.so.5.9 ${DEST}/usr/lib32
-  ln -s lib${lib}.so.5.9 ${DEST}/usr/lib32/lib${lib}.so.5
+  ln -sf lib${lib}.so.5.9 ${DEST}/usr/lib32/lib${lib}.so.5
 done
 
 popd
@@ -130,12 +129,12 @@ make -j4
 
 for lib in ncurses form panel menu; do
   install -m755 lib/lib${lib}.so.5.9 ${DEST}/usr/lib32
-  ln -s lib${lib}.so.5.9 ${DEST}/usr/lib32/lib${lib}.so.5
+  ln -sf lib${lib}.so.5.9 ${DEST}/usr/lib32/lib${lib}.so.5
 done
 
 popd
 
-cd ..
+popd
 
 rm -rf ncurses-${VER}
 
@@ -145,26 +144,26 @@ mv ${DEST}/usr/lib/libncursesw.so.6{,.0} ${DEST}/lib
 ln -sf ../../lib/libncursesw.so.6.0 ${DEST}/usr/lib/libncursesw.so
 
 for lib in ncurses form panel menu ; do
-  rm -f ${DEST}/usr/lib/lib${lib}.so
-  rm -f ${DEST}/usr/lib32/lib${lib}.so
+  rm -rf ${DEST}/usr/lib/lib${lib}.so
+  rm -rf ${DEST}/usr/lib32/lib${lib}.so
   echo "INPUT(-l${lib}w)" > ${DEST}/usr/lib/lib${lib}.so
   echo "INPUT(-l${lib}w)" > ${DEST}/usr/lib32/lib${lib}.so
 done
 
 for lib in ncurses ncurses++ form panel menu; do
-  ln -s ${lib}w.pc ${DEST}/usr/lib/pkgconfig/${lib}.pc
-  ln -s ${lib}w.pc ${DEST}/usr/lib32/pkgconfig/${lib}.pc
+  ln -sf ${lib}w.pc ${DEST}/usr/lib/pkgconfig/${lib}.pc
+  ln -sf ${lib}w.pc ${DEST}/usr/lib32/pkgconfig/${lib}.pc
 done
 
-rm -f ${DEST}/usr/lib/libcursesw.so
-rm -f ${DEST}/usr/lib/libcursesw.so
+rm -rf ${DEST}/usr/lib/libcursesw.so
+rm -rf ${DEST}/usr/lib32/libcursesw.so
 echo "INPUT(-lncursesw)" > ${DEST}/usr/lib/libcursesw.so
 echo "INPUT(-lncursesw)" > ${DEST}/usr/lib32/libcursesw.so
-ln -s libncurses.so ${DEST}/usr/lib/libcurses.so
-ln -s libncurses.so ${DEST}/usr/lib32/libcurses.so
+ln -sf libncurses.so ${DEST}/usr/lib/libcurses.so
+ln -sf libncurses.so ${DEST}/usr/lib32/libcurses.so
 
-rm -f ${DEST}/usr/lib/*.a
-rm -f ${DEST}/usr/lib32/*.a
+rm -rf ${DEST}/usr/lib/*.a
+rm -rf ${DEST}/usr/lib32/*.a
 
 pushd ${DEST}
 

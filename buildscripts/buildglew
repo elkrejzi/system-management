@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.11.0
+export VER=1.12.0
 export DEST=/binary/glew-${VER}
 
 cp -a glew-${VER} glew-${VER}-32

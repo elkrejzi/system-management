@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.5.0
+export VER=3.6.0rc2
 
 for tarball in cfe-${VER}.src.tar.xz clang-tools-extra-${VER}.src.tar.xz  \
                compiler-rt-${VER}.src.tar.xz llvm-${VER}.src.tar.xz
@@ -26,8 +26,6 @@ sed -i 's:$(PROJ_prefix)/docs/llvm:$(PROJ_prefix)/share/doc/llvm:' Makefile.conf
 sed -i '/@LLVM_CONFIG_CMAKE_DIR@/s:$(PROJ_cmake):$(PROJ_prefix)/share/llvm/cmake:' cmake/modules/Makefile
 
 sed -i "/ld-linux-x86-64/s/lib64/lib/" tools/clang/lib/Driver/Tools.cpp
-
-patch -Np0 -i /media/ntfs/Other/Linux/patches/llvm-fixes.patch
 
 export CC="gcc"
 export CXX="g++"

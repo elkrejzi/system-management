@@ -9,6 +9,8 @@ patch -Np1 -i /media/ntfs/Other/Linux/patches/fltk-fixes.patch
 
 sed -i "s:class Fl_XFont_On_Demand:class FL_EXPORT Fl_XFont_On_Demand:g" FL/x.H
 
+sed -i "/cat./d" documentation/Makefile
+
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr --enable-shared

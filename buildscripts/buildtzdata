@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2014j
+export VER=2015a
 export INST=/binary/tzdata-${VER}
 export DEST=${INST}/usr/share/zoneinfo
 

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.2.6
+export VER=2.2.7
 export DEST=/binary/bluefish-${VER}
 
 pushd bluefish-${VER}

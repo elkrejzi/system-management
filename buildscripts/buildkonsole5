@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=14.12.1
+export VER=14.12.2
 export DEST=/binary/konsole-${VER}
 
 pushd konsole-${VER}

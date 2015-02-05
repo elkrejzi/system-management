@@ -1,13 +1,9 @@
 #!/bin/bash -e
 
-export VER=0.48.5
+export VER=0.91
 export DEST=/binary/inkscape-${VER}
 
 pushd inkscape-${VER}
-
-patch -Np1 -i /media/ntfs/Other/Linux/patches/inkscape-fixes.patch
-
-sed -i "s|GfxColorSpace::parse(|&NULL, |g" src/extension/internal/pdfinput/pdf-parser.cpp
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \

@@ -3,11 +3,19 @@
 export VER=4.8.6
 export DEST=/binary/qt-${VER}
 
+pushd qt-everywhere-opensource-src-${VER}
+
 if [ -e /media/ntfs/Other/Linux/patches/qt4fixes.patch ]; then
-  pushd qt-everywhere-opensource-src-${VER}
   patch -Np1 -i /media/ntfs/Other/Linux/patches/qt4fixes.patch
-  popd
 fi
+
+sed -e '631a if (image->isNull()) { state = Error; return -1; }' \
+    -i src/gui/image/qgifhandler.cpp
+
+sed -e '/CONFIG -/ a\isEmpty(OUTPUT_DIR): OUTPUT_DIR = ../..' \
+    -i src/3rdparty/webkit/Source/WebKit2/DerivedSources.pro
+
+popd
 
 export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w"
 export CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w"
@@ -19,9 +27,6 @@ pushd qt-everywhere-opensource-src-${VER}
 cp mkspecs/common/linux.conf mkspecs/common/linux32.conf
 sed -i "/^QMAKE_LIBDIR\s/s:=:= /usr/lib32:g" mkspecs/common/linux32.conf
 sed -i "s:common/linux.conf:common/linux32.conf:" mkspecs/linux-g++-32/qmake.conf
-
-sed -i '/CONFIG -/ a\isEmpty(OUTPUT_DIR): OUTPUT_DIR = ../..' \
-     src/3rdparty/webkit/Source/WebKit2/DerivedSources.pro
 
 ./configure -confirm-license \
             -opensource \
@@ -145,9 +150,6 @@ rm -rf ${DEST}/usr/lib/qt4/plugins/imageformats/libqtga.so
 popd
 
 pushd qt-everywhere-opensource-src-${VER}-32
-
-sed -i '/CONFIG -/ a\isEmpty(OUTPUT_DIR): OUTPUT_DIR = ../..' \
-     src/3rdparty/webkit/Source/WebKit2/DerivedSources.pro
 
 sed -i "/^QMAKE_LINK\s/s|g++|g++ -m32|g" mkspecs/common/g++-base.conf
 sed -i "s|-O2|${CXXFLAGS} -m32|" mkspecs/common/g++-base.conf

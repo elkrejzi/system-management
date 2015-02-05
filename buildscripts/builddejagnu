@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.5.1
+export VER=1.5.2
 export DEST=/binary/dejagnu-${VER}
 
 pushd dejagnu-${VER}

@@ -1,38 +1,18 @@
 #!/bin/bash -e
 
-export VER=0.5.9
+export VER=0.5.10
 export DEST=/binary/gstreamer-vaapi-${VER}
 
 pushd gstreamer-vaapi-${VER}
 
-mkdir build1.0
-pushd build1.0
-
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-../configure --prefix=/usr    \
-             --disable-static \
-             --disable-builtin-libvpx
+./configure --prefix=/usr    \
+            --disable-static \
+            --disable-builtin-libvpx
 
 make -j4
 make install DESTDIR=${DEST}
-
-popd
-
-mkdir build0.10
-pushd build0.10
-
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-../configure --prefix=/usr             \
-             --disable-static          \
-             --disable-wayland         \
-             --disable-builtin-libvpx  \
-             --with-gstreamer-api=0.10
-make -j4
-make install DESTDIR=${DEST}
-
-popd
 
 popd
 
