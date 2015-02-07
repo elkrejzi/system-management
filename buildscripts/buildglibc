@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.20
+export VER=2.21
 export DEST=/binary/glibc-${VER}
 
 mv glibc-${VER} src
@@ -23,8 +23,8 @@ pushd build64
 echo slibdir=/lib > configparms
 echo rtlddir=/lib >> configparms
 
-CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"     \
-CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
+CFLAGS="-march=native -mtune=native -g -O2 -pipe"   \
+CXXFLAGS="-march=native -mtune=native -g -O2 -pipe" \
 ../src/configure --prefix=/usr --libdir=/usr/lib --libexecdir=/usr/lib         \
                  --disable-profile --enable-add-ons --enable-kernel=3.4.0      \
                  --enable-bind-now --enable-multi-arch --enable-obsolete-rpc   \
@@ -48,8 +48,8 @@ echo rtlddir=/lib32 >> configparms
 export CC="gcc -m32"
 export CXX="g++ -m32"
 
-CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"     \
-CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
+CFLAGS="-march=native -mtune=native -g -O2 -pipe"   \
+CXXFLAGS="-march=native -mtune=native -g -O2 -pipe" \
 ../src/configure --prefix=/usr --libdir=/usr/lib32 --libexecdir=/usr/lib32     \
                  --disable-profile --enable-add-ons --enable-kernel=3.4.0      \
                  --enable-bind-now --enable-multi-arch --enable-obsolete-rpc   \
@@ -66,6 +66,7 @@ make -j4 install install_root=${PWD}/dest
 
 mv dest/lib32 ${DEST}/
 mv dest/usr/lib32 ${DEST}/usr/
+mv dest/usr/include/gnu/lib-names-32.h ${DEST}/usr/include/gnu/
 mv dest/usr/include/gnu/stubs-32.h ${DEST}/usr/include/gnu/
 
 popd

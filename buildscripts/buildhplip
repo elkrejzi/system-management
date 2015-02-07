@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.14.10
+export VER=3.15.2
 export DEST=/binary/hplip-${VER}
 
 pushd hplip-${VER}
@@ -17,17 +17,17 @@ autoreconf --force --install
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr                  \
-             --enable-qt4                  \
-             --enable-foomatic-ppd-install \
-             --enable-hpcups-install       \
-             --enable-new-hpcups           \
-             --enable-cups-ppd-install     \
-             --enable-cups-drv-install     \
-             --enable-hpijs-install        \
-             --enable-foomatic-drv-install \
-             --enable-pp-build             \
-             --disable-foomatic-rip-hplip-install
+./configure --prefix=/usr                 \
+            --enable-qt4                  \
+            --enable-foomatic-ppd-install \
+            --enable-hpcups-install       \
+            --enable-new-hpcups           \
+            --enable-cups-ppd-install     \
+            --enable-cups-drv-install     \
+            --enable-hpijs-install        \
+            --enable-foomatic-drv-install \
+            --enable-pp-build             \
+            --disable-foomatic-rip-hplip-install
 
 make -j4
 make install DESTDIR=${DEST} rulesdir=/lib/udev/rules.d rulessystemdir=/lib/systemd/system

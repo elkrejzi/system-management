@@ -1,25 +1,24 @@
 #!/bin/bash -e
 
-export VER=1.23.5
-export DEST=/binary/gvfs-${VER}
+export VER=0.0.2
+export DEST=/binary/libpagemaker-${VER}
 
-pushd gvfs-${VER}
+pushd libpagemaker-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr     \
-            --sysconfdir=/etc \
-            --disable-static  \
-            --disable-goa
+./configure --prefix=/usr --disable-static
 
 make -j4
 make install DESTDIR=${DEST}
 
 popd
 
-rm -rf gvfs-${VER}
+rm -rf libpagemaker-${VER}
 
 find ${DEST} -name "*.la" -delete
+
+rm -rf ${DEST}/usr/share
 
 pushd ${DEST}
 
@@ -34,11 +33,8 @@ popd
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
-cp -rf --remove-destination usr /
+for dir in usr/include usr/lib ; do cp -rf --remove-destination $dir /usr ; done
 
-[ -x /usr/bin/gio-querymodules ] && echo "Processing triggers for gio-2.0" && /usr/bin/gio-querymodules /usr/lib/gio/modules
-[ -x /usr/bin/glib-compile-schemas ] && echo "Processing triggers for glib-2.0" && /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas
-[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 

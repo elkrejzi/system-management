@@ -7,6 +7,7 @@ pushd cups-filters-${VER}
 
 sed -i "s:cups.service:org.cups.cupsd.service:g" utils/cups-browsed.service
 
+# Uses libpoppler.so
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr              \

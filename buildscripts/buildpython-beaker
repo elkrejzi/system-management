@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.6.4
+export VER=1.6.5.post1
 export DEST=/binary/python-beaker-${VER}
 
 cp -a Beaker-${VER} Beaker-${VER}-3

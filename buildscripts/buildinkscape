@@ -5,6 +5,7 @@ export DEST=/binary/inkscape-${VER}
 
 pushd inkscape-${VER}
 
+# Uses libpoppler.so
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr

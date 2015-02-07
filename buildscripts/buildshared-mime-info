@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.3
+export VER=1.4
 export DEST=/binary/shared-mime-info-${VER}
 
 pushd shared-mime-info-${VER}

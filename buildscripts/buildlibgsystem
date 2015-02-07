@@ -1,23 +1,20 @@
 #!/bin/bash -e
 
-export VER=1.23.5
-export DEST=/binary/gvfs-${VER}
+export VER=2015.1
+export DEST=/binary/libgsystem-${VER}
 
-pushd gvfs-${VER}
+pushd libgsystem-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr     \
-            --sysconfdir=/etc \
-            --disable-static  \
-            --disable-goa
+./autogen.sh --prefix=/usr
 
 make -j4
 make install DESTDIR=${DEST}
 
 popd
 
-rm -rf gvfs-${VER}
+rm -rf libgsystem-${VER}
 
 find ${DEST} -name "*.la" -delete
 
@@ -36,9 +33,6 @@ cat > ${DEST}/INSTALL << "EOF"
 
 cp -rf --remove-destination usr /
 
-[ -x /usr/bin/gio-querymodules ] && echo "Processing triggers for gio-2.0" && /usr/bin/gio-querymodules /usr/lib/gio/modules
-[ -x /usr/bin/glib-compile-schemas ] && echo "Processing triggers for glib-2.0" && /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas
-[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 

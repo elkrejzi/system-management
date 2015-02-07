@@ -33,7 +33,7 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr       \
             --exec-prefix=      \
             --libdir=/usr/lib32 \
-            --disable-static 
+            --disable-static
 
 make -j4
 make install DESTDIR=${PWD}/dest
@@ -48,14 +48,14 @@ find ${DEST} -name "*.la" -delete
 
 rm -rf ${DEST}/usr/share/doc
 
-install -dm755 ${DEST}/etc/sysctl.d ${DEST}/lib
+install -dm755 ${DEST}/lib ${DEST}/usr/lib/sysctl.d
 
 mv ${DEST}/usr/bin/pidof ${DEST}/bin
 
 mv ${DEST}/usr/lib/libprocps.so.* ${DEST}/lib
 ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libprocps.so) ${DEST}/usr/lib/libprocps.so
 
-cat > ${DEST}/etc/sysctl.d/99-procps.conf << "EOF"
+cat > ${DEST}/usr/lib/sysctl.d/99-procps.conf << "EOF"
 #
 # /etc/sysctl.conf - Configuration file for setting system variables
 # See sysctl.conf (5) for information.
@@ -130,7 +130,7 @@ popd
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
-for dir in bin etc lib sbin usr ; do cp -rf --remove-destination $dir / ; done
+for dir in bin lib sbin usr ; do cp -rf --remove-destination $dir / ; done
 
 [ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig

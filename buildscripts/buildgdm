@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.14.1
+export VER=3.15.3.1
 export DEST=/binary/gdm-${VER}
 
 pushd gdm-${VER}
@@ -11,6 +11,7 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
             --sysconfdir=/etc    \
             --localstatedir=/var \
             --disable-static     \
+            --without-plymouth   \
             --with-default-pam-config=lfs
 
 make -j4

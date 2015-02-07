@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=40.0.2214.91
+export PKGVER=40.0.2214.111
 export DEST=/binary/chromium-${PKGVER}
 
 export -n CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"

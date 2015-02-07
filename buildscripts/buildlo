@@ -21,6 +21,7 @@ sed -e "/ustrbuf/a #include <algorithm>" -i svl/source/misc/gridprinter.cxx
 
 chmod +x bin/unpack-sources
 
+# Uses libpoppler.so
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./autogen.sh --prefix=/usr               \

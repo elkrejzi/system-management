@@ -1,7 +1,9 @@
 #!/bin/bash -e
 
-export VER=0.30.0
+export VER=0.31.0
 export DEST=/binary/poppler-${VER}
+
+cp -a poppler-${VER} poppler-${VER}-static
 
 pushd poppler-${VER}
 
@@ -17,11 +19,31 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf poppler-${VER}
+pushd poppler-${VER}-static
+
+# Build static library with -fPIC
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -fPIC"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -fPIC" \
+./configure --prefix=/usr
+
+make -C goo     -j4
+make -C fofi    -j4
+make -C splash  -j4
+make -C poppler -j4
+
+install -m644 poppler/.libs/libpoppler.a ${DEST}/usr/lib
+
+popd
+
+rm -rf poppler-${VER} poppler-${VER}-static
 
 find ${DEST} -name "*.la" -delete
 
 rm -rf ${DEST}/usr/bin/poppler-glib-demo
+rm -rf ${DEST}/usr/lib/libpoppler.so
+
+# Use static library to avoid infinite amount of rebuilds every Poppler release.
+echo "INPUT ( /usr/lib/libpoppler.a -lopenjpeg )" > ${DEST}/usr/lib/libpoppler.so
 
 pushd ${DEST}
 

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.21.4
+export VER=1.21.5
 export DEST=/binary/clutter-${VER}
 
 pushd clutter-${VER}

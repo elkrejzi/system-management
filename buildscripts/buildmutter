@@ -1,12 +1,12 @@
 #!/bin/bash -e
 
-export VER=3.14.3
+export VER=3.15.4
 export DEST=/binary/mutter-${VER}
 
 pushd mutter-${VER}
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr    \
             --disable-static \
             --enable-compile-warnings=minimum
@@ -23,9 +23,12 @@ find ${DEST} -name "*.la" -delete
 pushd ${DEST}
 
 find * -type f 2>/dev/null | while read BUILD_BINARY ; do
-  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
-    strip --strip-unneeded ${BUILD_BINARY}
-  esac
+case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+mkdir -p usr/lib/debug/`dirname ${BUILD_BINARY}`
+objcopy --only-keep-debug ${BUILD_BINARY} usr/lib/debug/${BUILD_BINARY}
+strip --strip-unneeded ${BUILD_BINARY}
+objcopy --add-gnu-debuglink=usr/lib/debug/${BUILD_BINARY} ${BUILD_BINARY}
+esac
 done
 
 popd
