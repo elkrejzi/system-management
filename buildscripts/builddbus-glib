@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.102
+export VER=0.104
 export DEST=/binary/dbus-glib-${VER}
 
 pushd dbus-glib-${VER}

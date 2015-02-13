@@ -5,6 +5,9 @@ export DEST=/binary/valgrind-${VER}
 
 pushd valgrind-${VER}
 
+sed -i "s/-mt//g" configure
+sed -i "s/2.20/2.21/g" configure
+
 ./configure --prefix=/usr
 
 make -j4

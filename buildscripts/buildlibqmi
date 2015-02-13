@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.12.2
+export VER=1.12.4
 export DEST=/binary/libqmi-${VER}
 
 pushd libqmi-${VER}

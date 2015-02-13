@@ -1,11 +1,15 @@
 #!/bin/bash -e
 
-export VER=1.0.62
+export VER=1.0.64
 export DEST=/binary/cups-filters-${VER}
 
 pushd cups-filters-${VER}
 
 sed -i "s:cups.service:org.cups.cupsd.service:g" utils/cups-browsed.service
+
+sed -i "s:globalParams->getAntialias():gFalse:g" filter/pdftoopvp/OPVPOutputDev.cxx
+sed -i "/paperColor,g/s:gTrue,gFalse:gTrue:" filter/pdftoijs.cxx filter/pdftoraster.cxx
+sed -i "/setAntialias/d" filter/pdftoopvp/pdftoopvp.cxx
 
 # Uses libpoppler.so
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \

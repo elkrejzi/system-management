@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.8.11p2
+export VER=1.8.12
 export DEST=/binary/sudo-${VER}
 
 pushd sudo-${VER}

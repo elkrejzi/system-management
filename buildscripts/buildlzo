@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.08
+export VER=2.09
 export DEST=/binary/lzo-${VER}
 
 pushd lzo-${VER}

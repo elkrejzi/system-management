@@ -1,31 +1,29 @@
 #!/bin/bash -e
 
-export VER=2.11.3
+export VER=3.0.0
 export DEST=/binary/postfix-${VER}
 
 pushd postfix-${VER}
 
-sed -i "s/DB_VERSION_MAJOR == 5/DB_VERSION_MAJOR >= 5/" src/util/dict_db.c
-
 make makefiles DEBUG="" \
- CCARGS='-DUSE_SASL_AUTH -DUSE_CYRUS_SASL -I/usr/include/sasl \
-         -DUSE_TLS -I/usr/include/openssl \
-         -DHAS_MYSQL -I/usr/include/mysql \
-         -DHAS_PGSQL -I/usr/include/postgresql \
-         -DHAS_SQLITE \
-         -DHAS_PCRE \
-         -DHAS_LDAP \
-         -DDEF_MANPAGE_DIR=\"/usr/share/man\" \
-         -DDEF_DAEMON_DIR=\"/usr/lib/postfix\" \
-         -DDEF_SAMPLE_DIR=\"/etc/postfix/sample\" \
-         -DDEF_README_DIR=\"/usr/share/doc/postfix\"' \
- AUXLIBS='-lsasl2 -lssl -lcrypto \
-          -lmysqlclient -lz -lpthread -lm \
-          -lpq \
-          -lsqlite3 \
-          -lpcre \
-          -llber -lldap' \
- OPT='-march=native -mtune=native -O2 -pipe -fstack-protector-strong'
+     CCARGS='-DUSE_SASL_AUTH -DUSE_CYRUS_SASL -I/usr/include/sasl \
+             -DUSE_TLS -I/usr/include/openssl \
+             -DHAS_MYSQL -I/usr/include/mysql \
+             -DHAS_PGSQL -I/usr/include/postgresql \
+             -DHAS_SQLITE \
+             -DHAS_PCRE \
+             -DHAS_LDAP \
+             -DDEF_MANPAGE_DIR=\"/usr/share/man\" \
+             -DDEF_DAEMON_DIR=\"/usr/lib/postfix\" \
+             -DDEF_SAMPLE_DIR=\"/etc/postfix/sample\" \
+             -DDEF_README_DIR=\"/usr/share/doc/postfix\"' \
+     AUXLIBS='-lsasl2 -lssl -lcrypto \
+              -lmysqlclient -lz -lpthread -lm \
+              -lpq \
+              -lsqlite3 \
+              -lpcre \
+              -llber -lldap' \
+     OPT="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
 
 make
 
@@ -92,7 +90,7 @@ if [ ! -f /etc/postfix/master.cf ]; then
    cp -f /etc/postfix/master.cf.dist /etc/postfix/master.cf
 fi
 
-/usr/lib/postfix/post-install daemon_directory=/usr/lib/postfix upgrade-package
+/usr/lib/postfix/post-install daemon_directory=/usr/lib/postfix meta_directory=/etc/postfix upgrade-package
 
 chown postfix /var/lib/postfix
 

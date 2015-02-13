@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
-export VER=5.99.3
-#export SHLIBVER=${VER}
-export SHLIBVER=5.99
+export VER=6.0
+export SHLIBVER=${VER}
+#export SHLIBVER=5.99
 export DEST=/binary/pulseaudio-${VER}
 
 cp -a pulseaudio-${VER} pulseaudio-${VER}-32
@@ -15,13 +15,11 @@ find . -name "Makefile.in" | xargs sed -i "s|(libdir)/@PACKAGE@|(libdir)/pulse|"
 
 CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr            \
-            --sysconfdir=/etc        \
-            --localstatedir=/var     \
-            --disable-bluez4         \
-            --disable-rpath          \
-            --disable-samplerate     \
-            --disable-systemd-daemon \
+./configure --prefix=/usr        \
+            --sysconfdir=/etc    \
+            --localstatedir=/var \
+            --disable-bluez4     \
+            --disable-rpath      \
             --with-module-dir=/usr/lib/pulse/modules
 
 make -j4
@@ -39,14 +37,12 @@ find . -name "Makefile.in" | xargs sed -i "s|(libdir)/@PACKAGE@|(libdir)/pulse|"
 
 CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr            \
-            --sysconfdir=/etc        \
-            --localstatedir=/var     \
-            --libdir=/usr/lib32      \
-            --disable-bluez4         \
-            --disable-rpath          \
-            --disable-samplerate     \
-            --disable-systemd-daemon \
+./configure --prefix=/usr        \
+            --sysconfdir=/etc    \
+            --localstatedir=/var \
+            --libdir=/usr/lib32  \
+            --disable-bluez4     \
+            --disable-rpath      \
             --with-module-dir=/usr/lib/pulse/modules
 
 _libs="libpulse.la libpulse-simple.la libpulse-mainloop-glib.la"

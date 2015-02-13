@@ -1,0 +1,221 @@
+#!/bin/bash -e
+
+export VER=1.3.2
+export DEST=/binary/nfs-utils-${VER}
+
+pushd nfs-utils-${VER}
+
+sed -i "/daemon_init/s:\!::" utils/statd/statd.c
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+./configure --prefix=/usr           \
+            --sysconfdir=/etc       \
+            --sbindir=/sbin         \
+            --enable-libmount-mount \
+            --without-tcp-wrappers  \
+            --disable-gss
+
+make -j4
+make install DESTDIR=${DEST}
+
+install -Dm644 utils/mount/nfsmount.conf ${DEST}/etc/nfsmount.conf
+
+popd
+
+rm -rf nfs-utils-${VER}
+
+install -dm755 ${DEST}/etc/default
+install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants
+install -dm755 ${DEST}/etc/systemd/system/remote-fs.target.wants
+install -dm755 ${DEST}/lib/systemd/system
+
+install -dm555 ${DEST}/var/lib/nfs/rpc_pipefs
+install -dm755 ${DEST}/var/lib/nfs/v4recovery
+
+cat > ${DEST}/etc/idmapd.conf << "EOF"
+[General]
+Verbosity = 0
+Pipefs-Directory = /var/lib/nfs/rpc_pipefs
+Domain = localdomain
+
+[Mapping]
+Nobody-User = nobody
+Nobody-Group = nogroup
+
+[Translation]
+Method = nsswitch
+EOF
+
+cat > ${DEST}/etc/default/nfs-utils << "EOF"
+# Begin /etc/default/nfs-utils
+
+# Options to pass to rpc.idmapd.
+# See rpc.idmapd(8) for more details.
+IDMAPD_OPTS=""
+
+# Options to paass to rpc.mountd.
+# If you have a port-based firewall, you might want to set up
+# a fixed port here using the --port option.
+# See rpc.mountd(8) for more details.
+MOUNTD_OPTS=""
+
+# Options to pass to rpc.nfsd.
+# See rpc.nfsd(8) for more details.
+NFSD_OPTS=""
+
+# Options to pass to sm-notify.
+# See sm-notify(8) for more details.
+SM_NOTIFY_OPTS=""
+
+# Options to pass to rpc.statd.
+# See rpc.statd(8) for more details.
+STATD_OPTS=""
+
+# End /etc/default/nfs-utils
+EOF
+
+cat > ${DEST}/lib/systemd/system/nfs-client.service << "EOF"
+[Unit]
+Description=NFS server and client services
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/true
+EOF
+
+cat > ${DEST}/lib/systemd/system/nfs-client.target << "EOF"
+[Unit]
+Description=NFS client services
+Before=remote-fs-pre.target
+Wants=remote-fs-pre.target rpc-statd-notify.service
+
+[Install]
+WantedBy=multi-user.target
+WantedBy=remote-fs.target
+EOF
+
+cat > ${DEST}/lib/systemd/system/nfs-server.service << "EOF"
+[Unit]
+Description=NFS server and services
+Requires=network.target proc-fs-nfsd.mount rpcbind.target rpc-mountd.service
+Wants=rpc-idmapd.service rpc-statd.service rpc-statd-notify.service
+Before=rpc-statd-notify.service
+After=network.target proc-fs-nfsd.mount rpcbind.target rpc-idmapd.service rpc-statd.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+EnvironmentFile=/etc/default/nfs-utils
+ExecStartPre=/sbin/exportfs -r
+ExecStart=/sbin/rpc.nfsd $NFSD_OPTS
+ExecStop=/sbin/rpc.nfsd 0
+ExecStopPost=/sbin/exportfs -au
+ExecStopPost=/sbin/exportfs -f
+ExecReload=/sbin/exportfs -r
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > ${DEST}/lib/systemd/system/proc-fs-nfsd.mount << "EOF"
+[Unit]
+Description=NFSD configuration filesystem
+
+[Mount]
+What=nfsd
+Where=/proc/fs/nfsd
+Type=nfsd
+EOF
+
+cat > ${DEST}/lib/systemd/system/rpc-idmapd.service << "EOF"
+[Unit]
+Description=NFSv4 ID-name mapping service
+Requires=var-lib-nfs-rpc_pipefs.mount
+After=var-lib-nfs-rpc_pipefs.mount
+BindsTo=nfs-server.service
+
+[Service]
+Type=forking
+EnvironmentFile=/etc/default/nfs-utils
+ExecStart=/sbin/rpc.idmapd $IDMAPD_OPTS
+EOF
+
+cat > ${DEST}/lib/systemd/system/rpc-mountd.service << "EOF"
+[Unit]
+Description=NFS Mount Daemon
+Requires=proc-fs-nfsd.mount
+After=proc-fs-nfsd.mount network.target
+BindsTo=nfs-server.service
+
+[Service]
+Type=forking
+EnvironmentFile=/etc/default/nfs-utils
+ExecStart=/sbin/rpc.mountd $MOUNTD_OPTS
+EOF
+
+cat > ${DEST}/lib/systemd/system/rpc-statd-notify.service << "EOF"
+[Unit]
+Description=Notify NFS peers of a restart
+Requires=network-online.target
+After=network-online.target nss-lookup.target nfs-server.service
+PartOf=nfs-client.service
+
+[Service]
+Type=forking
+EnvironmentFile=/etc/default/nfs-utils
+ExecStart=/sbin/sm-notify $SM_NOTIFY_OPTS
+EOF
+
+cat > ${DEST}/lib/systemd/system/rpc-statd.service << "EOF"
+[Unit]
+Description=NFS status monitor for NFSv2/3 locking.
+DefaultDependencies=no
+Conflicts=umount.target
+Requires=nss-lookup.target rpcbind.target
+After=network.target nss-lookup.target rpcbind.target
+PartOf=nfs-client.service
+
+[Service]
+Type=forking
+EnvironmentFile=/etc/default/nfs-utils
+PIDFile=/var/run/rpc.statd.pid
+ExecStart=/sbin/rpc.statd --no-notify $STATD_OPTS
+EOF
+
+cat > ${DEST}/lib/systemd/system/var-lib-nfs-rpc_pipefs.mount << "EOF"
+[Unit]
+Description=RPC Pipe File System
+DefaultDependencies=no
+Conflicts=umount.target
+
+[Mount]
+What=sunrpc
+Where=/var/lib/nfs/rpc_pipefs
+Type=rpc_pipefs
+EOF
+
+ln -sf /lib/systemd/system/nfs-client.target ${DEST}/etc/systemd/system/multi-user.target.wants/nfs-client.target
+ln -sf /lib/systemd/system/nfs-client.target ${DEST}/etc/systemd/system/remote-fs.target.wants/nfs-client.target
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib sbin usr var ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL
+

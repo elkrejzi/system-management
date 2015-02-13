@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.11.2
+export VER=0.12.0
 export DEST=/binary/mdds-${VER}
 
 pushd mdds_${VER}
