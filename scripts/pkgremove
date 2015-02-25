@@ -1,5 +1,4 @@
 #!/bin/sh
 
-find * -type f -o -type l | for file in `xargs` ; do rm -v /$file ; done
-find * -type d | sort -r | for file in `xargs` ; do rmdir -v /$file ; done
-
+find * -type f -o -type l | while read file ; do rm -v "/$file" ; done
+find * -type d | sort -r | while read file ; do rmdir -v "/$file" ; done

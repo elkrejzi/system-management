@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.4.0
+export VER=5.4.1
 export DEST=/binary/qt-${VER}
 
 if [ -e /media/ntfs/Other/Linux/patches/qt5fixes.patch ]; then
@@ -15,6 +15,7 @@ export CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
 pushd qt-everywhere-opensource-src-${VER}
 
 sed -i "/^QMAKE_LFLAGS_RPATH/s| -Wl,-rpath,||g" qtbase/mkspecs/common/gcc-base-unix.conf
+sed -i "s# GMutexLocker# WebCore::GMutexLocker#g" qtwebkit/Source/WebCore/platform/graphics/gstreamer/WebKitWebSourceGStreamer.cpp
 
 ./configure -prefix         /usr               \
             -sysconfdir     /etc/xdg           \
@@ -35,7 +36,8 @@ sed -i "/^QMAKE_LFLAGS_RPATH/s| -Wl,-rpath,||g" qtbase/mkspecs/common/gcc-base-u
             -nomake examples    \
             -no-rpath           \
             -optimized-qmake    \
-            -no-use-gold-linker
+            -no-use-gold-linker \
+            -skip qtwebengine
 
 make -j4
 
@@ -118,7 +120,7 @@ EOF
 
 popd
 
-rm -rf qt-everywhere-opensource-src-${VER}
+#rm -rf qt-everywhere-opensource-src-${VER}
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash

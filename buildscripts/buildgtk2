@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.24.25
+export VER=2.24.26
 export DEST=/binary/gtk+-${VER}
 
 cp -a gtk+-${VER} gtk+-${VER}-32
@@ -8,12 +8,12 @@ cp -a gtk+-${VER} gtk+-${VER}-32
 pushd gtk+-${VER}
 
 sed -i 's#l \(gtk-.*\).sgml#& -o \1#' docs/{faq,tutorial}/Makefile.in
-sed -i 's#.*@man_#man_#' docs/reference/gtk/Makefile.in
-sed -i -e 's#pltcheck.sh#$(NULL)#g' gtk/Makefile.in
 
 CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr --sysconfdir=/etc
+./configure --prefix=/usr     \
+            --sysconfdir=/etc \
+            --enable-man
 
 make -j4
 make install DESTDIR=${DEST}
@@ -27,8 +27,6 @@ export CXX="g++ -m32"
 export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
 sed -i 's#l \(gtk-.*\).sgml#& -o \1#' docs/{faq,tutorial}/Makefile.in
-sed -i 's#.*@man_#man_#' docs/reference/gtk/Makefile.in
-sed -i -e 's#pltcheck.sh#$(NULL)#g' gtk/Makefile.in
 
 CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.4.16
+export VER=0.4.17
 export DEST=/binary/caribou-${VER}
 
 pushd caribou-${VER}

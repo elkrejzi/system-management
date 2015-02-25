@@ -1,10 +1,9 @@
 #!/bin/bash -e
 
-export PKGVER=3.5.25
-export VER=${PKGVER}.3
+export VER=3.5.27
 export DEST=/binary/djvulibre-${VER}
 
-pushd djvulibre-${PKGVER}
+pushd djvulibre-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
@@ -21,7 +20,7 @@ done
 
 popd
 
-rm -rf djvulibre-${PKGVER}
+rm -rf djvulibre-${VER}
 
 find ${DEST} -name "*.la" -delete
 

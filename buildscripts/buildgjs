@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.42.0
+export VER=1.43.3
 export DEST=/binary/gjs-${VER}
 
 pushd gjs-${VER}

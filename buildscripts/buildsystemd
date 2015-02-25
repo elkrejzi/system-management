@@ -31,7 +31,6 @@ CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong -fno-l
              --with-rc-local-script-path-stop= \
              --with-rc-local-script-path-start=/etc/rc.local         \
              --with-dbuspolicydir=/etc/dbus-1/system.d               \
-             --with-dbusinterfacedir=/usr/share/dbus-1/interfaces    \
              --with-dbussessionservicedir=/usr/share/dbus-1/services \
              --with-dbussystemservicedir=/usr/share/dbus-1/system-services
 
@@ -82,6 +81,7 @@ rm -rf ${DEST}/etc/systemd/system/multi-user.target.wants/systemd-networkd.servi
 rm -rf ${DEST}/etc/systemd/system/multi-user.target.wants/systemd-resolved.service
 rm -rf ${DEST}/etc/systemd/system/multi-user.target.wants/systemd-timesyncd.service
 rm -rf ${DEST}/etc/systemd/system/network-online.target.wants
+rm -rf ${DEST}/etc/systemd/system/sockets.target.wants
 rm -rf ${DEST}/etc/systemd/system/sysinit.target.wants
 
 #rm -rf ${DEST}/lib/systemd/system/sysinit.target.wants/ldconfig.service

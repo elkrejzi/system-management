@@ -23,6 +23,10 @@ popd
 
 rm -rf plasma-workspace-${VER}
 
+rm -rf ${DEST}/usr/bin/kglobalaccel5
+rm -rf ${DEST}/usr/share/dbus-1/services/org.kde.kglobalaccel.service
+rm -rf ${DEST}/usr/share/kservices5/kglobalaccel5.desktop
+
 sed -i "s:qtpaths:&-qt5:g" ${DEST}/usr/bin/startkde
 
 install -dm755 ${DEST}/etc/pam.d

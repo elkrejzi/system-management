@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.21
+export VER=3.22
 export DEST=/binary/highlight-${VER}
 
 pushd highlight-${VER}

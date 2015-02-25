@@ -1,22 +1,20 @@
 #!/bin/bash -e
 
 export VER=3.15.90
-export DEST=/binary/gnome-settings-daemon-${VER}
+export DEST=/binary/gnome-characters-${VER}
 
-pushd gnome-settings-daemon-${VER}
+pushd gnome-characters-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr     \
-            --sysconfdir=/etc \
-            --disable-static
+./configure --prefix=/usr --disable-static
 
 make -j4
-make udevrulesdir=/lib/udev/rules.d install DESTDIR=${DEST}
+make install DESTDIR=${DEST}
 
 popd
 
-rm -rf gnome-settings-daemon-${VER}
+rm -rf gnome-characters-${VER}
 
 find ${DEST} -name "*.la" -delete
 
@@ -33,11 +31,11 @@ popd
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
-for dir in etc lib usr ; do cp -rf --remove-destination $dir / ; done
+cp -rf --remove-destination usr /
 
 [ -x /usr/bin/glib-compile-schemas ] && echo "Processing triggers for glib-2.0" && /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas
 [ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
-[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
 EOF
 
 chmod 755 ${DEST}/INSTALL

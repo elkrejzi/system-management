@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.12.11
+export VER=3.13.90
 export DEST=/binary/evolution-${VER}
 
 pushd evolution-${VER}
@@ -9,7 +9,7 @@ CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr          \
             --sysconfdir=/etc      \
-            --disable-spamassassin \
+            --disable-autoar       \
             --enable-contact-maps  \
             --with-openldap
 

@@ -9,7 +9,7 @@ export BZIP2_INCLUDE=/usr/include
 export BZIP2_LIB=/usr/lib
 
 export MAJOR_VER=5.20
-export MINOR_VER=1
+export MINOR_VER=2
 export VER=${MAJOR_VER}.${MINOR_VER}
 
 export DEST=/binary/perl-${VER}

@@ -1,19 +1,16 @@
 #!/bin/bash -e
 
-export VER=5.2.6
-export DEST=/binary/unrar-${VER}
+export VER=0.22.3
+export DEST=/binary/python-m2crypto-${VER}
 
-pushd unrar
+pushd M2Crypto-${VER}
 
-sed -i "s:-O2:-march=native -mtune=native -O2 -pipe -fstack-protector-strong:g" makefile
-
-make -j4
-
-install -Dm755 unrar ${DEST}/usr/bin/unrar
+python setup.py build
+python setup.py install --root=${DEST} --optimize=1
 
 popd
 
-rm -rf unrar
+rm -rf M2Crypto-${VER}
 
 pushd ${DEST}
 

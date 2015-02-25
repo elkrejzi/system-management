@@ -3,10 +3,6 @@
 export VER=2.0.3
 export DEST=/binary/SDL2-${VER}
 
-pushd SDL2-${VER}
-  patch -Np1 -i /media/ntfs/Other/Linux/patches/sdl2.patch
-popd
-
 cp -a SDL2-${VER} SDL2-${VER}-32
 
 pushd SDL2-${VER}

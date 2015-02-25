@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.14.2
+export VER=3.15.92
 export DEST=/binary/aisleriot-${VER}
 
 pushd aisleriot-${VER}

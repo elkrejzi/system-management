@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.15.4
+export VER=2.15.90
 export DEST=/binary/at-spi2-core-${VER}
 
 pushd at-spi2-core-${VER}

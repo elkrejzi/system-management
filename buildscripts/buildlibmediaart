@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.7.0
+export VER=1.9.0
 export DEST=/binary/libmediaart-${VER}
 
 pushd libmediaart-${VER}

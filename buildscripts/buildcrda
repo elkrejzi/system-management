@@ -1,0 +1,53 @@
+#!/bin/bash -e
+
+export VER=3.18
+export DEST=/binary/crda-${VER}
+
+pushd crda-${VER}
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/crda-fixes.patch
+
+sed -i "s:-O2 -fpic:-march=native -mtune=native -O2 -pipe -fstack-protector-strong -fpic:g" Makefile
+
+make LIBDIR="/lib/crda" REG_BIN="/lib/crda/regulatory.bin" RUNTIME_PUBKEY_DIR="/lib/crda/pubkeys" RUNTIME_PUBKEY_ONLY=1 V=1 -j4
+make install LIBDIR="/lib/crda" DESTDIR=${DEST}
+
+popd
+
+rm -rf crda-${VER}
+
+gzip -d ${DEST}/usr/share/man/man8/*
+
+cat > ${DEST}/lib/crda/set-wireless-regdom << "EOF"
+#!/bin/bash
+
+unset WIRELESS_REGDOM
+
+. /etc/default/wireless-regdom
+
+[ -n "${WIRELESS_REGDOM}" ] && iw reg set ${WIRELESS_REGDOM}
+EOF
+
+chmod 755 ${DEST}/lib/crda/set-wireless-regdom
+
+echo 'ACTION=="add" SUBSYSTEM=="module", DEVPATH=="/module/cfg80211", RUN+="/lib/crda/set-wireless-regdom"' >> ${DEST}/lib/udev/rules.d/85-regulatory.rules
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

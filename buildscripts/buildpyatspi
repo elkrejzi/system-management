@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.14.0
+export VER=2.15.90
 export DEST=/binary/pyatspi-${VER}
 
 cp -a pyatspi-${VER} pyatspi-${VER}-3

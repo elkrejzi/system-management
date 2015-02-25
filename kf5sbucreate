@@ -4,7 +4,7 @@ for file in *
 do
 
   v=$(tail $file | grep real | awk '{print $2}' | sed "s/s//;s/m/*60+/;s/h/*3600+/")
-  v2=$( echo "scale=2; ($v)/110" | bc )
+  v2=$( echo "scale=2; ($v)/141" | bc )
   echo "$file $v2 SBU" | sed "s:\.log::g;s: \.: 0\.:g"
 
 done | sort

@@ -16,6 +16,8 @@ popd
 
 rm -rf bison-${VER}
 
+rm -rf ${DEST}/usr/share/doc
+
 rm -rf ${DEST}/usr/share/info/dir
 gzip -9 ${DEST}/usr/share/info/*
 

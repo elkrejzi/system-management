@@ -1,0 +1,44 @@
+#!/bin/bash -e
+
+export VER=3.18.2
+export DEST=/binary/btrfs-progs-${VER}
+
+pushd btrfs-progs-v${VER}
+
+sed -i "/LIBS/s:\$(libs_static):-lbtrfs:;/libs/s:\$(libs_static)::" Makefile
+
+make prefix=/usr bindir=/sbin CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" V=1 -j4
+make prefix=/usr bindir=/sbin CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" V=1 install DESTDIR=${DEST}
+
+popd
+
+rm -rf btrfs-progs-v${VER}
+
+rm -rf ${DEST}/usr/share/man/man8/btrfsck.8.gz
+ln -sf btrfs-check.8 ${DEST}/usr/share/man/man8/btrfsck.8
+gzip -d ${DEST}/usr/share/man/*/*.gz
+
+install -dm755 ${DEST}/lib
+
+mv ${DEST}/usr/lib/libbtrfs.so.* ${DEST}/lib
+ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libbtrfs.so) ${DEST}/usr/lib/libbtrfs.so
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in lib sbin usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

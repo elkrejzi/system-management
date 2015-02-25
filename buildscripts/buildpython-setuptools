@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=12.0.5
+export VER=12.2
 export DEST=/binary/python-setuptools-${VER}
 
 cp -a setuptools-${VER} setuptools-${VER}-3

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.14.0
+export VER=3.15.0
 export DEST=/binary/pygobject-${VER}
 
 cp -a pygobject-${VER} pygobject-${VER}-3
