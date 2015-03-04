@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.14.31
+export VER=1.14.32
 export DEST=/binary/libgsf-${VER}
 
 pushd libgsf-${VER}

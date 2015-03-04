@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.0.28
+export VER=1.0.29
 export DEST=/binary/alsa-plugins-${VER}
 
 sed -i "/speex_preprocess/i#include <stdint.h>" alsa-plugins-${VER}/speex/pcm_speex.c

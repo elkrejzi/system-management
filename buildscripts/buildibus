@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.5.9
+export VER=1.5.10
 export DEST=/binary/ibus-${VER}
 
 pushd ibus-${VER}

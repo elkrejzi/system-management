@@ -15,6 +15,9 @@ sed -e '631a if (image->isNull()) { state = Error; return -1; }' \
 sed -e '/CONFIG -/ a\isEmpty(OUTPUT_DIR): OUTPUT_DIR = ../..' \
     -i src/3rdparty/webkit/Source/WebKit2/DerivedSources.pro
 
+sed -i '/BOOST_TT/a pp.macros["BOOST_NEXT_PRIOR_HPP_INCLUDED"];' src/tools/moc/main.cpp
+sed -i '/BOOST_TT/a pp.macros["BOOST_LEXICAL_CAST_INCLUDED"];'   src/tools/moc/main.cpp
+
 popd
 
 export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w"

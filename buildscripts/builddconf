@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.22.0
+export VER=0.23.1
 export DEST=/binary/dconf-${VER}
 
 pushd dconf-${VER}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.65
+export VER=1.67
 export DEST=/binary/perl-uri-${VER}
 
 pushd URI-${VER}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.29
+export VER=1.30
 export DEST=/binary/libidn-${VER}
 
 cp -a libidn-${VER} libidn-${VER}-32

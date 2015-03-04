@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.4.0
+export VER=2.4.1
 export DEST=/binary/libsigc++-${VER}
 
 pushd libsigc++-${VER}

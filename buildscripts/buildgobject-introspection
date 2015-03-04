@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.43.3
+export VER=1.43.91
 export DEST=/binary/gobject-introspection-${VER}
 
 pushd gobject-introspection-${VER}

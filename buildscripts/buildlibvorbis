@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.3.4
+export VER=1.3.5
 export DEST=/binary/libvorbis-${VER}
 
 cp -a libvorbis-${VER} libvorbis-${VER}-32
