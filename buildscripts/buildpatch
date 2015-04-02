@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.7.4
+export VER=2.7.5
 export DEST=/binary/patch-${VER}
 
 pushd patch-${VER}

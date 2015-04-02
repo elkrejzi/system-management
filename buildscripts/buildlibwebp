@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.4.2
+export VER=0.4.3
 export DEST=/binary/libwebp-${VER}
 
 pushd libwebp-${VER}
@@ -13,7 +13,7 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
             --enable-experimental   \
             --enable-libwebpdecoder \
             --enable-libwebpdemux   \
-            --enable-libwebpmux 
+            --enable-libwebpmux
 
 make -j4
 make install DESTDIR=${DEST}

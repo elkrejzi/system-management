@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.12.7
+export VER=3.12.8
 export DEST=/binary/empathy-${VER}
 
 pushd empathy-${VER}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.3.2
+export VER=4.3.3.1
 export DEST=/binary/netcdf-${VER}
 
 pushd netcdf-${VER}

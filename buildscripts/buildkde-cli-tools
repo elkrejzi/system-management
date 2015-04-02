@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.2.0
+export VER=5.2.2
 export DEST=/binary/kde-cli-tools-${VER}
 
 pushd kde-cli-tools-${VER}

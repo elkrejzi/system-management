@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.20.2
+export VER=0.22.0
 export DEST=/binary/shotwell-${VER}
 
 pushd shotwell-${VER}

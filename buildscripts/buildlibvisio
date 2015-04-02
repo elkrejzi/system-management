@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.1.0
+export VER=0.1.1
 export DEST=/binary/libvisio-${VER}
 
 pushd libvisio-${VER}
@@ -18,7 +18,7 @@ rm -rf libvisio-${VER}
 
 find ${DEST} -name "*.la" -delete
 
-rm -rf ${DEST}/usr/share/doc
+rm -rf ${DEST}/usr/share
 
 pushd ${DEST}
 

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=36.0
+export VER=37.0
 export DEST=/binary/firefox-${VER}
 
 pushd mozilla-release
@@ -57,7 +57,7 @@ make -f client.mk configure
 
 make -C firefox-build-dir -j4
 make -C firefox-build-dir install DESTDIR=${DEST} INSTALL_SDK=
-make -C firefox-build-dir install DESTDIR=${PWD}/dest INSTALL_SDK=
+#make -C firefox-build-dir install DESTDIR=${PWD}/dest INSTALL_SDK=
 
 for i in 16 22 24 32 48 256; do
   install -Dm644 browser/branding/official/default$i.png ${DEST}/usr/share/icons/hicolor/${i}x${i}/apps/firefox.png
@@ -70,7 +70,7 @@ install -Dm644 browser/branding/official/content/about-logo@2x.png ${DEST}/usr/s
 
 popd
 
-#rm -rf mozilla-release
+rm -rf mozilla-release
 
 install -dm755 ${DEST}/usr/lib/firefox/browser/defaults/preferences ${DEST}/usr/share/applications
 
@@ -148,7 +148,7 @@ Comment[nb]=Surf på nettet
 Comment[nl]=Verken het internet
 Comment[nn]=Surf på nettet
 Comment[no]=Surf på nettet
-Comment[pl]=Przeglądanie stron WWW 
+Comment[pl]=Przeglądanie stron WWW
 Comment[pt]=Navegue na Internet
 Comment[pt_BR]=Navegue na Internet
 Comment[ro]=Navigați pe Internet
@@ -204,7 +204,7 @@ Terminal=false
 Type=Application
 Icon=firefox
 Categories=Network;WebBrowser;
-MimeType=text/html;text/xml;application/xhtml+xml;application/vnd.mozilla.xul+xml;text/mml;x-scheme-handler/http;x-scheme-handler/https;
+MimeType=text/html;text/xml;application/xhtml+xml;application/vnd.mozilla.xul+xml;text/mml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
 StartupNotify=true
 EOF
 

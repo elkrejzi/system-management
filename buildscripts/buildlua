@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export LUA_MAJOR=5.2
-export VER=${LUA_MAJOR}.3
+export VER=${LUA_MAJOR}.4
 export DEST=/binary/lua-${VER}
 
 pushd lua-${VER}
@@ -35,7 +35,7 @@ includedir=\${prefix}/include
 Name: Lua
 Description: An Extensible Extension Language
 Version: ${VER}
-Requires: 
+Requires:
 Libs: -L\${libdir} -llua -lm
 Cflags: -I\${includedir}
 EOF

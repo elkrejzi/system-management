@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.7.90
+export VER=2.8.0
 export DEST=/binary/webkitgtk-${VER}
 
 install -dm755 webkitgtk-${VER}/build
@@ -18,11 +18,11 @@ cmake -DCMAKE_BUILD_TYPE=Release  \
 
 make -j4
 make install DESTDIR=${DEST}
-make install DESTDIR=$PWD/dest
+#make install DESTDIR=$PWD/dest
 
 popd
 
-#rm -rf webkitgtk-${VER}
+rm -rf webkitgtk-${VER}
 
 pushd ${DEST}
 

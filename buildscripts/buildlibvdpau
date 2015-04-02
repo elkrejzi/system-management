@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.9
+export VER=1.1
 export DEST=/binary/libvdpau-${VER}
 
 cp -a libvdpau-${VER} libvdpau-${VER}-32
@@ -41,6 +41,8 @@ popd
 rm -rf libvdpau-${VER} libvdpau-${VER}-32
 
 find ${DEST} -name "*.la" -delete
+
+rm -rf ${DEST}/usr/share
 
 pushd ${DEST}
 

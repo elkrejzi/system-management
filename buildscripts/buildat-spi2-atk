@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.15.90
+export VER=2.16.0
 export DEST=/binary/at-spi2-atk-${VER}
 
 pushd at-spi2-atk-${VER}

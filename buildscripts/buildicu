@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=54.1
+export VER=55.1
 export DEST=/binary/icu-${VER}
 
 cp -a icu icu-32

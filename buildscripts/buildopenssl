@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.0.2
+export VER=1.0.2a
 export DEST=/binary/openssl-${VER}
 
 export CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"

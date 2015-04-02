@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.8.1
+export VER=1.8.2
 export DEST=/binary/mate-session-manager-${VER}
 
 pushd mate-session-manager-${VER}

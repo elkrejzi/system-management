@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.14.0
+export VER=1.14.2
 export DEST=/binary/cairo-${VER}
 
 if [ -f /media/ntfs/Other/Linux/patches/cairo-fixes.patch ]; then

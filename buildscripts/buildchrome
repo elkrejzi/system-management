@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=40.0.2214.111
+export PKGVER=41.0.2272.101
 export DEST=/binary/chromium-${PKGVER}
 
 export -n CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
@@ -104,10 +104,19 @@ cat > ${DEST}/usr/bin/chromium << "EOF"
 #!/bin/bash
 
 # Allow users to override command-line options
-# Based on Gentoo's chromium package (and by extension, Debian's)
+# Based on Gentoo's chromium package
 if [[ -f /etc/chromium/default ]]; then
 	. /etc/chromium/default
 fi
+# Source additional configuration files
+for file in /etc/chromium/*; do
+	# Don't source /etc/chromium/default again
+	[[ $file == /etc/chromium/default ]] && continue
+
+	if [[ -f $file ]]; then
+		. $file
+	fi
+done
 
 # Prefer user defined CHROMIUM_USER_FLAGS (from env) over system
 # default CHROMIUM_FLAGS (from /etc/chromium/default)
@@ -145,9 +154,12 @@ EOF
 
          cp -rf out/Release/chrome_100_percent.pak \
                 out/Release/content_resources.pak \
+                out/Release/keyboard_resources.pak \
                 out/Release/libffmpegsumo.so \
                 out/Release/libpdf.so \
+                out/Release/natives_blob.bin \
                 out/Release/resources.pak \
+                out/Release/snapshot_blob.bin \
                 ${DEST}/usr/lib/chromium/
 
 #                out/Release/nacl_helper \

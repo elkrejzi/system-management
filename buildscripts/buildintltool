@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.50.2
+export VER=0.51.0
 export DEST=/binary/intltool-${VER}
 
 pushd intltool-${VER}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.11
+export VER=0.12
 export DEST=/binary/libwacom-${VER}
 
 pushd libwacom-${VER}

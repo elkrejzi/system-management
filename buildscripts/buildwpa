@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.3
+export VER=2.4
 export DEST=/binary/wpa_supplicant-${VER}
 
 pushd wpa_supplicant-${VER}

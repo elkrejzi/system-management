@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.16.2
+export VER=1.16.3
 export DEST=/binary/wget-${VER}
 
 pushd wget-${VER}
@@ -9,7 +9,7 @@ CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr      \
             --sysconfdir=/etc  \
-            --with-ssl=openssl 
+            --with-ssl=openssl
 
 make -j4
 make install DESTDIR=${DEST}

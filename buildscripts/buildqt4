@@ -171,7 +171,7 @@ PKG_CONFIG_PATH=/usr/lib32/pkgconfig \
             -opensource \
             -release \
             -prefix /usr \
-            -headerdir /usr/include/qt4 \
+            -headerdir /usr/lib32/qt4/include \
             -datadir /usr/share/qt4 \
             -libdir /usr/lib32 \
             -plugindir /usr/lib32/qt4/plugins \

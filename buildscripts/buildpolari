@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.14.1
+export VER=3.16.0
 export DEST=/binary/polari-${VER}
 
 pushd polari-${VER}

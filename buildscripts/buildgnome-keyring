@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.15.90
+export VER=3.15.92
 export DEST=/binary/gnome-keyring-${VER}
 
 pushd gnome-keyring-${VER}

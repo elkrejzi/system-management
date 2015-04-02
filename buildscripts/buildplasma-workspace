@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.2.0
+export VER=5.2.2
 export DEST=/binary/plasma-workspace-${VER}
 
 pushd plasma-workspace-${VER}

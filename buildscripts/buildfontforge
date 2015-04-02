@@ -1,13 +1,13 @@
 #!/bin/bash -e
 
-export VER=2.0.20141230
-export DEST=/binary/fontforge-2.0-${VER}
+export VER=20150330
+export DEST=/binary/fontforge-${VER}
 
 pushd fontforge-${VER}
 
-#rm -rf libltdl m4
+rm -rf libltdl m4/argz.m4
 
-#./bootstrap
+./bootstrap --force
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
@@ -15,14 +15,6 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 
 make -j4
 make install DESTDIR=${DEST}
-
-install -dm755 ${DEST}/usr/share/icons
-
-rm -rf desktop/icons/src
-cp -rf desktop/icons ${DEST}/usr/share/icons/hicolor
-
-install -Dm644 desktop/fontforge.desktop ${DEST}/usr/share/applications/fontforge.desktop
-install -Dm644 desktop/fontforge.xml ${DEST}/usr/share/mime/packages/fontforge.xml
 
 popd
 

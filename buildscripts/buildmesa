@@ -1,18 +1,18 @@
 #!/bin/bash -e
 
-export VER=10.4.1
+export VER=10.5.2
 
-pushd Mesa-${VER}
+pushd mesa-${VER}
 
-autoreconf -fi
+#autoreconf -fi
 
 patch -Np1 -i /media/ntfs/Other/Linux/patches/mesalib-xdemos.patch
 
 popd
 
-cp -a Mesa-${VER} Mesa-${VER}-32
+cp -a mesa-${VER} mesa-${VER}-32
 
-pushd Mesa-${VER}
+pushd mesa-${VER}
 
 CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
@@ -37,12 +37,12 @@ CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
 make -j4
 make -C xdemos
 
-make install DESTDIR=/binary/Mesa-${VER}
-make -C xdemos install DESTDIR=/binary/Mesa-${VER}
+make install DESTDIR=/binary/mesa-${VER}
+make -C xdemos install DESTDIR=/binary/mesa-${VER}
 
 popd
 
-pushd Mesa-${VER}-32
+pushd mesa-${VER}-32
 
 export CC="gcc -m32"
 export CXX="g++ -m32"
@@ -76,27 +76,27 @@ make -C xdemos EXT=32 CC="${CC}"
 
 make install DESTDIR=${PWD}/dest
 
-mv dest/usr/lib32 /binary/Mesa-${VER}/usr/
+mv dest/usr/lib32 /binary/mesa-${VER}/usr/
 
-install -m755 xdemos/glxinfo32 /binary/Mesa-${VER}/usr/bin/
-install -m755 xdemos/glxgears32 /binary/Mesa-${VER}/usr/bin/
+install -m755 xdemos/glxinfo32 /binary/mesa-${VER}/usr/bin/
+install -m755 xdemos/glxgears32 /binary/mesa-${VER}/usr/bin/
 
 popd
 
-rm -rf Mesa-${VER} Mesa-${VER}-32
+rm -rf mesa-${VER} mesa-${VER}-32
 
-find /binary/Mesa-${VER} -name "*.la" -delete
+find /binary/mesa-${VER} -name "*.la" -delete
 
-pushd /binary/Mesa-${VER}
+pushd /binary/mesa-${VER}
 /media/ntfs/Other/Linux/makedebug
 popd
 
-mkdir -p /binary/Mesa-${VER}-debug/usr/lib/
-mv /binary/Mesa-${VER}/usr/lib/debug /binary/Mesa-${VER}-debug/usr/lib/
+mkdir -p /binary/mesa-${VER}-debug/usr/lib/
+mv /binary/mesa-${VER}/usr/lib/debug /binary/mesa-${VER}-debug/usr/lib/
 
 unset CC CXX PKG_CONFIG_PATH LLVM_CONFIG CFLAGS CXXFLAGS
 
-cat > /binary/Mesa-${VER}/INSTALL << "EOF"
+cat > /binary/mesa-${VER}/INSTALL << "EOF"
 #!/bin/bash
 
 for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
@@ -105,4 +105,4 @@ for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 
-chmod 755 /binary/Mesa-${VER}/INSTALL
+chmod 755 /binary/mesa-${VER}/INSTALL

@@ -10,7 +10,7 @@ e7431ab84d37b2678af71e29355e101d  fixesproto-5.0.tar.bz2
 6caebead4b779ba031727f66a7ffa358  inputproto-2.3.1.tar.bz2
 677ea8523eec6caca86121ad2dca0b71  kbproto-1.0.6.tar.bz2
 2d569c75884455c7148d133d341e8fd6  presentproto-1.0.tar.bz2
-ce4d0b05675968e4c83e003cc809660d  randrproto-1.4.0.tar.bz2
+51ff4d45dbe8e1098740d384971805ee  randrproto-1.4.1.tar.bz2
 1b4e5dede5ea51906f1530ca1e21d216  recordproto-1.14.2.tar.bz2
 a914ccc1de66ddeb4b611c6b0686e274  renderproto-0.11.1.tar.bz2
 cfdb57dae221b71b2703f8e2980eaaf4  resourceproto-1.2.0.tar.bz2
@@ -23,4 +23,4 @@ a036dc2fcbf052ec10621fd48b68dbb1  xf86dgaproto-2.1.tar.bz2
 1d716d0dac3b664e5ee20c69d34bc10e  xf86driproto-2.1.1.tar.bz2
 e793ecefeaecfeabd1aed6a01095174e  xf86vidmodeproto-2.3.1.tar.bz2
 9959fe0bfb22a0e7260433b8d199590a  xineramaproto-1.2.1.tar.bz2
-4dc2464bfeade23dab5de38da0f6b1b5  xproto-7.0.26.tar.bz2
+6c3345111a8044f730984988aacfa567  xproto-7.0.27.tar.bz2

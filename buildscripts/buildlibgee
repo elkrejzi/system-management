@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.16.1
+export VER=0.18.0
 export DEST=/binary/libgee-${VER}
 
 pushd libgee-${VER}

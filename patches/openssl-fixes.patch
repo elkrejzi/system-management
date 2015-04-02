@@ -1,5 +1,5 @@
---- a/crypto/Makefile	2015-01-22 17:12:09.000000000 +0100
-+++ b/crypto/Makefile	2015-01-23 16:42:13.460175569 +0100
+--- a/crypto/Makefile	2015-03-19 14:31:02.000000000 +0100
++++ b/crypto/Makefile	2015-03-24 21:26:11.390262643 +0100
 @@ -85,11 +85,11 @@
  	@if [ -z "$(THIS)" ]; then $(MAKE) -f $(TOP)/Makefile reflect THIS=$@; fi
  
@@ -41,8 +41,25 @@
  
  lint:
  	@target=lint; $(RECURSIVE_MAKE)
---- a/engines/Makefile	2015-01-22 17:12:24.000000000 +0100
-+++ b/engines/Makefile	2015-01-23 16:42:13.461175596 +0100
+--- a/crypto/objects/Makefile	2015-03-19 14:31:02.000000000 +0100
++++ b/crypto/objects/Makefile	2015-03-24 21:26:11.391262632 +0100
+@@ -44,11 +44,11 @@
+ # objects.pl both reads and writes obj_mac.num
+ obj_mac.h: objects.pl objects.txt obj_mac.num
+ 	$(PERL) objects.pl objects.txt obj_mac.num obj_mac.h
+-	@sleep 1; touch obj_mac.h; sleep 1
+ 
+-obj_xref.h: objxref.pl obj_xref.txt obj_mac.num
++# This doesn't really need obj_mac.h, but since that rule reads & writes
++# obj_mac.num, we can't run in parallel with it.
++obj_xref.h: objxref.pl obj_xref.txt obj_mac.num obj_mac.h
+ 	$(PERL) objxref.pl obj_mac.num obj_xref.txt > obj_xref.h
+-	@sleep 1; touch obj_xref.h; sleep 1
+ 
+ files:
+ 	$(PERL) $(TOP)/util/files.pl Makefile >> $(TOP)/MINFO
+--- a/engines/Makefile	2015-03-24 21:26:00.322392339 +0100
++++ b/engines/Makefile	2015-03-24 21:26:11.391262632 +0100
 @@ -72,7 +72,7 @@
  
  all:	lib subdirs
@@ -62,7 +79,7 @@
  files:
  	$(PERL) $(TOP)/util/files.pl Makefile >> $(TOP)/MINFO
 @@ -128,7 +128,7 @@
- 			  mv -f $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines/$$pfx$$l$$sfx.new $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines/$$pfx$$l$$sfx ); \
+ 			  mv -f $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/openssl/engines/$$pfx$$l$$sfx.new $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/openssl/engines/$$pfx$$l$$sfx ); \
  		done; \
  	fi
 -	@target=install; $(RECURSIVE_MAKE)
@@ -70,8 +87,8 @@
  
  tags:
  	ctags $(SRC)
---- a/Makefile.org	2015-01-22 15:58:06.000000000 +0100
-+++ b/Makefile.org	2015-01-23 16:42:13.461175596 +0100
+--- a/Makefile.org	2015-03-24 21:26:00.322392339 +0100
++++ b/Makefile.org	2015-03-24 21:26:11.391262632 +0100
 @@ -274,17 +274,17 @@
  build_libs: build_crypto build_ssl build_engines
  
@@ -112,7 +129,7 @@
 +install_dirs:
  	@$(PERL) $(TOP)/util/mkdir-p.pl $(INSTALL_PREFIX)$(INSTALLTOP)/bin \
  		$(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR) \
- 		$(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines \
+ 		$(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/openssl/engines \
 @@ -547,12 +547,19 @@
  		$(INSTALL_PREFIX)$(OPENSSLDIR)/misc \
  		$(INSTALL_PREFIX)$(OPENSSLDIR)/certs \
@@ -148,8 +165,8 @@
  	@pod2man="`cd ./util; ./pod2mantest $(PERL)`"; \
  	here="`pwd`"; \
  	filecase=; \
---- a/Makefile.shared	2015-01-20 13:33:36.000000000 +0100
-+++ b/Makefile.shared	2015-01-23 16:42:13.461175596 +0100
+--- a/Makefile.shared	2015-03-24 21:26:00.323392327 +0100
++++ b/Makefile.shared	2015-03-24 21:26:11.392262621 +0100
 @@ -105,6 +105,7 @@
      SHAREDFLAGS="$${SHAREDFLAGS:-$(CFLAGS) $(SHARED_LDFLAGS)}"; \
      LIBPATH=`for x in $$LIBDEPS; do echo $$x; done | sed -e 's/^ *-L//;t' -e d | uniq`; \
@@ -166,9 +183,9 @@
  			( $(SET_X); rm -f $$SHLIB$$SHLIB_SUFFIX; \
  			  ln -s $$prev $$SHLIB$$SHLIB_SUFFIX ); \
  		fi; \
---- a/test/Makefile	2015-01-22 17:12:26.000000000 +0100
-+++ b/test/Makefile	2015-01-23 16:42:13.461175596 +0100
-@@ -132,7 +132,7 @@
+--- a/test/Makefile	2015-03-19 14:31:16.000000000 +0100
++++ b/test/Makefile	2015-03-24 21:26:11.393262609 +0100
+@@ -133,7 +133,7 @@
  tags:
  	ctags $(SRC)
  
@@ -177,7 +194,7 @@
  
  apps:
  	@(cd ..; $(MAKE) DIRS=apps all)
-@@ -398,109 +398,109 @@
+@@ -402,121 +402,121 @@
  		link_app.$${shlib_target}
  
  $(RSATEST)$(EXE_EXT): $(RSATEST).o $(DLIBCRYPTO)
@@ -296,6 +313,10 @@
 -	@target=$(EVPTEST); $(BUILD_CMD)
 +	+@target=$(EVPTEST); $(BUILD_CMD)
  
+ $(EVPEXTRATEST)$(EXE_EXT): $(EVPEXTRATEST).o $(DLIBCRYPTO)
+-	@target=$(EVPEXTRATEST); $(BUILD_CMD)
++	+@target=$(EVPEXTRATEST); $(BUILD_CMD)
+ 
  $(ECDSATEST)$(EXE_EXT): $(ECDSATEST).o $(DLIBCRYPTO)
 -	@target=$(ECDSATEST); $(BUILD_CMD)
 +	+@target=$(ECDSATEST); $(BUILD_CMD)
@@ -321,8 +342,20 @@
 +	+@target=$(SRPTEST); $(BUILD_CMD)
  
  $(V3NAMETEST)$(EXE_EXT): $(V3NAMETEST).o $(DLIBCRYPTO)
- 	@target=$(V3NAMETEST); $(BUILD_CMD)
-@@ -522,7 +522,7 @@
+-	@target=$(V3NAMETEST); $(BUILD_CMD)
++	+@target=$(V3NAMETEST); $(BUILD_CMD)
+ 
+ $(HEARTBEATTEST)$(EXE_EXT): $(HEARTBEATTEST).o $(DLIBCRYPTO)
+-	@target=$(HEARTBEATTEST); $(BUILD_CMD_STATIC)
++	+@target=$(HEARTBEATTEST); $(BUILD_CMD_STATIC)
+ 
+ $(CONSTTIMETEST)$(EXE_EXT): $(CONSTTIMETEST).o
+-	@target=$(CONSTTIMETEST) $(BUILD_CMD)
++	+@target=$(CONSTTIMETEST) $(BUILD_CMD)
+ 
+ #$(AESTEST).o: $(AESTEST).c
+ #	$(CC) -c $(CFLAGS) -DINTERMEDIATE_VALUE_KAT -DTRACE_KAT_MCT $(AESTEST).c
+@@ -529,7 +529,7 @@
  #	fi
  
  dummytest$(EXE_EXT): dummytest.o $(DLIBCRYPTO)

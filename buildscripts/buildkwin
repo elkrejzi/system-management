@@ -1,11 +1,9 @@
 #!/bin/bash -e
 
-export VER=5.2.0
+export VER=5.2.2
 export DEST=/binary/kwin-${VER}
 
 pushd kwin-${VER}
-
-patch -Np1 -i /media/ntfs/Other/Linux/patches/kwin.patch
 
 cmake -DCMAKE_BUILD_TYPE=Release    \
       -DCMAKE_INSTALL_PREFIX=/usr   \
@@ -13,7 +11,7 @@ cmake -DCMAKE_BUILD_TYPE=Release    \
       -DLIB_INSTALL_DIR=lib         \
       -DBUILD_TESTING=OFF           \
       -DQML_INSTALL_DIR=lib/qt5/qml \
-      -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins             \
+      -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
       -Wno-dev

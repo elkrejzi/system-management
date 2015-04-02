@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.4.3
+export VER=1.5.0
 export DEST=/binary/libssh2-${VER}
 
 cp -a libssh2-${VER} libssh2-${VER}-32

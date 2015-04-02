@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.8.2
+export VER=1.8.3
 export DEST=/binary/marco-${VER}
 
 pushd marco-${VER}

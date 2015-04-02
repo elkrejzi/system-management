@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.7.92
+export VER=0.7.93
 export DEST=/binary/rest-${VER}
 
 pushd rest-${VER}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.2
+export VER=4.4
 export DEST=/binary/libtasn1-${VER}
 
 cp -a libtasn1-${VER} libtasn1-${VER}-32

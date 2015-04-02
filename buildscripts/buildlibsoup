@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.49.91
+export VER=2.50.0
 export DEST=/binary/libsoup-${VER}
 
 pushd libsoup-${VER}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.20
+export VER=2.21
 export DEST=/binary/which-${VER}
 
 pushd which-${VER}

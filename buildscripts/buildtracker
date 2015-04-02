@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.3.4
+export VER=1.4.0
 export DEST=/binary/tracker-${VER}
 
 pushd tracker-${VER}

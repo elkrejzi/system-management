@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export TCLMAJOR=8.6
-export VER=${TCLMAJOR}.3
+export VER=${TCLMAJOR}.4
 export DEST=/binary/tcl-${VER}
 
 pushd tcl${VER}/unix
@@ -31,16 +31,16 @@ find ${DEST} -name "*.so" -exec chmod 755 {} \;
 
 cd ..
 
-sed -e "s#${PWD}/unix/pkgs/tdbc1.0.2#/usr/lib/tdbc1.0.2#" \
-    -e "s#${PWD}/pkgs/tdbc1.0.2/generic#/usr/include#" \
-    -e "s#${PWD}/pkgs/tdbc1.0.2/library#/usr/lib/tcl${TCLMAJOR}#" \
-    -e "s#${PWD}/pkgs/tdbc1.0.2#/usr/include#" \
-    -i "${DEST}/usr/lib/tdbc1.0.2/tdbcConfig.sh"
+sed -e "s#${PWD}/unix/pkgs/tdbc1.0.3#/usr/lib/tdbc1.0.3#" \
+    -e "s#${PWD}/pkgs/tdbc1.0.3/generic#/usr/include#" \
+    -e "s#${PWD}/pkgs/tdbc1.0.3/library#/usr/lib/tcl${TCLMAJOR}#" \
+    -e "s#${PWD}/pkgs/tdbc1.0.3#/usr/include#" \
+    -i "${DEST}/usr/lib/tdbc1.0.3/tdbcConfig.sh"
 
-sed -e "s#${PWD}/unix/pkgs/itcl4.0.2#/usr/lib/itcl4.0.2#" \
-    -e "s#${PWD}/pkgs/itcl4.0.2/generic#/usr/include#" \
-    -e "s#${PWD}/pkgs/itcl4.0.2#/usr/include#" \
-    -i "${DEST}/usr/lib/itcl4.0.2/itclConfig.sh"
+sed -e "s#${PWD}/unix/pkgs/itcl4.0.3#/usr/lib/itcl4.0.3#" \
+    -e "s#${PWD}/pkgs/itcl4.0.3/generic#/usr/include#" \
+    -e "s#${PWD}/pkgs/itcl4.0.3#/usr/include#" \
+    -i "${DEST}/usr/lib/itcl4.0.3/itclConfig.sh"
 
 popd
 

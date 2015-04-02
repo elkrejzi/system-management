@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.4.1.2
+export VER=4.4.2.2
 export DEST=/binary/libreoffice-${VER}
 
 pushd libreoffice-${VER}
@@ -111,13 +111,13 @@ eval $(dbus-launch)
 
 make build -j4
 make distro-pack-install DESTDIR=${DEST}
-make distro-pack-install DESTDIR=${PWD}/dest
+#make distro-pack-install DESTDIR=${PWD}/dest
 
 install -m644 sysui/desktop/appstream-appdata/*.xml ${DEST}/usr/share/appdata
 
 popd
 
-#rm -rf libreoffice-${VER}
+rm -rf libreoffice-${VER}
 
 find ${DEST} -name "*.la" -delete
 find ${DEST} -name "*.so" -exec chmod 755 {} \;

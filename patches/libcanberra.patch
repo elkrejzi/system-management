@@ -1,5 +1,5 @@
 --- a/src/canberra-gtk.c	2010-09-28 15:55:03.000000000 +0200
-+++ b/src/canberra-gtk.c	2015-02-25 16:16:16.672211853 +0100
++++ b/src/canberra-gtk.c	2015-03-18 21:36:39.304131427 +0100
 @@ -26,7 +26,9 @@
  
  #include <gtk/gtk.h>
@@ -22,7 +22,7 @@
          if (XGetWindowProperty(GDK_DISPLAY_XDISPLAY(d), GDK_WINDOW_XID(w),
                                 gdk_x11_get_xatom_by_name_for_display(d, "_NET_WM_DESKTOP"),
                                 0, G_MAXLONG, False, XA_CARDINAL, &type_return,
-@@ -252,88 +259,92 @@
+@@ -252,88 +259,95 @@
                  if ((ret = ca_proplist_sets(p, CA_PROP_WINDOW_ICON_NAME, t)) < 0)
                          return ret;
  
@@ -36,7 +36,10 @@
 -                        if ((ret = ca_proplist_setf(p, CA_PROP_WINDOW_X11_XID, "%lu", (unsigned long) GDK_WINDOW_XID(dw))) < 0)
 -                                return ret;
 +#ifdef GDK_WINDOWING_X11
-+        if (GDK_IS_X11_DISPLAY (gtk_widget_get_display (GTK_WIDGET(w)))) {
++#ifdef GDK_IS_X11_DISPLAY
++        if (GDK_IS_X11_DISPLAY (gtk_widget_get_display (GTK_WIDGET(w))))
++#endif
++        {
 +                if (gtk_widget_get_realized(GTK_WIDGET(w))) {
 +                        GdkWindow *dw = NULL;
 +                        GdkScreen *screen = NULL;
@@ -176,7 +179,7 @@
          return CA_SUCCESS;
  }
 --- a/src/canberra-gtk-module.c	2012-05-15 12:23:57.000000000 +0200
-+++ b/src/canberra-gtk-module.c	2015-02-25 16:16:16.672211853 +0100
++++ b/src/canberra-gtk-module.c	2015-03-18 21:42:29.485543540 +0100
 @@ -25,7 +25,9 @@
  #endif
  
@@ -239,7 +242,7 @@
  
  static void dispatch_sound_event(SoundEventData *d) {
          int ret = CA_SUCCESS;
-@@ -456,13 +475,16 @@
+@@ -456,13 +475,18 @@
                             hint == GDK_WINDOW_TYPE_HINT_DIALOG) {
  
                          gboolean played_sound = FALSE;
@@ -252,7 +255,9 @@
 -                                                gtk_widget_get_display(GTK_WIDGET(d->object)),
 -                                                gtk_widget_get_window(GTK_WIDGET(d->object)));
 +#ifdef GDK_WINDOWING_X11
++#ifdef GDK_IS_X11_DISPLAY
 +                        if (GDK_IS_X11_DISPLAY (gtk_widget_get_display (GTK_WIDGET (d->object))))
++#endif
 +                                is_xembed =
 +                                        gtk_widget_get_realized(GTK_WIDGET(d->object)) &&
 +                                        window_is_xembed(
@@ -262,14 +267,18 @@
  
                          g_object_set_qdata(d->object, is_xembed_quark, GINT_TO_POINTER(is_xembed));
  
-@@ -581,8 +603,16 @@
+@@ -581,8 +605,20 @@
                          GdkDisplay *display;
  
                          display = gtk_widget_get_display(GTK_WIDGET(d->object));
 -                        w_desktop = window_get_desktop(display, gtk_widget_get_window(GTK_WIDGET(d->object)));
 -                        c_desktop = display_get_desktop(display);
 +#ifdef GDK_WINDOWING_X11
++#ifdef GDK_IS_X11_DISPLAY
 +                        if (GDK_IS_X11_DISPLAY (display)) {
++#else
++                        if (TRUE) {
++#endif
 +                                w_desktop = window_get_desktop(display, gtk_widget_get_window(GTK_WIDGET(d->object)));
 +                                c_desktop = display_get_desktop(display);
 +                        } else

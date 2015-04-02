@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.15.91
+export VER=3.16.0
 export DEST=/binary/vino-${VER}
 
 pushd vino-${VER}
@@ -29,9 +29,10 @@ popd
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
-for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+cp -rf --remove-destination usr /
 
 [ -x /usr/bin/glib-compile-schemas ] && echo "Processing triggers for glib-2.0" && /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
 EOF
 
 chmod 755 ${DEST}/INSTALL

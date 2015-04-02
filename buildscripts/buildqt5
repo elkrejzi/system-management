@@ -120,7 +120,7 @@ EOF
 
 popd
 
-#rm -rf qt-everywhere-opensource-src-${VER}
+rm -rf qt-everywhere-opensource-src-${VER}
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash

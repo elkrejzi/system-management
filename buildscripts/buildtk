@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export TKMAJOR=8.6
-export VER=${TKMAJOR}.3
+export VER=${TKMAJOR}.4
 export DEST=/binary/tk-${VER}
 
 pushd tk${VER}/unix

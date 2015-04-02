@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.4
+export VER=1.5
 export DEST=/binary/libndp-${VER}
 
 pushd libndp-${VER}

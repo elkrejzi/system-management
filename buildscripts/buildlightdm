@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.12.2
+export VER=1.14.0
 export DEST=/binary/lightdm-${VER}
 
 pushd lightdm-${VER}
@@ -34,10 +34,6 @@ install -dm770 ${DEST}/var/lib/lightdm ${DEST}/var/lib/lightdm-data
 install -dm711 ${DEST}/var/log/lightdm
 
 chmod +t ${DEST}/var/cache/lightdm ${DEST}/var/lib/lightdm ${DEST}/var/lib/lightdm-data
-
-echo "GDK_CORE_DEVICE_EVENTS=true" > ${DEST}/var/lib/lightdm/.pam_environment
-
-chmod 644 ${DEST}/var/lib/lightdm/.pam_environment
 
 install -dm755 ${DEST}/etc/lightdm
 

@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
-export VER=5.7.0
+export VER=5.8.0
 export DEST=/binary/kf5
 
-export URL=http://download.kde.org/stable/frameworks/5.7/
+export URL=http://download.kde.org/stable/frameworks/5.8/
 
 frameworks=(
   attica
@@ -41,6 +41,7 @@ frameworks=(
   kemoticons
   kiconthemes
   kjobwidgets
+  kpeople
   knotifications
   ktextwidgets
   kwallet
@@ -54,6 +55,7 @@ frameworks=(
   knewstuff
   knotifyconfig
   kparts
+  kxmlrpcclient
   kactivities
   kded
   kdewebkit

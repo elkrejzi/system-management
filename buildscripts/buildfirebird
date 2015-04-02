@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.5.3.26780
+export VER=2.5.4.26856
 export DEST=/binary/firebird-${VER}
 
 pushd Firebird-${VER}-0

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.7.35
+export VER=1.7.38
 export DEST=/binary/wine-${VER}
 
 install -dm755 wine-${VER}/build64 wine-${VER}/build32

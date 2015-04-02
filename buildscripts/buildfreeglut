@@ -1,15 +1,18 @@
 #!/bin/bash -e
 
-export VER=2.8.1
+export VER=3.0.0
 export DEST=/binary/freeglut-${VER}
 
 cp -a freeglut-${VER} freeglut-${VER}-32
 
 pushd freeglut-${VER}
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure -prefix=/usr --disable-static
+cmake -DCMAKE_INSTALL_PREFIX=/usr      \
+      -DCMAKE_BUILD_TYPE=Release       \
+      -DCMAKE_INSTALL_LIBDIR=lib       \
+      -DFREEGLUT_BUILD_STATIC_LIBS=OFF \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
 
 make -j4
 make install DESTDIR=${DEST}
@@ -22,11 +25,12 @@ export CC="gcc -m32"
 export CXX="g++ -m32"
 export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr       \
-            --libdir=/usr/lib32 \
-            --disable-static
+cmake -DCMAKE_INSTALL_PREFIX=/usr      \
+      -DCMAKE_BUILD_TYPE=Release       \
+      -DCMAKE_INSTALL_LIBDIR=lib32     \
+      -DFREEGLUT_BUILD_STATIC_LIBS=OFF \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
 
 make -j4
 make install DESTDIR=${PWD}/dest
@@ -36,8 +40,6 @@ mv dest/usr/lib32 ${DEST}/usr
 popd
 
 rm -rf freeglut-${VER} freeglut-${VER}-32
-
-find ${DEST} -name "*.la" -delete
 
 pushd ${DEST}
 

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.1.1
+export VER=0.1.2
 export DEST=/binary/libe-book-${VER}
 
 pushd libe-book-${VER}
@@ -20,7 +20,7 @@ rm -rf libe-book-${VER}
 
 find ${DEST} -name "*.la" -delete
 
-rm -rf ${DEST}/usr/share/doc
+rm -rf ${DEST}/usr/share
 
 pushd ${DEST}
 

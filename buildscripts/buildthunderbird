@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=31.5.0
+export VER=31.6.0
 export DEST=/binary/thunderbird-${VER}
 
 pushd comm-esr31
@@ -54,7 +54,7 @@ EOF
 make -f client.mk
 
 make -f client.mk install DESTDIR=${DEST} INSTALL_SDK=
-make -f client.mk install DESTDIR=${PWD}/dest INSTALL_SDK=
+#make -f client.mk install DESTDIR=${PWD}/dest INSTALL_SDK=
 
 for i in 16x16 22x22 24x24 32x32 48x48 256x256; do
   install -Dm644 other-licenses/branding/thunderbird/mailicon${i/x*/}.png ${DEST}/usr/share/icons/hicolor/$i/apps/thunderbird.png
@@ -62,7 +62,7 @@ done
 
 popd
 
-#rm -rf comm-esr31
+rm -rf comm-esr31
 
 install -dm755 ${DEST}/usr/lib/thunderbird/defaults/preferences ${DEST}/usr/share/applications
 

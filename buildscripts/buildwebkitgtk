@@ -6,6 +6,7 @@ export DEST=/binary/webkitgtk-${VER}
 pushd webkitgtk-${VER}
 
 sed -i "/TARGET_WAYLAND_TRUE/d" GNUmakefile.in
+sed -i "s/GMutexLocker /WebCore::&/" Source/WebCore/platform/graphics/gstreamer/VideoSinkGStreamer.cpp Source/WebCore/platform/graphics/gstreamer/WebKitWebSourceGStreamer.cpp
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \

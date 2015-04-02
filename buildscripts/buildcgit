@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.10.2
+export VER=0.11.2
 export DEST=/binary/cgit-${VER}
 
 pushd cgit-${VER}
@@ -164,6 +164,8 @@ Alias /cgit-css "/usr/share/cgit/"
 	Require all granted
 </Directory>
 EOF
+
+sed -i "s:-X -S:-O xhtml -S:g" ${DEST}/usr/lib/cgit/filters/syntax-highlighting.sh
 
 pushd ${DEST}
 
