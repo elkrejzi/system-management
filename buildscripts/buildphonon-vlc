@@ -3,33 +3,16 @@
 export VER=0.8.2
 export DEST=/binary/phonon-backend-vlc-${VER}
 
-install -dm755 phonon-backend-vlc-${VER}/build4 phonon-backend-vlc-${VER}/build5
+pushd phonon-backend-vlc-${VER}
 
-pushd phonon-backend-vlc-${VER}/build4
-
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
-      -DCMAKE_INSTALL_LIBDIR=lib  \
-      -DCMAKE_SKIP_RPATH=ON       \
-      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-      -Wno-dev ..
-
-make -j4
-make install DESTDIR=${DEST}
-
-popd
-
-pushd phonon-backend-vlc-${VER}/build5
-
-cmake -DCMAKE_BUILD_TYPE=Release   \
-      -DCMAKE_INSTALL_PREFIX=/usr  \
+cmake -DCMAKE_INSTALL_PREFIX=/usr  \
+      -DCMAKE_BUILD_TYPE=Release   \
       -DCMAKE_INSTALL_LIBDIR=lib   \
       -DCMAKE_SKIP_RPATH=ON        \
       -DPHONON_BUILD_PHONON4QT5=ON \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-      -Wno-dev ..
+      -Wno-dev
 
 make -j4
 make install DESTDIR=${DEST}

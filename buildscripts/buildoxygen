@@ -3,33 +3,16 @@
 export VER=5.2.2
 export DEST=/binary/oxygen-${VER}
 
-install -dm755 oxygen-${VER}/kde5 oxygen-${VER}/kde4
+pushd oxygen-${VER}
 
-pushd oxygen-${VER}/kde5
-
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
       -DLIB_INSTALL_DIR=lib       \
       -DBUILD_TESTING=OFF         \
-      -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins             \
+      -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-      -Wno-dev ..
-
-make -j4
-make install DESTDIR=${DEST}
-
-popd
-
-pushd oxygen-${VER}/kde4
-
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
-      -DBUILD_TESTING=OFF         \
-      -DUSE_KDE4=ON               \
-      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-      -Wno-dev ..
+      -Wno-dev
 
 make -j4
 make install DESTDIR=${DEST}
@@ -39,10 +22,6 @@ popd
 rm -rf oxygen-${VER}
 
 rm -rf ${DEST}/usr/bin/oxygen-demo*
-
-install -dm755 ${DEST}/usr/lib/qt4/plugins/styles
-
-ln -sfr ${DEST}/usr/lib/kde4/plugins/styles/oxygen.so ${DEST}/usr/lib/qt4/plugins/styles
 
 pushd ${DEST}
 

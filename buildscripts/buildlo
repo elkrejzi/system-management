@@ -37,7 +37,6 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
              --enable-avahi              \
              --enable-dbus               \
              --enable-gio                \
-             --enable-kde4               \
              --enable-gtk3               \
              --enable-lockdown           \
              --enable-python=system      \

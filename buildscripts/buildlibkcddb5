@@ -1,14 +1,15 @@
 #!/bin/bash -e
 
-export VER=4.13.80-78-gebfa75c
-export DEST=/binary/baloo-widgets-${VER}
+export VER=4.13.80-18-g4aacbc0
+export DEST=/binary/libkcddb-${VER}
 
-pushd baloo-widgets-${VER}
+pushd libkcddb-${VER}
 
 cmake -DCMAKE_INSTALL_PREFIX=/usr \
       -DCMAKE_BUILD_TYPE=Release  \
       -DLIB_INSTALL_DIR=lib       \
       -DBUILD_TESTING=OFF         \
+      -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
       -Wno-dev
@@ -18,7 +19,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf baloo-widgets-${VER}
+rm -rf libkcddb-${VER}
 
 pushd ${DEST}
 

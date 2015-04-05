@@ -1,12 +1,13 @@
 #!/bin/bash -e
 
-export VER=3.1.2
+export VER=3.2.0
 export DEST=/binary/kid3-${VER}
 
 pushd kid3-${VER}
 
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
+      -DWITH_QT5=ON               \
       -DWITH_APPS="CLI;KDE"       \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \

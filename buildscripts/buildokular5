@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=14.11.97-175-g78d8b1f
+export VER=15.03.97-219-g2708e9c
 export DEST=/binary/okular-${VER}
 
 pushd okular-${VER}
@@ -9,6 +9,7 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr \
       -DCMAKE_BUILD_TYPE=Release  \
       -DLIB_INSTALL_DIR=lib       \
       -DBUILD_TESTING=OFF         \
+      -DQML_INSTALL_DIR=lib/qt5/qml           \
       -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \

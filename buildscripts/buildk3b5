@@ -1,14 +1,15 @@
 #!/bin/bash -e
 
-export VER=4.13.80-78-gebfa75c
-export DEST=/binary/baloo-widgets-${VER}
+export VER=2.0.1-614-g0600322
+export DEST=/binary/k3b-${VER}
 
-pushd baloo-widgets-${VER}
+pushd k3b-${VER}
 
 cmake -DCMAKE_INSTALL_PREFIX=/usr \
       -DCMAKE_BUILD_TYPE=Release  \
       -DLIB_INSTALL_DIR=lib       \
       -DBUILD_TESTING=OFF         \
+      -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
       -Wno-dev
@@ -18,7 +19,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf baloo-widgets-${VER}
+rm -rf k3b-${VER}
 
 pushd ${DEST}
 
@@ -35,6 +36,9 @@ cat > ${DEST}/INSTALL << "EOF"
 
 cp -rf --remove-destination usr /
 
+[ -x /usr/bin/update-mime-database ] && echo "Processing triggers for shared-mime-info" && /usr/bin/update-mime-database /usr/share/mime
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 

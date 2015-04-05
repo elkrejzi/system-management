@@ -3,34 +3,17 @@
 export VER=5.2.2
 export DEST=/binary/breeze-${VER}
 
-install -dm755 breeze-${VER}/kde5 breeze-${VER}/kde4
+pushd breeze-${VER}
 
-pushd breeze-${VER}/kde5
-
-cmake -DCMAKE_BUILD_TYPE=Release    \
-      -DCMAKE_INSTALL_PREFIX=/usr   \
+cmake -DCMAKE_INSTALL_PREFIX=/usr   \
+      -DCMAKE_BUILD_TYPE=Release    \
       -DLIB_INSTALL_DIR=lib         \
       -DBUILD_TESTING=OFF           \
       -DQML_INSTALL_DIR=lib/qt5/qml \
-      -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins             \
+      -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-      -Wno-dev ..
-
-make -j4
-make install DESTDIR=${DEST}
-
-popd
-
-pushd breeze-${VER}/kde4
-
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
-      -DBUILD_TESTING=OFF         \
-      -DUSE_KDE4=ON               \
-      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-      -Wno-dev ..
+      -Wno-dev
 
 make -j4
 make install DESTDIR=${DEST}
@@ -38,10 +21,6 @@ make install DESTDIR=${DEST}
 popd
 
 rm -rf breeze-${VER}
-
-install -dm755 ${DEST}/usr/lib/qt4/plugins/styles
-
-ln -sfr ${DEST}/usr/lib/kde4/plugins/styles/breeze.so ${DEST}/usr/lib/qt4/plugins/styles
 
 pushd ${DEST}
 

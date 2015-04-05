@@ -1,15 +1,16 @@
 #!/bin/bash -e
 
-export VER=0.9.2
-export DEST=/binary/libdbusmenu-qt-${VER}
+export VER=0.2.6
+export DEST=/binary/sni-qt-${VER}
 
-cp -a libdbusmenu-qt-${VER} libdbusmenu-qt-${VER}-32
+cp -a sni-qt-${VER} sni-qt-${VER}-32
 
-pushd libdbusmenu-qt-${VER}
+pushd sni-qt-${VER}
+
+sed -i '/tests/ d' CMakeLists.txt
 
 cmake -DCMAKE_INSTALL_PREFIX=/usr \
       -DCMAKE_BUILD_TYPE=Release  \
-      -DWITH_DOC=OFF              \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
 
@@ -18,20 +19,19 @@ make install DESTDIR=${DEST}
 
 popd
 
-pushd libdbusmenu-qt-${VER}-32
+pushd sni-qt-${VER}-32
 
 export CC="gcc -m32"
 export CXX="g++ -m32"
 export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
-sed -i "/add_subdirectory.*tools/d" CMakeLists.txt
+sed -i '/tests/ d' CMakeLists.txt
 
 cmake -DCMAKE_INSTALL_PREFIX=/usr \
       -DCMAKE_BUILD_TYPE=Release  \
-      -DLIB_SUFFIX=32             \
-      -DWITH_DOC=OFF              \
-      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
+      -DQT_PLUGINS_DIR=/usr/lib32/qt4/plugins \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong $(pkg-config --cflags QtCore)"   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong $(pkg-config --cflags QtCore)"
 
 make -j4
 make install DESTDIR=${PWD}/dest
@@ -41,7 +41,18 @@ mv dest/usr/lib32 ${DEST}/usr
 popd
 
 
-rm -rf libdbusmenu-qt-${VER} libdbusmenu-qt-${VER}-32
+rm -rf sni-qt-${VER} sni-qt-${VER}-32
+
+install -dm755 ${DEST}/etc
+
+cat > ${DEST}/etc/sni-qt.conf << "EOF"
+[need-activate-action]
+clementine=1
+mumble=1
+skype=1
+speedcrunch=1
+keepassx=1
+EOF
 
 pushd ${DEST}
 
@@ -56,9 +67,7 @@ popd
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
-cp -rf --remove-destination usr /
-
-[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
 EOF
 
 chmod 755 ${DEST}/INSTALL

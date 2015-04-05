@@ -3,37 +3,19 @@
 export VER=4.8.3
 export DEST=/binary/phonon-${VER}
 
-install -dm755 phonon-${VER}/build4 phonon-${VER}/build5
+pushd phonon-${VER}
 
-sed -i "s:BSD_SOURCE:DEFAULT_SOURCE:g" phonon-${VER}/cmake/FindPhononInternal.cmake
+sed -i "s:BSD_SOURCE:DEFAULT_SOURCE:g" cmake/FindPhononInternal.cmake
 
-pushd phonon-${VER}/build4
-
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
-      -DCMAKE_SKIP_RPATH=ON       \
-      -DCMAKE_INSTALL_LIBDIR=lib  \
-      -DPHONON_INSTALL_QT_EXTENSIONS_INTO_SYSTEM_QT=ON    \
-      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-      -Wno-dev ..
-
-make -j4
-make install DESTDIR=${DEST}
-
-popd
-
-pushd phonon-${VER}/build5
-
-cmake -DCMAKE_BUILD_TYPE=Release   \
-      -DCMAKE_INSTALL_PREFIX=/usr  \
+cmake -DCMAKE_INSTALL_PREFIX=/usr  \
+      -DCMAKE_BUILD_TYPE=Release   \
       -DCMAKE_SKIP_RPATH=ON        \
       -DCMAKE_INSTALL_LIBDIR=lib   \
       -DPHONON_BUILD_PHONON4QT5=ON \
-      -DPHONON_INSTALL_QT_EXTENSIONS_INTO_SYSTEM_QT=ON    \
+      -DPHONON_INSTALL_QT_EXTENSIONS_INTO_SYSTEM_QT=ON \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-      -Wno-dev ..
+      -Wno-dev
 
 make -j4
 make install DESTDIR=${DEST}
@@ -41,13 +23,6 @@ make install DESTDIR=${DEST}
 popd
 
 rm -rf phonon-${VER}
-
-mkdir ${DEST}/usr/include/qt4
-
-mv ${DEST}/usr/include/KDE ${DEST}/usr/include/qt4
-mv ${DEST}/usr/include/phonon ${DEST}/usr/include/qt4
-
-sed -i "s#includedir=/usr/include#includedir=/usr/include/qt4#" ${DEST}/usr/lib/pkgconfig/phonon.pc
 
 pushd ${DEST}
 

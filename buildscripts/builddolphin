@@ -1,16 +1,18 @@
 #!/bin/bash -e
 
-export VER=4.13.80-78-gebfa75c
-export DEST=/binary/baloo-widgets-${VER}
+export VER=14.12.2-261-gde84f22
+export DEST=/binary/dolphin-${VER}
 
-pushd baloo-widgets-${VER}
+pushd dolphin-${VER}
 
 cmake -DCMAKE_INSTALL_PREFIX=/usr \
       -DCMAKE_BUILD_TYPE=Release  \
+      -DSYSCONF_INSTALL_DIR=/etc  \
       -DLIB_INSTALL_DIR=lib       \
       -DBUILD_TESTING=OFF         \
-      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+      -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"      \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"    \
       -Wno-dev
 
 make -j4
@@ -18,7 +20,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf baloo-widgets-${VER}
+rm -rf dolphin-${VER}
 
 pushd ${DEST}
 
@@ -33,8 +35,9 @@ popd
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
-cp -rf --remove-destination usr /
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
 
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 

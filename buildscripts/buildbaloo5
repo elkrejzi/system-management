@@ -17,19 +17,11 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr   \
       -Wno-dev
 
 make -j4
-make install DESTDIR=${DEST}/baloo-libs
+make install DESTDIR=${DEST}
 
 popd
 
 rm -rf baloo-${VER}
-
-install -dm755 ${DEST}/baloo-binaries/usr/share
-
-mv ${DEST}/baloo-libs/etc ${DEST}/baloo-binaries
-mv ${DEST}/baloo-libs/usr/bin ${DEST}/baloo-binaries/usr
-mv ${DEST}/baloo-libs/usr/share/dbus-1 ${DEST}/baloo-binaries/usr/share
-mv ${DEST}/baloo-libs/usr/share/icons ${DEST}/baloo-binaries/usr/share
-mv ${DEST}/baloo-libs/usr/share/polkit-1 ${DEST}/baloo-binaries/usr/share
 
 pushd ${DEST}
 
@@ -41,20 +33,13 @@ done
 
 popd
 
-cat > ${DEST}/baloo-libs/INSTALL << "EOF"
-#!/bin/bash
-
-cp -rf --remove-destination usr /
-
-[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
-EOF
-
-cat > ${DEST}/baloo-binaries/INSTALL << "EOF"
+cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
 for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
 
 [ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 
-chmod 755 ${DEST}/baloo-libs/INSTALL ${DEST}/baloo-binaries/INSTALL
+chmod 755 ${DEST}/INSTALL
