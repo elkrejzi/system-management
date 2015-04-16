@@ -5,6 +5,8 @@ export DEST=/binary/libgd-${VER}
 
 pushd libgd-${VER}
 
+patch -Np1 -i /media/ntfs/Other/Linux/patches/libgd-fixes.patch
+
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr --disable-static

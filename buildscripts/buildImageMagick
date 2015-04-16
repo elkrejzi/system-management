@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=6.9.1-0
+export VER=6.9.1-1
 export DEST=/binary/ImageMagick-${VER}
 
 pushd ImageMagick-${VER}

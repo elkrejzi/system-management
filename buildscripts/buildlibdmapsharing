@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.9.29
+export VER=2.9.30
 export DEST=/binary/libdmapsharing-${VER}
 
 pushd libdmapsharing-${VER}

@@ -7,6 +7,8 @@ pushd comm-esr31
 
 sed -i "s:-\$(MOZ_APP_VERSION)::g" config/baseconfig.mk mozilla/config/baseconfig.mk
 
+patch -Np1 -i /media/ntfs/Other/Linux/patches/thunderbird.patch
+
 cat > mozconfig << "EOF"
 ac_add_options --enable-application=mail
 ac_add_options --prefix=/usr

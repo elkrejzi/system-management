@@ -1,0 +1,51 @@
+--- a/source4/lib/tls/tls.c	2014-10-01 11:16:21.000000000 +0200
++++ b/source4/lib/tls/tls.c	2015-04-16 20:39:57.678772224 +0200
+@@ -572,7 +572,6 @@
+ {
+ 	struct tls_context *tls;
+ 	int ret = 0;
+-	const int cert_type_priority[] = { GNUTLS_CRT_X509, GNUTLS_CRT_OPENPGP, 0 };
+ 	struct socket_context *new_sock;
+ 	NTSTATUS nt_status;
+ 
+@@ -597,8 +596,7 @@
+ 	gnutls_certificate_allocate_credentials(&tls->xcred);
+ 	gnutls_certificate_set_x509_trust_file(tls->xcred, ca_path, GNUTLS_X509_FMT_PEM);
+ 	TLSCHECK(gnutls_init(&tls->session, GNUTLS_CLIENT));
+-	TLSCHECK(gnutls_set_default_priority(tls->session));
+-	gnutls_certificate_type_set_priority(tls->session, cert_type_priority);
++	TLSCHECK(gnutls_priority_set_direct(tls->session, "NORMAL:+CTYPE-OPENPGP", NULL));
+ 	TLSCHECK(gnutls_credentials_set(tls->session, GNUTLS_CRD_CERTIFICATE, tls->xcred));
+ 
+ 	talloc_set_destructor(tls, tls_destructor);
+--- a/source4/lib/tls/tls_tstream.c	2014-10-01 11:16:21.000000000 +0200
++++ b/source4/lib/tls/tls_tstream.c	2015-04-16 20:39:57.678772224 +0200
+@@ -967,11 +967,6 @@
+ #if ENABLE_GNUTLS
+ 	struct tstream_tls *tlss;
+ 	int ret;
+-	static const int cert_type_priority[] = {
+-		GNUTLS_CRT_X509,
+-		GNUTLS_CRT_OPENPGP,
+-		0
+-	};
+ #endif /* ENABLE_GNUTLS */
+ 
+ 	req = tevent_req_create(mem_ctx, &state,
+@@ -1007,15 +1002,13 @@
+ 		return tevent_req_post(req, ev);
+ 	}
+ 
+-	ret = gnutls_set_default_priority(tlss->tls_session);
++	ret = gnutls_priority_set_direct(tlss->tls_session, "NORMAL:+CTYPE-OPENPGP", NULL);
+ 	if (ret != GNUTLS_E_SUCCESS) {
+ 		DEBUG(0,("TLS %s - %s\n", __location__, gnutls_strerror(ret)));
+ 		tevent_req_error(req, EINVAL);
+ 		return tevent_req_post(req, ev);
+ 	}
+ 
+-	gnutls_certificate_type_set_priority(tlss->tls_session, cert_type_priority);
+-
+ 	ret = gnutls_credentials_set(tlss->tls_session,
+ 				     GNUTLS_CRD_CERTIFICATE,
+ 				     tls_params->x509_cred);

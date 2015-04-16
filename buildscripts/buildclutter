@@ -10,8 +10,10 @@ CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr               \
             --sysconfdir=/etc           \
             --enable-egl-backend        \
+            --enable-gdk-backend        \
             --enable-wayland-backend    \
             --enable-wayland-compositor \
+            --enable-x11-backend        \
             --enable-evdev-input
 
 make -j4

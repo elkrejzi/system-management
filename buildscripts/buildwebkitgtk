@@ -5,6 +5,10 @@ export DEST=/binary/webkitgtk-${VER}
 
 pushd webkitgtk-${VER}
 
+patch -Np1 -i /media/ntfs/Other/Linux/patches/webkitgtk-gcc5.patch
+
+autoreconf -fi
+
 sed -i "/TARGET_WAYLAND_TRUE/d" GNUmakefile.in
 sed -i "s/GMutexLocker /WebCore::&/" Source/WebCore/platform/graphics/gstreamer/VideoSinkGStreamer.cpp Source/WebCore/platform/graphics/gstreamer/WebKitWebSourceGStreamer.cpp
 

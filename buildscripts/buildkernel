@@ -88,7 +88,7 @@ ln -sf ../generated/uapi/linux/version.h ${HEADERSDIR}/include/linux/version.h
 find ${HEADERSDIR}/arch/x86 -name ".*.cmd" -delete
 
 for SCRIPT in Kbuild.include Lindent \
-   Makefile.{build,clean,extrawarn,host,lib,modpost} \
+   Makefile.{build,clean,extrawarn,host,kasan,lib,modpost} \
    check{includes,stack,version}.pl conmakehash \
    {depmod,gcc-goto,gcc-version,gen_initramfs_list,mkuboot}.sh \
    gcc-x86_{32,64}-has-stack-protector.sh \

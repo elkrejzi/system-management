@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.2.52
+export VER=1.2.53
 export DEST=/binary/libpng-${VER}
 
 cp -a libpng-${VER} libpng-${VER}-32

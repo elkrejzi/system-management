@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.22.1
+export VER=0.23.1
 export DEST=/binary/p11-kit-${VER}
 
 cp -a p11-kit-${VER} p11-kit-${VER}-32

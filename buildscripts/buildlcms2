@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.6
+export VER=2.7
 export DEST=/binary/lcms2-${VER}
 
 cp -a lcms2-${VER} lcms2-${VER}-32

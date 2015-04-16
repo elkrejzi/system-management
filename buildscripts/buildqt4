@@ -9,6 +9,8 @@ if [ -e /media/ntfs/Other/Linux/patches/qt4fixes.patch ]; then
   patch -Np1 -i /media/ntfs/Other/Linux/patches/qt4fixes.patch
 fi
 
+patch -Np1 -i /media/ntfs/Other/Linux/patches/qt4-gcc5.patch
+
 sed -e '631a if (image->isNull()) { state = Error; return -1; }' \
     -i src/gui/image/qgifhandler.cpp
 

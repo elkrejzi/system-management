@@ -1,7 +1,14 @@
 #!/bin/bash -e
 
-export VER=3.3.14
+export VER=3.4.0
 export DEST=/binary/gnutls-${VER}
+
+pushd gnutls-${VER}
+  sed -i '0,/gnutls_certificate_get_x509_key/{//d;}' doc/manpages/Makefile.am
+  sed -i '0,/gnutls_certificate_get_x509_crt/{//d;}' doc/manpages/Makefile.am
+  sed -i '0,/gnutls_certificate_get_verify_flags/{//d;}' doc/manpages/Makefile.am
+  autoreconf -fi
+popd
 
 cp -a gnutls-${VER} gnutls-${VER}-32
 

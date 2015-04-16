@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.6.23
+export VER=5.6.24
 export DEST=/binary/mysql-${VER}
 
 sed -i "s:#define\[:#\[\\\t \]\*define\[:" mysql-${VER}/cmake/ssl.cmake

@@ -1,0 +1,70 @@
+--- a/configure	2015-01-07 10:47:51.000000000 +0100
++++ b/configure	2015-04-10 09:31:05.976990302 +0200
+@@ -4890,7 +4890,7 @@
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+-#if !(defined(__GNUC__) && !defined(__clang__) && !defined(__INTEL_COMPILER) && __GNUC__ >= 4 && __GNUC_MINOR__ >= 7)
++#if !(defined(__GNUC__) && !defined(__clang__) && !defined(__INTEL_COMPILER) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7)))
+ #error Not a supported GCC compiler
+ #endif
+ 
+@@ -4909,7 +4909,7 @@
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+-#if !(defined(__clang__) && __clang_major__ >= 3 && __clang_minor__ >= 3)
++#if !(defined(__clang__) && (__apple_build_version__ >= 4250024 || (!defined(__apple_build_version__) && (__clang_major__ > 3 || (__clang_major__ == 3 && __clang_minor__ >= 3)))))
+ #error Not a supported Clang compiler
+ #endif
+ 
+@@ -4948,7 +4948,7 @@
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+-#if !(defined(__GNUG__) && defined(__GNUC__) && !defined(__clang__) && !defined(__INTEL_COMPILER) && __GNUC__ >= 4 && __GNUC_MINOR__ >= 7)
++#if !(defined(__GNUG__) && defined(__GNUC__) && !defined(__clang__) && !defined(__INTEL_COMPILER) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7)))
+ #error Not a supported G++ compiler
+ #endif
+ 
+@@ -4967,7 +4967,7 @@
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+-#if !(defined(__clang__) && __clang_major__ >= 3 && __clang_minor__ >= 3)
++#if !(defined(__clang__) && (__apple_build_version__ >= 4250024 || (!defined(__apple_build_version__) && (__clang_major__ > 3 || (__clang_major__ == 3 && __clang_minor__ >= 3)))))
+ #error Not a supported Clang++ compiler
+ #endif
+ 
+--- a/Source/autotools/CheckSystemAndBasicDependencies.m4	2015-01-07 10:45:43.000000000 +0100
++++ b/Source/autotools/CheckSystemAndBasicDependencies.m4	2015-04-10 09:31:05.977990323 +0200
+@@ -87,12 +87,12 @@
+ c_compiler="unknown"
+ AC_LANG_PUSH([C])
+ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([
+-#if !(defined(__GNUC__) && !defined(__clang__) && !defined(__INTEL_COMPILER) && __GNUC__ >= 4 && __GNUC_MINOR__ >= 7)
++#if !(defined(__GNUC__) && !defined(__clang__) && !defined(__INTEL_COMPILER) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7)))
+ #error Not a supported GCC compiler
+ #endif
+ ])], [c_compiler="gcc"], [])
+ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([
+-#if !(defined(__clang__) && __clang_major__ >= 3 && __clang_minor__ >= 3)
++#if !(defined(__clang__) && (__apple_build_version__ >= 4250024 || (!defined(__apple_build_version__) && (__clang_major__ > 3 || (__clang_major__ == 3 && __clang_minor__ >= 3)))))
+ #error Not a supported Clang compiler
+ #endif
+ ])], [c_compiler="clang"], [])
+@@ -106,12 +106,12 @@
+ cxx_compiler="unknown"
+ AC_LANG_PUSH([C++])
+ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([
+-#if !(defined(__GNUG__) && defined(__GNUC__) && !defined(__clang__) && !defined(__INTEL_COMPILER) && __GNUC__ >= 4 && __GNUC_MINOR__ >= 7)
++#if !(defined(__GNUG__) && defined(__GNUC__) && !defined(__clang__) && !defined(__INTEL_COMPILER) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7)))
+ #error Not a supported G++ compiler
+ #endif
+ ])], [cxx_compiler="g++"], [])
+ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([
+-#if !(defined(__clang__) && __clang_major__ >= 3 && __clang_minor__ >= 3)
++#if !(defined(__clang__) && (__apple_build_version__ >= 4250024 || (!defined(__apple_build_version__) && (__clang_major__ > 3 || (__clang_major__ == 3 && __clang_minor__ >= 3)))))
+ #error Not a supported Clang++ compiler
+ #endif
+ ])], [cxx_compiler="clang++"], [])

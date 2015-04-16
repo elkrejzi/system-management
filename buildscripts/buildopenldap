@@ -7,7 +7,6 @@ pushd openldap-${VER}
 
 patch -Np1 -i /media/ntfs/Other/Linux/patches/openldap-blfs-paths.patch
 patch -Np1 -i /media/ntfs/Other/Linux/patches/openldap-symbol-versions.patch
-patch -Np1 -i /media/ntfs/Other/Linux/patches/openldap-bdb.patch
 
 autoconf
 
@@ -33,6 +32,8 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
             --enable-sql          \
             --enable-backends=mod \
             --enable-overlays=mod \
+            --disable-bdb         \
+            --disable-hdb         \
             --disable-ndb
 
 make depend
@@ -84,10 +85,10 @@ rm -rf openldap-${VER} openldap-${VER}-32
 find ${DEST} -name "*.la" -delete
 
 rm -rf ${DEST}/etc/openldap/ldap.conf ${DEST}/etc/openldap/slapd.conf ${DEST}/etc/openldap/slapd.ldif
-rm -rf ${DEST}/var/lib/openldap/*  ${DEST}/var/run
+rm -rf ${DEST}/var/run
 
-mkdir -p ${DEST}/etc/default ${DEST}/etc/openldap/slapd.d ${DEST}/etc/systemd/system/multi-user.target.wants
-mkdir -p ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d
+install -dm755 ${DEST}/etc/default ${DEST}/etc/openldap/slapd.d ${DEST}/etc/systemd/system/multi-user.target.wants
+install -dm755 ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d ${DEST}/var/lib/openldap
 
 cat > ${DEST}/etc/default/slapd << "EOF"
 # Begin /etc/default/slapd
@@ -159,8 +160,8 @@ fi
 chmod 700 /etc/openldap/slapd.d /var/lib/openldap
 chown -R ldap:ldap /etc/openldap/slapd.d /var/lib/openldap
 
-chmod 640 /etc/openldap/slapd.conf /etc/openldap/slapd.ldif /etc/openldap/DB_CONFIG.example
-chown root:ldap /etc/openldap/slapd.conf /etc/openldap/slapd.ldif /etc/openldap/DB_CONFIG.example
+chmod 640 /etc/openldap/slapd.conf /etc/openldap/slapd.ldif
+chown root:ldap /etc/openldap/slapd.conf /etc/openldap/slapd.ldif
 
 [ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q /usr/share/man
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig

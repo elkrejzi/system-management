@@ -1,9 +1,11 @@
 #!/bin/bash -e
 
-export VER=3.0.0
+export VER=3.0.1
 export DEST=/binary/postfix-${VER}
 
 pushd postfix-${VER}
+
+sed -i 's/Linux.3\*/Linux.[34]\*/' makedefs
 
 make makefiles DEBUG="" \
      CCARGS='-DUSE_SASL_AUTH -DUSE_CYRUS_SASL -I/usr/include/sasl \

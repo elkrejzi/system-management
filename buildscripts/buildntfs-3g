@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2014.2.15
+export VER=2015.3.14
 export DEST=/binary/ntfs-3g_ntfsprogs-${VER}
 
 pushd ntfs-3g_ntfsprogs-${VER}
@@ -12,6 +12,9 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
             --with-fuse=external
 
 make -j4
+
+mkdir -p ${DEST}/lib
+
 make install DESTDIR=${DEST}
 
 popd

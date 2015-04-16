@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.16.0
+export VER=3.16.1
 export DEST=/binary/gucharmap-${VER}
 
 pushd gucharmap-${VER}

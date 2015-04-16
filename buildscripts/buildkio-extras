@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.2.2
+export VER=5.2.95
 export DEST=/binary/kio-extras-${VER}
 
 pushd kio-extras-${VER}
@@ -20,10 +20,6 @@ make install DESTDIR=${DEST}
 popd
 
 rm -rf kio-extras-${VER}
-
-rm -rf ${DEST}/usr/lib/libmolletnetwork.so
-
-mv ${DEST}/usr/share/config.kcfg/jpegcreatorsettings.kcfg ${DEST}/usr/share/config.kcfg/jpegcreatorsettings5.kcfg
 
 pushd ${DEST}
 

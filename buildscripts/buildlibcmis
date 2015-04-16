@@ -5,6 +5,10 @@ export DEST=/binary/libcmis-${VER}
 
 pushd libcmis-${VER}
 
+patch -Np1 -i /media/ntfs/Other/Linux/patches/libcmis-gcc5.patch
+
+autoreconf -fi
+
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr    \

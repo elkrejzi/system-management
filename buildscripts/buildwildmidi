@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.3.7
+export VER=0.3.8
 export DEST=/binary/wildmidi-${VER}
 
 pushd wildmidi-wildmidi-${VER}

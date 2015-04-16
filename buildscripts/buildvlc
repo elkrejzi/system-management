@@ -1,18 +1,15 @@
 #!/bin/bash -e
 
-export VER=2.2.0
+export VER=2.2.1
 export DEST=/binary/vlc-${VER}
 
 pushd vlc-${VER}
-
-sed "s:< 56:< 57:g" -i configure
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr     \
             --enable-a52      \
             --enable-aa       \
-            --enable-egl      \
             --enable-faad     \
             --enable-gles1    \
             --enable-gles2    \

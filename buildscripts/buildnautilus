@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.16.0
+export VER=3.16.1
 export DEST=/binary/nautilus-${VER}
 
 pushd nautilus-${VER}
@@ -10,7 +10,8 @@ CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr           \
             --sysconfdir=/etc       \
             --disable-packagekit    \
-            --disable-update-mimedb
+            --disable-update-mimedb \
+            --disable-tracker
 
 make -j4
 make install DESTDIR=${DEST}

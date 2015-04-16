@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
 export VER=4.9.2
-#export VER=5-20150201
+#export VER=5.1.0-RC-20150412
 export PKGVER=${VER}
-#export PKGVER="5.0.0 20150201"
+#export PKGVER="5.0.1 20150412"
 export DEST=/binary/gcc-${VER}
 
 mv gcc-${VER} src
@@ -59,6 +59,10 @@ make install DESTDIR=${DEST}
 
 install -m644 libiberty/pic/libiberty.a ${DEST}/usr/lib
 
+install -dm755 ${DEST}/usr/lib/bfd-plugins
+
+ln -sf ../../libexec/gcc/$(gcc -dumpmachine)/$(cat ../src/gcc/BASE-VER)/liblto_plugin.so ${DEST}/usr/lib/bfd-plugins/
+
 popd
 
 rm -rf src build
@@ -77,10 +81,6 @@ chmod 755 ${DEST}/lib/*
 chmod 755 ${DEST}/usr/lib32/libgcc_s.so.1
 
 ln -sf ../usr/bin/cpp ${DEST}/lib/cpp
-
-install -dm755 ${DEST}/usr/lib/bfd-plugins
-
-ln -sf ../../libexec/gcc/$(gcc -dumpmachine)/${VER}/liblto_plugin.so ${DEST}/usr/lib/bfd-plugins/
 
 pushd ${DEST}/usr/bin/
 ln gcc cc

@@ -1,6 +1,5 @@
-diff -Naur a/doc/man/man5/slapd-bdb.5 b/doc/man/man5/slapd-bdb.5
---- a/doc/man/man5/slapd-bdb.5	2014-09-19 03:48:49.000000000 +0200
-+++ b/doc/man/man5/slapd-bdb.5	2014-10-02 08:57:33.768819553 +0200
+--- a/doc/man/man5/slapd-bdb.5	2014-09-19 01:48:49.000000000 +0000
++++ b/doc/man/man5/slapd-bdb.5	2015-04-09 18:07:00.612882647 +0000
 @@ -135,7 +135,7 @@
  associated indexes live.
  A separate directory must be specified for each database.
@@ -10,21 +9,8 @@ diff -Naur a/doc/man/man5/slapd-bdb.5 b/doc/man/man5/slapd-bdb.5
  .TP
  .B dirtyread
  Allow reads of modified but not yet committed data.
-diff -Naur a/doc/man/man5/slapd.conf.5 b/doc/man/man5/slapd.conf.5
---- a/doc/man/man5/slapd.conf.5	2014-09-19 03:48:49.000000000 +0200
-+++ b/doc/man/man5/slapd.conf.5	2014-10-02 08:57:33.768819553 +0200
-@@ -2021,7 +2021,7 @@
- # The database directory MUST exist prior to
- # running slapd AND should only be accessible
- # by the slapd/tools. Mode 0700 recommended.
--directory LOCALSTATEDIR/openldap\-data
-+directory LOCALSTATEDIR/lib/openldap
- # Indices to maintain
- index     objectClass  eq
- index     cn,sn,mail   pres,eq,approx,sub
-diff -Naur a/doc/man/man5/slapd-config.5 b/doc/man/man5/slapd-config.5
---- a/doc/man/man5/slapd-config.5	2014-09-19 03:48:49.000000000 +0200
-+++ b/doc/man/man5/slapd-config.5	2014-10-02 08:57:33.769819569 +0200
+--- a/doc/man/man5/slapd-config.5	2014-09-19 01:48:49.000000000 +0000
++++ b/doc/man/man5/slapd-config.5	2015-04-09 18:07:00.612882647 +0000
 @@ -2051,7 +2051,7 @@
  # The database directory MUST exist prior to
  # running slapd AND should only be accessible
@@ -34,9 +20,19 @@ diff -Naur a/doc/man/man5/slapd-config.5 b/doc/man/man5/slapd-config.5
  # Indices to maintain
  olcDbIndex:     objectClass  eq
  olcDbIndex:     cn,sn,mail   pres,eq,approx,sub
-diff -Naur a/include/ldap_defaults.h b/include/ldap_defaults.h
---- a/include/ldap_defaults.h	2014-09-19 03:48:49.000000000 +0200
-+++ b/include/ldap_defaults.h	2014-10-02 08:57:33.769819569 +0200
+--- a/doc/man/man5/slapd.conf.5	2014-09-19 01:48:49.000000000 +0000
++++ b/doc/man/man5/slapd.conf.5	2015-04-09 18:07:00.612882647 +0000
+@@ -2021,7 +2021,7 @@
+ # The database directory MUST exist prior to
+ # running slapd AND should only be accessible
+ # by the slapd/tools. Mode 0700 recommended.
+-directory LOCALSTATEDIR/openldap\-data
++directory LOCALSTATEDIR/lib/openldap
+ # Indices to maintain
+ index     objectClass  eq
+ index     cn,sn,mail   pres,eq,approx,sub
+--- a/include/ldap_defaults.h	2014-09-19 01:48:49.000000000 +0000
++++ b/include/ldap_defaults.h	2015-04-09 18:07:00.613882663 +0000
 @@ -39,7 +39,7 @@
  #define LDAP_ENV_PREFIX "LDAP"
  
@@ -55,9 +51,8 @@ diff -Naur a/include/ldap_defaults.h b/include/ldap_defaults.h
  #define SLAPD_DEFAULT_DB_MODE		0600
  #define SLAPD_DEFAULT_UCDATA		LDAP_DATADIR LDAP_DIRSEP "ucdata"
  	/* default max deref depth for aliases */
-diff -Naur a/libraries/liblber/Makefile.in b/libraries/liblber/Makefile.in
---- a/libraries/liblber/Makefile.in	2014-09-19 03:48:49.000000000 +0200
-+++ b/libraries/liblber/Makefile.in	2014-10-02 08:57:33.769819569 +0200
+--- a/libraries/liblber/Makefile.in	2014-09-19 01:48:49.000000000 +0000
++++ b/libraries/liblber/Makefile.in	2015-04-09 18:12:21.523278277 +0000
 @@ -48,6 +48,6 @@
  
  install-local: FORCE
@@ -66,9 +61,8 @@ diff -Naur a/libraries/liblber/Makefile.in b/libraries/liblber/Makefile.in
 +	$(LTINSTALL) $(INSTALLFLAGS) -m 755 $(LIBRARY) $(DESTDIR)$(libdir)
  	$(LTFINISH) $(DESTDIR)$(libdir)
  
-diff -Naur a/libraries/libldap/Makefile.in b/libraries/libldap/Makefile.in
---- a/libraries/libldap/Makefile.in	2014-09-19 03:48:49.000000000 +0200
-+++ b/libraries/libldap/Makefile.in	2014-10-02 08:57:33.769819569 +0200
+--- a/libraries/libldap/Makefile.in	2014-09-19 01:48:49.000000000 +0000
++++ b/libraries/libldap/Makefile.in	2015-04-09 18:12:21.523278277 +0000
 @@ -68,7 +68,7 @@
  
  install-local: $(CFFILES) FORCE
@@ -78,9 +72,8 @@ diff -Naur a/libraries/libldap/Makefile.in b/libraries/libldap/Makefile.in
  	$(LTFINISH) $(DESTDIR)$(libdir)
  	-$(MKDIR) $(DESTDIR)$(sysconfdir)
  	@for i in $(CFFILES); do \
-diff -Naur a/libraries/libldap_r/Makefile.in b/libraries/libldap_r/Makefile.in
---- a/libraries/libldap_r/Makefile.in	2014-09-19 03:48:49.000000000 +0200
-+++ b/libraries/libldap_r/Makefile.in	2014-10-02 08:57:33.769819569 +0200
+--- a/libraries/libldap_r/Makefile.in	2014-09-19 01:48:49.000000000 +0000
++++ b/libraries/libldap_r/Makefile.in	2015-04-09 18:12:21.523278277 +0000
 @@ -83,6 +83,6 @@
  
  install-local: $(CFFILES) FORCE
@@ -89,9 +82,8 @@ diff -Naur a/libraries/libldap_r/Makefile.in b/libraries/libldap_r/Makefile.in
 +	$(LTINSTALL) $(INSTALLFLAGS) -m 755 $(LIBRARY) $(DESTDIR)$(libdir)
  	$(LTFINISH) $(DESTDIR)$(libdir)
  
-diff -Naur a/servers/slapd/Makefile.in b/servers/slapd/Makefile.in
---- a/servers/slapd/Makefile.in	2014-09-19 03:48:49.000000000 +0200
-+++ b/servers/slapd/Makefile.in	2014-10-02 08:57:33.770819589 +0200
+--- a/servers/slapd/Makefile.in	2014-09-19 01:48:49.000000000 +0000
++++ b/servers/slapd/Makefile.in	2015-04-09 18:07:00.613882663 +0000
 @@ -376,10 +376,10 @@
  	install-conf install-dbc-maybe install-schema install-tools
  
@@ -125,9 +117,8 @@ diff -Naur a/servers/slapd/Makefile.in b/servers/slapd/Makefile.in
 +		$(LN_S) -f $(DESTDIR)$(sbindir)/slapd$(EXEEXT) $(DESTDIR)$(sbindir)/$$i$(EXEEXT); \
  	done
  
-diff -Naur a/servers/slapd/slapd.conf b/servers/slapd/slapd.conf
---- a/servers/slapd/slapd.conf	2014-09-19 03:48:49.000000000 +0200
-+++ b/servers/slapd/slapd.conf	2014-10-02 08:57:33.770819589 +0200
+--- a/servers/slapd/slapd.conf	2014-09-19 01:48:49.000000000 +0000
++++ b/servers/slapd/slapd.conf	2015-04-09 18:11:45.464659474 +0000
 @@ -10,14 +10,12 @@
  # service AND an understanding of referrals.
  #referral	ldap://root.openldap.org
@@ -143,7 +134,7 @@ diff -Naur a/servers/slapd/slapd.conf b/servers/slapd/slapd.conf
 -# moduleload	back_hdb.la
 -# moduleload	back_ldap.la
 +modulepath	%MODULEDIR%
-+moduleload	back_bdb
++moduleload	back_mdb
  
  # Sample security restrictions
  #	Require integrity protection (prevent hijacking)
@@ -151,14 +142,16 @@ diff -Naur a/servers/slapd/slapd.conf b/servers/slapd/slapd.conf
  #
  # rootdn can always read and write EVERYTHING!
  
-+# Specific Backend Directives for bdb:
-+backend         bdb
++# Specific Backend Directives for mdb:
++backend		mdb
 +
  #######################################################################
- # BDB database definitions
+-# BDB database definitions
++# MDB database definitions
  #######################################################################
  
- database	bdb
+-database	bdb
++database	mdb
  suffix		"dc=my-domain,dc=com"
 -rootdn		"cn=Manager,dc=my-domain,dc=com"
 +#rootdn		"cn=Manager,dc=my-domain,dc=com"
@@ -177,9 +170,8 @@ diff -Naur a/servers/slapd/slapd.conf b/servers/slapd/slapd.conf
 +
  # Indices to maintain
  index	objectClass	eq
-diff -Naur a/servers/slapd/slapi/Makefile.in b/servers/slapd/slapi/Makefile.in
---- a/servers/slapd/slapi/Makefile.in	2014-09-19 03:48:49.000000000 +0200
-+++ b/servers/slapd/slapi/Makefile.in	2014-10-02 08:57:33.770819589 +0200
+--- a/servers/slapd/slapi/Makefile.in	2014-09-19 01:48:49.000000000 +0000
++++ b/servers/slapd/slapi/Makefile.in	2015-04-09 18:07:00.614882679 +0000
 @@ -46,6 +46,6 @@
  install-local: FORCE
  	if test "$(BUILD_MOD)" = "yes"; then \

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.11.1
+export VER=2.11.93
 export DEST=/binary/fontconfig-${VER}
 
 cp -a fontconfig-${VER} fontconfig-${VER}-32

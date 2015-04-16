@@ -7,7 +7,7 @@ pushd iputils-s${VER}
 
 sed -i "s:-O3:-march=native -mtune=native -O2 -pipe -fstack-protector-strong:g" Makefile
 
-make -j4
+make USE_GNUTLS=no -j4
 make -C doc man
 
 install -dm755 ${DEST}/bin

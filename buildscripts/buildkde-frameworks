@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
-export VER=5.8.0
+export VER=5.9.0
 export DEST=/binary/kf5
 
-export URL=http://download.kde.org/stable/frameworks/5.8/
+export URL=http://download.kde.org/stable/frameworks/5.9/
 
 frameworks=(
   attica
@@ -23,6 +23,7 @@ frameworks=(
   kplotting
   kwidgetsaddons
   kwindowsystem
+  modemmanager-qt
   networkmanager-qt
   solid
   sonnet
@@ -47,7 +48,6 @@ frameworks=(
   kwallet
   kxmlgui
   kbookmarks
-  kcmutils
   kio
   frameworkintegration
   kdeclarative
@@ -56,10 +56,11 @@ frameworks=(
   knotifyconfig
   kparts
   kxmlrpcclient
-  kactivities
+  kcmutils
   kded
   kdewebkit
   ktexteditor
+  kactivities
   kdesignerplugin
   plasma-framework )
 

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.10.0
+export VER=1.11.2
 export DEST=/binary/cairomm-${VER}
 
 pushd cairomm-${VER}

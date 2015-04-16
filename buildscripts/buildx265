@@ -1,12 +1,12 @@
 #!/bin/bash -e
 
-export VER=1.5
+export VER=1.6
 export DEST=/binary/x265-${VER}
 
-pushd multicoreware-x265-*/build/linux
+pushd x265_${VER}/build/linux
 
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
       ../../source
@@ -16,7 +16,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf multicoreware-x265-*
+rm -rf x265_${VER}
 
 find ${DEST} -name "*.a" -delete
 

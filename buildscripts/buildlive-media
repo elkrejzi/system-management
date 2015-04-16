@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2014.12.17
+export VER=2015.04.01
 export DEST=/binary/live-media-${VER}
 
 pushd live

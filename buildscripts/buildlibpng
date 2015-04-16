@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.6.16
+export VER=1.6.17
 export DEST=/binary/libpng-${VER}
 
 pushd libpng-${VER}

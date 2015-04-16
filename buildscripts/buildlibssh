@@ -3,6 +3,8 @@
 export VER=0.6.4
 export DEST=/binary/libssh-${VER}
 
+sed -i "s: -pedantic-errors::g" libssh-${VER}/cmake/Modules/DefineCompilerFlags.cmake
+
 install -dm755 libssh-${VER}/build
 
 pushd libssh-${VER}/build

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.16.0
+export VER=3.16.1
 export DEST=/binary/gnome-terminal-${VER}
 
 pushd gnome-terminal-${VER}
@@ -9,7 +9,8 @@ CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr       \
             --disable-migration \
-            --disable-static
+            --disable-static    \
+            --disable-search-provider
 
 make -j4
 make install DESTDIR=${DEST}

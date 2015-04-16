@@ -6,6 +6,7 @@ export DEST=/binary/gst-plugins-bad-${VER}
 pushd gst-plugins-bad-${VER}
 
 sed "s:stdafx:libmodplug/&:g" -i ext/modplug/gstmodplug.cc
+sed "s: IMG_FMT_I420: VPX_IMG_FMT_I420:g" -i ext/vp8/gstvp8utils.h
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \

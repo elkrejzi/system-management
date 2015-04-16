@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
 
-export VER=20140913
-export DLID=24290
+export VER=20150121
+export DLID=24661
 export DEST=/binary/intel-ucode-${VER}
 
 install -dm755 ${DEST}/boot

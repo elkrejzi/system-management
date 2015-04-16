@@ -12,6 +12,8 @@ fi
 #patch -Np1 -i /media/ntfs/Other/Linux/patches/xserver-autobind-hotplug.patch
 #autoreconf -fi
 
+patch -Np1 -i /media/ntfs/Other/Linux/patches/xorg-server-gcc5.patch
+
 CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr            \

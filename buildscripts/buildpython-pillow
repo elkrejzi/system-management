@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.7.0
+export VER=2.8.1
 export DEST=/binary/python-pillow-${VER}
 
 PY3VER=$(pkg-config --modversion python3)

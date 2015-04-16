@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.7.0
+export VER=0.7.1
 export DEST=/binary/liborcus-${VER}
 
 pushd liborcus-${VER}
