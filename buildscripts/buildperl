@@ -18,6 +18,8 @@ export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
 
 pushd perl-${VER}
 
+patch -Np1 -i /media/ntfs/Other/Linux/patches/perl-gcc5.patch
+
 sh Configure -Dprefix=/usr   \
              -Dusethreads    \
              -Duselargefiles \
