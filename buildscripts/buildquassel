@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.12-rc1
+export VER=0.12.0
 export DEST=/binary/quassel-${VER}
 
 pushd quassel-${VER}

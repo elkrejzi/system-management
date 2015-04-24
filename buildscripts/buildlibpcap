@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.7.2
+export VER=1.7.3
 export DEST=/binary/libpcap-${VER}
 
 pushd libpcap-${VER}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=7.41.0
+export VER=7.42.0
 export DEST=/binary/curl-${VER}
 
 cp -a curl-${VER} curl-${VER}-32

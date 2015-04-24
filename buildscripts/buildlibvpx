@@ -3,7 +3,7 @@
 export VER=1.4.0
 export DEST=/binary/libvpx-${VER}
 
-pushd libvpx-v${VER}
+pushd libvpx-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
@@ -16,7 +16,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf libvpx-v${VER}
+rm -rf libvpx-${VER}
 
 find ${DEST} -name "*.la" -delete
 

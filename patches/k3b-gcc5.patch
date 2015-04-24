@@ -1,0 +1,66 @@
+diff --git a/libk3b/projects/k3bcdrdaowriter.cpp b/libk3b/projects/k3bcdrdaowriter.cpp
+index 0d14408..dafb1bf 100644
+--- a/libk3b/projects/k3bcdrdaowriter.cpp
++++ b/libk3b/projects/k3bcdrdaowriter.cpp
+@@ -918,7 +918,7 @@ void K3b::CdrdaoWriter::parseCdrdaoWrote( const QString& line )
+ 
+ void K3b::CdrdaoWriter::parseCdrdaoMessage()
+ {
+-    static const char msgSync[] = { 0xff, 0x00, 0xff, 0x00 };
++    static const unsigned char msgSync[] = { 0xff, 0x00, 0xff, 0x00 };
+     unsigned int avail = m_comSock->bytesAvailable();
+     unsigned int msgs = avail / ( sizeof(msgSync)+d->progressMsgSize );
+     unsigned int count = 0;
+diff --git a/libk3b/tools/k3bwavefilewriter.cpp b/libk3b/tools/k3bwavefilewriter.cpp
+index 7aa6c1d..25b425f 100644
+--- a/libk3b/tools/k3bwavefilewriter.cpp
++++ b/libk3b/tools/k3bwavefilewriter.cpp
+@@ -109,7 +109,7 @@ void K3b::WaveFileWriter::write( const char* data, int len, Endianess e )
+ 
+ void K3b::WaveFileWriter::writeEmptyHeader()
+ {
+-    static const char riffHeader[] =
++    static const unsigned char riffHeader[] =
+         {
+             0x52, 0x49, 0x46, 0x46, // 0  "RIFF"
+             0x00, 0x00, 0x00, 0x00, // 4  wavSize
+@@ -124,7 +124,7 @@ void K3b::WaveFileWriter::writeEmptyHeader()
+             0x00, 0x00, 0x00, 0x00  // 40 byteCount
+         };
+ 
+-    m_outputStream.writeRawData( riffHeader, 44 );
++    m_outputStream.writeRawData( (const char*) riffHeader, 44 );
+ }
+ 
+ 
+diff --git a/plugins/encoder/external/k3bexternalencoder.cpp b/plugins/encoder/external/k3bexternalencoder.cpp
+index df9c576..d68f200 100644
+--- a/plugins/encoder/external/k3bexternalencoder.cpp
++++ b/plugins/encoder/external/k3bexternalencoder.cpp
+@@ -37,7 +37,7 @@ K3B_EXPORT_PLUGIN(k3bexternalencoder, K3bExternalEncoder)
+ Q_DECLARE_METATYPE( QProcess::ExitStatus )
+ 
+ 
+-static const char s_riffHeader[] =
++static const unsigned char s_riffHeader[] =
+ {
+     0x52, 0x49, 0x46, 0x46, // 0  "RIFF"
+     0x00, 0x00, 0x00, 0x00, // 4  wavSize
+@@ -222,7 +222,7 @@ bool K3bExternalEncoder::writeWaveHeader()
+     qDebug() << "(K3bExternalEncoder) writing wave header";
+ 
+     // write the RIFF thing
+-    if( d->process->write( s_riffHeader, 4 ) != 4 ) {
++    if( d->process->write( (const char*) s_riffHeader, 4 ) != 4 ) {
+         qDebug() << "(K3bExternalEncoder) failed to write riff header.";
+         return false;
+     }
+@@ -243,7 +243,7 @@ bool K3bExternalEncoder::writeWaveHeader()
+     }
+ 
+     // write static part of the header
+-    if( d->process->write( s_riffHeader + 8, 32 ) != 32 ) {
++    if( d->process->write( (const char*) s_riffHeader + 8, 32 ) != 32 ) {
+         qDebug() << "(K3bExternalEncoder) failed to write wave header.";
+         return false;
+     }

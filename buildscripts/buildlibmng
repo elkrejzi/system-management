@@ -1,13 +1,11 @@
 #!/bin/bash -e
 
-export VER=2.0.2
+export VER=2.0.3
 export DEST=/binary/libmng-${VER}
 
 cp -a libmng-${VER} libmng-${VER}-32
 
 pushd libmng-${VER}
-
-sed -i "s:#include <jpeg:#include <stdio.h>\n&:" libmng_types.h
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
@@ -23,8 +21,6 @@ pushd libmng-${VER}-32
 export CC="gcc -m32"
 export CXX="g++ -m32"
 export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
-
-sed -i "s:#include <jpeg:#include <stdio.h>\n&:" libmng_types.h
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
