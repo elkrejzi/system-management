@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.2.2
+export VER=0.2.3
 export DEST=/binary/rpcbind-${VER}
 
 pushd rpcbind-${VER}

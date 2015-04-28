@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.8.3
+export VER=0.9.0
 export DEST=/binary/mpv-${VER}
 
 pushd mpv-${VER}
@@ -12,7 +12,6 @@ CC=clang CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong 
                 --confdir=/etc/mpv \
                 --lua=52           \
                 --enable-cdda      \
-                --enable-joystick  \
                 --enable-openal    \
                 --enable-sdl2      \
                 --enable-libmpv-shared
