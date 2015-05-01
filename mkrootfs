@@ -1,0 +1,669 @@
+#!/bin/bash
+
+export LFS=/mnt/lfs
+export LFSVER=7.7-systemd
+export LFSCODE=Krejzi
+
+umask 022
+
+install -dm755 ${LFS}/{boot,dev,home,media,mnt,opt,proc,srv,sys}
+install -dm755 ${LFS}/etc/{ld.so.conf.d,opt,profile.d} ${LFS}/run/lock
+
+install -dm755 ${LFS}/{,usr/}{bin,lib,lib32,sbin}
+install -dm755 ${LFS}/usr/local/{bin,lib,sbin}
+
+install -dm755 ${LFS}/usr/{,local/}{include,libexec,src}
+install -dm755 ${LFS}/usr/{,local/}share/{color,dict,doc,info,locale,misc}
+install -dm755 ${LFS}/usr/{,local/}share/man/man{1..8}
+
+install -dm755 ${LFS}/var/{cache,local,log,mail,opt,spool}
+install -dm755 ${LFS}/var/lib/{color,locate,misc}
+
+ln -sf lib ${LFS}/lib64
+
+ln -sf ../run ${LFS}/var/run
+ln -sf ../run/lock ${LFS}/var/lock
+
+install -dm1777 ${LFS}/tmp ${LFS}/var/tmp
+install -dm750 ${LFS}/root
+
+cat > ${LFS}/etc/crypttab << "EOF"
+# Begin /etc/crypttab
+#
+# Each mapped device will be created in /dev/mapper, so your /etc/fstab
+# should use the /dev/mapper/<name> paths for encrypted devices.
+#
+# <name>       <device>         <password>              <options>
+
+
+
+# End /etc/crypttab
+EOF
+
+cat > ${LFS}/etc/fstab << "EOF"
+# Begin /etc/fstab
+#
+# <file system> <dir>   <type>  <options>       <dump>  <pass>
+
+
+
+# End /etc/fstab
+EOF
+
+cat > ${LFS}/etc/group << "EOF"
+root:x:0:
+bin:x:1:daemon
+sys:x:2:
+kmem:x:3:
+tape:x:4:
+tty:x:5:
+daemon:x:6:
+floppy:x:7:
+disk:x:8:
+lp:x:9:
+dialout:x:10:
+audio:x:11:
+video:x:12:
+utmp:x:13:
+usb:x:14:
+cdrom:x:15:
+adm:x:16:
+messagebus:x:18:
+systemd-journal:x:23:
+input:x:24:
+mail:x:34:
+systemd-bus-proxy:x:72:
+systemd-journal-gateway:x:73:
+systemd-journal-remote:x:74:
+systemd-journal-upload:x:75:
+systemd-network:x:76:
+systemd-resolve:x:77:
+systemd-timesync:x:78:
+nogroup:x:99:
+users:x:999:
+EOF
+
+cat > ${LFS}/etc/host.conf << "EOF"
+# Begin /etc/host.conf
+
+order hosts,bind
+multi on
+
+# End /etc/host.conf
+EOF
+
+cat > ${LFS}/etc/hosts << "EOF"
+# Begin /etc/hosts
+
+127.0.0.1	localhost	localhost.localdomain
+::1		localhost	localhost.localdomain
+
+# End /etc/hosts
+EOF
+
+cat > ${LFS}/etc/issue << "EOF"
+Linux From Scratch \n \l
+EOF
+
+cat > ${LFS}/etc/ld.so.conf << "EOF"
+# Begin /etc/ld.so.conf
+
+include /etc/ld.so.conf.d/*.conf
+
+# End /etc/ld.so.conf
+EOF
+
+cat > ${LFS}/etc/lfs-release << EOF
+${LFSVER}
+EOF
+
+cat > ${LFS}/etc/lsb-release << EOF
+DISTRIB_ID="Linux From Scratch"
+DISTRIB_RELEASE="${LFSVER}"
+DISTRIB_CODENAME="${LFSCODE}"
+DISTRIB_DESCRIPTION="Linux From Scratch"
+EOF
+
+cat > ${LFS}/etc/nsswitch.conf << "EOF"
+# Begin /etc/nsswitch.conf
+
+passwd: files
+group: files
+shadow: files
+
+publickey: files
+
+hosts: files dns myhostname
+networks: files
+
+protocols: files
+services: files
+ethers: files
+rpc: files
+
+netgroup: files
+
+# End /etc/nsswitch.conf
+EOF
+
+cat > ${LFS}/etc/os-release << "EOF"
+NAME="Linux From Scratch"
+ID=lfs
+PRETTY_NAME="Linux From Scratch"
+EOF
+
+cat > ${LFS}/etc/passwd << "EOF"
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/dev/null:/bin/false
+daemon:x:6:6:Daemon User:/dev/null:/bin/false
+lp:x:9:9:Print Service User:/var/spool/cups:/bin/false
+messagebus:x:18:18:D-Bus Message Daemon User:/var/run/dbus:/bin/false
+systemd-bus-proxy:x:72:72:systemd Bus Proxy:/:/bin/false
+systemd-journal-gateway:x:73:73:systemd Journal Gateway:/:/bin/false
+systemd-journal-remote:x:74:74:systemd Journal Remote:/:/bin/false
+systemd-journal-upload:x:75:75:systemd Journal Upload:/:/bin/false
+systemd-network:x:76:76:systemd Network Management:/:/bin/false
+systemd-resolve:x:77:77:systemd Resolver:/:/bin/false
+systemd-timesync:x:78:78:systemd Time Synchronization:/:/bin/false
+nobody:x:99:99:Unprivileged User:/dev/null:/bin/false
+EOF
+
+cat > ${LFS}/etc/profile << "EOF"
+# Begin /etc/profile
+
+if [ "`id -u`" -eq 0 ]; then
+  PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+else
+  PATH="/usr/local/bin:/usr/bin:/bin"
+fi
+export PATH
+
+if [ "$PS1" ]; then
+  if [ "$BASH" ]; then
+    # The file bash.bashrc already sets the default PS1.
+    # PS1='\h:\w\$ '
+    if [ -f /etc/bash.bashrc ]; then
+      . /etc/bash.bashrc
+    fi
+  else
+    if [ "`id -u`" -eq 0 ]; then
+      PS1='# '
+    else
+      PS1='$ '
+    fi
+  fi
+fi
+
+if [ -d /etc/profile.d ]; then
+  for i in /etc/profile.d/*.sh; do
+    if [ -r $i ]; then
+      . $i
+    fi
+  done
+  unset i
+fi
+
+# End /etc/profile
+EOF
+
+cat > ${LFS}/etc/securetty << "EOF"
+# Begin /etc/securetty
+
+console
+
+# Local X displays (allows empty passwords with pam_unix's nullok_secure)
+:0
+:0.0
+:0.1
+:1
+:1.0
+:1.1
+:2
+:2.0
+:2.1
+:3
+:3.0
+:3.1
+#...
+
+
+# ==========================================================
+#
+# TTYs sorted by major number according to Documentation/devices.txt
+#
+# ==========================================================
+
+# Virtual consoles
+tty1
+tty2
+tty3
+tty4
+tty5
+tty6
+tty7
+tty8
+tty9
+tty10
+tty11
+tty12
+tty13
+tty14
+tty15
+tty16
+tty17
+tty18
+tty19
+tty20
+tty21
+tty22
+tty23
+tty24
+tty25
+tty26
+tty27
+tty28
+tty29
+tty30
+tty31
+tty32
+tty33
+tty34
+tty35
+tty36
+tty37
+tty38
+tty39
+tty40
+tty41
+tty42
+tty43
+tty44
+tty45
+tty46
+tty47
+tty48
+tty49
+tty50
+tty51
+tty52
+tty53
+tty54
+tty55
+tty56
+tty57
+tty58
+tty59
+tty60
+tty61
+tty62
+tty63
+
+# UART serial ports
+ttyS0
+ttyS1
+ttyS2
+ttyS3
+ttyS4
+ttyS5
+#...ttyS191
+
+# Serial Mux devices	(Linux/PA-RISC only)
+ttyB0
+ttyB1
+#...
+
+# Chase serial card
+ttyH0
+ttyH1
+#...
+
+# Cyclades serial cards
+ttyC0
+ttyC1
+#...ttyC31
+
+# Digiboard serial cards
+ttyD0
+ttyD1
+#...
+
+# Stallion serial cards
+ttyE0
+ttyE1
+#...ttyE255
+
+# Specialix serial cards
+ttyX0
+ttyX1
+#...
+
+# Comtrol Rocketport serial cards
+ttyR0
+ttyR1
+#...
+
+# SDL RISCom serial cards
+ttyL0
+ttyL1
+#...
+
+# Hayes ESP serial card
+ttyP0
+ttyP1
+#...
+
+# Computone IntelliPort II serial card
+ttyF0
+ttyF1
+#...ttyF255
+
+# Specialix IO8+ serial card
+ttyW0
+ttyW1
+#...
+
+# Comtrol VS-1000 serial controller
+ttyV0
+ttyV1
+#...
+
+# ISI serial card
+ttyM0
+ttyM1
+#...
+
+# Technology Concepts serial card
+ttyT0
+ttyT1
+#...
+
+# Specialix RIO serial card
+ttySR0
+ttySR1
+#...ttySR511
+
+# Chase Research AT/PCI-Fast serial card
+ttyCH0
+ttyCH1
+#...ttyCH63
+
+# Moxa Intellio serial card
+ttyMX0
+ttyMX1
+#...ttyMX127
+
+# SmartIO serial card
+ttySI0
+ttySI1
+#...
+
+# USB dongles
+ttyUSB0
+ttyUSB1
+ttyUSB2
+#...
+
+# LinkUp Systems L72xx UARTs
+ttyLU0
+ttyLU1
+ttyLU2
+ttyLU3
+
+# StrongARM builtin serial ports
+ttySA0
+ttySA1
+ttySA2
+
+# SCI serial port (SuperH) ports and SC26xx serial ports
+ttySC0
+ttySC1
+ttySC2
+ttySC3
+
+# ARM "AMBA" serial ports
+ttyAM0
+ttyAM1
+ttyAM2
+ttyAM3
+ttyAM4
+ttyAM5
+ttyAM6
+ttyAM7
+ttyAM8
+ttyAM9
+ttyAM10
+ttyAM11
+ttyAM12
+ttyAM13
+ttyAM14
+ttyAM15
+
+# Embedded ARM AMBA PL011 ports (e.g. emulated by QEMU)
+ttyAMA0
+ttyAMA1
+ttyAMA2
+ttyAMA3
+
+# DataBooster serial ports
+ttyDB0
+ttyDB1
+ttyDB2
+ttyDB3
+ttyDB4
+ttyDB5
+ttyDB6
+ttyDB7
+
+# SGI Altix console ports
+ttySG0
+
+# Motorola i.MX ports
+ttySMX0
+ttySMX1
+ttySMX2
+
+# Marvell MPSC ports
+ttyMM0
+ttyMM1
+
+# PPC CPM (SCC or SMC) ports
+ttyCPM0
+ttyCPM1
+ttyCPM2
+ttyCPM3
+ttyCPM4
+ttyCPM5
+
+# Altix serial cards
+ttyIOC0
+ttyIOC1
+#...ttyIOC31
+
+# NEC VR4100 series SIU
+ttyVR0
+
+# NEC VR4100 series SSIU
+ttyVR1
+
+# Altix ioc4 serial cards
+ttyIOC84
+ttyIOC85
+#...ttyIOC115
+
+# Altix ioc3 serial cards
+ttySIOC0
+ttySIOC1
+#...ttySIOC31
+
+# PPC PSC ports
+ttyPSC0
+ttyPSC1
+ttyPSC2
+ttyPSC3
+ttyPSC4
+ttyPSC5
+
+# ATMEL serial ports
+ttyAT0
+ttyAT1
+#...ttyAT15
+
+# Hilscher netX serial port
+ttyNX0
+ttyNX1
+#...ttyNX15
+
+# Xilinx uartlite - port
+ttyUL0
+ttyUL1
+ttyUL2
+ttyUL3
+
+# Xen virtual console - port 0
+xvc0
+
+# pmac_zilog - port
+ttyPZ0
+ttyPZ1
+ttyPZ2
+ttyPZ3
+
+# TX39/49 serial port
+ttyTX0
+ttyTX1
+ttyTX2
+ttyTX3
+ttyTX4
+ttyTX5
+ttyTX6
+ttyTX7
+
+# SC26xx serial ports (see SCI serial ports (SuperH))
+
+# MAX3100 serial ports
+ttyMAX0
+ttyMAX1
+ttyMAX2
+ttyMAX3
+
+# OMAP serial ports
+ttyO0
+ttyO1
+ttyO2
+ttyO3
+
+# User space serial ports
+ttyU0
+ttyU1
+
+# A2232 serial card
+ttyY0
+ttyY1
+
+# IBM 3270 terminal Unix tty access
+3270/tty1
+3270/tty2
+#...
+
+# IBM iSeries/pSeries virtual console
+hvc0
+hvc1
+#...
+#IBM pSeries console ports
+hvsi0
+hvsi1
+hvsi2
+
+# Equinox SST multi-port serial boards
+ttyEQ0
+ttyEQ1
+#...ttyEQ1027
+
+# ==========================================================
+#
+# Not in Documentation/Devices.txt
+#
+# ==========================================================
+
+# Embedded Freescale i.MX ports
+ttymxc0
+ttymxc1
+ttymxc2
+ttymxc3
+ttymxc4
+ttymxc5
+
+# Serial Console for MIPS Swarm
+duart0
+duart1
+
+# s390 and s390x ports in LPAR mode
+ttysclp0
+
+# End /etc/securetty
+EOF
+
+cat > ${LFS}/etc/shells << "EOF"
+# Begin /etc/shells
+
+/bin/sh
+/bin/bash
+
+# End /etc/shells
+EOF
+
+cat > ${LFS}/root/.bashrc << "EOF"
+# Begin ~/.bashrc
+
+# You may uncomment the following lines if you want `ls' to be colorized:
+# export LS_OPTIONS='--color=auto'
+# eval "`dircolors`"
+# alias ls='ls $LS_OPTIONS'
+# alias ll='ls $LS_OPTIONS -l'
+# alias l='ls $LS_OPTIONS -lA'
+#
+# Some more alias to avoid making mistakes:
+# alias rm='rm -i'
+# alias cp='cp -i'
+# alias mv='mv -i'
+
+# End ~/.bashrc
+EOF
+
+cat > ${LFS}/root/.profile << "EOF"
+# Begin ~/.profile
+
+if [ "$BASH" ]; then
+  if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+  fi
+fi
+
+# End ~/.profile
+EOF
+
+ln -sf /proc/self/mounts ${LFS}/etc/mtab
+
+chmod 600 ${LFS}/etc/crypttab
+chmod 640 ${LFS}/root/.bashrc ${LFS}/root/.profile
+
+touch ${LFS}/var/log/{btmp,lastlog,wtmp}
+
+chgrp 13 ${LFS}/var/log/lastlog
+chmod 664 ${LFS}/var/log/lastlog
+chmod 600 ${LFS}/var/log/btmp
+
+mknod -m 600 ${LFS}/dev/console c 5 1
+mknod -m 666 ${LFS}/dev/null c 1 3
+
+ln -sf /tools/bin/{bash,cat,echo,pwd,stty} ${LFS}/bin
+ln -sf /tools/bin/perl ${LFS}/usr/bin
+
+ln -sf /tools/lib/libgcc_s.so ${LFS}/usr/lib
+ln -sf /tools/lib/libgcc_s.so.1 ${LFS}/lib
+
+ln -sf /tools/lib/libstdc++.so{,.6} ${LFS}/usr/lib
+ln -sf /tools/lib32/libgcc_s.so{,.1} ${LFS}/usr/lib32
+ln -sf /tools/lib32/libstdc++.so{,.6} ${LFS}/usr/lib32
+
+ln -sf bash ${LFS}/bin/sh

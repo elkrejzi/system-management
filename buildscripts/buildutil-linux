@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.26.1
+export VER=2.26.2
 export DEST=/binary/util-linux-${VER}
 
 cp -a util-linux-${VER} util-linux-${VER}-32
