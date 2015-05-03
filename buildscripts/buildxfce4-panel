@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.11.1
+export VER=4.12.0
 export DEST=/binary/xfce4-panel-${VER}
 
 pushd xfce4-panel-${VER}

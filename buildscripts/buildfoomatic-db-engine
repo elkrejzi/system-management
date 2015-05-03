@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.0.12
+export VER=4.0-20150415
 export DEST=/binary/foomatic-db-engine-${VER}
 
 pushd foomatic-db-engine-${VER}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.4
+export VER=4.5
 export DEST=/binary/run-parts-${VER}
 
 pushd debianutils-${VER}

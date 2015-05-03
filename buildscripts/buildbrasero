@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.12.0
+export VER=3.12.1
 export DEST=/binary/brasero-${VER}
 
 pushd brasero-${VER}

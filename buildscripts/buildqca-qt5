@@ -6,6 +6,7 @@ export DEST=/binary/qca-qt5-${VER}
 pushd qca-qt5-${VER}
 
 sed -i "/BSD_SOURCE/d" CMakeLists.txt
+sed -i "/qca_core.h/a #include <QIODevice>" include/QtCrypto/qca_basic.h
 
 cmake -DCMAKE_INSTALL_PREFIX=/usr   \
       -DCMAKE_BUILD_TYPE=Release    \

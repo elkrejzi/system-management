@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.6.4
+export VER=0.6.5
 export DEST=/binary/libssh-${VER}
 
 sed -i "s: -pedantic-errors::g" libssh-${VER}/cmake/Modules/DefineCompilerFlags.cmake

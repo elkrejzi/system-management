@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=15.03.97-21-g78e4e57
+export VER=15.03.97-23-ge7810c0
 export DEST=/binary/gwenview-${VER}
 
 pushd gwenview-${VER}

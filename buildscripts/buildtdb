@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.3.4
+export VER=1.3.5
 export DEST=/binary/tdb-${VER}
 
 cp -a tdb-${VER} tdb-${VER}-32

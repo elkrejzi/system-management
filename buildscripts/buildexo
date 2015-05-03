@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.10.2
+export VER=0.10.4
 export DEST=/binary/exo-${VER}
 
 pushd exo-${VER}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.1.30
+export VER=0.1.31
 export DEST=/binary/tumbler-${VER}
 
 pushd tumbler-${VER}

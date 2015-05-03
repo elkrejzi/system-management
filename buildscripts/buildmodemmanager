@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.4.6
+export VER=1.4.8
 export DEST=/binary/ModemManager-${VER}
 
 pushd ModemManager-${VER}

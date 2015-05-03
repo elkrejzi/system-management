@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.4.2.2
+export VER=4.4.3.2
 export DEST=/binary/libreoffice-${VER}
 
 pushd libreoffice-${VER}

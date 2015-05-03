@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.19.1
+export VER=4.0
 export DEST=/binary/btrfs-progs-${VER}
 
 pushd btrfs-progs-v${VER}
@@ -14,9 +14,11 @@ popd
 
 rm -rf btrfs-progs-v${VER}
 
-rm -rf ${DEST}/usr/lib/libbtrfs.a ${DEST}/usr/share/man/man8/btrfsck.8.gz
+rm -rf ${DEST}/usr/lib/libbtrfs.a ${DEST}/usr/share/man/man8/{btrfsck,btrfs-zero-log}.8.gz
 
 ln -sf btrfs-check.8 ${DEST}/usr/share/man/man8/btrfsck.8
+ln -sf btrfs-rescue.8 ${DEST}/usr/share/man/man8/btrfs-zero-log.8
+
 gzip -d ${DEST}/usr/share/man/*/*.gz
 
 install -dm755 ${DEST}/lib

@@ -11,7 +11,7 @@ CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -fPIC"   
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -fPIC" \
 ./configure --prefix=/usr
 
-make -j4
+make LC_ALL=en_US -j4
 make install DESTDIR=${DEST}
 
 popd

@@ -1,13 +1,15 @@
 #!/bin/bash -e
 
-export VER=1.1.8
+export VER=1.1.9
 export DEST=/binary/libmtp-${VER}
 
 pushd libmtp-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr --disable-static
+./configure --prefix=/usr    \
+            --disable-static \
+            --with-udev=/lib/udev
 
 make -j4
 make install DESTDIR=${DEST}
@@ -17,8 +19,6 @@ popd
 rm -rf libmtp-${VER}
 
 find ${DEST} -name "*.la" -delete
-
-sed -i "/^Unable to open/d" ${DEST}/lib/udev/rules.d/69-libmtp.rules
 
 pushd ${DEST}
 
@@ -36,6 +36,8 @@ cat > ${DEST}/INSTALL << "EOF"
 for dir in usr/include usr/lib ; do cp -rf --remove-destination $dir /usr ; done
 
 cp -rf --remove-destination lib /
+
+udevadm hwdb --update
 
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF

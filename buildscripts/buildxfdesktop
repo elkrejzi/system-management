@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.11.8
+export VER=4.12.1
 export DEST=/binary/xfdesktop-${VER}
 
 pushd xfdesktop-${VER}

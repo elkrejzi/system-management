@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.11.3
+export VER=4.12.0
 export DEST=/binary/xfce4-settings-${VER}
 
 pushd xfce4-settings-${VER}

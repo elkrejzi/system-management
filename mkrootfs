@@ -103,6 +103,7 @@ EOF
 
 cat > ${LFS}/etc/issue << "EOF"
 Linux From Scratch \n \l
+
 EOF
 
 cat > ${LFS}/etc/ld.so.conf << "EOF"

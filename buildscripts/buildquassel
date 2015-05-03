@@ -5,6 +5,8 @@ export DEST=/binary/quassel-${VER}
 
 pushd quassel-${VER}
 
+patch -Np1 -i /media/ntfs/Other/Linux/patches/quassel-qt55.patch
+
 cmake -DCMAKE_INSTALL_PREFIX=/usr \
       -DCMAKE_BUILD_TYPE=Release  \
       -DUSE_QT5=ON                \

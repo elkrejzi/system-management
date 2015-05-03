@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=8.36
+export VER=8.37
 export DEST=/binary/pcre-${VER}
 
 cp -a pcre-${VER} pcre-${VER}-32

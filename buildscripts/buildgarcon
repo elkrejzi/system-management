@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.3.0
+export VER=0.5.0
 export DEST=/binary/garcon-${VER}
 
 pushd garcon-${VER}

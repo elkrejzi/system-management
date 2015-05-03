@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.0.5
+export VER=3.0.4
 export DEST=/binary/swig-${VER}
 
 pushd swig-${VER}

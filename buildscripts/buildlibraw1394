@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.1.0
+export VER=2.1.1
 export DEST=/binary/libraw1394-${VER}
 
 pushd libraw1394-${VER}

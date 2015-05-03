@@ -32,14 +32,14 @@ patch -Np1 -i /media/ntfs/Other/Linux/patches/qt5-gcc5.patch
             -opensource         \
             -dbus-linked        \
             -openssl-linked     \
+            -gstreamer 1.0      \
             -journald           \
             -system-harfbuzz    \
             -system-sqlite      \
             -nomake examples    \
             -no-rpath           \
             -optimized-qmake    \
-            -no-use-gold-linker \
-            -skip qtwebengine
+            -no-use-gold-linker
 
 make -j4
 
