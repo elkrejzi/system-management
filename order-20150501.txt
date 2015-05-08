@@ -1,0 +1,954 @@
+# Begin Fri May  1 10:56:52 UTC 2015
+
+linux-api-headers-4.0.1
+glibc-2.21 32 and 64 bit + separate debug info
+tzdata-2015d
+zlib-1.2.8 32 and 64 bit
+file-5.22
+m4-1.4.17
+bison-3.0.4
+flex-2.5.39
+attr-2.4.47 32 and 64 bit
+acl-2.2.52 32 and 64 bit
+sed-4.2.2
+binutils-2.25 with ld.gold + separate debug info
+gmp-6.0.0a 32 and 64 bit + separate debug info
+mpfr-3.1.2 + separate debug info
+mpc-1.0.3 + separate debug info
+gcc-5.1.0 32 and 64 bit + separate debug info
+pkg-config-0.28
+ncurses-5.9-20150425 32 and 64 bit, widec soname 6, widec soname 5, non widec soname 5
+util-linux-2.26.2 32 and 64 bit
+e2fsprogs-1.42.12 32 and 64 bit
+procps-ng-3.3.10 32 and 64 bit
+bzip2-1.0.6 32 and 64 bit
+readline-6.3 patchlevel 8 32 and 64 bit
+xz-5.2.1 32 and 64 bit
+bc-1.06.95
+psmisc-22.21
+cracklib-2.9.4
+tcl-8.6.4 without bundled SQLite module
+db-6.1.23 with SQL, STL and TCL libraries
+Linux-PAM-1.2.0
+libcap-2.24 32 and 64 bit, with PAM module
+shadow-4.2.1
+expat-2.1.0 32 and 64 bit
+gdbm-1.11 32 and 64 bit
+libffi-3.2.1 32 and 64 bit
+libtool-2.4.6 32 and 64 bit
+openssl-1.0.2a 32 and 64 bit + separate debug info
+pcre-8.37 32 and 64 bit
+sqlite-3.8.9 32 and 64 bit, with TCL module
+coreutils-8.23 with OpenSSL support
+grep-2.21 with PCRE support
+bash-4.3 patchlevel 33
+hostname-3.15 (from Debian)
+run-parts-4.5 (from Debian - debianutils-4.4)
+which-2.21 (the binary)
+perl-5.20.2
+Python-2.7.9
+Python-3.4.3
+autoconf-2.69
+automake-1.15
+diffutils-3.3
+findutils-4.4.2
+gawk-4.1.2
+gperf-3.0.4
+groff-1.22.3
+gzip-1.6
+make-4.1
+patch-2.7.1
+tar-1.28
+texinfo-5.2
+check-0.9.14
+iptables-1.4.21
+libpipeline-1.4.0
+iproute2-4.0.0
+kbd-2.0.2
+kmod-20
+less-471
+man-db-2.7.1
+nano-2.4.1
+unzip-6.0
+zip-3.0
+perl-xml-parser-2.44
+perl-xml-namespacesupport-1.11
+perl-xml-sax-base-1.08
+perl-xml-sax-0.99
+perl-xml-sax-expat-0.51
+perl-xml-simple-2.20
+perl-archive-zip-1.46
+perl-error-0.17023
+perl-sgmls-1.1
+perl-uri-1.67
+icu-55.1 32 and 64 bit
+libidn-1.30 32 and 64 bit
+libunistring-0.9.5 32 and 64 bit
+libxml2-2.9.2 32 and 64 bit
+libxslt-1.1.28 32 and 64 bit
+boost-1.58.0
+lua-5.2.4
+highlight-3.22
+wget-1.16.3
+ca-certificates-20141019
+docbook-xml-4.5
+docbook-xsl-1.78.1
+intltool-0.51.0
+itstool-2.0.2
+xmlto-0.0.26
+sgml-common-0.6.3
+docbook-4.5
+docbook-dsssl-1.79
+OpenSP-1.5.2
+openjade-1.3.2
+docbook-utils-0.6.14
+glib-2.44.0 32 and 64 bit + separate debug info
+libcroco-0.6.8 32 and 64 bit
+gettext-0.19.4 32 and 64 bit
+rarian-0.8.1
+gnome-doc-utils-0.20.10
+gtk-doc-1.21
+python-setuptools-15.2 Python 2 and Python 3 Modules
+python-alabaster-0.7.3 Python 2 and Python 3 Modules
+python-beaker-1.7.0 Python 2 and Python 3 Modules
+python-cssselect-0.9.1 Python 2 and Python 3 Modules
+python-markupsafe-0.23 Python 2 and Python 3 Modules
+python-pygments-2.0.2 Python 2 and Python 3 Modules
+python-pytz-2015.2 Python 2 and Python 3 Modules
+python-pyxdg-0.25 Python 2 and Python 3 Module
+python-six-1.9.0 Python 2 and Python 3 Modules
+python-snowballstemmer-1.2.0 Python 2 and Python 3 Modules
+python-babel-1.3 Python 2 and Python 3 Modules
+python-docutils-0.12 Python 2 and Python 3 Modules
+python-jinja2-2.7.3 Python 2 and Python 3 Modules
+python-lxml-3.4.4 Python 2 and Python 3 Modules
+python-mako-1.0.1 Python 2 and Python 3 Modules
+python-sphinx-1.3.1 Python 2 and Python 3 Modules
+python-sphinx_rtd_theme-0.1.7 Python 2 and Python 3 Modules
+elfutils-0.161 32 and 64 bit
+gobject-introspection-1.44.0 + separate debug info
+libaio-0.3.110 32 and 64 bit
+libcap-ng-0.7.4
+libgpg-error-1.19 32 and 64 bit
+libssh2-1.5.0 32 and 64 bit
+libtasn1-4.5 32 and 64 bit
+lzo-2.09
+nettle-3.1.1 32 and 64 bit
+p11-kit-0.23.1 32 and 64 bit
+popt-1.16
+rtmpdump-2.4+git79459a2 32 and 64 bit
+vala-0.28.0 + separate debug info
+curl-7.42.1 32 and 64 bit
+gnutls-3.4.0 32 and 64 bit
+libarchive-3.1.2
+libgcrypt-1.6.3 32 and 64 bit
+systemd-219 32 and 64 bit + separate debug info
+LVM2-2.02.118
+cryptsetup-1.6.7
+
+Rebuild systemd-219 with cryptsetup support
+Rebuild util-linux-2.26.2 with libcap-ng, PAM, Python and UDev support
+
+iana-etc-2.30
+man-pages-3.83
+libusb-1.0.19
+libusb-compat-0.1.5
+cmake-3.2.2
+htop-1.0.3
+pciutils-3.3.1
+usbutils-008
+nasm-2.11.08
+yasm-1.3.0
+libpng-1.6.17 32 and 64 bit
+freetype-2.5.5 32 and 64 bit
+fontconfig-2.11.93 32 and 64 bit
+pixman-0.32.6 32 and 64 bit
+wayland-1.7.0 32 and 64 bit + separate debug info
+
+# Begin Xorg Chapter
+
+# First script
+Xorg Protocol Headers
+xcb-proto-1.11
+xtrans-1.3.5
+
+# Second script
+makedepend-1.0.5
+util-macros-1.19.0
+
+# Third script
+libXau-1.0.8 32 and 64 bit
+libXdmcp-1.1.2 32 and 64 bit
+libxcb-1.11 32 and 64 bit
+Xorg Libraries 32 and 64 bit, without xtrans-1.3.5 (built earlier)
+
+# Fourth script
+xcb-util-0.4.0
+xcb-util-image-0.4.0
+xcb-util-keysyms-0.3.9
+xcb-util-renderutil-0.3.9
+xcb-util-wm-0.4.1
+
+# End Xorg Chapter (for now)
+
+dbus-1.8.16 32 and 64 bit
+dbus-glib-0.104
+dbus-python-1.2.0 Python 2 and Python 3 Modules
+intel-ucode-20150121
+lsb-release-1.4
+fuse-2.9.3
+ntfs-3g_ntfsprogs-2015.3.14
+linux-4.0.1-krejzi with linux-headers-4.0.1-krejzi and linux-tools-4.0.1
+syslinux-6.03
+libatomic_ops-7.4.2
+gc-7.4.2
+guile-2.0.11
+nspr-4.10.8 32 and 64 bit
+nss-3.18.1 32 and 64 bit
+mozjs-17.0.0
+llvm-3.6.0 32 and 64 bit, with clang, clang-tools-extra, compiler-rt
+tk-8.6.4
+yaml-0.1.6
+ruby-2.2.2
+libical-1.0.1
+bluez-5.30
+
+Rebuild Python-2.7.9 with BlueZ and Tk support
+Rebuild Python-3.4.3 with BlueZ and Tk support
+
+firebird-2.5.4.26856
+mysql-5.6.24
+postgresql-9.4.1
+unixODBC-2.3.2
+cyrus-sasl-2.1.26
+openldap-2.4.40 32 and 64 bit
+krb5-1.13.1 32 and 64 bit
+
+Rebuild curl-7.42.1 with GSSAPI and LDAP support
+Rebuild cyrus-sasl-2.1.26 with GSSAPI and LDAP support
+Rebuild postgresql-9.4.1 with GSSAPI and LDAP support
+
+libclc-236324
+libdrm-2.4.60 32 and 64 bit + separate debug info
+libomxil-bellagio-0.9.3 32 and 64 bit
+libva-1.5.1 32 and 64 bit
+libvdpau-1.1 32 and 64 bit
+opencl-headers-1.2.20140412
+ocl-icd-2.2.3 32 and 64 bit
+mesa-10.5.4 32 and 64 bit + separate debug info
+glu-9.0.0 32 and 64 bit
+freeglut-3.0.0 32 and 64 bit
+libjpeg-turbo-1.4.0 32 and 64 bit
+libtiff-4.0.3 32 and 64 bit
+jasper-1.900.1 32 and 64 bit
+giflib-5.1.1 32 and 64 bit
+lcms-1.19 32 and 64 bit
+lcms2-2.7 32 and 64 bit
+libmng-2.0.3 32 and 64 bit
+libmad-0.15.1b
+libid3tag-0.15.1b
+imlib2-1.4.7
+w3m-0.5.3
+xdg-utils-1.1.0-rc3
+libdaemon-0.14
+libgusb-0.2.3
+polkit-0.112
+colord-1.2.10
+avahi-0.6.31
+cups-2.0.2 32 and 64 bit
+cairo-1.14.2 32 and 64 bit + separate debug info
+graphite2-1.2.4 32 and 64 bit
+harfbuzz-0.9.40 32 and 64 bit + separate debug info
+
+Rebuild freetype-2.5.5 with Harfbuzz support
+Rebuild libva-1.5.1 with EGL and GLX support
+
+pango-1.36.8 32 and 64 bit + separate debug info
+gdk-pixbuf-2.31.3 32 and 64 bit + separate debug info
+atk-2.16.0 32 and 64 bit + separate debug info
+at-spi2-core-2.16.0 + separate debug info
+at-spi2-atk-2.16.0 + separate debug info
+json-glib-1.0.4
+libxkbcommon-0.5.0
+libevdev-1.4.2
+mtdev-1.1.5
+libepoxy-1.2
+libinput-0.14.1
+libunwind-1.1
+gtk+-2.24.27 32 and 64 bit + separate debug info
+gtk+-3.16.2 + separate debug info
+
+# Begin Xorg Chapter (again)
+
+xbitmaps-1.1.1
+
+# Fifth script
+Xorg Applications
+
+font-util-1.3.1 (from Xorg Fonts)
+xcursor-themes-1.0.4
+xkeyboard-config-2.14
+
+# Sixth script
+xorg-server-1.17.1 + separate debug info
+
+xf86-input-evdev-2.9.2 + separate debug info
+xf86-input-synaptics-1.8.2 + separate debug info
+xf86-video-intel-2.99.917 + separate debug info
+
+# End Xorg Chapter (again)
+
+fftw-3.3.4
+GConf-3.2.6
+talloc-2.1.2
+tdb-1.3.5 32 and 64 bit
+tevent-0.9.24
+ldb-1.1.20
+jansson-2.7
+libmbim-1.12.2
+libndp-1.5
+libnl-3.2.25
+libpcap-1.7.3
+libqmi-1.12.6
+libsoup-2.50.0
+slang-2.3.0
+swig-3.0.4
+libteam-1.17
+newt-0.52.18
+bind-9.10.2 + separate debug info
+dhcp-4.3.2
+ModemManager-1.4.8
+ppp-2.4.7
+wpa_supplicant-2.4
+NetworkManager-1.0.0
+json-c-0.12 32 and 64 bit
+libasyncns-0.8 32 and 64 bit
+orc-0.4.23 32 and 64 bit
+alsa-lib-1.0.29 32 and 64 bit
+libogg-1.3.2 32 and 64 bit
+libvorbis-1.3.5 32 and 64 bit
+libtheora-1.1.1 32 and 64 bit
+cdparanoia-III-10.2 32 and 64 bit
+libvisual-0.4.0 32 and 64 bit
+flac-1.3.0 32 and 64 bit
+speex-1.2rc2 32 and 64 bit
+speexdsp-1.2rc3 32 and 64 bit
+libsndfile-1.0.25 32 and 64 bit
+libsamplerate-0.1.8 32 and 64 bit
+gsm-1.0.13 32 and 64 bit
+celt-0.11.3
+opus-1.1
+sbc-1.3
+webrtc-audio-processing-0.1
+eigen-2.0.17
+eigen-3.2.4
+jack-1.9.10 32 and 64 bit
+pulseaudio-6.0 32 and 64 bit
+portaudio-v19_20140130 32 and 64 bit
+openal-soft-1.16.0 32 and 64 bit
+SDL-1.2.15 32 and 64 bit
+SDL2-2.0.3 32 and 64 bit
+mpg123-1.22.1 32 and 64 bit
+geoclue-0.12.99
+iso-codes-3.57
+libproxy-0.4.11
+gstreamer-0.10.36 32 and 64 bit
+gstreamer-1.4.5
+gst-plugins-base-0.10.36 32 and 64 bit
+gst-plugins-base-1.4.5
+libglade-2.6.4
+librsvg-2.40.9
+py2cairo-1.10.0 Python 2 Module
+pycairo-1.10.0 Python 3 Module
+pygobject-2.28.6 Python 2 Module
+pygobject-3.16.0 Python 2 and Python 3 Modules
+pygtk-2.24.0 Python 2 Module
+aspell-0.60.6.1
+hunspell-1.3.3
+enchant-1.6.0
+geoclue-2.2.0
+libevent-2.0.22
+libnotify-0.7.6
+libsecret-0.18.2
+libvpx-1.4.0
+libwebp-0.4.3
+startup-notification-0.12
+wireless_tools-30pre9
+aspell-en-7.1.0
+aspell-hr-0.51.0
+hunspell-en-us-20070829
+hunspell-hr-20060617
+dmz-cursor-theme-0.4.3
+hicolor-icon-theme-0.15
+icon-naming-utils-0.8.90
+mime-types-9
+cantarell-fonts-0.0.16
+fonts-baekmuk-2.2
+fonts-cm-unicode-0.7.0
+fonts-dejavu-2.34
+fonts-freefont-20120503
+fonts-gentiumbasic-1.1
+fonts-gentiumplus-1.508
+fonts-liberation-2.00.1
+fonts-opendesktop-1.4.2
+dconf-0.24.0
+gsettings-desktop-schemas-3.16.1
+glib-networking-2.44.0
+adwaita-icon-theme-3.16.0
+gnome-icon-theme-3.12.0
+gnome-icon-theme-extras-3.12.0
+gnome-icon-theme-symbolic-3.12.0
+gnome-themes-standard-3.16.0
+desktop-file-utils-0.22
+shared-mime-info-1.4
+qt-4.8.6 32 and 64 bit
+qt-5.5.0-alpha1-11-gc38d3b2
+qtchooser-39
+webkitgtk-2.4.8
+webkitgtk-2.8.1
+samba-4.2.1
+
+Rebuild avahi-0.6.31 with GTK+2, GTK+3, Qt4 and Python support
+Rebuild cmake-3.2.2 with Qt4 GUI
+Rebuild highlight-3.22 with Qt4 GUI
+Rebuild wpa_supplicant-2.4 with Qt4 GUI
+
+djvulibre-3.5.27
+exiv2-0.24
+fribidi-0.19.6
+ijs-0.35
+ilmbase-2.2.0
+libexif-0.6.21
+libgd-2.1.1
+liblqr-0.4.2
+libraw-0.16.0
+minizip-1.2.8
+openjpeg-1.5.2
+openjpeg-2.1.0
+recode-3.6
+enca-1.16
+ghostscript-9.16
+libgphoto2-2.5.7
+openexr-2.2.0
+poppler-0.32.0
+graphviz-2.38.0
+ImageMagick-6.9.1-2
+libcddb-1.3.2
+libdvdread-5.0.3
+libebml-1.3.1
+libquvi-scripts-0.9.20131130
+libraw1394-2.1.1
+v4l-utils-1.6.2 32 and 64 bit
+a52dec-0.7.4
+aalib-1.4rc5
+dirac-1.0.2
+faac-1.28
+faad2-2.7
+fdk-aac-0.1.4
+game-music-emu-0.6.0
+id3lib-3.8.3
+ladspa-1.13
+lame-3.99.5
+libaacplus-2.0.2
+libaacs-0.8.1
+libao-1.2.0
+libass-0.12.1
+libavc1394-0.5.4
+libbluray-0.8.0
+libbs2b-3.1.0
+libcaca-0.99.beta19
+libcanberra-0.30 32 and 64 bit
+libcdio-0.93
+libdc1394-2.2.3
+libdca-0.0.5
+libdiscid-0.6.1
+libdv-1.0.0
+libdvbpsi-1.2.0
+libdvdcss-1.3.0
+libdvdnav-5.0.3
+libguess-1.2
+libiec61883-1.2.0
+libiptcdata-1.0.4
+libkate-0.4.1
+libmatroska-1.4.2
+libmimic-1.0.4
+libmms-0.6.4
+libmodplug-0.8.8.5
+libmpcdec-1.2.6
+libmpeg2-0.5.1
+libmtp-1.1.9
+libofa-0.9.3
+libquvi-0.9.4
+libshout-2.3.1
+libssh-0.6.5
+libtar-1.2.20
+libupnp-1.6.19
+live-media-2015.04.22
+neon-0.30.1
+opencore-amr-0.1.3
+schroedinger-1.0.11
+SDL_image-1.2.12
+soundtouch-1.8.0 32 and 64 bit
+taglib-1.9.1
+twolame-0.3.13
+vo-aacenc-0.1.3
+vo-amrwbenc-0.1.3
+wavpack-4.70.0
+wildmidi-0.3.8
+x264-20141218
+x265-1.6
+xvidcore-1.3.3
+zbar-0.10
+zvbi-0.2.35
+libcdio-paranoia-10.2+0.93+1
+ffmpeg-2.6.2
+
+Rebuild x264-20141218 with FFMpeg support
+
+chromaprint-1.1
+fluidsynth-1.1.6
+freerdp-1.0.2
+libmusicbrainz-2.1.5
+libmusicbrainz-5.1.0
+libquicktime-1.2.4
+libvncserver-0.9.10
+vcdimager-0.7.24
+mjpegtools-2.1.0
+mpv-0.9.1
+vlc-2.2.1
+gst-plugins-good-0.10.31
+gst-plugins-good-1.4.5
+gst-plugins-bad-0.10.23
+gst-plugins-bad-1.4.5
+gst-plugins-ugly-0.10.19
+gst-plugins-ugly-1.4.5
+gst-ffmpeg-0.10.13
+gst-libav-1.4.5
+gstreamer-vaapi-0.5.10
+cppunit-1.13.2
+glm-0.9.6.3
+mdds-0.12.0
+npapi-sdk-0.27.2
+raptor2-2.0.15
+clucene-core-2.3.3.4
+glew-1.12.0 32 and 64 bit
+hdf5-1.8.14
+hyphen-2.8.8
+libieee1284-0.2.11
+libiodbc-3.52.10
+librevenge-0.0.2
+net-snmp-5.7.3
+rasqal-0.9.33
+libixion-0.9.1
+libwpd-0.10.0
+libabw-0.1.1
+libcdr-0.1.1
+libcmis-0.5.0
+libe-book-0.1.2
+libetonyek-0.1.1
+libexttextcat-3.4.4
+libfreehand-0.1.0
+libgltf-0.0.2
+liblangtag-0.5.6
+libmspub-0.1.2
+libmwaw-0.3.4
+libodfgen-0.1.3
+liborcus-0.7.1
+libpagemaker-0.0.2
+libvisio-0.1.1
+libwpg-0.3.0
+libwps-0.3.1
+lpsolve-5.5.2.0
+mythes-1.2.4
+redland-1.0.17
+sane-backends-1.0.24
+vigra-1.10.0
+
+Rebuild colord-1.2.10 with SANE support
+
+dotconf-1.3
+espeak-1.48.04
+re2c-0.14.2
+ninja-1.5.3
+speech-dispatcher-0.8.2
+libgnome-keyring-3.12.0
+scons-2.3.4
+apr-1.5.1
+apr-util-1.5.4
+httpd-2.4.12
+serf-1.3.8
+git-2.2.0
+subversion-1.8.13
+libassuan-2.2.0
+libksba-1.3.3
+pkcs11-helper-1.11
+pth-2.0.7
+dirmngr-1.1.1
+gnupg-2.0.27
+gpgme-1.5.4
+pinentry-0.9.1
+extra-cmake-modules-5.9.0
+media-player-info-22
+mobile-broadband-provider-info-20120614
+libplist-1.12
+libusbmuxd-1.0.10
+libimobiledevice-1.2.0
+cln-1.3.4
+doxygen-1.8.9.1
+fontforge-20150430
+libatasmart-0.19
+libzip-0.11.2
+lm_sensors-3.3.5
+parted-3.2
+xapian-core-1.2.20
+alsa-plugins-1.0.29 32 and 64 bit
+alsa-utils-1.0.29
+ebook-tools-0.2.2
+ibus-1.5.10
+libdbusmenu-qt-0.9.2 32 and 64 bit, Qt4 version
+libdbusmenu-qt-0.9.3+14.10.20140619 Qt5 versio
+libqalculate-0.9.7
+oxygen-fonts-5.3.0
+phonon-4.8.3 Qt5 version
+phonon-backend-gstreamer-4.8.2 Qt5 version
+phonon-backend-vlc-0.8.2 Qt5 version
+polkit-qt-0.112.0 Qt5 version
+qca-qt5-2.1.0.3 Qt5 version
+udisks-2.1.5
+upower-0.99.2
+weston-1.7.0
+attica-5.9.0
+kapidox-5.9.0
+karchive-5.9.0
+kcodecs-5.9.0
+kconfig-5.9.0
+kcoreaddons-5.9.0
+kdbusaddons-5.9.0
+kdnssd-5.9.0
+kguiaddons-5.9.0
+ki18n-5.9.0
+kidletime-5.9.0
+kimageformats-5.9.0
+kitemmodels-5.9.0
+kitemviews-5.9.0
+kplotting-5.9.0
+kwidgetsaddons-5.9.0
+kwindowsystem-5.9.0
+modemmanager-qt-5.9.0
+networkmanager-qt-5.9.0
+solid-5.9.0
+sonnet-5.9.0
+threadweaver-5.9.0
+kauth-5.9.0
+kcompletion-5.9.0
+kcrash-5.9.0
+kdoctools-5.9.0
+kpty-5.9.0
+kunitconversion-5.9.0
+kconfigwidgets-5.9.0
+kglobalaccel-5.9.0
+kpackage-5.9.0
+kservice-5.9.0
+kdesu-5.9.0
+kemoticons-5.9.0
+kiconthemes-5.9.0
+kjobwidgets-5.9.0
+kpeople-5.9.0
+knotifications-5.9.0
+ktextwidgets-5.9.0
+kwallet-5.9.0
+kxmlgui-5.9.0
+kbookmarks-5.9.0
+kio-5.9.0
+frameworkintegration-5.9.0
+kdeclarative-5.9.0
+kinit-5.9.0
+knewstuff-5.9.0
+knotifyconfig-5.9.0
+kparts-5.9.0
+kxmlrpcclient-5.9.0
+kcmutils-5.9.0
+kded-5.9.0
+kdewebkit-5.9.0
+ktexteditor-5.9.0
+kactivities-5.9.0
+kdesignerplugin-5.9.0
+plasma-framework-5.9.0
+kjs-5.9.0
+kdelibs4support-5.9.0
+khtml-5.9.0
+kjsembed-5.9.0
+kmediaplayer-5.9.0
+kross-5.9.0
+krunner-5.9.0
+cogl-1.20.0 + separate debug info
+gcab-0.6
+libsigc++-2.4.1
+appstream-glib-0.3.6
+cairomm-1.11.2
+clutter-1.22.0 + separate debug info
+exempi-2.2.2
+gcr-3.15.92
+glibmm-2.44.0
+gmime-2.6.20
+gnome-desktop-3.16.1
+gtk-engines-2.21.0
+gtksourceview-3.16.1
+gtk-vnc-0.5.4
+libburn-1.3.8
+libgee-0.18.0
+libgtop-2.30.0
+libgxps-0.2.2
+libisofs-1.3.8
+libpaper-1.1.24+nmu4
+libpeas-1.14.0
+libspectre-0.2.7
+libunique-3.0.2
+libwnck-3.14.0
+libxklavier-5.4
+murrine-0.98.2
+network-manager-applet-1.0.0
+pangox-compat-0.0.2
+prelink-20130503
+t1lib-5.1.2
+vte-0.36.4
+vte-0.40.0
+yelp-xsl-3.16.0
+zziplib-0.13.62
+atkmm-2.22.7
+clutter-gst-2.0.14 + separate debug info
+clutter-gtk-1.6.0 + separate debug info
+gexiv2-0.10.3
+gnome-video-effects-0.4.1
+libdmapsharing-2.9.30
+libkpathsea-20140525
+mate-desktop-1.10.0
+nautilus-3.16.1
+pangomm-2.36.0
+rest-0.7.93
+totem-pl-parser-3.10.5
+accountsservice-0.6.40
+brasero-3.12.1
+caja-1.10.0
+cheese-3.16.1
+evince-3.16.0
+gnome-keyring-3.16.0
+grilo-0.2.12
+gtkmm-2.24.4
+gtkmm-3.16.0
+gucharmap-3.16.1
+gvfs-1.24.1
+yelp-3.16.0
+aisleriot-3.16.1
+eog-3.16.1
+epiphany-3.16.0
+file-roller-3.16.1
+gedit-3.16.1
+gnome-calculator-3.16.0
+gnome-logs-3.16.1
+gnome-nettool-3.8.1
+gnome-power-manager-3.16.1
+gnome-system-monitor-3.16.0
+gnome-terminal-3.16.1
+rhythmbox-3.2.1
+seahorse-3.15.92
+shotwell-0.22.0
+simple-scan-3.16.1.1
+vinagre-3.16.0
+zenity-3.14.0
+lightdm-1.14.0
+lightdm-gtk-greeter-2.0.0
+broadcom-wl-6.30.223.248
+firefox-37.0.2
+flashplayer-11.2.202.451
+skype-4.3.0.37
+thunderbird-31.6.0
+asciidoc-8.6.9
+babl-0.1.12
+chmlib-0.40
+enscript-1.6.6
+expect-5.45
+gsl-1.16
+ibus-qt-1.3.3
+libc-client-2007f
+libmcrypt-2.5.8
+libopenraw-0.0.9
+libtxc_dxtn-1.0.1 32 and 64 bit
+libva-intel-driver-1.5.1
+libvdpau-va-gl-0.3.4
+mhash-0.9.9.9
+nss-mdns-0.10
+qpdf-5.1.2
+tidy-cvs_20101110
+gegl-0.2.0
+openssh-6.8p1
+postfix-3.0.0
+rtkit-0.11
+smartmontools-6.3
+lua-bitop-1.0.2
+lua-expat-1.3.0
+lua-socket-3.0-rc1
+python-m2crypto-0.22.3 Python 2 Module
+python-notify-0.1.1 Python 2 Module
+python-pillow-2.8.1 Python 2 and Python 3 Modules
+python-pyopengl-3.1.0 Python 2 and Python 3 Modules
+python-pyyaml-3.11 Python 2 and Python 3 Modules
+python-reportlab-3.1.44 Python 2 and Python 3 Modules
+python-sip-4.16.7 Python 2 and Python 3 Modules
+python-unidecode-0.04.17 Python 2 and Python 3 Modules
+python-pyqt-4.11.3 Python 2 and Python 3 Modules
+bluefish-2.2.7
+cgit-0.11.2
+cups-filters-1.0.67
+gimp-2.8.14
+gparted-0.22.0
+inkscape-0.91
+php-5.6.7
+transmission-2.84
+wireshark-1.12.4
+xscreensaver-5.3
+wireless-regdb-2015.04.06
+crda-3.18
+foomatic-db-engine-4-20150415
+foomatic-db-4.0-20150415
+hplip-3.15.4
+libnfsidmap-0.26
+libtirpc-0.2.5
+nfs-utils-1.3.2
+rpcbind-0.2.3
+cdrdao-1.2.3
+cdrtools-3.01a28
+dvd+rw-tools-7.1
+transcode-1.1.7
+Orion-1.5
+oxygen-gtk2-1.4.6
+sni-qt-0.2.6 32 and 64 bit
+snorenotify-0.5.2
+sound-theme-freedesktop-0.8
+btrfs-progs-4.0
+cabextract-1.6
+cpio-2.11
+dejagnu-1.5.3
+dmidecode-2.12
+dosfstools-3.0.27
+ed-1.11
+ethtool-3.18
+gdb-7.9
+hdparm-9.45
+iputils-20121221
+iw-4.0
+kpartx-0.5.0
+lsof-4.88
+mtools-4.0.18
+ncftp-3.2.5
+powertop-2.7
+rfkill-0.5
+strace-4.10
+sudo-1.8.13
+thermal_daemon-1.3
+traceroute-2.0.21
+unrar-5.2.7
+valgrind-3.10.1
+whois-5.2.7
+bluez-qt-5.3.0
+kde-cli-tools-5.3.0
+kdecoration-5.3.0
+kfilemetadata-5.9.0
+kio-extras-5.3.0
+kwayland-5.3.0
+libkscreen-5.3.0
+libksysguard-5.3.0
+baloo-5.9.0
+breeze-5.3.0
+kwin-5.3.0
+oxygen-5.3.0
+khelpcenter-5.3.0
+kinfocenter-5.3.0
+ksysguard-5.3.0
+systemsettings-5.3.0
+plasma-workspace-5.3.0
+bluedevil-5.3.0
+kde-gtk-config-5.3.0
+khotkeys-5.3.0
+kmenuedit-5.3.0
+kscreen-5.3.0
+kwrited-5.3.0
+milou-5.3.0
+plasma-nm-5.3.0
+plasma-workspace-wallpapers-5.3.0
+polkit-kde-agent-5.3.0
+powerdevil-5.3.0
+plasma-desktop-5.3.0
+kdeplasma-addons-5.3.0
+kmix-15.04.0
+konsole-15.04.0
+oxygen-icons-15.04.0
+baloo-widgets-4.13.80-79-g99336ac
+libkcddb-4.13.80-18-g4aacbc0
+libkdcraw-4.13.3-131-g9850efb
+libkexiv2-4.14.1-120-gbba8e5f
+ark-14.12.2-75-g9eafd83
+dolphin-14.12.2-272-g7550ef0
+gwenview-15.03.97-23-ge7810c0
+kate-15.04.0-52-g6902bd6
+ksnapshot-15.04.0-113-g2503aac
+okular-15.03.97-226-gdcf4d93
+k3b-2.0.1-614-g0600322
+kid3-3.2.0
+kile-2.1-472-g95ba610
+quassel-0.12.2
+libgcrypt-1.5.4 32 and 64 bit, versioned shared library only
+libpng-1.2.53 32 and 64 bit, versioned shared library only
+chromium-42.0.2311.135
+chromium-pepper-flash-17.0.0.169
+libreoffice-4.4.3.2
+wine-1.7.42
+
+# End Sun May  3 05:16:41 UTC 2015
+
+# Begin Fri May  8 09:14:11 UTC 2015
+
+libmatekbd-1.10.0
+libmatemixer-1.10.0
+libmateweather-1.10.0
+mate-backgrounds-1.10.0
+mate-icon-theme-1.10.0
+mate-menus-1.10.0
+mate-themes-1.10.0
+marco-1.10.0
+mate-panel-1.10.0
+mate-settings-daemon-1.10.0
+mate-control-center-1.10.0
+mate-applets-1.10.0
+mate-media-1.10.0
+mate-notification-daemon-1.10.0
+mate-polkit-1.10.0
+mate-power-manager-1.10.0
+mate-screensaver-1.10.0
+mate-screensaver-hacks-5.32
+mate-sensors-applet-1.9.90
+mate-session-manager-1.10.0
+mate-system-monitor-1.10.0
+mate-terminal-1.9.91
+mate-utils-1.10.0
+atril-1.10.0
+caja-extensions-1.10.0
+engrampa-1.10.0
+pluma-1.10.0
+
+Updated to gnutls-3.4.1
+Updated to gtk-doc-1.22
+Updated to libass-0.12.2
+Updated to libdrm-2.4.61
+Updated to libinput-0.15.0
+Updated to libtirpc-0.3.0
+Updated to linux-4.0.2-krejzi
+Updated to LVM2-2.02.119
+Updated to man-pages-4.00
+Updated to NetworkManager-1.0.2
+Updated to network-manager-applet-1.0.2
+Updated to nss-3.19
+Updated to sqlite-3.8.10
+Updated to v4l-utils-1.6.3
+
+# End Fri May  8 10:15:46 UTC 2015
