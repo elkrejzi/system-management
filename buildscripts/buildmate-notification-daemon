@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.8.2
+export VER=1.10.0
 export DEST=/binary/mate-notification-daemon-${VER}
 
 pushd mate-notification-daemon-${VER}
@@ -9,7 +9,7 @@ CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr     \
             --sysconfdir=/etc \
-            --with-gtk=2.0    \
+            --with-gtk=3.0    \
             --disable-static
 
 make -j4

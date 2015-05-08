@@ -1,13 +1,19 @@
 #!/bin/bash -e
 
-export VER=3.0.2
+export VER=1.1.6
 export DEST=/binary/libunique-${VER}
 
 pushd libunique-${VER}
 
+patch -Np1 -i /media/ntfs/Other/Linux/patches/libunique-fixes.patch
+
+autoreconf -fi
+
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr
+./configure --prefix=/usr  \
+            --disable-dbus \
+            --disable-static
 
 make -j4
 make install DESTDIR=${DEST}

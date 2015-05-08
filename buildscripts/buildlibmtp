@@ -20,6 +20,8 @@ rm -rf libmtp-${VER}
 
 find ${DEST} -name "*.la" -delete
 
+rm -rf ${DEST}/usr/share
+
 pushd ${DEST}
 
 find * -type f 2>/dev/null | while read BUILD_BINARY ; do

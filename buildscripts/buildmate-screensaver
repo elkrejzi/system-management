@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.8.1
+export VER=1.10.0
 export DEST=/binary/mate-screensaver-${VER}
 
 pushd mate-screensaver-${VER}
@@ -9,7 +9,9 @@ CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr     \
             --sysconfdir=/etc \
-            --with-gtk=2.0    \
+            --with-gtk=3.0    \
+            --with-libgl      \
+            --with-systemd    \
             --disable-static  \
             --with-xscreensaverhackdir=/usr/libexec/xscreensaver \
             --with-xscreensaverdir=/usr/share/xscreensaver/config

@@ -8,7 +8,7 @@ pushd mate-desktop-${VER}
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr        \
-            --with-gtk=2.0       \
+            --with-gtk=3.0       \
             --disable-static     \
             --disable-desktop-docs
 

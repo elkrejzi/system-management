@@ -1,9 +1,10 @@
 #!/bin/bash -e
 
-export VER=1.8.1
+export VER=1.10.0
+export GTKVER=3.16
 export DEST=/binary/mate-themes-${VER}
 
-pushd mate-themes-${VER}
+pushd mate-themes-gtk${GTKVER}-${VER}
 
 ./configure --prefix=/usr --enable-all-themes
 
@@ -12,14 +13,14 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf mate-themes-${VER}
+rm -rf mate-themes-gtk${GTKVER}-${VER}
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
 cp -rf --remove-destination usr /
 
-[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for mate-icon-theme" && for dir in Fog Quid ; do /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/${dir} ; done
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for mate-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/mate
 EOF
 
 chmod 755 ${DEST}/INSTALL

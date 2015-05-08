@@ -1,18 +1,16 @@
 #!/bin/bash -e
 
-export VER=1.8.3
+export VER=1.10.0
 export DEST=/binary/mate-settings-daemon-${VER}
 
 pushd mate-settings-daemon-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr       \
-            --sysconfdir=/etc   \
-            --with-gtk=2.0      \
-            --disable-static    \
-            --enable-pulse      \
-            --disable-gstreamer
+./configure --prefix=/usr     \
+            --sysconfdir=/etc \
+            --with-gtk=3.0    \
+            --disable-static
 
 make -j4
 make install DESTDIR=${DEST}

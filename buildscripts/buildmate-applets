@@ -1,18 +1,17 @@
 #!/bin/bash -e
 
-export VER=1.8.1
+export VER=1.10.0
 export DEST=/binary/mate-applets-${VER}
 
 pushd mate-applets-${VER}
-
-sed -i s:lcpufreq:lcpupower:g configure configure.ac
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr     \
             --sysconfdir=/etc \
-            --with-gtk=2.0    \
-            --disable-static
+            --with-gtk=3.0    \
+            --disable-static  \
+            --with-cpufreq-lib=cpupower
 
 make -j4
 make install DESTDIR=${DEST}

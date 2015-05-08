@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.8.0
+export VER=1.9.90
 export DEST=/binary/mate-sensors-applet-${VER}
 
 pushd mate-sensors-applet-${VER}
@@ -8,7 +8,7 @@ pushd mate-sensors-applet-${VER}
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr    \
-            --with-gtk=2.0   \
+            --with-gtk=3.0   \
             --disable-static \
 
 make -j4

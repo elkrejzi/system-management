@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.21
+export VER=1.22
 export DEST=/binary/gtk-doc-${VER}
 
 pushd gtk-doc-${VER}
