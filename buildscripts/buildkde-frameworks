@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
-export VER=5.9.0
+export VER=5.10.0
 export DEST=/binary/kf5
 
-export URL=http://download.kde.org/stable/frameworks/5.9/
+export URL=http://download.kde.org/stable/frameworks/5.10/
 
 frameworks=(
   attica

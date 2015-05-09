@@ -1,19 +1,17 @@
 #!/bin/bash -e
 
-export VER=4.14.3-1478-g87fc3d1
-export DEST=/binary/kdepimlibs-${VER}
+export VER=
+export DEST=/binary/kdepimlibs #-${VER}
 
-pushd kdepimlibs-${VER}
+pushd kdepimlibs #-${VER}
 
-sed -i "/tests/d" akonadi-contact/CMakeLists.txt
-
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
       -DLIB_INSTALL_DIR=lib       \
       -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins                \
       -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules \
-      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"      \
-      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"    \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
       -Wno-dev
 
 make -j4
@@ -21,9 +19,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf kdepimlibs-${VER}
-
-rm -rf ${DEST}/usr/lib/gpgmepp
+rm -rf kdepimlibs #-${VER}
 
 pushd ${DEST}
 

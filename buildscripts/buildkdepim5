@@ -1,18 +1,17 @@
 #!/bin/bash -e
 
-export VER=4.14.3-2050-g1dda1c6
-export DEST=/binary/kdepim-${VER}
+export VER=
+export DEST=/binary/kdepim #-${VER}
 
-pushd kdepim-${VER}
+pushd kdepim #-${VER}
 
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
       -DSYSCONF_INSTALL_DIR=/etc  \
       -DLIB_INSTALL_DIR=lib       \
-      -DKDEPIM_BUILD_MOBILE=OFF   \
       -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
-      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"      \
-      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"    \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
       -Wno-dev
 
 make -j4
@@ -20,7 +19,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf kdepim-${VER}
+rm -rf kdepim #-${VER}
 
 pushd ${DEST}
 

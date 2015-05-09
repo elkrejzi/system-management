@@ -1,16 +1,16 @@
 #!/bin/bash -e
 
-export VER=2.2.0-70-g2f7ca42
-export DEST=/binary/libkgapi-${VER}
+export VER=
+export DEST=/binary/libkgapi #-${VER}
 
-pushd libkgapi-${VER}
+pushd libkgapi #-${VER}
 
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
       -DLIB_INSTALL_DIR=lib       \
       -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules \
-      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"      \
-      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"    \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
       -Wno-dev
 
 make -j4
@@ -18,7 +18,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf libkgapi-${VER}
+rm -rf libkgapi #-${VER}
 
 pushd ${DEST}
 

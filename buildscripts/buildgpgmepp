@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
 export VER=
-export DEST=/binary/prison #-${VER}
+export DEST=/binary/gpgmepp #-${VER}
 
-pushd prison #-${VER}
+pushd gpgmepp #-${VER}
 
 cmake -DCMAKE_INSTALL_PREFIX=/usr \
       -DCMAKE_BUILD_TYPE=Release  \
@@ -19,7 +19,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf prison #-${VER}
+rm -rf gpgmepp #-${VER}
 
 pushd ${DEST}
 

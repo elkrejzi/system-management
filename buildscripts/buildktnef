@@ -1,12 +1,12 @@
 #!/bin/bash -e
 
 export VER=
-export DEST=/binary/prison #-${VER}
+export DEST=/binary/ktnef #-${VER}
 
-pushd prison #-${VER}
+pushd ktnef #-${VER}
 
 cmake -DCMAKE_INSTALL_PREFIX=/usr \
-      -DCMAKE_BUILD_TYPE=Release  \
+      -DCMAKE_INSTALL_PREFIX=/usr \
       -DLIB_INSTALL_DIR=lib       \
       -DBUILD_TESTING=OFF         \
       -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules \
@@ -19,7 +19,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf prison #-${VER}
+rm -rf ktnef #-${VER}
 
 pushd ${DEST}
 

@@ -1,14 +1,15 @@
 #!/bin/bash -e
 
 export VER=
-export DEST=/binary/prison #-${VER}
+export DEST=/binary/kmailtransport #-${VER}
 
-pushd prison #-${VER}
+pushd kmailtransport #-${VER}
 
 cmake -DCMAKE_INSTALL_PREFIX=/usr \
       -DCMAKE_BUILD_TYPE=Release  \
       -DLIB_INSTALL_DIR=lib       \
       -DBUILD_TESTING=OFF         \
+      -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins                \
       -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
@@ -19,7 +20,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf prison #-${VER}
+rm -rf kmailtransport #-${VER}
 
 pushd ${DEST}
 
