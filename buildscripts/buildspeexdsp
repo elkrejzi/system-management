@@ -3,10 +3,6 @@
 export VER=1.2rc3
 export DEST=/binary/speexdsp-${VER}
 
-#pushd speexdsp-${VER}
-#  patch -Np1 -i /media/ntfs/Other/Linux/patches/speexdsp-fixes.patch
-#popd
-
 cp -a speexdsp-${VER} speexdsp-${VER}-32
 
 pushd speexdsp-${VER}

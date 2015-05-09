@@ -1,14 +1,18 @@
 #!/bin/bash -e
 
-export VER=1.0.5
+export VER=5.3.0
 export DEST=/binary/libkscreen-${VER}
 
 pushd libkscreen-${VER}
 
 cmake -DCMAKE_BUILD_TYPE=Release  \
       -DCMAKE_INSTALL_PREFIX=/usr \
-      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+      -DLIB_INSTALL_DIR=lib       \
+      -DBUILD_TESTING=OFF         \
+      -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins                \
+      -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"      \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"    \
       -Wno-dev
 
 make -j4

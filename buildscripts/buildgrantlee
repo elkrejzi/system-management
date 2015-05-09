@@ -1,12 +1,13 @@
 #!/bin/bash -e
 
-export VER=0.5.1
+export VER=5.0.0
 export DEST=/binary/grantlee-${VER}
 
 pushd grantlee-${VER}
 
 cmake -DCMAKE_BUILD_TYPE=Release  \
       -DCMAKE_INSTALL_PREFIX=/usr \
+      -DBUILD_TESTS=OFF           \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
       -Wno-dev

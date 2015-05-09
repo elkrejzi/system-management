@@ -1,16 +1,18 @@
 #!/bin/bash -e
 
-export VER=4.14.2
+export VER=5.3.0
 export DEST=/binary/kdeplasma-addons-${VER}
 
 install -dm755 kdeplasma-addons-${VER}/build
 
 pushd kdeplasma-addons-${VER}/build
 
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
-      -DKDE4_BUILD_TESTS=OFF      \
-      -DCMAKE_SKIP_RPATH=ON       \
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
+      -DLIB_INSTALL_DIR=lib       \
+      -DBUILD_TESTING=OFF         \
+      -DQML_INSTALL_DIR=lib/qt5/qml           \
+      -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
       -Wno-dev ..
@@ -36,10 +38,6 @@ cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
 cp -rf --remove-destination usr /
-
-[ -x /usr/bin/update-mime-database ] && echo "Processing triggers for shared-mime-info" && /usr/bin/update-mime-database /usr/share/mime
-[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
-[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 
 chmod 755 ${DEST}/INSTALL

@@ -5,8 +5,6 @@ export DEST=/binary/cups-${VER}
 
 pushd cups-${VER}
 
-#patch -Np1 -i /media/ntfs/Other/Linux/patches/cups-content-type.patch
-
 sed -i "/MAN.*.EXT/s:.gz::g" configure config-scripts/cups-manpages.m4
 sed -i "s:555:755:g;s:444:644:g" Makedefs.in
 

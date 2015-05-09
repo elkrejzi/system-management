@@ -1,12 +1,16 @@
 #!/bin/bash -e
 
-export VER=0.9.3.4
+export VER=5.3.0
 export DEST=/binary/plasma-nm-${VER}
 
 pushd plasma-nm-${VER}
 
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
+      -DLIB_INSTALL_DIR=lib       \
+      -DBUILD_TESTING=OFF         \
+      -DQML_INSTALL_DIR=lib/qt5/qml           \
+      -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
       -Wno-dev
@@ -33,7 +37,6 @@ cat > ${DEST}/INSTALL << "EOF"
 
 cp -rf --remove-destination usr /
 
-[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for oxygen-icon-theme" && /usr/bin/gtk-update-icon-cache -q /usr/share/icons/oxygen
 [ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF

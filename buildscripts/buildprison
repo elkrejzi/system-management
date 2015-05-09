@@ -1,12 +1,15 @@
 #!/bin/bash -e
 
-export VER=1.1.1
-export DEST=/binary/prison-${VER}
+export VER=
+export DEST=/binary/prison #-${VER}
 
-pushd prison-${VER}
+pushd prison #-${VER}
 
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
+      -DLIB_INSTALL_DIR=lib       \
+      -DBUILD_TESTING=OFF         \
+      -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
       -Wno-dev
@@ -16,7 +19,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf prison-${VER}
+rm -rf prison #-${VER}
 
 pushd ${DEST}
 

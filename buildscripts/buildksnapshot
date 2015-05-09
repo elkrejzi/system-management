@@ -1,18 +1,17 @@
 #!/bin/bash -e
 
-export VER=4.14.2
+export VER=15.04.0-113-g2503aac
 export DEST=/binary/ksnapshot-${VER}
 
-install -dm755 ksnapshot-${VER}/build
+pushd ksnapshot-${VER}
 
-pushd ksnapshot-${VER}/build
-
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
-      -DKDE4_BUILD_TESTS=OFF      \
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
+      -DLIB_INSTALL_DIR=lib       \
+      -DBUILD_TESTING=OFF         \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-      -Wno-dev ..
+      -Wno-dev
 
 make -j4
 make install DESTDIR=${DEST}

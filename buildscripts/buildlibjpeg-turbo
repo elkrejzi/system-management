@@ -3,10 +3,6 @@
 export VER=1.4.0
 export DEST=/binary/libjpeg-turbo-${VER}
 
-#pushd libjpeg-turbo-${VER}
-#  patch -Np1 -i /media/ntfs/Other/Linux/patches/libjpeg-turbo.patch
-#popd
-
 cp -a libjpeg-turbo-${VER} libjpeg-turbo-${VER}-32
 
 pushd libjpeg-turbo-${VER}

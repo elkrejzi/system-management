@@ -33,10 +33,10 @@ fi
 sh ${PKG2}.run --extract fglrx
 
 pushd ${SRC}
-   patch -Np1 -i /media/ntfs/Other/Linux/fglrx.patch
+   patch -Np1 -i /media/ntfs/Other/Linux/patches/fglrx.patch
 
 #if [ -e /media/ntfs/Other/Linux/fglrx-fixes.patch ]; then
-#   patch -Np1 -i /media/ntfs/Other/Linux/fglrx-fixes.patch
+#   patch -Np1 -i /media/ntfs/Other/Linux/patches/fglrx-fixes.patch
 #fi
 
 popd

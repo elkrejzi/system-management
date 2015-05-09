@@ -1,35 +1,27 @@
 #!/bin/bash -e
 
-export VER=4.14.3
+export VER=5.9.0
 export DEST=/binary/baloo-${VER}
 
 pushd baloo-${VER}
 
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
+cmake -DCMAKE_INSTALL_PREFIX=/usr   \
+      -DCMAKE_BUILD_TYPE=Release    \
+      -DSYSCONF_INSTALL_DIR=/etc    \
+      -DLIB_INSTALL_DIR=lib         \
+      -DBUILD_TESTING=OFF           \
+      -DQML_INSTALL_DIR=lib/qt5/qml \
+      -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
       -Wno-dev
 
 make -j4
-make install DESTDIR=${DEST}/baloo-binaries
+make install DESTDIR=${DEST}
 
 popd
 
 rm -rf baloo-${VER}
-
-install -dm755 ${DEST}/baloo-akonadi/usr/bin ${DEST}/baloo-akonadi/usr/share
-install -dm755 ${DEST}/baloo-libraries/usr/share
-
-mv ${DEST}/baloo-binaries/usr/bin/akonadi_baloo_indexer ${DEST}/baloo-akonadi/usr/bin
-mv ${DEST}/baloo-binaries/usr/share/akonadi ${DEST}/baloo-akonadi/usr/share
-
-mv ${DEST}/baloo-binaries/usr/include ${DEST}/baloo-libraries/usr
-mv ${DEST}/baloo-binaries/usr/lib ${DEST}/baloo-libraries/usr
-
-install -dm755 ${DEST}/baloo-binaries/usr/lib
-
-mv ${DEST}/baloo-libraries/usr/lib/kde4 ${DEST}/baloo-binaries/usr/lib
 
 pushd ${DEST}
 
@@ -41,26 +33,13 @@ done
 
 popd
 
-cat > ${DEST}/baloo-akonadi/INSTALL << "EOF"
-#!/bin/bash
-
-cp -rf --remove-destination usr /
-EOF
-
-cat > ${DEST}/baloo-binaries/INSTALL << "EOF"
+cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
 for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
 
 [ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
-EOF
-
-cat > ${DEST}/baloo-libraries/INSTALL << "EOF"
-#!/bin/bash
-
-cp -rf --remove-destination usr /
-
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 
-chmod 755 ${DEST}/baloo-akonadi/INSTALL ${DEST}/baloo-binaries/INSTALL ${DEST}/baloo-libraries/INSTALL
+chmod 755 ${DEST}/INSTALL

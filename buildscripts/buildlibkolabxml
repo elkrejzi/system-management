@@ -1,13 +1,14 @@
 #!/bin/bash -e
 
-export VER=1.1.0
-export DEST=/binary/libkolabxml-${VER}
+export VER=
+export DEST=/binary/libkolabxml #-${VER}
 
-pushd libkolabxml-${VER}
+pushd libkolabxml #-${VER}
 
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
       -DBUILD_TESTS=OFF           \
+      -DQT5_BUILD=ON              \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
       -Wno-dev
@@ -17,7 +18,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf libkolabxml-${VER}
+rm -rf libkolabxml #-${VER}
 
 pushd ${DEST}
 

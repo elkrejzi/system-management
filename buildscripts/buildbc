@@ -5,6 +5,8 @@ export DEST=/binary/bc-${VER}
 
 pushd bc-${VER}
 
+patch -Np1 -i /media/ntfs/Other/Linux/patches/bc-fixes.patch
+
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr             \

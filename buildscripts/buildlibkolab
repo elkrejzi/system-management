@@ -1,12 +1,13 @@
 #!/bin/bash -e
 
-export VER=0.5.3
-export DEST=/binary/libkolab-${VER}
+export VER=
+export DEST=/binary/libkolab #-${VER}
 
-pushd libkolab-${VER}
+pushd libkolab #-${VER}
 
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
+      -DBUILD_TESTS=OFF           \
       -DCMAKE_SKIP_RPATH=ON       \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
@@ -17,7 +18,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf libkolab-${VER}
+rm -rf libkolab #-${VER}
 
 pushd ${DEST}
 

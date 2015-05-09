@@ -5,10 +5,6 @@ export DEST=/binary/net-snmp-${VER}
 
 pushd net-snmp-${VER}
 
-#patch -Np1 -i /media/ntfs/Other/Linux/patches/net-snmp-fixes.patch
-
-autoreconf -fi
-
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr                                   \

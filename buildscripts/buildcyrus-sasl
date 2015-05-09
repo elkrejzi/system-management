@@ -5,7 +5,7 @@ export DEST=/binary/cyrus-sasl-${VER}
 
 pushd cyrus-sasl-${VER}
 
-patch -Np1 -i /media/ntfs/Other/Linux/patches/cyrus-sasl-2.1.26-fixes-1.patch
+patch -Np1 -i /media/ntfs/Other/Linux/patches/cyrus-sasl-fixes.patch
 
 autoreconf -fi
 

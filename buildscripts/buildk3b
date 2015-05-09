@@ -1,14 +1,15 @@
 #!/bin/bash -e
 
-export VER=2.0.3
-export DEST=/binary/k3b-${VER}a
+export VER=2.0.1-614-g0600322
+export DEST=/binary/k3b-${VER}
 
 pushd k3b-${VER}
 
-#patch -Np1 -i /media/ntfs/Other/Linux/patches/k3b-fixes.patch
-
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
+      -DLIB_INSTALL_DIR=lib       \
+      -DBUILD_TESTING=OFF         \
+      -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
       -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
       -Wno-dev
@@ -33,7 +34,7 @@ popd
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
-for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+cp -rf --remove-destination usr /
 
 [ -x /usr/bin/update-mime-database ] && echo "Processing triggers for shared-mime-info" && /usr/bin/update-mime-database /usr/share/mime
 [ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor

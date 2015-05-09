@@ -10,8 +10,6 @@ sed 's|-include $(MAKEDIR)/devel.mk||g' -i mk/syslinux.mk
 
 sed 's|/usr/man|/usr/share/man|g' -i mk/syslinux.mk
 
-#patch -Np1 -i /media/ntfs/Other/Linux/patches/syslinux.patch
-
 make bios
 make bios installer
 
