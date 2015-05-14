@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.2.0
+export VER=2.2.1
 export DEST=/binary/libassuan-${VER}
 
 pushd libassuan-${VER}

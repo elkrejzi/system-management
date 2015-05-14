@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.11.2
+export VER=1.0.1
 export DEST=/binary/libzip-${VER}
 
 pushd libzip-${VER}

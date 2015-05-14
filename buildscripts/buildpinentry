@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.9.1
+export VER=0.9.2
 export DEST=/binary/pinentry-${VER}
 
 pushd pinentry-${VER}
@@ -20,8 +20,6 @@ rm -rf pinentry-${VER}
 
 rm -rf ${DEST}/usr/share/info/dir
 gzip -9 ${DEST}/usr/share/info/*
-
-ln -sf pinentry-curses ${DEST}/usr/bin/pinentry
 
 pushd ${DEST}
 

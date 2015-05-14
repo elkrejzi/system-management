@@ -1,14 +1,9 @@
 #!/bin/bash -e
 
-export VER=10.5.4
+export VER=10.5.5
 
 pushd mesa-${VER}
-
-#autoreconf -fi
-
-patch -Np1 -i /media/ntfs/Other/Linux/patches/mesalib-xdemos.patch
-patch -Np1 -i /media/ntfs/Other/Linux/patches/intel-fix.patch
-
+  patch -Np1 -i /media/ntfs/Other/Linux/patches/mesalib-xdemos.patch
 popd
 
 cp -a mesa-${VER} mesa-${VER}-32

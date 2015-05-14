@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.2.0
+export VER=3.2.1
 export DEST=/binary/kid3-${VER}
 
 pushd kid3-${VER}

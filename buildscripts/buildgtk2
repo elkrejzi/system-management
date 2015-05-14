@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.24.27
+export VER=2.24.28
 export DEST=/binary/gtk+-${VER}
 
 cp -a gtk+-${VER} gtk+-${VER}-32

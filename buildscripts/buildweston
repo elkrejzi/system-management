@@ -1,11 +1,9 @@
 #!/bin/bash -e
 
-export VER=1.7.0
+export VER=1.7.91
 export DEST=/binary/weston-${VER}
 
 pushd weston-${VER}
-
-patch -Np1 -i /media/ntfs/Other/Linux/patches/weston-fixes.patch
 
 CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \

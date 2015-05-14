@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.12.4
+export VER=1.12.5
 export DEST=/binary/wireshark-${VER}
 
 pushd wireshark-${VER}

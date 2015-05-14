@@ -1,24 +1,24 @@
 #!/bin/bash -e
 
-export VER=0.16.1
-export DEST=/binary/libraw-${VER}
+export VER=0.9.14
+export DEST=/binary/lmdb-${VER}
 
-pushd LibRaw-${VER}
+pushd lmdb-LMDB_${VER}/libraries/liblmdb
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr --disable-static
+sed -i "s:man/:share/&:g" Makefile
 
-make -j4
-make install DESTDIR=${DEST}
+make prefix=/usr OPT="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
+
+install -dm755 ${DEST}/usr/bin ${DEST}/usr/share/man/man1
+install -dm755 ${DEST}/usr/include ${DEST}/usr/lib
+
+make prefix=/usr OPT="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" install DESTDIR=${DEST}
 
 popd
 
-rm -rf LibRaw-${VER}
+rm -rf lmdb-LMDB_${VER}
 
-find ${DEST} -name "*.la" -delete
-
-rm -rf ${DEST}/usr/share
+rm -rf ${DEST}/usr/lib/liblmdb.a
 
 pushd ${DEST}
 

@@ -6,7 +6,7 @@ export DEST=/binary/mate-themes-${VER}
 
 pushd mate-themes-gtk${GTKVER}-${VER}
 
-./configure --prefix=/usr --enable-all-themes
+./configure --prefix=/usr
 
 make -j4
 make install DESTDIR=${DEST}
