@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=15.04.0
+export VER=15.04.1
 export DEST=/binary/oxygen-icons-${VER}
 
 pushd oxygen-icons-${VER}

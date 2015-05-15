@@ -1,0 +1,76 @@
+#!/bin/bash -e
+
+export VER=5.5.0-alpha1-736-g7d1ec1a
+export DEST=/binary/qtbase-${VER}
+
+pushd qtbase-opensource-src-${VER}
+
+export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
+export CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
+
+./configure -prefix         /usr               \
+            -sysconfdir     /etc/xdg           \
+            -bindir         /usr/lib/qt5/bin   \
+            -headerdir      /usr/include/qt5   \
+            -archdatadir    /usr/lib/qt5       \
+            -datadir        /usr/share/qt5     \
+            -docdir         /usr/share/doc/qt5 \
+            -translationdir /usr/share/qt5/translations \
+            -examplesdir    /usr/share/doc/qt5/examples \
+            -confirm-license    \
+            -opensource         \
+            -dbus-linked        \
+            -openssl-linked     \
+            -gstreamer 1.0      \
+            -journald           \
+            -system-harfbuzz    \
+            -system-sqlite      \
+            -nomake examples    \
+            -no-rpath           \
+            -optimized-qmake    \
+            -no-use-gold-linker
+
+make -j4
+
+find . -name "*.pc" -exec perl -pi -e "s, -L$PWD/?\S+,,g" {} \;
+
+make install INSTALL_ROOT=${DEST}
+
+sed -i -e "s:$PWD:/usr/lib/qt5:g" \
+    ${DEST}/usr/lib/qt5/mkspecs/modules/qt_lib_bootstrap_private.pri
+
+find ${DEST}/usr/lib/*.prl -exec sed -i -e \
+     '/^QMAKE_PRL_BUILD_DIR/d;s/\(QMAKE_PRL_LIBS =\).*/\1/' {} \;
+
+popd
+
+rm -rf qtbase-opensource-src-${VER}
+
+rm -rf ${DEST}/usr/lib/*.la ${DEST}/usr/share
+
+install -dm755 ${DEST}/usr/bin
+
+for file in ${DEST}/usr/lib/qt5/bin/*
+do
+  ln -sf ../lib/qt5/bin/$(basename $file) ${DEST}/usr/bin/$(basename $file)-qt5
+done
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

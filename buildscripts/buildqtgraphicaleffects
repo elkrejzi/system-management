@@ -1,0 +1,23 @@
+#!/bin/bash -e
+
+export VER=5.5.0-alpha1
+export DEST=/binary/qtgraphicaleffects-${VER}
+
+pushd qtgraphicaleffects-opensource-src-${VER}
+
+qmake-qt5
+
+make -j4
+make install INSTALL_ROOT=${DEST}
+
+popd
+
+rm -rf qtgraphicaleffects-opensource-src-${VER}
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL

@@ -1,17 +1,11 @@
 #!/bin/bash -e
 
-export VER=5.5.0-alpha1-34-g007d73e
-export DEST=/binary/qtwayland-${VER}
+export VER=5.5.0-alpha1-3-g7e767af
+export DEST=/binary/qtsvg-${VER}
 
-pushd qtwayland-opensource-src-${VER}
+pushd qtsvg-opensource-src-${VER}
 
 qmake-qt5
-
-make sub-src-qmake_all
-make -C src sub-client-qmake_all
-
-sed -i "/LIBS/s:lXcomposite:& -lXrender:;/PKGCONFIG/s:xcomposite:& xrender:" src/hardwareintegration/client/xcomposite-glx/xcomposite-glx.pri
-sed -i "/LIBS/s:-lQt5PlatformSupport:& -lQt5DBus:g" src/client/Makefile
 
 make -j4
 
@@ -24,16 +18,9 @@ find ${DEST}/usr/lib/*.prl -exec sed -i -e \
 
 popd
 
-rm -rf qtwayland-opensource-src-${VER}
+rm -rf qtsvg-opensource-src-${VER}
 
 rm -rf ${DEST}/usr/lib/*.la
-
-install -dm755 ${DEST}/usr/bin
-
-for file in ${DEST}/usr/lib/qt5/bin/*
-do
-  ln -sf ../lib/qt5/bin/$(basename $file) ${DEST}/usr/bin/$(basename $file)-qt5
-done
 
 pushd ${DEST}
 

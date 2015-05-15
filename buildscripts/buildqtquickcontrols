@@ -1,0 +1,33 @@
+#!/bin/bash -e
+
+export VER=5.5.0-alpha1-65-g1f0daa7
+export DEST=/binary/qtquickcontrols-${VER}
+
+pushd qtquickcontrols-opensource-src-${VER}
+
+qmake-qt5
+
+make -j4
+make install INSTALL_ROOT=${DEST}
+
+popd
+
+rm -rf qtquickcontrols-opensource-src-${VER}
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL
