@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.5.0-alpha1-67-gf61c89a
+export VER=5.5.0-beta
 export DEST=/binary/qtmultimedia-${VER}
 
 pushd qtmultimedia-opensource-src-${VER}

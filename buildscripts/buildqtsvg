@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.5.0-alpha1-3-g7e767af
+export VER=5.5.0-beta
 export DEST=/binary/qtsvg-${VER}
 
 pushd qtsvg-opensource-src-${VER}

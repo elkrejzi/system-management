@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.5.0-alpha1-736-g7d1ec1a
+export VER=5.5.0-beta
 export DEST=/binary/qtbase-${VER}
 
 pushd qtbase-opensource-src-${VER}

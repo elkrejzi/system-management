@@ -1,5 +1,5 @@
---- a/mozilla/js/src/builtin/TypedObject.cpp	2015-03-30 18:48:16.000000000 +0200
-+++ b/mozilla/js/src/builtin/TypedObject.cpp	2015-04-10 21:06:02.629917801 +0200
+--- a/mozilla/js/src/builtin/TypedObject.cpp	2015-05-07 20:53:49.000000000 +0200
++++ b/mozilla/js/src/builtin/TypedObject.cpp	2015-05-17 09:27:32.972165668 +0200
 @@ -710,12 +710,12 @@
      contents.append(")");
      RootedAtom stringRepr(cx, contents.finishAtom());
@@ -14,7 +14,7 @@
 +        return false;
  
      // Create the instance of ArrayType
-     Rooted<UnsizedArrayTypeDescr *> obj(cx);
+     Rooted<UnsizedArrayTypeDescr*> obj(cx);
 @@ -728,7 +728,7 @@
      if (!JSObject::defineProperty(cx, obj, cx->names().length,
                                    UndefinedHandleValue, nullptr, nullptr,
@@ -138,19 +138,19 @@
          }
          Rooted<TypedObject*> obj(cx, createZeroed(cx, callee, length));
          if (!obj)
---- a/mozilla/js/src/frontend/BytecodeCompiler.cpp	2015-03-30 18:48:17.000000000 +0200
-+++ b/mozilla/js/src/frontend/BytecodeCompiler.cpp	2015-04-10 21:06:45.991784284 +0200
+--- a/mozilla/js/src/frontend/BytecodeCompiler.cpp	2015-05-07 20:53:49.000000000 +0200
++++ b/mozilla/js/src/frontend/BytecodeCompiler.cpp	2015-05-17 09:28:14.619003197 +0200
 @@ -544,7 +544,7 @@
  
      RootedScriptSource sourceObject(cx, CreateScriptSourceObject(cx, options));
      if (!sourceObject)
 -        return nullptr;
 +        return false;
-     ScriptSource *ss = sourceObject->source();
+     ScriptSource* ss = sourceObject->source();
  
      SourceCompressionTask sct(cx);
---- a/mozilla/js/xpconnect/wrappers/XrayWrapper.cpp	2015-03-30 18:48:09.000000000 +0200
-+++ b/mozilla/js/xpconnect/wrappers/XrayWrapper.cpp	2015-04-10 21:29:16.381036189 +0200
+--- a/mozilla/js/xpconnect/wrappers/XrayWrapper.cpp	2015-05-07 20:53:42.000000000 +0200
++++ b/mozilla/js/xpconnect/wrappers/XrayWrapper.cpp	2015-05-17 09:27:32.974165708 +0200
 @@ -351,7 +351,7 @@
          {
              JSAutoCompartment ac(cx, target);
@@ -160,8 +160,8 @@
          }
          return JS_WrapObject(cx, protop);
      }
---- a/mozilla/media/webrtc/trunk/webrtc/modules/video_coding/codecs/vp8/vp8_impl.cc	2015-03-30 18:48:09.000000000 +0200
-+++ b/mozilla/media/webrtc/trunk/webrtc/modules/video_coding/codecs/vp8/vp8_impl.cc	2015-04-10 21:37:36.611608719 +0200
+--- a/mozilla/media/webrtc/trunk/webrtc/modules/video_coding/codecs/vp8/vp8_impl.cc	2015-05-07 20:53:42.000000000 +0200
++++ b/mozilla/media/webrtc/trunk/webrtc/modules/video_coding/codecs/vp8/vp8_impl.cc	2015-05-17 09:27:32.975165729 +0200
 @@ -180,7 +180,7 @@
    // Creating a wrapper to the image - setting image data to NULL. Actual
    // pointer will be set in encode. Setting align to 1, as it is meaningless
@@ -184,8 +184,8 @@
    // TODO(mikhal): Stride should be set in initialization.
    raw_->stride[VPX_PLANE_Y] = input_image.stride(kYPlane);
    raw_->stride[VPX_PLANE_U] = input_image.stride(kUPlane);
---- a/mozilla/netwerk/ipc/NeckoParent.cpp	2015-03-30 18:48:13.000000000 +0200
-+++ b/mozilla/netwerk/ipc/NeckoParent.cpp	2015-04-10 21:23:07.143575131 +0200
+--- a/mozilla/netwerk/ipc/NeckoParent.cpp	2015-05-07 20:53:46.000000000 +0200
++++ b/mozilla/netwerk/ipc/NeckoParent.cpp	2015-05-17 09:27:32.978165789 +0200
 @@ -359,7 +359,7 @@
    RtspChannelParent* p = static_cast<RtspChannelParent*>(aActor);
    return p->Init(aConnectArgs);

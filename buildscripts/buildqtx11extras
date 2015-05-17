@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.5.0-alpha1-1-ge6a813c
+export VER=5.5.0-beta
 export DEST=/binary/qtx11extras-${VER}
 
 pushd qtx11extras-opensource-src-${VER}

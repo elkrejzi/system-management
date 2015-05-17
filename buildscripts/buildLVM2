@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.02.119
+export VER=2.02.120
 export DEST=/binary/LVM2-${VER}
 
 pushd LVM2.${VER}

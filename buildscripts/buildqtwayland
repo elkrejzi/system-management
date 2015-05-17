@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.5.0-alpha1-34-g007d73e
+export VER=5.5.0-beta
 export DEST=/binary/qtwayland-${VER}
 
 pushd qtwayland-opensource-src-${VER}
