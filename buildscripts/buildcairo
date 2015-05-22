@@ -17,7 +17,6 @@ CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr    \
             --disable-static \
-            --enable-gl      \
             --enable-tee
 
 make -j4
@@ -36,7 +35,6 @@ CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr       \
             --libdir=/usr/lib32 \
             --disable-static    \
-            --enable-gl         \
             --enable-tee
 
 sed -i "/DIST_SUBDIRS/s:boilerplate test::" Makefile

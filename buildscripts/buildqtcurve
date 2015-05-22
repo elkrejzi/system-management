@@ -1,0 +1,66 @@
+#!/bin/bash -e
+
+export VER=1.8.18-240-g721fcf3
+export DEST=/binary/qtcurve-${VER}
+
+cp -a qtcurve-${VER} qtcurve-${VER}-32
+
+pushd qtcurve-${VER}
+
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
+      -DENABLE_TEST=OFF           \
+      -DQTC_QT4_ENABLE_KDE=OFF    \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+pushd qtcurve-${VER}-32
+
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+cmake -DCMAKE_INSTALL_PREFIX=/usr             \
+      -DCMAKE_BUILD_TYPE=Release              \
+      -DQT_PLUGINS_DIR=/usr/lib32/qt4/plugins \
+      -DQT_LIBRARY_DIR=/usr/lib32             \
+      -DLIB_INSTALL_DIR=/usr/lib32            \
+      -DENABLE_TEST=OFF                       \
+      -DENABLE_QT5=OFF                        \
+      -DQTC_QT4_ENABLE_KDE=OFF                \
+      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
+
+make -j4
+make install DESTDIR=${PWD}/dest
+
+mv dest/usr/lib32 ${DEST}/usr
+
+popd
+
+rm -rf qtcurve-${VER} qtcurve-${VER}-32
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

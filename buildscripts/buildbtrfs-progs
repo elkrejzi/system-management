@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.0
+export VER=4.0.1
 export DEST=/binary/btrfs-progs-${VER}
 
 pushd btrfs-progs-v${VER}

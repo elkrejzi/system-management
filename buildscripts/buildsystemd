@@ -1,74 +1,90 @@
 #!/bin/bash -e
 
-export PKGDIR=`basename ${PWD}`
-export DEST=/binary/${PKGDIR}
+export VER=220
+export DEST=/binary/systemd-${VER}
 export PKGDEBUG=/binary/${PKGDIR}-debug/usr/lib/
 
-patch -Np1 -i /media/ntfs/Other/Linux/patches/systemd-compat.patch
+pushd systemd-${VER}
+  patch -Np1 -i /media/ntfs/Other/Linux/patches/systemd-compat.patch
+  rm src/journal/audit_type-to-name.h src/udev/keyboard-keys-from-name.gperf
+popd
 
-echo "Building native systemd and udev."
+cp -a systemd-${VER} systemd-${VER}-32
 
-mkdir build64
-pushd build64
+pushd systemd-${VER}
 
-CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong -fno-lto" \
-../configure --prefix=/usr        \
-             --libdir=/usr/lib    \
-             --sysconfdir=/etc    \
-             --localstatedir=/var \
-             --disable-firstboot  \
-             --disable-kdbus      \
-             --disable-ldconfig   \
-             --disable-static     \
-             --disable-sysusers   \
-             --enable-gtk-doc     \
-             --enable-split-usr   \
-             --with-pamlibdir=/lib/security    \
-             --with-rootprefix=                \
-             --with-rootlibdir=/lib            \
-             --with-sysvinit-path=/etc/init.d  \
-             --with-sysvrcnd-path=/etc         \
-             --with-rc-local-script-path-stop= \
-             --with-rc-local-script-path-start=/etc/rc.local         \
-             --with-dbuspolicydir=/etc/dbus-1/system.d               \
-             --with-dbussessionservicedir=/usr/share/dbus-1/services \
-             --with-dbussystemservicedir=/usr/share/dbus-1/system-services
+CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong -fno-lto"   \
+CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong -fno-lto" \
+./configure --prefix=/usr        \
+            --libdir=/usr/lib    \
+            --sysconfdir=/etc    \
+            --localstatedir=/var \
+            --disable-efi        \
+            --disable-firstboot  \
+            --disable-gudev      \
+            --disable-kdbus      \
+            --disable-ldconfig   \
+            --disable-machined   \
+            --disable-static     \
+            --disable-sysusers   \
+            --enable-gtk-doc     \
+            --enable-split-usr   \
+            --with-pamlibdir=/lib/security    \
+            --with-rootprefix=                \
+            --with-rootlibdir=/lib            \
+            --with-sysvinit-path=/etc/init.d  \
+            --with-sysvrcnd-path=/etc         \
+            --with-rc-local-script-path-stop= \
+            --with-rc-local-script-path-start=/etc/rc.local         \
+            --with-dbuspolicydir=/etc/dbus-1/system.d               \
+            --with-dbussessionservicedir=/usr/share/dbus-1/services \
+            --with-dbussystemservicedir=/usr/share/dbus-1/system-services
 
 make -j4
-make install DESTDIR=${DEST} -j4
+make install DESTDIR=${DEST}
 
 popd
 
-echo "Building 32 bit libraries."
+pushd systemd-${VER}-32
 
-mkdir build32
-pushd build32
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
-CC="gcc -m32"  \
-CXX="g++ -m32" \
-PKG_CONFIG_PATH=/usr/lib32/pkgconfig                 \
-CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong -fno-lto" \
-../configure --prefix=/usr        \
-             --libdir=/usr/lib32  \
-             --sysconfdir=/etc    \
-             --localstatedir=/var \
-             --disable-gnutls     \
-             --disable-kmod       \
-             --disable-networkd   \
-             --disable-pam        \
-             --disable-static     \
-             --without-python
+CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong -fno-lto"    \
+CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong -fno-lto"  \
+./configure --prefix=/usr           \
+            --libdir=/usr/lib32     \
+            --sysconfdir=/etc       \
+            --localstatedir=/var    \
+            --disable-efi           \
+            --disable-firstboot     \
+            --disable-gnutls        \
+            --disable-gudev         \
+            --disable-kdbus         \
+            --disable-kmod          \
+            --disable-ldconfig      \
+            --disable-libcryptsetup \
+            --disable-libcurl       \
+            --disable-libidn        \
+            --disable-libiptc       \
+            --disable-machined      \
+            --disable-networkd      \
+            --disable-pam           \
+            --disable-qrencode      \
+            --disable-static        \
+            --disable-sysusers      \
+            --disable-xkbcommon     \
+            --without-python
 
-make src/shared/{af,cap,errno}-{from,to}-name.h src/gudev/gudevmarshal.{c,h} src/gudev/gudevenumtypes.c src/libsystemd/libsystemd.sym src/shared/arphrd-{to,from}-name.h
+make -j4
+make install DESTDIR=${PWD}/dest
 
-make libsystemd.la libudev.la libgudev-1.0.la libnss_myhostname.la libnss_mymachines.la libnss_resolve.la -j4
-
-make install-libLTLIBRARIES DESTDIR=${DEST}
-make install-pkgconfiglibDATA DESTDIR=${DEST}
+mv dest/usr/lib32 ${DEST}/usr
 
 popd
 
-echo "Packaging systemd and udev."
+rm -rf systemd-${VER} systemd-${VER}-32
 
 find ${DEST} -name "*.la" -delete
 
@@ -84,9 +100,7 @@ rm -rf ${DEST}/etc/systemd/system/network-online.target.wants
 rm -rf ${DEST}/etc/systemd/system/sockets.target.wants
 rm -rf ${DEST}/etc/systemd/system/sysinit.target.wants
 
-#rm -rf ${DEST}/lib/systemd/system/sysinit.target.wants/ldconfig.service
-#rm -rf ${DEST}/lib/systemd/system/sysinit.target.wants/systemd-firstboot.service
-#rm -rf ${DEST}/lib/systemd/system/sysinit.target.wants/systemd-sysusers.service
+rm -rf ${DEST}/lib/systemd/system/local-fs.target.wants/var-lib-machines.mount
 rm -rf ${DEST}/lib/systemd/system/sysinit.target.wants/systemd-update-done.service
 
 install -dm755 ${DEST}/etc/profile.d ${DEST}/lib32 ${DEST}/sbin
@@ -178,27 +192,6 @@ cat > ${DEST}/INSTALL << "EOF"
 
 for dir in bin etc lib lib32 sbin usr var ; do cp -rf --remove-destination $dir / ; done
 
-getent group systemd-bus-proxy > /dev/null || groupadd -g 72 systemd-bus-proxy
-getent passwd systemd-bus-proxy > /dev/null || useradd -c "systemd Bus Proxy" -d / -g systemd-bus-proxy -s /bin/false -u 72 systemd-bus-proxy
-
-getent group systemd-journal-gateway > /dev/null || groupadd -g 73 systemd-journal-gateway
-getent passwd systemd-journal-gateway > /dev/null || useradd -c "systemd Journal Gateway" -d / -g systemd-journal-gateway -s /bin/false -u 73 systemd-journal-gateway
-
-getent group systemd-journal-remote > /dev/null || groupadd -g 74 systemd-journal-remote
-getent passwd systemd-journal-remote > /dev/null || useradd -c "systemd Journal Remote" -d / -g systemd-journal-remote -s /bin/false -u 74 systemd-journal-remote
-
-getent group systemd-journal-upload > /dev/null || groupadd -g 75 systemd-journal-upload
-getent passwd systemd-journal-upload > /dev/null || useradd -c "systemd Journal Upload" -d / -g systemd-journal-upload -s /bin/false -u 75 systemd-journal-upload
-
-getent group systemd-network > /dev/null || groupadd -g 76 systemd-network
-getent passwd systemd-network > /dev/null || useradd -c "systemd Network Management" -d / -g systemd-network -s /bin/false -u 76 systemd-network
-
-getent group systemd-resolve > /dev/null || groupadd -g 77 systemd-resolve
-getent passwd systemd-resolve > /dev/null || useradd -c "systemd Resolver" -d / -g systemd-resolve -s /bin/false -u 77 systemd-resolve
-
-getent group systemd-timesync > /dev/null || groupadd -g 78 systemd-timesync
-getent passwd systemd-timesync > /dev/null || useradd -c "systemd Time Synchronization" -d / -g systemd-timesync -s /bin/false -u 78 systemd-timesync
-
 journalctl --update-catalog
 udevadm hwdb --update
 
@@ -235,7 +228,7 @@ EOF
 
 chmod 755 ${DEST}/INSTALL
 
-echo "Creating debug data."
+install -dm755 ${DEST}-debug/usr/lib
 
 pushd ${DEST}
 
@@ -248,8 +241,6 @@ objcopy --add-gnu-debuglink=usr/lib/debug/${BUILD_BINARY} ${BUILD_BINARY}
 esac
 done
 
-mkdir -p ${PKGDEBUG}
-
-mv usr/lib/debug ${PKGDEBUG}
-
 popd
+
+mv ${DEST}/usr/lib/debug ${DEST}-debug/usr/lib

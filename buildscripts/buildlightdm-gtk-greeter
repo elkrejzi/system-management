@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.0.0
+export VER=2.0.1
 export DEST=/binary/lightdm-gtk-greeter-${VER}
 
 pushd lightdm-gtk-greeter-${VER}

@@ -1,0 +1,210 @@
+#!/bin/bash -e
+
+export DEST=/binary/kf5
+
+frameworks=(
+  attica
+  kapidox
+  karchive
+  kcodecs
+  kconfig
+  kcoreaddons
+  kdbusaddons
+  kdnssd
+  kguiaddons
+  ki18n
+  kidletime
+  kimageformats
+  kitemmodels
+  kitemviews
+  kplotting
+  kwidgetsaddons
+  kwindowsystem
+  modemmanager-qt
+  networkmanager-qt
+  solid
+  sonnet
+  threadweaver
+  kauth
+  kcompletion
+  kcrash
+  kdoctools
+  kpty
+  kunitconversion
+  kconfigwidgets
+  kglobalaccel
+  kpackage
+  kservice
+  kdesu
+  kemoticons
+  kiconthemes
+  kjobwidgets
+  kpeople
+  knotifications
+  ktextwidgets
+  kwallet
+  kxmlgui
+  kbookmarks
+  kio
+  frameworkintegration
+  kdeclarative
+  kinit
+  knewstuff
+  knotifyconfig
+  kparts
+  kxmlrpcclient
+  kcmutils
+  kded
+  kdewebkit
+  ktexteditor
+  kactivities
+  kdesignerplugin
+  plasma-framework
+  kjs
+  kdelibs4support
+  khtml
+  kjsembed
+  kmediaplayer
+  kross
+  krunner )
+
+for framework in ${frameworks[@]}
+do
+
+  if [[ -d ${framework} ]]
+  then
+    pushd ${framework}
+      git clean -fdx
+      git fetch origin
+      git reset --hard origin/master
+      if [[ ${framework} != "kapidox" ]]
+      then
+        export VER=$(grep "KF5_VERSION " CMakeLists.txt | cut -d \" -f2)
+      fi
+    popd
+  else
+    git clone git://anongit.kde.org/${framework}.git
+    pushd ${framework}
+      if [[ ${framework} != "kapidox" ]]
+      then
+        export VER=$(grep "KF5_VERSION " CMakeLists.txt | cut -d \" -f2)
+      fi
+    popd
+  fi
+
+  install -dm755 ${framework}/build
+  pushd ${framework}/build
+
+  cmake -DCMAKE_INSTALL_PREFIX=/usr             \
+        -DCMAKE_BUILD_TYPE=Release              \
+        -DSYSCONF_INSTALL_DIR=/etc              \
+        -DLIB_INSTALL_DIR=lib                   \
+        -DBUILD_TESTING=OFF                     \
+        -DQML_INSTALL_DIR=lib/qt5/qml           \
+        -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
+        -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules \
+        -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+        -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+        -Wno-dev ..
+
+  make -j4
+  make install DESTDIR=${DEST}/${framework}-${VER}
+
+  rm -rf ${DEST}/${framework}-${VER}/usr/share/man/{de,it,nl,pt_BR,ru,sv,uk}
+
+  popd
+
+  pushd ${DEST}/${framework}-${VER}
+
+  find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+    case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+      strip --strip-unneeded ${BUILD_BINARY}
+    esac
+  done
+
+  popd
+
+  if [[ -e ${DEST}/${framework}-${VER}/etc ]]
+  then
+
+cat > ${DEST}/${framework}-${VER}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+EOF
+
+  else
+
+cat > ${DEST}/${framework}-${VER}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+  fi
+
+  if [[ ${framework} == "kdesu" ]]
+  then
+
+cat >> ${DEST}/${framework}-${VER}/INSTALL << "EOF"
+
+chgrp nogroup /usr/lib/libexec/kf5/kdesud
+chmod 2755 /usr/lib/libexec/kf5/kdesud
+EOF
+
+  fi
+
+  if [[ ${framework} == "kdelibs4support" ]]
+  then
+
+cat >> ${DEST}/${framework}-${VER}/INSTALL << "EOF"
+
+chmod 4755 /usr/lib/libexec/kf5/fileshareset
+EOF
+
+  fi
+
+  if [[ -e ${DEST}/${framework}-${VER}/usr/share/man ]]
+  then
+
+cat >> ${DEST}/${framework}-${VER}/INSTALL << "EOF"
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+  manpage=1
+
+  fi
+
+  if [[ ${framework} != "kapidox" && ${framework} != "kdesignerplugin" && ${framework} != "kimageformats" ]]
+  then
+
+    if [[ ${manpage} == "1" ]]
+    then
+
+cat >> ${DEST}/${framework}-${VER}/INSTALL << "EOF"
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+    else
+
+cat >> ${DEST}/${framework}-${VER}/INSTALL << "EOF"
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+    fi
+
+  fi
+
+  chmod +x ${DEST}/${framework}-${VER}/INSTALL
+
+  pushd ${DEST}/${framework}-${VER}
+      ./INSTALL
+  popd
+
+  unset manpage
+
+  rm -rf ${framework}
+
+done

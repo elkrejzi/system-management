@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=42.0.2311.135
+export PKGVER=43.0.2357.65
 export DEST=/binary/chromium-${PKGVER}
 
 export -n CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
@@ -38,6 +38,7 @@ chromium_conf=(
     -Duse_system_libevent=1
     -Duse_system_libjpeg=1
     -Duse_system_libpng=1
+    -Duse_system_libvpx=1
     -Duse_system_libwebp=1
     -Duse_system_libxml=1
     -Duse_system_libxslt=1

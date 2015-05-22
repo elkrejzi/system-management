@@ -1,11 +1,9 @@
 #!/bin/bash -e
 
-export VER=2.1-472-g95ba610
+export VER=2.1-479-g84e0558
 export DEST=/binary/kile-${VER}
 
 pushd kile-${VER}
-
-sed -i 's:${OKULAR_INCLUDE_DIR}:/usr/include:g' CMakeLists.txt
 
 cmake -DCMAKE_INSTALL_PREFIX=/usr \
       -DCMAKE_BUILD_TYPE=Release  \

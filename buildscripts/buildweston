@@ -1,15 +1,13 @@
 #!/bin/bash -e
 
-export VER=1.7.91
+export VER=1.7.92
 export DEST=/binary/weston-${VER}
 
 pushd weston-${VER}
 
 CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr   \
-            --with-cairo=gl \
-            --enable-demo-clients-install
+./configure --prefix=/usr --enable-demo-clients-install
 
 make -j4
 make install DESTDIR=${DEST}

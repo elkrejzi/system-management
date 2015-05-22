@@ -39,8 +39,7 @@ make install INSTALL_ROOT=${DEST}
 sed -i -e "s:$PWD:/usr/lib/qt5:g" \
     ${DEST}/usr/lib/qt5/mkspecs/modules/qt_lib_bootstrap_private.pri
 
-find ${DEST}/usr/lib/*.prl -exec sed -i -e \
-     '/^QMAKE_PRL_BUILD_DIR/d;s/\(QMAKE_PRL_LIBS =\).*/\1/' {} \;
+find ${DEST}/usr/lib/*.prl -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
 
 popd
 

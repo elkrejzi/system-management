@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.13.80-79-g99336ac
+export VER=4.13.80-80-g331c859
 export DEST=/binary/baloo-widgets-${VER}
 
 pushd baloo-widgets-${VER}

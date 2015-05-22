@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.42.12
+export VER=1.42.13
 export DEST=/binary/e2fsprogs-${VER}
 
 cp -a e2fsprogs-${VER} e2fsprogs-${VER}-32

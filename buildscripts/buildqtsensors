@@ -13,8 +13,7 @@ find . -name "*.pc" -exec perl -pi -e "s, -L$PWD/?\S+,,g" {} \;
 
 make install INSTALL_ROOT=${DEST}
 
-find ${DEST}/usr/lib/*.prl -exec sed -i -e \
-     '/^QMAKE_PRL_BUILD_DIR/d;s/\(QMAKE_PRL_LIBS =\).*/\1/' {} \;
+find ${DEST}/usr/lib/*.prl -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
 
 popd
 

@@ -14,12 +14,16 @@ export LDFLAGS="-L${DEST}/tmp/usr/lib"
 export CONFIG="--prefix=/usr --sysconfdir=/etc --localstatedir=/var --disable-static"
 
 export XCB_UTIL_VER=0.4.0
+export XCB_UTIL_CURSOR_VER=0.1.2
+export XCB_UTIL_ERRORS_VER=1.0
 export XCB_UTIL_IMAGE_VER=0.4.0
 export XCB_UTIL_KEYSYMS_VER=0.3.9
 export XCB_UTIL_RENDERUTIL_VER=0.3.9
 export XCB_UTIL_WM_VER=0.4.1
 
 wget -c ${XCB_HTTP}/xcb-util-${XCB_UTIL_VER}.tar.bz2
+wget -c ${XCB_HTTP}/xcb-util-cursor-${XCB_UTIL_CURSOR_VER}.tar.bz2
+wget -c ${XCB_HTTP}/xcb-util-errors-${XCB_UTIL_ERRORS_VER}.tar.bz2
 wget -c ${XCB_HTTP}/xcb-util-image-${XCB_UTIL_IMAGE_VER}.tar.bz2
 wget -c ${XCB_HTTP}/xcb-util-keysyms-${XCB_UTIL_KEYSYMS_VER}.tar.bz2
 wget -c ${XCB_HTTP}/xcb-util-renderutil-${XCB_UTIL_RENDERUTIL_VER}.tar.bz2
@@ -36,6 +40,30 @@ pushd xcb-util-${XCB_UTIL_VER}
 popd
 
 rm -rf xcb-util-${XCB_UTIL_VER}
+
+tar xf xcb-util-cursor-${XCB_UTIL_CURSOR_VER}.tar.bz2
+
+pushd xcb-util-cursor-${XCB_UTIL_CURSOR_VER}
+  ./configure ${CONFIG}
+  make -j4
+  make install DESTDIR=${DEST}/xcb/$(basename $PWD)
+  make install DESTDIR=${DEST}/tmp
+  rm -rf ${DEST}/tmp/usr/lib*/*.la
+popd
+
+rm -rf xcb-util-cursor-${XCB_UTIL_CURSOR_VER}
+
+tar xf xcb-util-errors-${XCB_UTIL_ERRORS_VER}.tar.bz2
+
+pushd xcb-util-errors-${XCB_UTIL_ERRORS_VER}
+  ./configure ${CONFIG}
+  make -j4
+  make install DESTDIR=${DEST}/xcb/$(basename $PWD)
+  make install DESTDIR=${DEST}/tmp
+  rm -rf ${DEST}/tmp/usr/lib*/*.la
+popd
+
+rm -rf xcb-util-errors-${XCB_UTIL_ERRORS_VER}
 
 tar xf xcb-util-image-${XCB_UTIL_IMAGE_VER}.tar.bz2
 
@@ -87,7 +115,7 @@ rm -rf xcb-util-wm-${XCB_UTIL_WM_VER}
 
 find ${DEST}/xcb -name "*.la" -delete
 
-rm -rf xcb-util-${XCB_UTIL_VER}.tar.bz2 xcb-util-image-${XCB_UTIL_IMAGE_VER}.tar.bz2 xcb-util-keysyms-${XCB_UTIL_KEYSYMS_VER}.tar.bz2 xcb-util-renderutil-${XCB_UTIL_RENDERUTIL_VER}.tar.bz2 xcb-util-wm-${XCB_UTIL_WM_VER}.tar.bz2
+rm -rf xcb-util-${XCB_UTIL_VER}.tar.bz2 xcb-util-cursor-${XCB_UTIL_CURSOR_VER}.tar.bz2 xcb-util-errors-${XCB_UTIL_ERRORS_VER}.tar.bz2 xcb-util-image-${XCB_UTIL_IMAGE_VER}.tar.bz2 xcb-util-keysyms-${XCB_UTIL_KEYSYMS_VER}.tar.bz2 xcb-util-renderutil-${XCB_UTIL_RENDERUTIL_VER}.tar.bz2 xcb-util-wm-${XCB_UTIL_WM_VER}.tar.bz2
 
 pushd ${DEST}/xcb
 

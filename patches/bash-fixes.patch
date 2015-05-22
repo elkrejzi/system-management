@@ -1,5 +1,39 @@
+--- a/arrayfunc.c	2014-10-01 18:57:35.000000000 +0200
++++ b/arrayfunc.c	2015-05-21 18:21:02.877941074 +0200
+@@ -404,6 +404,9 @@
+       (*var->assign_func) (var, l->word->word, i, 0);
+     else
+       array_insert (a, i, l->word->word);
++
++  VUNSETATTR (var, att_invisible);	/* no longer invisible */
++
+   return var;
+ }
+ 
+@@ -634,6 +637,10 @@
+ 
+   if (nlist)
+     dispose_words (nlist);
++
++  if (var)
++    VUNSETATTR (var, att_invisible);	/* no longer invisible */
++
+   return (var);
+ }
+ 
+--- a/assoc.c	2011-11-05 21:39:05.000000000 +0100
++++ b/assoc.c	2015-05-21 18:21:00.158956999 +0200
+@@ -436,6 +436,8 @@
+ #if 1
+ 	if (sh_contains_shell_metas (tlist->key))
+ 	  istr = sh_double_quote (tlist->key);
++	else if (ALL_ELEMENT_SUB (tlist->key[0]) && tlist->key[1] == '\0')
++	  istr = sh_double_quote (tlist->key);	
+ 	else
+ 	  istr = tlist->key;	
+ #else
 --- a/bashline.c	2014-10-01 18:57:30.000000000 +0200
-+++ b/bashline.c	2015-02-07 00:39:05.687378870 +0100
++++ b/bashline.c	2015-05-21 18:20:20.630188508 +0200
 @@ -202,6 +202,7 @@
  extern int last_command_exit_value;
  extern int array_needs_making;
@@ -21,7 +55,7 @@
    bashline_reset_event_hook ();
    check_signals_and_traps ();	/* XXX */
 --- a/builtins/common.h	2014-10-01 18:57:47.000000000 +0200
-+++ b/builtins/common.h	2015-02-07 00:39:05.685378859 +0100
++++ b/builtins/common.h	2015-05-21 18:20:20.631188502 +0200
 @@ -122,6 +122,10 @@
  /* Functions from getopts.def */
  extern void getopts_reset __P((int));
@@ -34,7 +68,7 @@
  extern int minus_o_option_value __P((char *));
  extern void list_minus_o_opts __P((int, int));
 --- a/builtins/read.def	2014-10-01 18:57:38.000000000 +0200
-+++ b/builtins/read.def	2015-02-07 00:39:05.685378859 +0100
++++ b/builtins/read.def	2015-05-21 18:20:20.631188502 +0200
 @@ -140,10 +140,12 @@
  procenv_t alrmbuf;
  int sigalrm_seen;
@@ -127,8 +161,54 @@
  }
  
  #if defined (READLINE)
+--- a/builtins/set.def	2013-04-19 13:20:34.000000000 +0200
++++ b/builtins/set.def	2015-05-21 18:20:57.876970364 +0200
+@@ -751,9 +751,11 @@
+   WORD_LIST *list;
+ {
+   int unset_function, unset_variable, unset_array, opt, nameref, any_failed;
++  int global_unset_func, global_unset_var;
+   char *name;
+ 
+   unset_function = unset_variable = unset_array = nameref = any_failed = 0;
++  global_unset_func = global_unset_var = 0;
+ 
+   reset_internal_getopt ();
+   while ((opt = internal_getopt (list, "fnv")) != -1)
+@@ -761,10 +763,10 @@
+       switch (opt)
+ 	{
+ 	case 'f':
+-	  unset_function = 1;
++	  global_unset_func = 1;
+ 	  break;
+ 	case 'v':
+-	  unset_variable = 1;
++	  global_unset_var = 1;
+ 	  break;
+ 	case 'n':
+ 	  nameref = 1;
+@@ -777,7 +779,7 @@
+ 
+   list = loptend;
+ 
+-  if (unset_function && unset_variable)
++  if (global_unset_func && global_unset_var)
+     {
+       builtin_error (_("cannot simultaneously unset a function and a variable"));
+       return (EXECUTION_FAILURE);
+@@ -795,6 +797,9 @@
+ 
+       name = list->word->word;
+ 
++      unset_function = global_unset_func;
++      unset_variable = global_unset_var;
++
+ #if defined (ARRAY_VARS)
+       unset_array = 0;
+       if (!unset_function && valid_array_reference (name))
 --- a/jobs.c	2014-10-01 18:57:26.000000000 +0200
-+++ b/jobs.c	2015-02-07 00:39:05.286376788 +0100
++++ b/jobs.c	2015-05-21 18:20:20.632188497 +0200
 @@ -3339,7 +3339,9 @@
        if (posixly_correct && this_shell_builtin && this_shell_builtin == wait_builtin)
  	{
@@ -140,18 +220,58 @@
  	  wait_signal_received = SIGCHLD;
  	  /* If we're in a signal handler, let CHECK_WAIT_INTR pick it up;
  	     run_pending_traps will call run_sigchld_trap later  */
+--- a/lib/sh/unicode.c	2014-01-30 22:47:19.000000000 +0100
++++ b/lib/sh/unicode.c	2015-05-21 18:20:58.415967207 +0200
+@@ -78,13 +78,15 @@
+   s = strrchr (locale, '.');
+   if (s)
+     {
+-      strcpy (charsetbuf, s+1);
++      strncpy (charsetbuf, s+1, sizeof (charsetbuf) - 1);
++      charsetbuf[sizeof (charsetbuf) - 1] = '\0';
+       t = strchr (charsetbuf, '@');
+       if (t)
+ 	*t = 0;
+       return charsetbuf;
+     }
+-  strcpy (charsetbuf, locale);
++  strncpy (charsetbuf, locale, sizeof (charsetbuf) - 1);
++  charsetbuf[sizeof (charsetbuf) - 1] = '\0';
+   return charsetbuf;
+ }
+ #endif
+--- a/parse.y	2014-10-05 19:52:50.000000000 +0200
++++ b/parse.y	2015-05-21 18:21:00.695953854 +0200
+@@ -2818,11 +2818,16 @@
+     case AND_AND:
+     case OR_OR:
+     case '&':
++    case WHILE:
+     case DO:
++    case UNTIL:
++    case IF:
+     case THEN:
++    case ELIF:
+     case ELSE:
+     case '{':		/* } */
+-    case '(':		/* ) */
++    case '(':		/* )( */
++    case ')':		/* only valid in case statement */
+     case BANG:		/* ! time pipeline */
+     case TIME:		/* time time pipeline */
+     case TIMEOPT:	/* time -p time pipeline */
 --- a/patchlevel.h	2014-10-05 19:52:50.000000000 +0200
-+++ b/patchlevel.h	2015-02-07 00:39:05.688378875 +0100
++++ b/patchlevel.h	2015-05-21 18:21:02.880941057 +0200
 @@ -25,6 +25,6 @@
     regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
     looks for to find the patch level (for the sccs version string). */
  
 -#define PATCHLEVEL 30
-+#define PATCHLEVEL 33
++#define PATCHLEVEL 39
  
  #endif /* _PATCHLEVEL_H_ */
 --- a/shell.c	2014-01-14 14:04:32.000000000 +0100
-+++ b/shell.c	2015-02-07 00:39:05.684378854 +0100
++++ b/shell.c	2015-05-21 18:20:20.632188497 +0200
 @@ -73,6 +73,7 @@
  #endif
  
@@ -176,7 +296,7 @@
       passed to us. */
    if (signal_is_trapped (0))
 --- a/sig.c	2014-01-10 21:06:06.000000000 +0100
-+++ b/sig.c	2015-02-07 00:39:05.688378875 +0100
++++ b/sig.c	2015-05-21 18:20:20.632188497 +0200
 @@ -532,8 +532,10 @@
  #if defined (READLINE)
    /* Set the event hook so readline will call it after the signal handlers
@@ -191,7 +311,7 @@
  #endif
  
 --- a/subst.h	2014-10-01 18:57:43.000000000 +0200
-+++ b/subst.h	2015-02-07 00:39:05.022375417 +0100
++++ b/subst.h	2015-05-21 18:20:20.633188491 +0200
 @@ -47,6 +47,7 @@
  #define ASS_MKASSOC	0x0004
  #define ASS_MKGLOBAL	0x0008	/* force global assignment */
@@ -201,7 +321,7 @@
  /* Flags for the string extraction functions. */
  #define SX_NOALLOC	0x0001	/* just skip; don't return substring */
 --- a/variables.c	2014-10-01 18:57:51.000000000 +0200
-+++ b/variables.c	2015-02-07 00:39:05.024375427 +0100
++++ b/variables.c	2015-05-21 18:20:59.606960232 +0200
 @@ -2516,10 +2516,27 @@
       HASH_TABLE *table;
       int hflags, aflags;
@@ -258,3 +378,40 @@
  		    }
  		  else
  		    v = nv;
+@@ -2805,10 +2833,12 @@
+ #endif
+     v = bind_variable (lhs, rhs, 0);
+ 
+-  if (v && isint)
+-    VSETATTR (v, att_integer);
+-
+-  VUNSETATTR (v, att_invisible);
++  if (v)
++    {
++      if (isint)
++	VSETATTR (v, att_integer);
++      VUNSETATTR (v, att_invisible);
++    }
+ 
+   return (v);
+ }
+--- a/y.tab.c	2014-10-05 19:52:50.000000000 +0200
++++ b/y.tab.c	2015-05-21 18:21:00.783953338 +0200
+@@ -5130,11 +5130,16 @@
+     case AND_AND:
+     case OR_OR:
+     case '&':
++    case WHILE:
+     case DO:
++    case UNTIL:
++    case IF:
+     case THEN:
++    case ELIF:
+     case ELSE:
+     case '{':		/* } */
+-    case '(':		/* ) */
++    case '(':		/* )( */
++    case ')':		/* only valid in case statement */
+     case BANG:		/* ! time pipeline */
+     case TIME:		/* time time pipeline */
+     case TIMEOPT:	/* time -p time pipeline */

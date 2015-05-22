@@ -7,20 +7,13 @@ pushd qtwayland-opensource-src-${VER}
 
 qmake-qt5
 
-make sub-src-qmake_all
-make -C src sub-client-qmake_all
-
-sed -i "/LIBS/s:lXcomposite:& -lXrender:;/PKGCONFIG/s:xcomposite:& xrender:" src/hardwareintegration/client/xcomposite-glx/xcomposite-glx.pri
-sed -i "/LIBS/s:-lQt5PlatformSupport:& -lQt5DBus:g" src/client/Makefile
-
 make -j4
 
 find . -name "*.pc" -exec perl -pi -e "s, -L$PWD/?\S+,,g" {} \;
 
 make install INSTALL_ROOT=${DEST}
 
-find ${DEST}/usr/lib/*.prl -exec sed -i -e \
-     '/^QMAKE_PRL_BUILD_DIR/d;s/\(QMAKE_PRL_LIBS =\).*/\1/' {} \;
+find ${DEST}/usr/lib/*.prl -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
 
 popd
 

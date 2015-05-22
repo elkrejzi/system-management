@@ -3,6 +3,8 @@
 export VER=3.16.2
 export DEST=/binary/gnome-themes-standard-${VER}
 
+cp -a gnome-themes-standard-${VER} gnome-themes-standard-${VER}-32
+
 pushd gnome-themes-standard-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
@@ -14,7 +16,22 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf gnome-themes-standard-${VER}
+pushd gnome-themes-standard-${VER}-32
+
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+./configure --prefix=/usr  --libdir=/usr/lib32
+
+make -C themes/Adwaita/gtk-2.0 libadwaita.la
+make -C themes/Adwaita/gtk-2.0 install-engineLTLIBRARIES DESTDIR=${DEST}
+
+popd
+
+rm -rf gnome-themes-standard-${VER} gnome-themes-standard-${VER}-32
 
 find ${DEST} -name "*.la" -delete
 
