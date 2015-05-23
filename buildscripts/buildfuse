@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.9.3
+export VER=2.9.4
 export DEST=/binary/fuse-${VER}
 
 pushd fuse-${VER}
