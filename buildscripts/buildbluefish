@@ -16,6 +16,8 @@ popd
 
 rm -rf bluefish-${VER}
 
+find ${DEST} -name "*.la" -delete
+
 rm -rf ${DEST}/usr/share/doc
 
 pushd ${DEST}

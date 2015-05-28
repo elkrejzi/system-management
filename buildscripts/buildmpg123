@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.22.1
+export VER=1.22.2
 export DEST=/binary/mpg123-${VER}
 
 cp -a mpg123-${VER} mpg123-${VER}-32

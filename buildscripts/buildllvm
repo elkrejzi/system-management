@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.6.0
+export VER=3.6.1
 
 for tarball in cfe-${VER}.src.tar.xz clang-tools-extra-${VER}.src.tar.xz  \
                compiler-rt-${VER}.src.tar.xz llvm-${VER}.src.tar.xz
@@ -90,6 +90,12 @@ done
 
 ln -sf /usr/bin/clang /binary/llvm-${VER}/usr/lib/clang-analyzer/scan-build/
 mv /binary/llvm-${VER}/usr/lib/clang-analyzer/scan-build/scan-build.1 /binary/llvm-${VER}/usr/share/man/man1/
+
+find /binary/llvm-${VER}/usr/lib/clang-analyzer -type d -exec chmod 755 {} \;
+find /binary/llvm-${VER}/usr/lib/clang-analyzer -type f -exec chmod 644 {} \;
+
+chmod 755 /binary/llvm-${VER}/usr/lib/clang-analyzer/scan-build/{c++-analyzer,ccc-analyzer,scan-build,set-xcode-analyzer}
+chmod 755 /binary/llvm-${VER}/usr/lib/clang-analyzer/scan-view/scan-view
 
 python -m compileall /binary/llvm-${VER}/usr/lib/clang-analyzer
 python -O -m compileall /binary/llvm-${VER}/usr/lib/clang-analyzer

@@ -47,6 +47,8 @@ rm -rf gtk+-${VER} gtk+-${VER}-32
 
 find ${DEST} -name "*.la" -delete
 
+rm -rf ${DEST}/usr/bin/gtk-update-icon-cache ${DEST}/usr/share/man/man1/gtk-update-icon-cache.1
+
 cat > ${DEST}/usr/share/gtk-2.0/gtkrc << "EOF"
 gtk-icon-theme-name = "Adwaita"
 gtk-theme-name = "Adwaita"

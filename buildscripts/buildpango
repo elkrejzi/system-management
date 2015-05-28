@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.36.8
+export VER=1.37.0
 export DEST=/binary/pango-${VER}
 
 cp -a pango-${VER} pango-${VER}-32
@@ -33,7 +33,6 @@ make -j4
 make install DESTDIR=${PWD}/dest
 
 mv dest/usr/lib32 ${DEST}/usr
-mv dest/usr/bin/pango-querymodules ${DEST}/usr/bin/pango-querymodules-32
 
 popd
 
@@ -58,9 +57,6 @@ cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
 cp -rf --remove-destination usr /
-
-pango-querymodules --update-cache
-pango-querymodules-32 --update-cache
 
 [ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig

@@ -43,7 +43,7 @@ rm -rf soundtouch soundtouch-32
 
 find ${DEST} -name "*.la" -delete
 
-rm -rf ${DEST}/usr/doc
+rm -rf ${DEST}/usr/share/doc
 
 pushd ${DEST}
 

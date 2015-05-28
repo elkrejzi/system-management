@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.1.3
+export VER=0.1.4
 export DEST=/binary/libodfgen-${VER}
 
 pushd libodfgen-${VER}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.7.9
+export VER=2.7.10
 export DEST=/binary/Python-${VER}
 
 pushd Python-${VER}

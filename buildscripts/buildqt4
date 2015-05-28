@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.8.6
+export VER=4.8.7
 export DEST=/binary/qt-${VER}
 
 pushd qt-everywhere-opensource-src-${VER}
@@ -8,11 +8,6 @@ pushd qt-everywhere-opensource-src-${VER}
 if [ -e /media/ntfs/Other/Linux/patches/qt4fixes.patch ]; then
   patch -Np1 -i /media/ntfs/Other/Linux/patches/qt4fixes.patch
 fi
-
-patch -Np1 -i /media/ntfs/Other/Linux/patches/qt4-gcc5.patch
-
-sed -e '631a if (image->isNull()) { state = Error; return -1; }' \
-    -i src/gui/image/qgifhandler.cpp
 
 sed -e '/CONFIG -/ a\isEmpty(OUTPUT_DIR): OUTPUT_DIR = ../..' \
     -i src/3rdparty/webkit/Source/WebKit2/DerivedSources.pro
@@ -53,6 +48,7 @@ sed -i "s:common/linux.conf:common/linux32.conf:" mkspecs/linux-g++-32/qmake.con
             -no-phonon \
             -no-phonon-backend \
             -no-openvg \
+            -no-webkit \
             -nomake demos \
             -nomake examples \
             -optimized-qmake
@@ -63,15 +59,10 @@ install -dm755 ${DEST}/usr/bin ${DEST}/usr/share/applications ${DEST}/usr/share/
 
 make install INSTALL_ROOT=${DEST}
 
-for file in 3Support CLucene Core DBus Declarative DesignerComponents \
-           Designer Gui Help Multimedia Network OpenGL Script \
-           ScriptTools Sql Svg Test UiTools WebKit XmlPatterns Xml
-do
-  sed -i -e '/^QMAKE_PRL_BUILD_DIR/d;s/\(QMAKE_PRL_LIBS =\).*/\1/' \
-       ${DEST}/usr/lib/libQt${file}.prl
-  perl -pi -e "s, -L$PWD/?\S+,,g" ${DEST}/usr/lib/pkgconfig/Qt${file}.pc
-done
-unset file
+sed -e '/^QMAKE_PRL_BUILD_DIR/d;s/\(QMAKE_PRL_LIBS =\).*/\1/' \
+    -i ${DEST}/usr/lib/*.prl
+
+perl -pi -e "s, -L$PWD/?\S+,,g" ${DEST}/usr/lib/pkgconfig/*.pc
 
 rm -rf ${DEST}/usr/tests ${DEST}/usr/share/doc ${DEST}/usr/lib/*.la
 
@@ -189,6 +180,7 @@ PKG_CONFIG_PATH=/usr/lib32/pkgconfig \
             -no-phonon \
             -no-phonon-backend \
             -no-openvg \
+            -no-webkit \
             -nomake demos \
             -nomake docs \
             -nomake examples \
@@ -202,15 +194,10 @@ make install INSTALL_ROOT=${PWD}/dest
 
 rm -rf dest/usr/lib32/*.la
 
-for file in 3Support Core DBus Declarative Gui Multimedia \
-            Network OpenGL Script  ScriptTools Sql Svg \
-            Test WebKit XmlPatterns Xml
-do
-  sed -i -e '/^QMAKE_PRL_BUILD_DIR/d;s/\(QMAKE_PRL_LIBS =\).*/\1/' \
-       dest/usr/lib32/libQt${file}.prl
-  perl -pi -e "s, -L$PWD/?\S+,,g" dest/usr/lib32/pkgconfig/Qt${file}.pc
-done
-unset file
+sed -e '/^QMAKE_PRL_BUILD_DIR/d;s/\(QMAKE_PRL_LIBS =\).*/\1/' \
+    -i dest/usr/lib32/*.prl
+
+perl -pi -e "s, -L$PWD/?\S+,,g" dest/usr/lib32/pkgconfig/*.pc
 
 rm -rf dest/usr/lib32/qt4/plugins/imageformats/libqtga.so
 

@@ -3,8 +3,6 @@
 export VER=0.10.36
 export DEST=/binary/gst-plugins-base-${VER}
 
-cp -a gst-plugins-base-${VER} gst-plugins-base-${VER}-32
-
 pushd gst-plugins-base-${VER}
 
 CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
@@ -19,30 +17,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-pushd gst-plugins-base-${VER}-32
-
-export CC="gcc -m32"
-export CXX="g++ -m32"
-export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
-
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr           \
-            --libdir=/usr/lib32     \
-            --disable-static        \
-            --disable-introspection \
-            --disable-examples      \
-            --with-package-name="GStreamer Base Plugins ${VER} BLFS" \
-            --with-package-origin="http://www.linuxfromscratch.org/blfs/view/svn/"
-
-make -j4
-make install DESTDIR=${PWD}/dest
-
-mv dest/usr/lib32 ${DEST}/usr
-
-popd
-
-rm -rf gst-plugins-base-${VER} gst-plugins-base-${VER}-32
+rm -rf gst-plugins-base-${VER}
 
 find ${DEST} -name "*.la" -delete
 

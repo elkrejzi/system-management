@@ -43,6 +43,8 @@ popd
 
 rm -rf transcode-${VER}
 
+find ${DEST} -name "*.la" -delete
+
 rm -rf ${DEST}/usr/share/doc
 
 pushd ${DEST}
