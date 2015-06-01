@@ -10,8 +10,8 @@ install -dm755 buildncursesw6-32 buildncursesw-32 buildncurses-32
 
 pushd buildncursesw6
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ../configure --prefix=/usr \
              --libdir=/usr/lib \
              --with-pkg-config-libdir=/usr/lib/pkgconfig \
@@ -30,8 +30,8 @@ popd
 
 pushd buildncursesw
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ../configure --prefix=/usr \
              --libdir=/usr/lib \
              --mandir=/usr/share/man \
@@ -50,8 +50,8 @@ popd
 
 pushd buildncurses
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ../configure --prefix=/usr \
              --libdir=/usr/lib \
              --mandir=/usr/share/man \
@@ -74,8 +74,8 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
 pushd buildncursesw6-32
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ../configure --prefix=/usr \
              --libdir=/usr/lib32 \
              --with-pkg-config-libdir=/usr/lib32/pkgconfig \
@@ -96,8 +96,8 @@ popd
 
 pushd buildncursesw-32
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ../configure --prefix=/usr \
              --libdir=/usr/lib32 \
              --mandir=/usr/share/man \
@@ -116,8 +116,8 @@ popd
 
 pushd buildncurses-32
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ../configure --prefix=/usr \
              --libdir=/usr/lib32 \
              --mandir=/usr/share/man \

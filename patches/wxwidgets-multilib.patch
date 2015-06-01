@@ -1,0 +1,25 @@
+--- a/Makefile.in	2014-10-06 23:33:44.000000000 +0200
++++ b/Makefile.in	2015-05-29 10:11:07.365920881 +0200
+@@ -16145,7 +16145,8 @@
+ 	$(INSTALL_DIR) $(DESTDIR)$(bindir)
+ 	$(INSTALL_DIR) $(DESTDIR)$(libdir)/wx/config
+ 	$(INSTALL_PROGRAM) lib/wx/config/$(TOOLCHAIN_FULLNAME) $(DESTDIR)$(libdir)/wx/config
+-	(cd $(DESTDIR)$(bindir) && rm -f wx-config && $(LN_S) $(libdir)/wx/config/$(TOOLCHAIN_FULLNAME) wx-config || cp -p $(DESTDIR)$(libdir)/wx/config/$(TOOLCHAIN_FULLNAME) wx-config)
++	(cd $(DESTDIR)$(bindir) && rm -f wx-config && $(LN_S) $(libdir)/wx/config/$(TOOLCHAIN_FULLNAME) wx-config32-$(WX_RELEASE) || cp -p $(DESTDIR)$(libdir)/wx/config/$(TOOLCHAIN_FULLNAME) wx-config32-$(WX_RELEASE))
++	(cd $(DESTDIR)$(bindir) && $(LN_S) wx-config32-$(WX_RELEASE) wx-config32$(EXEEXT))
+ 
+ locale_install: 
+ 	$(INSTALL_DIR) $(DESTDIR)$(datadir)/locale
+--- a/utils/wxrc/Makefile.in	2014-10-06 23:33:44.000000000 +0200
++++ b/utils/wxrc/Makefile.in	2015-05-29 10:11:07.365920881 +0200
+@@ -124,8 +124,8 @@
+ @COND_USE_XRC_1@	$(INSTALL_PROGRAM) wxrc$(EXEEXT) $(DESTDIR)$(bindir)
+ @COND_USE_XRC_1@	rm -f $(DESTDIR)$(bindir)/wxrc$(EXEEXT) $(DESTDIR)$(bindir)/wxrc-$(WX_RELEASE)
+ @COND_USE_XRC_1@	$(INSTALL_PROGRAM) wxrc$(EXEEXT) $(DESTDIR)$(bindir)
+-@COND_USE_XRC_1@	mv -f $(DESTDIR)$(bindir)/wxrc$(EXEEXT) $(DESTDIR)$(bindir)/wxrc-$(WX_RELEASE)
+-@COND_USE_XRC_1@	(cd $(DESTDIR)$(bindir) && $(LN_S) wxrc-$(WX_RELEASE) wxrc$(EXEEXT))
++@COND_USE_XRC_1@	mv -f $(DESTDIR)$(bindir)/wxrc$(EXEEXT) $(DESTDIR)$(bindir)/wxrc32-$(WX_RELEASE)
++@COND_USE_XRC_1@	(cd $(DESTDIR)$(bindir) && $(LN_S) wxrc32-$(WX_RELEASE) wxrc32$(EXEEXT))
+ 
+ @COND_USE_XRC_1@uninstall_wxrc: 
+ @COND_USE_XRC_1@	rm -f $(DESTDIR)$(bindir)/wxrc$(EXEEXT)

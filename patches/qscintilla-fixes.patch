@@ -1,16 +1,15 @@
-diff -Naur a/Python/configure.py b/Python/configure.py
---- a/Python/configure.py	2014-09-11 19:15:17.000000000 +0200
-+++ b/Python/configure.py	2014-09-28 15:33:13.707681766 +0200
-@@ -31,6 +31,8 @@
- import glob
+--- a/Python/configure.py	2015-04-20 16:38:24.000000000 +0200
++++ b/Python/configure.py	2015-05-29 10:38:32.876611996 +0200
+@@ -32,6 +32,8 @@
  import optparse
+ import sys
  
 +src_dir = os.path.dirname(os.path.abspath(__file__))
 +
- try:
-     import sysconfig
- except ImportError:
-@@ -210,6 +212,8 @@
+ 
+ ###############################################################################
+ # You shouldn't need to modify anything above this line.
+@@ -206,6 +208,8 @@
                      "The QScintilla version number could not be determined by "
                      "reading %s." % sciglobal)
  
@@ -19,7 +18,7 @@ diff -Naur a/Python/configure.py b/Python/configure.py
          lib_dir = target_configuration.qsci_lib_dir
          if lib_dir is None:
              lib_dir = target_configuration.qt_lib_dir
-@@ -264,7 +268,12 @@
+@@ -260,7 +264,12 @@
          the target configuration.
          """
  
@@ -33,15 +32,3 @@ diff -Naur a/Python/configure.py b/Python/configure.py
  
      def get_sip_installs(self, target_configuration):
          """ Return a tuple of the installation directory of the module's .sip
-@@ -1428,7 +1437,10 @@
- 
-     libs = qmake_config.get('LIBS')
-     if libs:
--        pro.write('LIBS += %s\n' % libs)
-+        if target_config.pyqt_package == 'PyQt5':
-+            pro.write('LIBS += %s -lqt5scintilla2\n' % libs)
-+        else:
-+            pro.write('LIBS += %s -lqscintilla2\n' % libs)
- 
-     if not opts.static:
-         pro.write('''

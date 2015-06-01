@@ -6,8 +6,8 @@ export DEST=/binary/tar-${VER}
 pushd tar-${VER}
 
 FORCE_UNSAFE_CONFIGURE=1 \
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr --bindir=/bin
 
 make -j4

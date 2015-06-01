@@ -16,7 +16,7 @@ cp -a qtwebkit qtwebkit-32
 
 pushd qtwebkit
 
-Tools/Scripts/build-webkit --qt --no-webkit2 --prefix=/usr --qmakearg='"QMAKE_CFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w" "QMAKE_CXXFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w"' --makeargs="-j4"
+Tools/Scripts/build-webkit --qt --no-webkit2 --prefix=/usr --qmakearg='"QMAKE_CFLAGS=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -w" "QMAKE_CXXFLAGS=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -w"' --makeargs="-j4"
 
 make INSTALL_ROOT=${DEST} -C WebKitBuild/Release install
 
@@ -27,7 +27,7 @@ popd
 
 pushd qtwebkit-32
 
-Tools/Scripts/build-webkit --qt --no-webkit2 --prefix=/usr --install-headers=/usr/lib32/qt4/include --install-libs=/usr/lib32 --qmakearg='-spec linux-g++-32 "QMAKE_CFLAGS=-m32 -march=native -mtune=native -O2 -pipe -fstack-protector-strong -w" "QMAKE_CXXFLAGS=-m32 -march=native -mtune=native -O2 -pipe -fstack-protector-strong -w"' --makeargs="-j4"
+Tools/Scripts/build-webkit --qt --no-webkit2 --prefix=/usr --install-headers=/usr/lib32/qt4/include --install-libs=/usr/lib32 --qmakearg='-spec linux-g++-32 "QMAKE_CFLAGS=-m32 -march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -w" "QMAKE_CXXFLAGS=-m32 -march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -w"' --makeargs="-j4"
 
 make INSTALL_ROOT=${PWD}/dest -C WebKitBuild/Release install
 

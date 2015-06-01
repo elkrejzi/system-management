@@ -15,8 +15,8 @@ sed -i -e 's@#ENCRYPT_METHOD DES@ENCRYPT_METHOD SHA512@' \
 sed -i -e 's@PATH=/sbin:/bin:/usr/sbin:/usr/bin@&:/usr/local/sbin:/usr/local/bin@' \
        -e 's@PATH=/bin:/usr/bin@&:/usr/local/bin@' etc/login.defs
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr --sysconfdir=/etc --with-group-name-max-length=32
 
 make -j4

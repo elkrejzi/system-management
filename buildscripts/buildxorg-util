@@ -27,7 +27,7 @@ rm -rf util-macros-${UTIL_MACROS_VER}
 tar xf makedepend-${MAKEDEPEND_VER}.tar.bz2
 
 pushd makedepend-${MAKEDEPEND_VER}
-  CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" ./configure ${CONFIG}
+  CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" ./configure ${CONFIG}
   make
   make install DESTDIR=${DEST}/$(basename $PWD)
   strip --strip-unneeded ${DEST}/$(basename $PWD)/usr/bin/makedepend

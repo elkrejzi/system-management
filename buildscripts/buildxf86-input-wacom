@@ -5,8 +5,8 @@ export DEST=/binary/xf86-input-wacom-${VER}
 
 pushd xf86-input-wacom-${VER}
 
-CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr \
             --with-udev-rules-dir=/lib/udev/rules.d \
             --with-systemd-unit-dir=/lib/systemd/system

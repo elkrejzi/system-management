@@ -61,8 +61,8 @@ pushd ffmpeg-${VER}
             --disable-debug            \
             --disable-opencl           \
             --disable-static           \
-            --extra-cflags='-march=native -mtune=native -O2 -pipe -fstack-protector-strong'   \
-            --extra-cxxflags='-march=native -mtune=native -O2 -pipe -fstack-protector-strong'
+            --extra-cflags='-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong'   \
+            --extra-cxxflags='-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong'
 
 make -j4
 make install DESTDIR=${DEST}

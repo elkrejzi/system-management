@@ -6,7 +6,7 @@ export DEST=/binary/zip-${VER}
 
 pushd zip${PKGVER}
 
-sed -i "s:-O3:-march=native -mtune=native -O2 -pipe -fstack-protector-strong:g" unix/configure
+sed -i "s:-O3:-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong:g" unix/configure
 
 make -f unix/Makefile -j4 generic_gcc
 make -f unix/Makefile prefix=${DEST}/usr MANDIR=${DEST}/usr/share/man/man1 install

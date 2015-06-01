@@ -9,8 +9,8 @@ pushd gtk+-${VER}
 
 sed -i 's#l \(gtk-.*\).sgml#& -o \1#' docs/{faq,tutorial}/Makefile.in
 
-CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr     \
             --sysconfdir=/etc \
             --enable-man
@@ -28,8 +28,8 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
 sed -i 's#l \(gtk-.*\).sgml#& -o \1#' docs/{faq,tutorial}/Makefile.in
 
-CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr       \
             --libdir=/usr/lib32 \
             --sysconfdir=/etc   \

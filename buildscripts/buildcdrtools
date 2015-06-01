@@ -6,7 +6,7 @@ export DEST=/binary/cdrtools-${VER}
 
 pushd cdrtools-${BVER}
 
-sed -i "s:-D_GNU_SOURCE:& -march=native -mtune=native -O2 -pipe -fstack-protector-strong:g" DEFAULTS/Defaults.linux
+sed -i "s:-D_GNU_SOURCE:& -march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong:g" DEFAULTS/Defaults.linux
 sed -i 's|/opt/schily|/usr|g' DEFAULTS/Defaults.linux
 sed -i 's|DEFINSGRP=.*|DEFINSGRP=root|' DEFAULTS/Defaults.linux
 

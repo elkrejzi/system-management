@@ -5,7 +5,7 @@ export DEST=/binary/live-media-${VER}
 
 pushd live
 
-sed -e 's/$(INCLUDES) -I. -O2 -DSOCKLEN_T/$(INCLUDES) -I. -O2 -pipe -fstack-protector-strong -march=native -mtune=native -I. -fPIC -DSOCKLEN_T/g' \
+sed -e 's/$(INCLUDES) -I. -O2 -DSOCKLEN_T/$(INCLUDES) -I. -O2 -pipe -fstack-protector-strong -march=sandybridge -fomit-frame-pointer -I. -fPIC -DSOCKLEN_T/g' \
     -i config.linux
 
 ./genMakefiles linux

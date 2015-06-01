@@ -4,7 +4,7 @@ export VER=0.3.110
 export DEST=/binary/libaio-${VER}
 
 pushd libaio-${VER}
-sed -e "s|-nostdlib -nostartfiles -Wall -I. -fPIC|& -march=native -mtune=native -pipe|g" -i src/Makefile
+sed -e "s|-nostdlib -nostartfiles -Wall -I. -fPIC|& -march=sandybridge -fomit-frame-pointer -pipe|g" -i src/Makefile
 popd
 
 cp -a libaio-${VER} libaio-${VER}-32

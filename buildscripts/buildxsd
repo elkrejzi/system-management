@@ -7,7 +7,7 @@ pushd xsd-${VER}+dep
 
 patch -Np1 -i /media/ntfs/Other/Linux/patches/xsd-fixes.patch
 
-make CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" -j4
+make CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" -j4
 make install install_prefix=${DEST}/usr
 
 popd

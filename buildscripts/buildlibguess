@@ -7,8 +7,8 @@ pushd libguess-${VER}
 
 #sed 's/libmowgli >= 0.9.50/libmowgli-2/g' -i configure
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr
 
 make -j4

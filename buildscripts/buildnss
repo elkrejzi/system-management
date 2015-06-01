@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
-export VER=3.19
+export VER=3.19.1
 export DEST=/binary/nss-${VER}
 
-export XCFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
+export XCFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
 
 pushd nss-${VER}
   patch -Np1 -i /media/ntfs/Other/Linux/patches/nss-standalone.patch

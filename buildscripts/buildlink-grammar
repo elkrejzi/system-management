@@ -8,8 +8,8 @@ pushd link-grammar-${VER}
 sed -i "s:-D_BSD_SOURCE -D_SVID_SOURCE ::g" configure
 sed -i "s:sitearch:vendorarch:g" configure
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr --disable-static
 
 make -j4

@@ -5,8 +5,8 @@ export DEST=/binary/qtbase-${VER}
 
 pushd qtbase-opensource-src-${VER}
 
-export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
-export CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
+export CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
+export CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
 
 ./configure -prefix         /usr               \
             -sysconfdir     /etc/xdg           \

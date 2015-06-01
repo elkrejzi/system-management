@@ -5,8 +5,8 @@ export DEST=/binary/evolution-data-server-${VER}
 
 pushd evolution-data-server-${VER}
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr    \
             --disable-uoa    \
             --with-krb5=/usr \

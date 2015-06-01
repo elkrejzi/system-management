@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/bash -e
 
 export MAJOR=1.8.0
-export PATCH=40
+export PATCH=45
 export VER="${MAJOR}"u"${PATCH}"
 export DIR=jdk"${MAJOR}"_"${PATCH}"
 export DEST=/binary/jdk-${VER}
@@ -52,12 +52,12 @@ ln -sf ../../java/jre/lib/${ARCH}/libnpjp2.so ${DEST}/usr/lib/mozilla/plugins/li
 
 sed s:.png:: -i ${DEST}/usr/share/applications/*.desktop
 
-cat > ${DEST}/etc/profile.d/jre.sh << "EOF"
-# Begin /etc/profile.d/jre.sh
+cat > ${DEST}/etc/profile.d/jdk.sh << "EOF"
+# Begin /etc/profile.d/jdk.sh
 
 export JAVA_HOME=/usr/lib/java
 
-# End /etc/profile.d/jre.sh
+# End /etc/profile.d/jdk.sh
 EOF
 
 cat > ${DEST}/INSTALL << "EOF"

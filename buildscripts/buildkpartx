@@ -6,7 +6,7 @@ export DEST=/binary/kpartx-${VER}
 pushd multipath-tools-${VER}/kpartx
 
 sed -i "s:lib64:lib:g" ../Makefile.inc
-sed -i "s:-O2:-march=native -mtune=native -O2 -pipe -fstack-protector-strong:g" ../Makefile.inc
+sed -i "s:-O2:-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong:g" ../Makefile.inc
 
 make -j4
 make install DESTDIR=${DEST}

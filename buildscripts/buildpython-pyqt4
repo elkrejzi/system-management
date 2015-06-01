@@ -7,7 +7,7 @@ cp -a PyQt-x11-gpl-${VER} PyQt-x11-gpl-${VER}-2
 
 pushd PyQt-x11-gpl-${VER}-2
 
-python configure-ng.py --confirm-license --qsci-api -v /usr/share/sip
+python configure-ng.py --confirm-license --qsci-api --no-sip-files -q /usr/bin/qmake-qt4
 
 find -name 'Makefile' | xargs sed -i 's|-Wl,-rpath,/usr/lib||g;s|-Wl,-rpath,.* ||g'
 
@@ -20,7 +20,7 @@ popd
 
 pushd PyQt-x11-gpl-${VER}
 
-python3 configure-ng.py --confirm-license --qsci-api
+python3 configure-ng.py --confirm-license --qsci-api -q /usr/bin/qmake-qt4
 
 find -name 'Makefile' | xargs sed -i 's|-Wl,-rpath,/usr/lib||g;s|-Wl,-rpath,.* ||g'
 

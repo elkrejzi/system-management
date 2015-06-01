@@ -13,8 +13,8 @@ cp -a systemd-${VER} systemd-${VER}-32
 
 pushd systemd-${VER}
 
-CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong -fno-lto"   \
-CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong -fno-lto" \
+CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong -fno-lto"   \
+CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong -fno-lto" \
 ./configure --prefix=/usr        \
             --libdir=/usr/lib    \
             --sysconfdir=/etc    \
@@ -51,8 +51,8 @@ export CC="gcc -m32"
 export CXX="g++ -m32"
 export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
-CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong -fno-lto"    \
-CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong -fno-lto"  \
+CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong -fno-lto"    \
+CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong -fno-lto"  \
 ./configure --prefix=/usr           \
             --libdir=/usr/lib32     \
             --sysconfdir=/etc       \

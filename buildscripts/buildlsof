@@ -14,7 +14,7 @@ pushd lsof-${VER}
 
 ./Configure -n linux
 
-sed -i "/DEBUG/s:-O:-march=native -mtune=native -O2 -pipe -fstack-protector-strong:" Makefile
+sed -i "/DEBUG/s:-O:-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong:" Makefile
 
 make -j4
 

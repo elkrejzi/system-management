@@ -8,8 +8,8 @@ pushd notify-python-${VER}
 patch -Np1 -i /media/ntfs/Other/Linux/patches/notify-python-fixes.patch
 
 PYTHON=/usr/bin/python \
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr
 
 touch src/pynotify.override

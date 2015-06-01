@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.8.4
+export VER=1.8.5
 export DEST=/binary/openmpi-${VER}
 
 pushd openmpi-${VER}
@@ -8,8 +8,8 @@ pushd openmpi-${VER}
 rm -rf opal/libltdl
 
 FC=/usr/bin/gfortran                       \
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr             \
             --sysconfdir=/etc/openmpi \
             --with-hwloc=/usr         \

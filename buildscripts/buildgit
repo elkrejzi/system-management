@@ -7,8 +7,8 @@ pushd git-${VER}
 
 sed -i "/BSD_SOURCE/d" git-compat-util.h
 
-make prefix=/usr USE_LIBPCRE=1 NO_CROSS_DIRECTORY_HARDLINKS=1 INSTALLDIRS=vendor CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" -j4
-make prefix=/usr USE_LIBPCRE=1 NO_CROSS_DIRECTORY_HARDLINKS=1 INSTALLDIRS=vendor CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" install DESTDIR=${DEST}
+make prefix=/usr USE_LIBPCRE=1 NO_CROSS_DIRECTORY_HARDLINKS=1 INSTALLDIRS=vendor CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" -j4
+make prefix=/usr USE_LIBPCRE=1 NO_CROSS_DIRECTORY_HARDLINKS=1 INSTALLDIRS=vendor CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" install DESTDIR=${DEST}
 
 popd
 

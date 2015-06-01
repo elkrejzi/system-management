@@ -1,11 +1,11 @@
 #!/bin/bash -e
 
-export VER=2.70
+export VER=2.72
 export DEST=/binary/dnsmasq-${VER}
 
 pushd dnsmasq-${VER}
 
-make CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" COPTS="-DHAVE_DNSSEC -DHAVE_DBUS" -j4
+make CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" COPTS="-DHAVE_DNSSEC -DHAVE_DBUS" -j4
 make install PREFIX=/usr DESTDIR=${DEST}
 
 install -Dm644 dnsmasq.conf.example ${DEST}/etc/dnsmasq.conf
@@ -35,7 +35,6 @@ ExecReload=/bin/kill -HUP $MAINPID
 
 [Install]
 WantedBy=multi-user.target
-Alias=dbus-uk.org.thekelleys.dnsmasq
 EOF
 
 ln -sf /lib/systemd/system/dnsmasq.service ${DEST}/etc/systemd/system/dbus-uk.org.thekelleys.dnsmasq
@@ -55,6 +54,9 @@ cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
 for dir in etc lib usr ; do cp -rf --remove-destination $dir / ; done
+
+getent group dnsmasq > /dev/null || groupadd -g 44 dnsmasq
+getent passwd dnsmasq > /dev/null || useradd -c "dnsmasq daemon" -u 44 -g dnsmasq -d / -s /sbin/nologin dnsmasq
 
 [ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
 EOF

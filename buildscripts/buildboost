@@ -8,7 +8,7 @@ pushd boost_${TARVER}
 
 ./bootstrap.sh --with-toolset=gcc --with-icu
 
-./b2 install threading=multi variant=release link=shared runtime-link=shared toolset=gcc cflags="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" --prefix=${DEST}/usr -j4
+./b2 install threading=multi variant=release link=shared runtime-link=shared toolset=gcc cflags="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" --prefix=${DEST}/usr -j4
 
 popd
 

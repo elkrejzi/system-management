@@ -13,8 +13,8 @@ cp -a cairo-${VER} cairo-${VER}-32
 
 pushd cairo-${VER}
 
-CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr    \
             --disable-static \
             --enable-tee
@@ -30,8 +30,8 @@ export CC="gcc -m32"
 export CXX="g++ -m32"
 export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
-CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr       \
             --libdir=/usr/lib32 \
             --disable-static    \

@@ -5,7 +5,7 @@ export DEST=/binary/lua-expat-${VER}
 
 pushd luaexpat-${VER}
 
-sed -i "s:-O2:-march=native -mtune=native -O2 -pipe -fstack-protector-strong:g" Makefile
+sed -i "s:-O2:-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong:g" Makefile
 
 make LUA_V=5.2 -j4
 make install LUA_V=5.2 DESTDIR=${DEST}

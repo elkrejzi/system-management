@@ -7,12 +7,12 @@ pushd lmdb-LMDB_${VER}/libraries/liblmdb
 
 sed -i "s:man/:share/&:g" Makefile
 
-make prefix=/usr OPT="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
+make prefix=/usr OPT="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
 
 install -dm755 ${DEST}/usr/bin ${DEST}/usr/share/man/man1
 install -dm755 ${DEST}/usr/include ${DEST}/usr/lib
 
-make prefix=/usr OPT="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" install DESTDIR=${DEST}
+make prefix=/usr OPT="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" install DESTDIR=${DEST}
 
 popd
 

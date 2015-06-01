@@ -6,8 +6,8 @@ export DEST=/binary/coreutils-${VER}
 pushd coreutils-${VER}
 
 FORCE_UNSAFE_CONFIGURE=1                   \
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr  \
             --with-openssl \
             --enable-no-install-program=kill,uptime

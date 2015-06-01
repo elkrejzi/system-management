@@ -13,8 +13,8 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr   \
       -DBUILD_TESTS=OFF             \
       -DQCA_SUFFIX=qt5              \
       -DQCA_INSTALL_IN_QT_PREFIX=ON \
-      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+      -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
       -Wno-dev
 
 make -j4

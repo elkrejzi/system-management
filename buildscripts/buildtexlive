@@ -8,8 +8,8 @@ install -dm755 texlive-${VER}-source/build
 pushd texlive-${VER}-source/build
 
 # Uses libpoppler.so
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ../configure --prefix=/usr                  \
              --sysconfdir=/etc              \
              --datarootdir=/usr/share       \

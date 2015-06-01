@@ -35,8 +35,8 @@ sed -i "s:ruby-1.9:ruby-2.2:g" -i configure
 export C_INCLUDE_PATH=/usr/lib/java/include:/usr/lib/java/include/linux
 export CPLUS_INCLUDE_PATH=$C_INCLUDE_PATH
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr
 
 make -j4

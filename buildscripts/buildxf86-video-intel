@@ -5,8 +5,8 @@ export DEST=/binary/xf86-video-intel-${VER}
 
 pushd xf86-video-intel-${VER}
 
-CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr     \
             --enable-kms-only \
             --disable-sna

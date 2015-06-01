@@ -9,7 +9,7 @@ sed -i "/Append/s:RPATH=libdir,::"   SConstruct
 sed -i "/Default/s:lib_static,::"    SConstruct
 sed -i "/Alias/s:install_static,::"  SConstruct
 
-scons PREFIX=/usr CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
+scons PREFIX=/usr CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
 scons PREFIX=${DEST}/usr install
 
 popd

@@ -5,7 +5,7 @@ export DEST=/binary/iproute2-${VER}
 
 pushd iproute2-${VER}
 
-make -j4 CCOPTS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
+make -j4 CCOPTS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
 
 install -dm755 ${DEST}/bin ${DEST}/sbin ${DEST}/usr/bin ${DEST}/usr/lib/tc ${DEST}/usr/share
 

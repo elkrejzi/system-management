@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.17023
+export VER=0.17024
 export DEST=/binary/perl-error-${VER}
 
 pushd Error-${VER}

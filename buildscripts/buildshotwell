@@ -5,7 +5,7 @@ export DEST=/binary/shotwell-${VER}
 
 pushd shotwell-${VER}
 
-sed -i "s:-O2 -g:-march=native -mtune=native -O2 -pipe -fstack-protector-strong:g" Makefile
+sed -i "s:-O2 -g:-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong:g" Makefile
 
 ./configure --prefix=/usr             \
             --disable-desktop-update  \

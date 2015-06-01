@@ -21,12 +21,11 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr      \
       -DPACKAGE_MODE=TRUE              \
       -DREBUILD_SHADER=TRUE            \
       -DXDG_STD=TRUE                   \
-      -DWX28_API=TRUE                  \
-      -DwxWidgets_CONFIG_EXECUTABLE=/usr/bin/wx-config32-2.8 \
-      -DwxWidgets_wxrc_EXECUTABLE=/usr/bin/wxrc32-2.8        \
+      -DwxWidgets_CONFIG_EXECUTABLE=/usr/bin/wx-config32 \
+      -DwxWidgets_wxrc_EXECUTABLE=/usr/bin/wxrc32        \
       -DCMAKE_TOOLCHAIN_FILE="cmake/linux-compiler-i386-multilib.cmake" \
-      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w"   \
-      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w" \
+      -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -w"   \
+      -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -w" \
       ..
 
 make -j4

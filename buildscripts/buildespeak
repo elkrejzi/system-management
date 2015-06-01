@@ -7,7 +7,7 @@ pushd espeak-${VER}-source/src
 
 cp portaudio19.h portaudio.h
 
-make CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" AUDIO=runtime -j4
+make CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" AUDIO=runtime -j4
 make install DESTDIR=${DEST}
 
 popd

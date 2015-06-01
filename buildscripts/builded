@@ -5,7 +5,7 @@ export DEST=/binary/ed-${VER}
 
 pushd ed-${VER}
 
-./configure --prefix=/usr --bindir=/bin CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
+./configure --prefix=/usr --bindir=/bin CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
 
 make -j4
 make install DESTDIR=${DEST}

@@ -25,8 +25,8 @@ cp -a cups-${VER} cups-${VER}-32
 pushd cups-${VER}
 
 CC="clang" CXX="clang++"                      \
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"      \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"    \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"      \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"    \
 ./configure --libdir=/usr/lib                 \
             --with-rcdir=/tmp/cupsinit        \
             --with-docdir=/usr/share/cups/doc \
@@ -43,8 +43,8 @@ pushd cups-${VER}-32
 
 CC="clang -m32" CXX="clang++ -m32"         \
 PKG_CONFIG_PATH=/usr/lib32/pkgconfig       \
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --libdir=/usr/lib32 \
             --disable-libusb    \
             --disable-avahi     \

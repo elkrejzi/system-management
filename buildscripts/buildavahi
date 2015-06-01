@@ -10,8 +10,8 @@ sed -i 's/\(CFLAGS=.*\)-Werror \(.*\)/\1\2/' configure
 sed -i -e 's/-DG_DISABLE_DEPRECATED=1//' \
        -e '/-DGDK_DISABLE_DEPRECATED/d' avahi-ui/Makefile.in
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr \
             --sysconfdir=/etc \
             --localstatedir=/var \

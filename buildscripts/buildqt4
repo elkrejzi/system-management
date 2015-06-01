@@ -17,8 +17,8 @@ sed -i '/BOOST_TT/a pp.macros["BOOST_LEXICAL_CAST_INCLUDED"];'   src/tools/moc/m
 
 popd
 
-export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w"
-export CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -w"
+export CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -w"
+export CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -w"
 
 cp -a qt-everywhere-opensource-src-${VER} qt-everywhere-opensource-src-${VER}-32
 

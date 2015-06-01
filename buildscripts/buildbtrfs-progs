@@ -5,7 +5,7 @@ export DEST=/binary/btrfs-progs-${VER}
 
 pushd btrfs-progs-v${VER}
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" ./configure --prefix=/usr --bindir=/sbin
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" ./configure --prefix=/usr --bindir=/sbin
 
 make
 make install DESTDIR=${DEST}

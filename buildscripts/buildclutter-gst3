@@ -5,8 +5,8 @@ export DEST=/binary/clutter-gst-${VER}
 
 pushd clutter-gst-${VER}
 
-CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr
 
 make -j4

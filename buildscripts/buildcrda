@@ -7,7 +7,7 @@ pushd crda-${VER}
 
 patch -Np1 -i /media/ntfs/Other/Linux/patches/crda-fixes.patch
 
-sed -i "s:-O2 -fpic:-march=native -mtune=native -O2 -pipe -fstack-protector-strong -fpic:g" Makefile
+sed -i "s:-O2 -fpic:-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -fpic:g" Makefile
 
 make LIBDIR="/lib/crda" REG_BIN="/lib/crda/regulatory.bin" RUNTIME_PUBKEY_DIR="/lib/crda/pubkeys" RUNTIME_PUBKEY_ONLY=1 V=1 -j4
 make install LIBDIR="/lib/crda" DESTDIR=${DEST}

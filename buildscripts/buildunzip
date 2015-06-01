@@ -8,7 +8,7 @@ pushd unzip${PKGVER}
 
 patch -Np1 -i /media/ntfs/Other/Linux/patches/unzip-fixes.patch
 
-sed -i -e 's/CFLAGS="-O -Wall/& -DNO_LCHMOD -march=native -mtune=native -O2 -pipe -fstack-protector-strong/' unix/Makefile
+sed -i -e 's/CFLAGS="-O -Wall/& -DNO_LCHMOD -march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong/' unix/Makefile
 
 make -f unix/Makefile -j4 linux_noasm
 make -f unix/Makefile prefix=${DEST}/usr MANDIR=${DEST}/usr/share/man/man1 install

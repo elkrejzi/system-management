@@ -11,8 +11,8 @@ cmake -DCMAKE_BUILD_TYPE=Release  \
       -DBUILD_TESTING=OFF         \
       -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins                \
       -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules \
-      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"      \
-      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"    \
+      -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"      \
+      -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"    \
       -Wno-dev
 
 make -j4

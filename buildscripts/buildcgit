@@ -11,9 +11,9 @@ make get-git
 
 sed -i "/BSD_SOURCE/d" git/git-compat-util.h
 
-make CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" -j4
+make CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" -j4
 
-make CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" CGIT_SCRIPT_PATH=/usr/share/cgit DESTDIR=${DEST} prefix=/usr install
+make CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" CGIT_SCRIPT_PATH=/usr/share/cgit DESTDIR=${DEST} prefix=/usr install
 
 mv ${DEST}/usr/share/cgit/cgit.cgi ${DEST}/usr/lib/cgit/cgit.cgi
 ln -sf ../../lib/cgit/cgit.cgi ${DEST}/usr/share/cgit/cgit.cgi

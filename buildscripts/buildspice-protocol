@@ -1,0 +1,23 @@
+#!/bin/bash -e
+
+export VER=0.12.7
+export DEST=/binary/spice-protocol-${VER}
+
+pushd spice-protocol-${VER}
+
+./configure --prefix=/usr
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf spice-protocol-${VER}
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL

@@ -5,8 +5,8 @@ export DEST=/binary/wpa_supplicant-${VER}
 
 pushd wpa_supplicant-${VER}
 
-export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -MMD"
-export CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -MMD"
+export CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -MMD"
+export CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -MMD"
 
 cat > wpa_supplicant/.config << "EOF"
 CONFIG_BACKEND=file
@@ -47,7 +47,7 @@ cd wpa_supplicant
 make BINDIR=/sbin LIBDIR=/lib V=1 -j4
 
 pushd wpa_gui-qt4
-qmake-qt4 "QMAKE_CFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong" "QMAKE_CXXFLAGS=-march=native -mtune=native -O2 -pipe -fstack-protector-strong" wpa_gui.pro
+qmake-qt4 "QMAKE_CFLAGS=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" "QMAKE_CXXFLAGS=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" wpa_gui.pro
 make V=1 -j4
 popd
 

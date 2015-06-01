@@ -23,8 +23,8 @@ pushd build64
 echo slibdir=/lib > configparms
 echo rtlddir=/lib >> configparms
 
-CFLAGS="-march=native -mtune=native -g -O2 -pipe"   \
-CXXFLAGS="-march=native -mtune=native -g -O2 -pipe" \
+CFLAGS="-march=sandybridge -g -O2 -pipe"   \
+CXXFLAGS="-march=sandybridge -g -O2 -pipe" \
 ../src/configure --prefix=/usr --libdir=/usr/lib --libexecdir=/usr/lib         \
                  --disable-profile --enable-add-ons --enable-kernel=3.4.0      \
                  --enable-bind-now --enable-multi-arch --enable-obsolete-rpc   \
@@ -48,8 +48,8 @@ echo rtlddir=/lib32 >> configparms
 export CC="gcc -m32"
 export CXX="g++ -m32"
 
-CFLAGS="-march=native -mtune=native -g -O2 -pipe"   \
-CXXFLAGS="-march=native -mtune=native -g -O2 -pipe" \
+CFLAGS="-march=sandybridge -g -O2 -pipe"   \
+CXXFLAGS="-march=sandybridge -g -O2 -pipe" \
 ../src/configure --prefix=/usr --libdir=/usr/lib32 --libexecdir=/usr/lib32     \
                  --disable-profile --enable-add-ons --enable-kernel=3.4.0      \
                  --enable-bind-now --enable-multi-arch --enable-obsolete-rpc   \

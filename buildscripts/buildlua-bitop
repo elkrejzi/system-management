@@ -5,7 +5,7 @@ export DEST=/binary/lua-bitop-${VER}
 
 pushd LuaBitOp-${VER}
 
-sed -i "s:-O2:-march=native -mtune=native -O2 -pipe -fstack-protector-strong:g" Makefile
+sed -i "s:-O2:-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong:g" Makefile
 
 make LUA=lua -j4
 

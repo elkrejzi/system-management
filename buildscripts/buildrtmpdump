@@ -9,7 +9,7 @@ cp -a rtmpdump-${VER} rtmpdump-${VER}-32
 
 pushd rtmpdump-${VER}
 
-make OPT="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" -j4
+make OPT="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" -j4
 
 make install prefix=/usr mandir=/usr/share/man DESTDIR=${DEST}
 
@@ -19,7 +19,7 @@ pushd rtmpdump-${VER}-32
 
 export CC="gcc -m32"
 
-make CC="gcc -m32" OPT="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" -j4
+make CC="gcc -m32" OPT="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" -j4
 make install prefix=/usr libdir=/usr/lib32 mandir=/usr/share/man  DESTDIR=${PWD}/dest
 
 mv dest/usr/lib32 ${DEST}/usr

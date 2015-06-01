@@ -7,8 +7,8 @@ unzip xonotic-${VER}-source.zip
 
 pushd Xonotic/source/d0_blind_id
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr --disable-rijndael --disable-static
 
 make -j4
@@ -18,7 +18,7 @@ popd
 
 pushd Xonotic/source/darkplaces
 
-sed -i "s:-fno-signaling-nans -fno-trapping-math:& -march=native -mtune=native -O2 -pipe -fstack-protector-strong:g" makefile.inc
+sed -i "s:-fno-signaling-nans -fno-trapping-math:& -march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong:g" makefile.inc
 
 make DP_FS_BASEDIR=/usr/share/xonotic/ DP_LINK_TO_LIBJPEG=1 cl-release
 make DP_FS_BASEDIR=/usr/share/xonotic/ DP_LINK_TO_LIBJPEG=1 sdl2-release

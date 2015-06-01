@@ -7,8 +7,8 @@ cp -a gmp-${VER} gmp-${VER}-32
 
 pushd gmp-${VER}
 
-CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \
 ./configure --build=x86_64-unknown-linux-gnu  \
             --host=x86_64-unknown-linux-gnu   \
             --target=x86_64-unknown-linux-gnu \
@@ -26,8 +26,8 @@ export CC="gcc -m32"
 export CXX="g++ -m32"
 export ABI=32
 
-CFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -g -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \
 ./configure --build=x86_64-unknown-linux-gnu  \
             --host=x86_64-unknown-linux-gnu   \
             --target=x86_64-unknown-linux-gnu \

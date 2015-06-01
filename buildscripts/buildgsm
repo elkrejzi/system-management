@@ -16,7 +16,7 @@ cp -a gsm-${VER} gsm-${VER}-32
 
 pushd gsm-${VER}
 
-make CCFLAGS="-c -fPIC -march=native -mtune=native -O2 -pipe -fstack-protector-strong" -j4
+make CCFLAGS="-c -fPIC -march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" -j4
 
 install -dm755 ${DEST}/usr/bin ${DEST}/usr/include/gsm ${DEST}/usr/lib ${DEST}/usr/share/man/man1 ${DEST}/usr/share/man/man3
 
@@ -32,7 +32,7 @@ pushd gsm-${VER}-32
 
 sed -i "/-shared/s:-shared:\$(LDFLAGS) &:" Makefile
 
-make CCFLAGS="-m32 -c -fPIC -march=native -mtune=native -O2 -pipe -fstack-protector-strong" LDFLAGS="-m32" -j4
+make CCFLAGS="-m32 -c -fPIC -march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" LDFLAGS="-m32" -j4
 
 install -dm755 ${DEST}/usr/lib32
 install -m755 lib/libgsm.so.${VER} ${DEST}/usr/lib32

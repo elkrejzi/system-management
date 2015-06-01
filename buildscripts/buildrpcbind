@@ -8,8 +8,8 @@ pushd rpcbind-${VER}
 sed -i "/servname/s:rpcbind:sunrpc:" src/rpcbind.c
 sed -i "/error = getaddrinfo/s:rpcbind:sunrpc:" src/rpcinfo.c
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr       \
             --bindir=/sbin      \
             --with-rpcuser=rpc  \

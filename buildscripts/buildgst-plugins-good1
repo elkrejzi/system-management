@@ -5,8 +5,8 @@ export DEST=/binary/gst-plugins-good-${VER}
 
 pushd gst-plugins-good-${VER}
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr \
             --with-package-name="GStreamer Good Plugins ${VER} BLFS" \
             --with-package-origin="http://www.linuxfromscratch.org/blfs/view/systemd/"

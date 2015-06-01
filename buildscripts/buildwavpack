@@ -1,12 +1,12 @@
 #!/bin/bash -e
 
-export VER=4.70.0
+export VER=4.75.0
 export DEST=/binary/wavpack-${VER}
 
 pushd wavpack-${VER}
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr --disable-static
 
 make -j4
@@ -17,8 +17,6 @@ popd
 rm -rf wavpack-${VER}
 
 find ${DEST} -name "*.la" -delete
-
-sed -i "s:exec_prefix:prefix:g" ${DEST}/usr/lib/pkgconfig/wavpack.pc
 
 pushd ${DEST}
 

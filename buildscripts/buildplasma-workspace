@@ -12,8 +12,8 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr             \
       -DBUILD_TESTING=OFF                     \
       -DQML_INSTALL_DIR=lib/qt5/qml           \
       -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
-      -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-      -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+      -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
       -Wno-dev
 
 make -j4
@@ -22,10 +22,6 @@ make install DESTDIR=${DEST}
 popd
 
 rm -rf plasma-workspace-${VER}
-
-rm -rf ${DEST}/usr/bin/kglobalaccel5
-rm -rf ${DEST}/usr/share/dbus-1/services/org.kde.kglobalaccel.service
-rm -rf ${DEST}/usr/share/kservices5/kglobalaccel5.desktop
 
 sed -i "s:qtpaths:&-qt5:g" ${DEST}/usr/bin/startkde
 

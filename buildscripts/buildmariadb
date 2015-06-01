@@ -32,8 +32,8 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr               \
       -DWITH_READLINE=ON                        \
       -DWITH_SSL=system                         \
       -DWITH_ZLIB=system                        \
-      -DCMAKE_C_FLAGS="-fPIC -march=native -mtune=native -O2 -pipe -fstack-protector-strong -fno-strict-aliasing -DBIG_JOINS=1 -fomit-frame-pointer -fno-delete-null-pointer-checks"   \
-      -DCMAKE_CXX_FLAGS="-fPIC -march=native -mtune=native -O2 -pipe -fstack-protector-strong -fno-strict-aliasing -DBIG_JOINS=1 -felide-constructors -fno-rtti -fno-delete-null-pointer-checks" \
+      -DCMAKE_C_FLAGS="-fPIC -march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -fno-strict-aliasing -DBIG_JOINS=1 -fomit-frame-pointer -fno-delete-null-pointer-checks"   \
+      -DCMAKE_CXX_FLAGS="-fPIC -march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -fno-strict-aliasing -DBIG_JOINS=1 -felide-constructors -fno-rtti -fno-delete-null-pointer-checks" \
       ..
 
 make -j4

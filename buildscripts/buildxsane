@@ -8,8 +8,8 @@ pushd xsane-${VER}
 sed -i "s:png_ptr->jmpbuf:png_jmpbuf(png_ptr):" src/xsane-save.c
 sed -i "s:netscape:xdg-open:g" src/xsane.h
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr --sbindir=/usr/bin
 
 make -j4

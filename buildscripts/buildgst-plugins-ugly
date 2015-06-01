@@ -11,8 +11,8 @@ sed "s:interf:opencore-amrnb/&:g" -i ext/amrnb/amrnb{de,en}c.h
 sed "s:dec_if:opencore-amrwb/&:g" -i ext/amrwbdec/amrwbdec.h
 sed "s:if_rom:opencore-amrwb/&:g" -i ext/amrwbdec/amrwbdec.h
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr \
             --with-package-name="GStreamer Ugly Plugins ${VER} BLFS" \
             --with-package-origin="http://www.linuxfromscratch.org/blfs/view/systemd/"

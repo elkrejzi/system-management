@@ -5,8 +5,8 @@ export DEST=/binary/glpk-${VER}
 
 pushd glpk-${VER}
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -fPIC"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -fPIC" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -fPIC"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -fPIC" \
 ./configure --prefix=/usr --disable-static
 
 make -j4

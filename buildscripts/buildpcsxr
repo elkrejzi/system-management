@@ -1,0 +1,44 @@
+#!/bin/bash -e
+
+export VER=1.9.93
+export DEST=/binary/pcsxr-${VER}
+
+pushd pcsxr
+
+autoreconf -fi
+
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
+./configure --prefix=/usr    \
+            --enable-libcdio \
+            --enable-opengl
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf pcsxr
+
+find ${DEST} -name "*.la" -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

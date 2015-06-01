@@ -11,13 +11,13 @@ make PREFIX=/usr              \
      SHAREDIR=/usr/share/misc \
      SHARED=yes               \
      ZLIB=no                  \
-     OPT="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" -j4
+     OPT="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" -j4
 
 make PREFIX=/usr              \
      SHAREDIR=/usr/share/misc \
      SHARED=yes               \
      ZLIB=no                  \
-     OPT="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" install install-lib DESTDIR=${DEST}
+     OPT="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" install install-lib DESTDIR=${DEST}
 
 popd
 

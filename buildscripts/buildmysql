@@ -36,8 +36,8 @@ cmake -DCMAKE_BUILD_TYPE=Release                    \
       -DWITH_PERFSCHEMA_STORAGE_ENGINE=ON           \
       -DWITH_EXTRA_CHARSETS=complex                 \
       -DWITH_SSL=system                             \
-      -DCMAKE_C_FLAGS="-fPIC -march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-      -DCMAKE_CXX_FLAGS="-fPIC -march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+      -DCMAKE_C_FLAGS="-fPIC -march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-fPIC -march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
       ..
 
 make -j4

@@ -18,8 +18,8 @@ sed -i "s:moc;:moc-qt5;:g" configure &&
 sed -i "s:uic;:uic-qt5;:g" configure &&
 sed -i "s:(AM_V_RCC)rcc:&-qt5:g" ui/qt/Makefile.in
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr     \
             --sysconfdir=/etc \
             --with-gtk3       \

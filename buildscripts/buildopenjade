@@ -7,8 +7,8 @@ pushd openjade-${VER}
 
 patch -Np1 -i /media/ntfs/Other/Linux/patches/openjade.patch
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr \
             --datadir=/usr/share/sgml/OpenJade \
             --mandir=/usr/share/man \

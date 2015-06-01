@@ -8,7 +8,7 @@ export XORG_HTTP=http://xorg.freedesktop.org/archive/individual
 export APP_HTTP=${XORG_HTTP}/app/
 
 export CPPFLAGS="-P"
-export CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
+export CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
 export CONFIG="--prefix=/usr --sysconfdir=/etc --localstatedir=/var"
 
 mkdir -p app

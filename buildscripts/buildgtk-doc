@@ -1,12 +1,12 @@
 #!/bin/bash -e
 
-export VER=1.23
+export VER=1.24
 export DEST=/binary/gtk-doc-${VER}
 
 pushd gtk-doc-${VER}
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr
 
 make -j4

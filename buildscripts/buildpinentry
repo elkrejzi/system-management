@@ -8,8 +8,8 @@ pushd pinentry-${VER}
 patch -Np1 -i /media/ntfs/Other/Linux/patches/pinentry-gnome3.patch
 autoreconf -fi
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -std=c++11" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -std=c++11" \
 ./configure --prefix=/usr
 
 make -j4

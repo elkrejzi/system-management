@@ -8,8 +8,8 @@ pushd nano-${VER}
 sed -i "s:DO_DOWN_VOID:do_down_void:g" src/winio.c
 sed -i "s:or(up_void:or(do_up_void:g" src/winio.c
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr \
             --sysconfdir=/etc \
             --enable-utf8

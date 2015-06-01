@@ -3,8 +3,8 @@
 export PKGVER=43.0.2357.81
 export DEST=/binary/chromium-${PKGVER}
 
-export -n CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
-export -n CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"
+export -n CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
+export -n CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
 
 export CC=clang
 export CXX=clang++

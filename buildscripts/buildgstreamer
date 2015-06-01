@@ -9,8 +9,8 @@ sed -e '/YYLEX_PARAM/d'                                       \
     -e '/parse-param.*scanner/i %lex-param { void *scanner }' \
     -i gst/parse/grammar.y
 
-CFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr         \
             --libexecdir=/usr/lib \
             --disable-examples    \

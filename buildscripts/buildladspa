@@ -10,7 +10,7 @@ pushd ladspa_sdk/src
 patch -Np1 -i /media/ntfs/Other/Linux/patches/ladspa-fixes.patch
 
 sed -e 's/mkdirhier/mkdir -p/' \
-    -e "s#-O3#-march=native -mtune=native -O2 -pipe -fstack-protector-strong#" \
+    -e "s#-O3#-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong#" \
     -i makefile
 
 make targets

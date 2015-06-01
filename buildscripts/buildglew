@@ -10,7 +10,7 @@ pushd glew-${VER}
 sed -i 's|lib64|lib|' config/Makefile.linux
 sed -i '/^.PHONY: .*\.pc$/d' Makefile
 
-make -j4 CFLAGS.EXTRA="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -fPIC"
+make -j4 CFLAGS.EXTRA="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -fPIC"
 make GLEW_DEST=${DEST}/usr install.all
 
 popd
@@ -21,7 +21,7 @@ sed -i 's|CC = cc|CC = gcc -m32|' config/Makefile.linux
 sed -i 's|LD = cc|LD = gcc -m32|' config/Makefile.linux
 sed -i 's|lib64|lib32|' config/Makefile.linux
 
-make -j4 CFLAGS.EXTRA="-march=native -mtune=native -O2 -pipe -fstack-protector-strong -fPIC"
+make -j4 CFLAGS.EXTRA="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -fPIC"
 make GLEW_DEST=${PWD}/dest/usr install.all
 
 mv dest/usr/lib32 ${DEST}/usr
