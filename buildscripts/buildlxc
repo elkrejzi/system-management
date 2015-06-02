@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.0.3
+export VER=1.1.2
 export DEST=/binary/lxc-${VER}
 
 pushd lxc-${VER}
@@ -9,7 +9,9 @@ CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-stro
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr        \
             --sysconfdir=/etc    \
-            --localstatedir=/var
+            --localstatedir=/var \
+            --with-init-script=systemd \
+            --with-systemdsystemunitdir=/lib/systemd/system
 
 make -j4
 make install DESTDIR=${DEST}
@@ -22,6 +24,21 @@ rm -rf ${DEST}/etc/bash_completion.d ${DEST}/usr/share/doc
 
 install -dm755 ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d
 
+cat > ${DEST}/lib/systemd/system/lxc-auto.service << "EOF"
+[Unit]
+Description=Autostart LXC Container
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/lxc-autostart
+ExecStop=/usr/bin/lxc-autostart -s
+Delegate=true
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
 cat > ${DEST}/lib/systemd/system/lxc@.service << "EOF"
 [Unit]
 Description=%i LXC
@@ -31,6 +48,7 @@ After=network.target
 Type=forking
 ExecStart=/usr/bin/lxc-start -d -n %i
 ExecStop=/usr/bin/lxc-stop -n %i
+Delegate=true
 
 [Install]
 WantedBy=multi-user.target

@@ -1,30 +1,38 @@
 #!/bin/bash -e
 
-export VER=0.3.1
-export DEST=/binary/libtirpc-${VER}
+export VER=2.11
+export DEST=/binary/radvd-${VER}
 
-pushd libtirpc-${VER}
+pushd radvd-${VER}
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr     \
-            --sysconfdir=/etc \
-            --disable-static  \
-            --disable-gssapi
+./configure --prefix=/usr --sysconfdir=/etc
 
 make -j4
 make install DESTDIR=${DEST}
 
+install -Dm644 radvd.conf.example ${DEST}/etc/radvd.conf
+
 popd
 
-rm -rf libtirpc-${VER}
+rm -rf radvd-${VER}
 
-find ${DEST} -name "*.la" -delete
+install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/lib/systemd/system
 
-install -dm755 ${DEST}/lib
+cat > ${DEST}/lib/systemd/system/radvd.service << "EOF"
+[Unit]
+Description=IPv6 Router Advertisement Daemon
+After=network.target
 
-mv ${DEST}/usr/lib/libtirpc.so.* ${DEST}/lib
-ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libtirpc.so) ${DEST}/usr/lib/libtirpc.so
+[Service]
+ExecStart=/usr/sbin/radvd --nodaemon --logmethod=stderr
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+ln -sf /lib/systemd/system/radvd.service ${DEST}/etc/systemd/system/multi-user.target.wants/radvd.service
 
 pushd ${DEST}
 
@@ -42,8 +50,6 @@ cat > ${DEST}/INSTALL << "EOF"
 for dir in etc lib usr ; do cp -rf --remove-destination $dir / ; done
 
 [ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
-[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 
 chmod 755 ${DEST}/INSTALL
-

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.2.3
+export VER=1.2.16
 export DEST=/binary/libvirt-${VER}
 
 pushd libvirt-${VER}
@@ -16,7 +16,7 @@ CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-st
 
 make -j4
 
-sed -i 's|/etc/sysconfig/|/etc/default/|' daemon/libvirtd.service src/virtlockd.service tools/libvirt-guests.service
+sed -i 's|/etc/sysconfig/|/etc/default/|' daemon/libvirtd.service src/virtlockd.service tools/libvirt-guests.service tools/libvirt-guests.sh tools/virt-pki-validate
 sed -i 's|#group =.*|group="kvm"|' src/qemu/qemu.conf
 
 make install DESTDIR=${DEST}
@@ -39,9 +39,7 @@ ln -sf /lib/systemd/system/libvirt-guests.service ${DEST}/etc/systemd/system/mul
 cat > ${DEST}/etc/default/libvirtd << "EOF"
 # Begin /etc/default/libvirtd
 
-LIBVIRTD_CONFIG="/etc/libvirt/libvirtd.conf"
-LIBVIRTD_ARGS="-p /var/run/libvirtd.pid"
-KRB5_KTNAME="/etc/libvirt/krb5.tab"
+LIBVIRTD_ARGS=""
 
 # End /etc/default/libvirtd
 EOF
@@ -49,17 +47,15 @@ EOF
 cat > ${DEST}/etc/default/libvirt-guests << "EOF"
 # Begin /etc/default/libvirt-guests
 
-LIBVIRTD_STOP_ACTION=suspend
-
-#LIBVIRTD_URI="-c qemu+ssh://user@host/system"
-LIBVIRTD_URI=""
-
-#LIBVIRTD_BYPASS_CACHE="--bypass-cache"
-LIBVIRTD_BYPASS_CACHE=""
-
-LIBVIRTD_START_DELAY=0
-
-LIBVIRTD_SHUTDOWN_TIMEOUT=60
+BYPASS_CACHE=0
+CONNECT_RETRIES=10
+ON_BOOT=start
+ON_SHUTDOWN=suspend
+PARALLEL_SHUTDOWN=0
+RETRIES_SLEEP=1
+SHUTDOWN_TIMEOUT=300
+START_DELAY=0
+URIS=default
 
 # End /etc/default/libvirt-guests
 EOF

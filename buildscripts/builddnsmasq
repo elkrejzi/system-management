@@ -37,7 +37,6 @@ ExecReload=/bin/kill -HUP $MAINPID
 WantedBy=multi-user.target
 EOF
 
-ln -sf /lib/systemd/system/dnsmasq.service ${DEST}/etc/systemd/system/dbus-uk.org.thekelleys.dnsmasq
 ln -sf /lib/systemd/system/dnsmasq.service ${DEST}/etc/systemd/system/multi-user.target.wants/dnsmasq.service
 
 pushd ${DEST}

@@ -8,8 +8,8 @@ export BUILD_BZIP2=0
 export BZIP2_INCLUDE=/usr/include
 export BZIP2_LIB=/usr/lib
 
-export MAJOR_VER=5.20
-export MINOR_VER=2
+export MAJOR_VER=5.22
+export MINOR_VER=0
 export VER=${MAJOR_VER}.${MINOR_VER}
 
 export DEST=/binary/perl-${VER}
@@ -17,8 +17,6 @@ export DEST=/binary/perl-${VER}
 export CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
 
 pushd perl-${VER}
-
-patch -Np1 -i /media/ntfs/Other/Linux/patches/perl-gcc5.patch
 
 sh Configure -Dprefix=/usr   \
              -Dusethreads    \
