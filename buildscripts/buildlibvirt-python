@@ -1,0 +1,33 @@
+#!/bin/bash -e
+
+export VER=1.2.16
+export DEST=/binary/libvirt-python-${VER}
+
+pushd libvirt-python-${VER}
+
+python setup.py build
+python setup.py install --root=${DEST} --optimize=1
+
+popd
+
+rm -rf libvirt-python-${VER}
+
+find ${DEST} -name "*.la" -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.7.93
+export VER=1.8.0
 export DEST=/binary/wayland-${VER}
 
 cp -a wayland-${VER} wayland-${VER}-32

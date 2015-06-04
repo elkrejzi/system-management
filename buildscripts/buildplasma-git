@@ -3,7 +3,6 @@
 export DEST=/binary/plasma
 
 plasmas=(
-  bluez-qt
   kde-cli-tools
   kdecoration
   kfilemetadata
@@ -127,15 +126,6 @@ cat > ${DEST}/${plasma}-${VER}/INSTALL << "EOF"
 #!/bin/bash
 
 for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
-EOF
-
-  elif [[ -e ${DEST}/${plasma}-${VER}/lib ]]
-  then
-
-cat > ${DEST}/${plasma}-${VER}/INSTALL << "EOF"
-#!/bin/bash
-
-for dir in lib usr ; do cp -rf --remove-destination $dir / ; done
 EOF
 
   else
@@ -283,6 +273,6 @@ EOF
   unset mimetype
   unset solib
 
-  #rm -rf ${plasma}
+  rm -rf ${plasma}
 
 done

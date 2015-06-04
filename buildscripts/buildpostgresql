@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=9.4.2
+export VER=9.4.3
 export DEST=/binary/postgresql-${VER}
 
 pushd postgresql-${VER}
