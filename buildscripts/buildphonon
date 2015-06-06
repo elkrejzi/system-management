@@ -7,11 +7,14 @@ pushd phonon-${VER}
 
 sed -i "s:BSD_SOURCE:DEFAULT_SOURCE:g" cmake/FindPhononInternal.cmake
 
-cmake -DCMAKE_INSTALL_PREFIX=/usr  \
-      -DCMAKE_BUILD_TYPE=Release   \
-      -DCMAKE_SKIP_RPATH=ON        \
-      -DCMAKE_INSTALL_LIBDIR=lib   \
-      -DPHONON_BUILD_PHONON4QT5=ON \
+patch -Np1 -i /media/ntfs/Other/Linux/patches/phonon-fixes.patch
+
+cmake -DCMAKE_INSTALL_PREFIX=/usr    \
+      -DCMAKE_BUILD_TYPE=Release     \
+      -DCMAKE_SKIP_RPATH=ON          \
+      -DCMAKE_INSTALL_LIBDIR=lib     \
+      -DPHONON_BUILD_PHONON4QT5=ON   \
+      -D__KDE_HAVE_GCC_VISIBILITY=NO \
       -DPHONON_INSTALL_QT_EXTENSIONS_INTO_SYSTEM_QT=ON \
       -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \

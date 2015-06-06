@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.45.1
+export VER=2.44.0
 export DEST=/binary/glib-networking-${VER}
 
 pushd glib-networking-${VER}

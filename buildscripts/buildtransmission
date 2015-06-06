@@ -16,7 +16,7 @@ install -Dm644 daemon/transmission-daemon.service ${DEST}/lib/systemd/system/tra
 
 pushd qt
 
-qmake-qt5 "QMAKE_CFLAGS=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" "QMAKE_CXXFLAGS=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
+qmake-qt5 "QMAKE_CFLAGS+=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" "QMAKE_CXXFLAGS+=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
 make -j4
 make install INSTALL_ROOT=${DEST}/usr
 

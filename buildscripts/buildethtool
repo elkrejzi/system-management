@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.18
+export VER=4.0
 export DEST=/binary/ethtool-${VER}
 
 pushd ethtool-${VER}

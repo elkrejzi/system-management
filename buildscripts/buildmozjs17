@@ -5,8 +5,10 @@ export DEST=/binary/mozjs-${VER}
 
 pushd mozjs${VER}/js/src
 
-CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -w"   \
-CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -w" \
+sed -i "s:defined(@TEMPLATE_FILE):@TEMPLATE_FILE:g" config/milestone.pl
+
+CFLAGS="-march=sandybridge -O2 -pipe -fstack-protector-strong -w"   \
+CXXFLAGS="-march=sandybridge -O2 -pipe -fstack-protector-strong -w" \
 ./configure --prefix=/usr       \
             --enable-readline   \
             --enable-threadsafe \

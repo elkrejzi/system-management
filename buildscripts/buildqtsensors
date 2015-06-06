@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.5.0-beta
+export VER=5.4.2
 export DEST=/binary/qtsensors-${VER}
 
 pushd qtsensors-opensource-src-${VER}

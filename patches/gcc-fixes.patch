@@ -1,5 +1,8 @@
+# Daily bump.
+# Fri, 5 Jun 2015 02:16:12 +0200 (00:16 +0000)
+
 --- a/gcc/c/c-parser.c	2015-04-20 18:55:33.000000000 +0200
-+++ b/gcc/c/c-parser.c	2015-05-23 11:32:41.664037866 +0200
++++ b/gcc/c/c-parser.c	2015-06-05 12:46:04.408334865 +0200
 @@ -13069,12 +13069,9 @@
  		      }
  		    else
@@ -33,7 +36,7 @@
  	}
      }
 --- a/gcc/calls.c	2015-04-07 23:02:12.000000000 +0200
-+++ b/gcc/calls.c	2015-05-23 11:18:33.952634193 +0200
++++ b/gcc/calls.c	2015-06-05 12:46:04.409335293 +0200
 @@ -2099,6 +2099,26 @@
  					   (XEXP (args[i].value, 0), size)))
  		*sibcall_failure = 1;
@@ -93,7 +96,7 @@
  
  	  /* When a parameter is a block, and perhaps in other cases, it is
 --- a/gcc/config/i386/i386.c	2015-04-17 23:55:05.000000000 +0200
-+++ b/gcc/config/i386/i386.c	2015-05-23 11:27:55.981186322 +0200
++++ b/gcc/config/i386/i386.c	2015-06-05 12:46:04.447351565 +0200
 @@ -2988,6 +2988,17 @@
            return;
          }
@@ -315,7 +318,7 @@
  	    if (MEM_P (x))
  	      {
 --- a/gcc/config/i386/i386.h	2015-02-21 01:06:53.000000000 +0100
-+++ b/gcc/config/i386/i386.h	2015-05-23 11:26:56.002281385 +0200
++++ b/gcc/config/i386/i386.h	2015-06-05 12:46:04.448351993 +0200
 @@ -1682,6 +1682,7 @@
    int stdarg;                   /* Set to 1 if function is stdarg.  */
    enum calling_abi call_abi;	/* Set to SYSV_ABI for sysv abi. Otherwise
@@ -325,7 +328,7 @@
  
  /* Initialize a variable CUM of type CUMULATIVE_ARGS
 --- a/gcc/config/i386/sse.md	2015-04-09 23:37:28.000000000 +0200
-+++ b/gcc/config/i386/sse.md	2015-05-23 11:18:33.954634308 +0200
++++ b/gcc/config/i386/sse.md	2015-06-05 12:46:04.450352849 +0200
 @@ -9523,7 +9523,7 @@
  	(mult:V4DI
  	  (sign_extend:V4DI
@@ -336,7 +339,7 @@
  			 (const_int 4) (const_int 6)])))
  	  (sign_extend:V4DI
 --- a/gcc/cp/constexpr.c	2015-04-12 21:10:58.000000000 +0200
-+++ b/gcc/cp/constexpr.c	2015-05-23 11:18:33.955634365 +0200
++++ b/gcc/cp/constexpr.c	2015-06-05 12:50:56.282174029 +0200
 @@ -1355,7 +1355,14 @@
  		     fun = DECL_CHAIN (fun))
  		  if (DECL_SAVED_TREE (fun))
@@ -404,8 +407,82 @@
    if (target == object)
      /* The hash table might have moved since the get earlier.  */
      ctx->values->put (object, init);
+@@ -3484,7 +3505,9 @@
+       break;
+ 
+     case PLACEHOLDER_EXPR:
+-      if (!ctx || !ctx->ctor || (lval && !ctx->object))
++      if (!ctx || !ctx->ctor || (lval && !ctx->object)
++	  || !(same_type_ignoring_top_level_qualifiers_p
++	       (TREE_TYPE (t), TREE_TYPE (ctx->ctor))))
+ 	{
+ 	  /* A placeholder without a referent.  We can get here when
+ 	     checking whether NSDMIs are noexcept, or in massage_init_elt;
+@@ -3499,8 +3522,6 @@
+ 	     use ctx->object unconditionally, but using ctx->ctor when we
+ 	     can is a minor optimization.  */
+ 	  tree ctor = lval ? ctx->object : ctx->ctor;
+-	  gcc_assert (same_type_ignoring_top_level_qualifiers_p
+-		      (TREE_TYPE (t), TREE_TYPE (ctor)));
+ 	  return cxx_eval_constant_expression
+ 	    (ctx, ctor, lval,
+ 	     non_constant_p, overflow_p);
+--- a/gcc/cp/cp-gimplify.c	2015-03-11 16:01:37.000000000 +0100
++++ b/gcc/cp/cp-gimplify.c	2015-06-05 12:53:46.248907017 +0200
+@@ -905,6 +905,7 @@
+   hash_set<tree> *p_set;
+   vec<tree> bind_expr_stack;
+   struct cp_genericize_omp_taskreg *omp_ctx;
++  bool no_sanitize_p;
+ };
+ 
+ /* Perform any pre-gimplification lowering of C++ front end trees to
+@@ -1104,6 +1105,21 @@
+ 				     : OMP_CLAUSE_DEFAULT_PRIVATE);
+ 	      }
+ 	}
++      if (flag_sanitize
++	  & (SANITIZE_NULL | SANITIZE_ALIGNMENT | SANITIZE_VPTR))
++	{
++	  /* The point here is to not sanitize static initializers.  */
++	  bool no_sanitize_p = wtd->no_sanitize_p;
++	  wtd->no_sanitize_p = true;
++	  for (tree decl = BIND_EXPR_VARS (stmt);
++	       decl;
++	       decl = DECL_CHAIN (decl))
++	    if (VAR_P (decl)
++		&& TREE_STATIC (decl)
++		&& DECL_INITIAL (decl))
++	      cp_walk_tree (&DECL_INITIAL (decl), cp_genericize_r, data, NULL);
++	  wtd->no_sanitize_p = no_sanitize_p;
++	}
+       wtd->bind_expr_stack.safe_push (stmt);
+       cp_walk_tree (&BIND_EXPR_BODY (stmt),
+ 		    cp_genericize_r, data, NULL);
+@@ -1226,9 +1242,10 @@
+       if (*stmt_p == error_mark_node)
+ 	*stmt_p = size_one_node;
+       return NULL;
+-    }    
+-  else if (flag_sanitize
+-	   & (SANITIZE_NULL | SANITIZE_ALIGNMENT | SANITIZE_VPTR))
++    }
++  else if ((flag_sanitize
++	    & (SANITIZE_NULL | SANITIZE_ALIGNMENT | SANITIZE_VPTR))
++	   && !wtd->no_sanitize_p)
+     {
+       if ((flag_sanitize & (SANITIZE_NULL | SANITIZE_ALIGNMENT))
+ 	  && TREE_CODE (stmt) == NOP_EXPR
+@@ -1269,6 +1286,7 @@
+   wtd.p_set = new hash_set<tree>;
+   wtd.bind_expr_stack.create (0);
+   wtd.omp_ctx = NULL;
++  wtd.no_sanitize_p = false;
+   cp_walk_tree (t_p, cp_genericize_r, &wtd, NULL);
+   delete wtd.p_set;
+   wtd.bind_expr_stack.release ();
 --- a/gcc/cp/cvt.c	2015-01-09 21:18:42.000000000 +0100
-+++ b/gcc/cp/cvt.c	2015-05-23 11:18:33.956634423 +0200
++++ b/gcc/cp/cvt.c	2015-06-05 12:46:04.451353277 +0200
 @@ -603,8 +603,20 @@
  tree
  cp_fold_convert (tree type, tree expr)
@@ -430,7 +507,7 @@
  }
  
 --- a/gcc/cp/decl2.c	2015-03-19 20:12:43.000000000 +0100
-+++ b/gcc/cp/decl2.c	2015-05-23 11:24:52.397411028 +0200
++++ b/gcc/cp/decl2.c	2015-06-05 12:46:04.452353706 +0200
 @@ -1175,6 +1175,10 @@
        && is_attribute_p ("omp declare simd", name))
      return true;
@@ -443,7 +520,7 @@
       the attribute until instantiation time.  */
    for (arg = args; arg; arg = TREE_CHAIN (arg))
 --- a/gcc/cp/decl.c	2015-04-02 18:43:02.000000000 +0200
-+++ b/gcc/cp/decl.c	2015-05-23 11:23:34.737303073 +0200
++++ b/gcc/cp/decl.c	2015-06-05 12:46:04.454354562 +0200
 @@ -4825,8 +4825,11 @@
  
    was_public = TREE_PUBLIC (decl);
@@ -468,7 +545,7 @@
  	  {
  	    error ("non-static data member declared %<auto%>");
 --- a/gcc/cp/lambda.c	2015-04-03 19:23:27.000000000 +0200
-+++ b/gcc/cp/lambda.c	2015-05-23 11:18:33.958634538 +0200
++++ b/gcc/cp/lambda.c	2015-06-05 12:46:04.455354990 +0200
 @@ -787,7 +787,7 @@
        /* In a lambda, need to go through 'this' capture.  */
        tree lam = CLASSTYPE_LAMBDA_EXPR (current_class_type);
@@ -479,7 +556,7 @@
  				       RO_NULL, tf_warning_or_error);
      }
 --- a/gcc/cp/name-lookup.c	2015-04-01 23:27:55.000000000 +0200
-+++ b/gcc/cp/name-lookup.c	2015-05-23 11:18:33.958634538 +0200
++++ b/gcc/cp/name-lookup.c	2015-06-05 12:46:04.455354990 +0200
 @@ -3408,7 +3408,7 @@
  			   tf_warning_or_error);
        if (b_kind < bk_proper_base)
@@ -490,7 +567,7 @@
  	      error_not_base_type (scope, current_class_type);
  	      return NULL_TREE;
 --- a/gcc/cp/parser.c	2015-04-20 18:55:33.000000000 +0200
-+++ b/gcc/cp/parser.c	2015-05-23 11:32:41.668037917 +0200
++++ b/gcc/cp/parser.c	2015-06-05 12:46:04.459356703 +0200
 @@ -22500,6 +22500,13 @@
  	  attributes = attribute;
  	}
@@ -569,7 +646,7 @@
  	}
      }
 --- a/gcc/cp/pt.c	2015-04-01 23:27:55.000000000 +0200
-+++ b/gcc/cp/pt.c	2015-05-23 11:27:30.146802454 +0200
++++ b/gcc/cp/pt.c	2015-06-05 12:50:24.633750438 +0200
 @@ -1919,7 +1919,13 @@
      ++header_count;
  
@@ -631,6 +708,17 @@
  		if (argvec == error_mark_node)
  		  RETURN (error_mark_node);
  		hash = hash_tmpl_and_args (gen_tmpl, argvec);
+@@ -11425,9 +11451,9 @@
+ 	       processing here.  */
+ 	    DECL_EXTERNAL (r) = 1;
+ 
+-	    register_specialization (r, gen_tmpl, argvec, false, hash);
+ 	    DECL_TEMPLATE_INFO (r) = build_template_info (tmpl, argvec);
+ 	    SET_DECL_IMPLICIT_INSTANTIATION (r);
++	    register_specialization (r, gen_tmpl, argvec, false, hash);
+ 	  }
+ 	else if (!cp_unevaluated_operand)
+ 	  register_local_specialization (r, t);
 @@ -14249,7 +14275,7 @@
        tmp = tsubst_omp_clauses (OMP_TARGET_UPDATE_CLAUSES (t), false,
  				args, complain, in_decl);
@@ -641,7 +729,7 @@
        break;
  
 --- a/gcc/cp/tree.c	2015-04-09 22:11:44.000000000 +0200
-+++ b/gcc/cp/tree.c	2015-05-23 11:27:15.316578155 +0200
++++ b/gcc/cp/tree.c	2015-06-05 12:46:04.463358416 +0200
 @@ -1207,6 +1207,7 @@
      {
        bool changed = false;
@@ -679,7 +767,7 @@
        }
  
 --- a/gcc/cp/typeck2.c	2015-01-23 17:30:00.000000000 +0100
-+++ b/gcc/cp/typeck2.c	2015-05-23 11:24:32.144136275 +0200
++++ b/gcc/cp/typeck2.c	2015-06-05 12:46:04.464358844 +0200
 @@ -957,9 +957,16 @@
  	    }
  	}
@@ -720,8 +808,65 @@
    if (BRACE_ENCLOSED_INITIALIZER_P (init)
        && !TYPE_NON_AGGREGATE_CLASS (type))
      return process_init_constructor (type, init, complain);
+--- a/gcc/dwarf2out.c	2015-04-20 15:31:02.000000000 +0200
++++ b/gcc/dwarf2out.c	2015-06-05 12:52:47.988969366 +0200
+@@ -20619,6 +20619,28 @@
+ 	      != TYPE_NAME (TREE_TYPE (decl))));
+ }
+ 
++/* Looks up the DIE for a context.  */
++
++static inline dw_die_ref
++lookup_context_die (tree context)
++{
++  if (context)
++    {
++      /* Find die that represents this context.  */
++      if (TYPE_P (context))
++	{
++	  context = TYPE_MAIN_VARIANT (context);
++	  dw_die_ref ctx = lookup_type_die (context);
++	  if (!ctx)
++	    return NULL;
++	  return strip_naming_typedef (context, ctx);
++	}
++      else
++	return lookup_decl_die (context);
++    }
++  return comp_unit_die ();
++}
++
+ /* Returns the DIE for a context.  */
+ 
+ static inline dw_die_ref
+@@ -23948,12 +23970,22 @@
+ 	  {
+ 	    tree tdecl = SYMBOL_REF_DECL (a->dw_attr_val.v.val_addr);
+ 	    dw_die_ref tdie = lookup_decl_die (tdecl);
++	    dw_die_ref cdie;
+ 	    if (tdie == NULL
+ 		&& DECL_EXTERNAL (tdecl)
+-		&& DECL_ABSTRACT_ORIGIN (tdecl) == NULL_TREE)
++		&& DECL_ABSTRACT_ORIGIN (tdecl) == NULL_TREE
++		&& (cdie = lookup_context_die (DECL_CONTEXT (tdecl))))
+ 	      {
+-		force_decl_die (tdecl);
+-		tdie = lookup_decl_die (tdecl);
++		/* Creating a full DIE for tdecl is overly expensive and
++		   at this point even wrong when in the LTO phase
++		   as it can end up generating new type DIEs we didn't
++		   output and thus optimize_external_refs will crash.  */
++		tdie = new_die (DW_TAG_subprogram, cdie, NULL_TREE);
++		add_AT_flag (tdie, DW_AT_external, 1);
++		add_AT_flag (tdie, DW_AT_declaration, 1);
++		add_linkage_attr (tdie, tdecl);
++		add_name_and_src_coords_attributes (tdie, tdecl);
++		equate_decl_number_to_die (tdecl, tdie);
+ 	      }
+ 	    if (tdie)
+ 	      {
 --- a/gcc/fortran/check.c	2015-03-02 19:56:51.000000000 +0100
-+++ b/gcc/fortran/check.c	2015-05-23 11:29:30.690530828 +0200
++++ b/gcc/fortran/check.c	2015-06-05 12:46:04.465359272 +0200
 @@ -6213,6 +6213,15 @@
  bool
  gfc_check_storage_size (gfc_expr *a, gfc_expr *kind)
@@ -739,7 +884,7 @@
      {
        gfc_error ("%qs argument of %qs intrinsic at %L shall not be TYPE(*)",
 --- a/gcc/fortran/decl.c	2015-04-10 13:29:53.000000000 +0200
-+++ b/gcc/fortran/decl.c	2015-05-23 11:30:42.240495466 +0200
++++ b/gcc/fortran/decl.c	2015-06-05 12:46:04.466359701 +0200
 @@ -1404,9 +1404,7 @@
  		    }
  		  else if (init->expr_type == EXPR_ARRAY)
@@ -783,7 +928,7 @@
        gcc_unreachable ();
      }
 --- a/gcc/fortran/expr.c	2015-02-06 19:15:01.000000000 +0100
-+++ b/gcc/fortran/expr.c	2015-05-23 11:30:07.135026771 +0200
++++ b/gcc/fortran/expr.c	2015-06-05 12:46:04.466359701 +0200
 @@ -3118,19 +3118,22 @@
  	bad_proc = true;
  
@@ -812,7 +957,7 @@
  
  	  /* ... or is not an entry and has a different name.  */
 --- a/gcc/fortran/interface.c	2015-02-01 01:29:54.000000000 +0100
-+++ b/gcc/fortran/interface.c	2015-05-23 11:30:58.232706361 +0200
++++ b/gcc/fortran/interface.c	2015-06-05 12:46:04.467360129 +0200
 @@ -346,8 +346,12 @@
  		break;
  
@@ -829,7 +974,7 @@
  
  	}
 --- a/gcc/fortran/io.c	2015-02-01 01:29:54.000000000 +0100
-+++ b/gcc/fortran/io.c	2015-05-23 11:31:18.785975216 +0200
++++ b/gcc/fortran/io.c	2015-06-05 12:46:04.468360557 +0200
 @@ -385,7 +385,7 @@
  
  	  if (c == delim)
@@ -851,7 +996,7 @@
      }
  
 --- a/gcc/fortran/match.c	2015-01-15 21:11:12.000000000 +0100
-+++ b/gcc/fortran/match.c	2015-05-23 11:30:58.232706361 +0200
++++ b/gcc/fortran/match.c	2015-06-05 12:46:04.468360557 +0200
 @@ -110,6 +110,9 @@
      case INTRINSIC_PARENTHESES:
        return "parens";
@@ -863,7 +1008,7 @@
        break;
      }
 --- a/gcc/fortran/parse.c	2015-02-01 01:29:54.000000000 +0100
-+++ b/gcc/fortran/parse.c	2015-05-23 11:29:15.011314175 +0200
++++ b/gcc/fortran/parse.c	2015-06-05 12:46:04.469360985 +0200
 @@ -2425,8 +2425,7 @@
        break;
  
@@ -874,8 +1019,20 @@
      }
  
    /* All is well, record the statement in case we need it next time.  */
+--- a/gcc/fortran/resolve.c	2015-03-25 11:15:46.000000000 +0100
++++ b/gcc/fortran/resolve.c	2015-06-05 12:50:06.477616661 +0200
+@@ -1981,7 +1981,8 @@
+ 	}
+ 
+       comp = gfc_get_proc_ptr_comp(e);
+-      if (comp && comp->attr.elemental)
++      if (e->expr_type == EXPR_VARIABLE
++	  && comp && comp->attr.elemental)
+ 	{
+ 	    gfc_error ("ELEMENTAL procedure pointer component %qs is not "
+ 		       "allowed as an actual argument at %L", comp->name,
 --- a/gcc/fortran/scanner.c	2015-02-13 17:57:28.000000000 +0100
-+++ b/gcc/fortran/scanner.c	2015-05-23 11:31:18.785975216 +0200
++++ b/gcc/fortran/scanner.c	2015-06-05 12:46:04.470361413 +0200
 @@ -1272,21 +1272,11 @@
  	 are still in a string and we are looking for a possible
  	 doubled quote and we end up here. See PR64506.  */
@@ -910,8 +1067,24 @@
  	  /* Both !$omp and !$ -fopenmp continuation lines have & on the
  	     continuation line only optionally.  */
  	  else if (openmp_flag || openacc_flag || openmp_cond_flag)
+--- a/gcc/fortran/simplify.c	2015-01-18 23:01:29.000000000 +0100
++++ b/gcc/fortran/simplify.c	2015-06-05 12:52:18.178077549 +0200
+@@ -5174,8 +5174,11 @@
+ 	e = gfc_constructor_lookup_expr (source->value.constructor, j);
+       else
+ 	{
+-	  gcc_assert (npad > 0);
+-
++	  if (npad <= 0)
++	    {
++	      mpz_clear (index);
++	      return NULL;
++	    }
+ 	  j = j - nsource;
+ 	  j = j % npad;
+ 	  e = gfc_constructor_lookup_expr (pad->value.constructor, j);
 --- a/gcc/fortran/symbol.c	2015-04-10 13:29:53.000000000 +0200
-+++ b/gcc/fortran/symbol.c	2015-05-23 11:28:41.895849323 +0200
++++ b/gcc/fortran/symbol.c	2015-06-05 12:46:04.470361413 +0200
 @@ -458,6 +458,11 @@
  	}
      }
@@ -925,7 +1098,7 @@
    conf (dummy, intrinsic);
    conf (dummy, threadprivate);
 --- a/gcc/fortran/trans-openmp.c	2015-03-30 19:54:05.000000000 +0200
-+++ b/gcc/fortran/trans-openmp.c	2015-05-23 11:32:41.669037929 +0200
++++ b/gcc/fortran/trans-openmp.c	2015-06-05 12:46:04.471361842 +0200
 @@ -4114,6 +4114,7 @@
    stmtblock_t block;
    gfc_omp_clauses clausesa_buf[GFC_OMP_SPLIT_NUM];
@@ -969,8 +1142,19 @@
    if (flag_openmp)
      stmt = build2_loc (input_location, OMP_TARGET, void_type_node, stmt,
  		       omp_clauses);
+--- a/gcc/gimple-fold.c	2015-04-09 20:30:34.000000000 +0200
++++ b/gcc/gimple-fold.c	2015-06-05 12:51:57.114501287 +0200
+@@ -2530,7 +2530,7 @@
+ 	return false;
+ 
+       tree orig_len = get_maxval_strlen (orig, 0);
+-      if (!orig_len)
++      if (!orig_len || TREE_CODE (orig_len) != INTEGER_CST)
+ 	return false;
+ 
+       /* We could expand this as
 --- a/gcc/gimplify.c	2015-03-20 13:39:32.000000000 +0100
-+++ b/gcc/gimplify.c	2015-05-23 11:32:41.671037954 +0200
++++ b/gcc/gimplify.c	2015-06-05 12:46:04.472362270 +0200
 @@ -111,6 +111,9 @@
    /* Flag for GOVD_MAP: don't copy back.  */
    GOVD_MAP_TO_ONLY = 8192,
@@ -1335,7 +1519,7 @@
      default:
        gcc_unreachable ();
 --- a/gcc/ipa-chkp.c	2015-04-06 12:41:55.000000000 +0200
-+++ b/gcc/ipa-chkp.c	2015-05-23 11:31:36.800208969 +0200
++++ b/gcc/ipa-chkp.c	2015-06-05 12:46:04.473362698 +0200
 @@ -264,7 +264,7 @@
    if (!arg_type)
      return orig_type;
@@ -1346,7 +1530,7 @@
  
    for (arg_type = TYPE_ARG_TYPES (type);
 --- a/gcc/ipa-inline.c	2015-04-03 20:09:13.000000000 +0200
-+++ b/gcc/ipa-inline.c	2015-05-23 11:26:42.303067491 +0200
++++ b/gcc/ipa-inline.c	2015-06-05 12:46:04.473362698 +0200
 @@ -427,49 +427,55 @@
  	      && lookup_attribute ("always_inline",
  				   DECL_ATTRIBUTES (callee->decl)));
@@ -1469,7 +1653,7 @@
  	  if (estimate_edge_time (e)
  	      >= 20 + inline_edge_summary (e)->call_stmt_time)
 --- a/gcc/lra-constraints.c	2015-04-10 18:05:26.000000000 +0200
-+++ b/gcc/lra-constraints.c	2015-05-23 11:18:33.964634884 +0200
++++ b/gcc/lra-constraints.c	2015-06-05 12:46:04.474363126 +0200
 @@ -533,7 +533,7 @@
    if (x == res || CONSTANT_P (res))
      return res;
@@ -1480,7 +1664,7 @@
  
  /* Set up curr_operand_mode.  */
 --- a/gcc/lra-eliminations.c	2015-02-04 21:02:21.000000000 +0100
-+++ b/gcc/lra-eliminations.c	2015-05-23 11:18:33.965634942 +0200
++++ b/gcc/lra-eliminations.c	2015-06-05 12:46:04.475363554 +0200
 @@ -318,7 +318,9 @@
     substitution if UPDATE_P, or the full offset if FULL_P, or
     otherwise zero.  If FULL_P, we also use the SP offsets for
@@ -1609,7 +1793,7 @@
  		{
  		  if (first_p)
 --- a/gcc/lra-spills.c	2015-01-15 14:28:42.000000000 +0100
-+++ b/gcc/lra-spills.c	2015-05-23 11:18:33.965634942 +0200
++++ b/gcc/lra-spills.c	2015-06-05 12:46:04.475363554 +0200
 @@ -461,7 +461,7 @@
  	{
  	  rtx x = lra_eliminate_regs_1 (insn, pseudo_slots[i].mem,
@@ -1620,7 +1804,7 @@
  	}
        return;
 --- a/gcc/lto-wrapper.c	2015-01-30 17:15:00.000000000 +0100
-+++ b/gcc/lto-wrapper.c	2015-05-23 11:21:27.938957086 +0200
++++ b/gcc/lto-wrapper.c	2015-06-05 12:46:04.475363554 +0200
 @@ -934,7 +934,7 @@
  	  filename[p - argv[i]] = '\0';
  	  file_offset = (off_t) loffset;
@@ -1631,7 +1815,7 @@
  	{
  	  lto_argv[lto_argc++] = argv[i];
 --- a/gcc/match.pd	2015-02-13 21:17:55.000000000 +0100
-+++ b/gcc/match.pd	2015-05-23 11:33:11.742416376 +0200
++++ b/gcc/match.pd	2015-06-05 12:52:47.988969366 +0200
 @@ -702,16 +702,12 @@
        (for integers).  Avoid this if the final type is a pointer since
        then we sometimes need the middle conversion.  Likewise if the
@@ -1654,8 +1838,18 @@
      (ocvt @0))
  
     /* If we have a sign-extension of a zero-extended value, we can
+@@ -763,7 +759,8 @@
+    /* If we are converting an integer to a floating-point that can
+       represent it exactly and back to an integer, we can skip the
+       floating-point conversion.  */
+-   (if (inside_int && inter_float && final_int &&
++   (if (GIMPLE /* PR66211 */
++	&& inside_int && inter_float && final_int &&
+ 	(unsigned) significand_size (TYPE_MODE (inter_type))
+ 	>= inside_prec - !inside_unsignedp)
+     (convert @0))))))
 --- a/gcc/omp-low.c	2015-04-03 15:35:49.000000000 +0200
-+++ b/gcc/omp-low.c	2015-05-23 11:32:41.672037967 +0200
++++ b/gcc/omp-low.c	2015-06-05 12:46:04.477364411 +0200
 @@ -5377,7 +5377,10 @@
    child_cfun = DECL_STRUCT_FUNCTION (child_fn);
  
@@ -1782,8 +1976,59 @@
  	default:
  	  gcc_unreachable ();
  	}
+--- a/gcc/tree-data-ref.c	2015-01-15 14:28:42.000000000 +0100
++++ b/gcc/tree-data-ref.c	2015-06-05 12:52:47.990969429 +0200
+@@ -1036,6 +1036,7 @@
+ 				 base, memoff);
+ 	  MR_DEPENDENCE_CLIQUE (ref) = MR_DEPENDENCE_CLIQUE (old);
+ 	  MR_DEPENDENCE_BASE (ref) = MR_DEPENDENCE_BASE (old);
++	  DR_UNCONSTRAINED_BASE (dr) = true;
+ 	  access_fns.safe_push (access_fn);
+ 	}
+     }
+@@ -1453,7 +1454,8 @@
+      offset/overlap based analysis but have to rely on points-to
+      information only.  */
+   if (TREE_CODE (addr_a) == MEM_REF
+-      && TREE_CODE (TREE_OPERAND (addr_a, 0)) == SSA_NAME)
++      && (DR_UNCONSTRAINED_BASE (a)
++	  || TREE_CODE (TREE_OPERAND (addr_a, 0)) == SSA_NAME))
+     {
+       /* For true dependences we can apply TBAA.  */
+       if (flag_strict_aliasing
+@@ -1469,7 +1471,8 @@
+ 				       build_fold_addr_expr (addr_b));
+     }
+   else if (TREE_CODE (addr_b) == MEM_REF
+-	   && TREE_CODE (TREE_OPERAND (addr_b, 0)) == SSA_NAME)
++	   && (DR_UNCONSTRAINED_BASE (b)
++	       || TREE_CODE (TREE_OPERAND (addr_b, 0)) == SSA_NAME))
+     {
+       /* For true dependences we can apply TBAA.  */
+       if (flag_strict_aliasing
+--- a/gcc/tree-data-ref.h	2015-03-18 14:36:16.000000000 +0100
++++ b/gcc/tree-data-ref.h	2015-06-05 12:52:47.990969429 +0200
+@@ -81,6 +81,10 @@
+ 
+   /* A list of chrecs.  Access functions of the indices.  */
+   vec<tree> access_fns;
++
++  /* Whether BASE_OBJECT is an access representing the whole object
++     or whether the access could not be constrained.  */
++  bool unconstrained_base;
+ };
+ 
+ struct dr_alias
+@@ -129,6 +133,7 @@
+ #define DR_STMT(DR)                (DR)->stmt
+ #define DR_REF(DR)                 (DR)->ref
+ #define DR_BASE_OBJECT(DR)         (DR)->indices.base_object
++#define DR_UNCONSTRAINED_BASE(DR)  (DR)->indices.unconstrained_base
+ #define DR_ACCESS_FNS(DR)	   (DR)->indices.access_fns
+ #define DR_ACCESS_FN(DR, I)        DR_ACCESS_FNS (DR)[I]
+ #define DR_NUM_DIMENSIONS(DR)      DR_ACCESS_FNS (DR).length ()
 --- a/gcc/tree.h	2015-04-08 20:41:55.000000000 +0200
-+++ b/gcc/tree.h	2015-05-23 11:32:41.673037980 +0200
++++ b/gcc/tree.h	2015-06-05 12:46:04.478364839 +0200
 @@ -1320,6 +1320,11 @@
  #define OMP_PARALLEL_COMBINED(NODE) \
    (OMP_PARALLEL_CHECK (NODE)->base.private_flag)
@@ -1796,8 +2041,122 @@
  /* True if OMP_ATOMIC* is supposed to be sequentially consistent
     as opposed to relaxed.  */
  #define OMP_ATOMIC_SEQ_CST(NODE) \
+--- a/gcc/tree-ssa-dce.c	2015-01-15 14:28:42.000000000 +0100
++++ b/gcc/tree-ssa-dce.c	2015-06-05 12:47:41.764002114 +0200
+@@ -1149,7 +1149,12 @@
+ 	if (e != e2)
+ 	  {
+ 	    cfg_altered = true;
+-            remove_edge (e2);
++	    /* If we made a BB unconditionally exit a loop then this
++	       transform alters the set of BBs in the loop.  Schedule
++	       a fixup.  */
++	    if (loop_exit_edge_p (bb->loop_father, e))
++	      loops_state_set (LOOPS_NEED_FIXUP);
++	    remove_edge (e2);
+ 	  }
+ 	else
+ 	  ei_next (&ei);
+--- a/gcc/tree-ssa-dom.c	2015-03-13 09:47:14.000000000 +0100
++++ b/gcc/tree-ssa-dom.c	2015-06-05 12:52:47.991969460 +0200
+@@ -2963,6 +2963,9 @@
+ 		{
+ 		  basic_block bb = gimple_bb (use_stmt);
+ 		  edge te = find_taken_edge (bb, val);
++		  if (!te)
++		    continue;
++
+ 		  edge_iterator ei;
+ 		  edge e;
+ 		  gimple_stmt_iterator gsi;
+--- a/gcc/tree-vect-slp.c	2015-03-24 11:45:09.000000000 +0100
++++ b/gcc/tree-vect-slp.c	2015-06-05 12:52:47.991969460 +0200
+@@ -1875,21 +1875,27 @@
+     {
+       /* Check if a pure SLP stmt has uses in non-SLP stmts.  */
+       gcc_checking_assert (PURE_SLP_STMT (stmt_vinfo));
++      /* We always get the pattern stmt here, but for immediate
++	 uses we have to use the LHS of the original stmt.  */
++      gcc_checking_assert (!STMT_VINFO_IN_PATTERN_P (stmt_vinfo));
++      if (STMT_VINFO_RELATED_STMT (stmt_vinfo))
++	stmt = STMT_VINFO_RELATED_STMT (stmt_vinfo);
+       if (TREE_CODE (gimple_op (stmt, 0)) == SSA_NAME)
+ 	FOR_EACH_IMM_USE_STMT (use_stmt, imm_iter, gimple_op (stmt, 0))
+-	  if (gimple_bb (use_stmt)
+-	      && flow_bb_inside_loop_p (loop, gimple_bb (use_stmt))
+-	      && (use_vinfo = vinfo_for_stmt (use_stmt))
+-	      && !STMT_SLP_TYPE (use_vinfo)
+-	      && (STMT_VINFO_RELEVANT (use_vinfo)
+-		  || VECTORIZABLE_CYCLE_DEF (STMT_VINFO_DEF_TYPE (use_vinfo))
+-		  || (STMT_VINFO_IN_PATTERN_P (use_vinfo)
+-		      && STMT_VINFO_RELATED_STMT (use_vinfo)
+-		      && !STMT_SLP_TYPE (vinfo_for_stmt
+-			    (STMT_VINFO_RELATED_STMT (use_vinfo)))))
+-	      && !(gimple_code (use_stmt) == GIMPLE_PHI
+-		   && STMT_VINFO_DEF_TYPE (use_vinfo) == vect_reduction_def))
+-	    stype = hybrid;
++	  {
++	    if (!flow_bb_inside_loop_p (loop, gimple_bb (use_stmt)))
++	      continue;
++	    use_vinfo = vinfo_for_stmt (use_stmt);
++	    if (STMT_VINFO_IN_PATTERN_P (use_vinfo)
++		&& STMT_VINFO_RELATED_STMT (use_vinfo))
++	      use_vinfo = vinfo_for_stmt (STMT_VINFO_RELATED_STMT (use_vinfo));
++	    if (!STMT_SLP_TYPE (use_vinfo)
++		&& (STMT_VINFO_RELEVANT (use_vinfo)
++		    || VECTORIZABLE_CYCLE_DEF (STMT_VINFO_DEF_TYPE (use_vinfo)))
++		&& !(gimple_code (use_stmt) == GIMPLE_PHI
++		     && STMT_VINFO_DEF_TYPE (use_vinfo) == vect_reduction_def))
++	      stype = hybrid;
++	  }
+     }
+ 
+   if (stype == hybrid)
+--- a/gcc/tree-vect-stmts.c	2015-03-23 15:59:57.000000000 +0100
++++ b/gcc/tree-vect-stmts.c	2015-06-05 12:51:24.415716318 +0200
+@@ -3369,15 +3369,13 @@
+ 	     (or in STMT_VINFO_RELATED_STMT chain).  */
+ 	  if (slp_node)
+ 	    SLP_TREE_VEC_STMTS (slp_node).quick_push (new_stmt);
++
++	  if (!*prev_stmt_info)
++	    STMT_VINFO_VEC_STMT (stmt_info) = new_stmt;
+ 	  else
+-	    {
+-	      if (!*prev_stmt_info)
+-		STMT_VINFO_VEC_STMT (stmt_info) = new_stmt;
+-	      else
+-		STMT_VINFO_RELATED_STMT (*prev_stmt_info) = new_stmt;
++	    STMT_VINFO_RELATED_STMT (*prev_stmt_info) = new_stmt;
+ 
+-	      *prev_stmt_info = vinfo_for_stmt (new_stmt);
+-	    }
++	  *prev_stmt_info = vinfo_for_stmt (new_stmt);
+ 	}
+     }
+ 
+@@ -3956,14 +3954,12 @@
+ 
+ 	      if (slp_node)
+ 		SLP_TREE_VEC_STMTS (slp_node).quick_push (new_stmt);
++
++	      if (!prev_stmt_info)
++		STMT_VINFO_VEC_STMT (stmt_info) = new_stmt;
+ 	      else
+-		{
+-		  if (!prev_stmt_info)
+-		    STMT_VINFO_VEC_STMT (stmt_info) = new_stmt;
+-		  else
+-		    STMT_VINFO_RELATED_STMT (prev_stmt_info) = new_stmt;
+-		  prev_stmt_info = vinfo_for_stmt (new_stmt);
+-		}
++		STMT_VINFO_RELATED_STMT (prev_stmt_info) = new_stmt;
++	      prev_stmt_info = vinfo_for_stmt (new_stmt);
+ 	    }
+ 	}
+ 
 --- a/gcc/tree-vrp.c	2015-02-17 16:32:05.000000000 +0100
-+++ b/gcc/tree-vrp.c	2015-05-23 11:18:33.967635057 +0200
++++ b/gcc/tree-vrp.c	2015-06-05 12:46:04.479365267 +0200
 @@ -874,13 +874,18 @@
    if (is_new)
      {
@@ -1833,7 +2192,7 @@
      }
  
 --- a/gcc/ubsan.c	2015-04-09 21:51:08.000000000 +0200
-+++ b/gcc/ubsan.c	2015-05-23 11:22:23.302098186 +0200
++++ b/gcc/ubsan.c	2015-06-05 12:46:04.480365695 +0200
 @@ -87,6 +87,7 @@
  #include "builtins.h"
  #include "tree-object-size.h"
@@ -1869,8 +2228,148 @@
      {
        gimple_assign_set_rhs_with_ops (&gsi2, NOP_EXPR, urhs);
        update_stmt (stmt);
+--- a/libstdc++-v3/config/cpu/powerpc/atomic_word.h	2015-01-05 13:33:28.000000000 +0100
++++ b/libstdc++-v3/config/cpu/powerpc/atomic_word.h	2015-06-05 12:46:16.388065660 +0200
+@@ -27,10 +27,11 @@
+ 
+ typedef int _Atomic_word;
+ 
+-#define _GLIBCXX_READ_MEM_BARRIER __asm __volatile ("isync":::"memory")
+ #ifdef __NO_LWSYNC__
++#define _GLIBCXX_READ_MEM_BARRIER __asm __volatile ("sync":::"memory")
+ #define _GLIBCXX_WRITE_MEM_BARRIER __asm __volatile ("sync":::"memory")
+ #else
++#define _GLIBCXX_READ_MEM_BARRIER __asm __volatile ("lwsync":::"memory")
+ #define _GLIBCXX_WRITE_MEM_BARRIER __asm __volatile ("lwsync":::"memory")
+ #endif
+ 
+--- a/libstdc++-v3/configure.host	2015-01-09 15:06:02.000000000 +0100
++++ b/libstdc++-v3/configure.host	2015-06-05 12:46:16.388065660 +0200
+@@ -216,7 +216,6 @@
+     # Newer versions of AIX only support PowerPC architecture, so use
+     # atomic instructions directly.
+     os_include_dir="os/aix"
+-    atomic_word_dir="os/aix"
+     ;;
+   aix4.[3456789]*)
+     # We set os_include_dir to os/aix only on AIX 4.3 and newer, but
+--- a/libstdc++-v3/include/bits/alloc_traits.h	2015-01-05 13:33:28.000000000 +0100
++++ b/libstdc++-v3/include/bits/alloc_traits.h	2015-06-05 12:48:11.192371536 +0200
+@@ -72,8 +72,8 @@
+       typedef _Alloc<_Tp, _Args...> __type;
+     };
+ 
+-  template<typename _Ptr, typename _Tp>
+-    using __alloc_rebind = typename __alloctr_rebind<_Ptr, _Tp>::__type;
++  template<typename _Alloc, typename _Tp>
++    using __alloc_rebind = typename __alloctr_rebind<_Alloc, _Tp>::__type;
+ 
+   /**
+    * @brief  Uniform interface to all allocator types.
+--- a/libstdc++-v3/include/bits/basic_string.h	2015-02-17 13:44:26.000000000 +0100
++++ b/libstdc++-v3/include/bits/basic_string.h	2015-06-05 12:48:29.442081908 +0200
+@@ -377,7 +377,10 @@
+       /**
+        *  @brief  Default constructor creates an empty string.
+        */
+-      basic_string() _GLIBCXX_NOEXCEPT
++      basic_string()
++#if __cplusplus >= 201103L
++      noexcept(is_nothrow_default_constructible<_Alloc>::value)
++#endif
+       : _M_dataplus(_M_local_data())
+       { _M_set_length(0); }
+ 
+--- a/libstdc++-v3/include/bits/stl_tree.h	2015-01-20 12:50:58.000000000 +0100
++++ b/libstdc++-v3/include/bits/stl_tree.h	2015-06-05 12:48:51.806904877 +0200
+@@ -146,7 +146,7 @@
+       _M_valptr() const
+       { return std::__addressof(_M_value_field); }
+ #else
+-      __gnu_cxx::__aligned_buffer<_Val> _M_storage;
++      __gnu_cxx::__aligned_membuf<_Val> _M_storage;
+ 
+       _Val*
+       _M_valptr()
+@@ -188,7 +188,7 @@
+       : _M_node() { }
+ 
+       explicit
+-      _Rb_tree_iterator(_Link_type __x) _GLIBCXX_NOEXCEPT
++      _Rb_tree_iterator(_Base_ptr __x) _GLIBCXX_NOEXCEPT
+       : _M_node(__x) { }
+ 
+       reference
+@@ -260,7 +260,7 @@
+       : _M_node() { }
+ 
+       explicit
+-      _Rb_tree_const_iterator(_Link_type __x) _GLIBCXX_NOEXCEPT
++      _Rb_tree_const_iterator(_Base_ptr __x) _GLIBCXX_NOEXCEPT
+       : _M_node(__x) { }
+ 
+       _Rb_tree_const_iterator(const iterator& __it) _GLIBCXX_NOEXCEPT
+@@ -268,8 +268,7 @@
+ 
+       iterator
+       _M_const_cast() const _GLIBCXX_NOEXCEPT
+-      { return iterator(static_cast<typename iterator::_Link_type>
+-			(const_cast<typename iterator::_Base_ptr>(_M_node))); }
++      { return iterator(const_cast<typename iterator::_Base_ptr>(_M_node)); }
+ 
+       reference
+       operator*() const _GLIBCXX_NOEXCEPT
+@@ -868,28 +867,19 @@
+ 
+       iterator
+       begin() _GLIBCXX_NOEXCEPT
+-      { 
+-	return iterator(static_cast<_Link_type>
+-			(this->_M_impl._M_header._M_left));
+-      }
++      { return iterator(this->_M_impl._M_header._M_left); }
+ 
+       const_iterator
+       begin() const _GLIBCXX_NOEXCEPT
+-      { 
+-	return const_iterator(static_cast<_Const_Link_type>
+-			      (this->_M_impl._M_header._M_left));
+-      }
++      { return const_iterator(this->_M_impl._M_header._M_left); }
+ 
+       iterator
+       end() _GLIBCXX_NOEXCEPT
+-      { return iterator(static_cast<_Link_type>(&this->_M_impl._M_header)); }
++      { return iterator(&this->_M_impl._M_header); }
+ 
+       const_iterator
+       end() const _GLIBCXX_NOEXCEPT
+-      { 
+-	return const_iterator(static_cast<_Const_Link_type>
+-			      (&this->_M_impl._M_header));
+-      }
++      { return const_iterator(&this->_M_impl._M_header); }
+ 
+       reverse_iterator
+       rbegin() _GLIBCXX_NOEXCEPT
+--- a/libstdc++-v3/include/debug/array	2015-01-05 13:33:28.000000000 +0100
++++ b/libstdc++-v3/include/debug/array	2015-06-05 12:49:47.183578968 +0200
+@@ -216,11 +216,11 @@
+ 
+       pointer
+       data() noexcept
+-      { return std::__addressof(_AT_Type::_S_ref(_M_elems, 0)); }
++      { return _AT_Type::_S_ptr(_M_elems); }
+ 
+       const_pointer
+       data() const noexcept
+-      { return std::__addressof(_AT_Type::_S_ref(_M_elems, 0)); }
++      { return _AT_Type::_S_ptr(_M_elems); }
+     };
+ 
+   // Array comparisons.
 --- a/libstdc++-v3/include/debug/vector	2015-01-05 13:33:28.000000000 +0100
-+++ b/libstdc++-v3/include/debug/vector	2015-05-23 11:18:33.967635057 +0200
++++ b/libstdc++-v3/include/debug/vector	2015-06-05 12:46:04.480365695 +0200
 @@ -69,13 +69,17 @@
  
        _Safe_vector&
@@ -1891,7 +2390,7 @@
  #endif
  
 --- a/libstdc++-v3/include/experimental/any	2015-01-05 13:33:28.000000000 +0100
-+++ b/libstdc++-v3/include/experimental/any	2015-05-23 11:20:55.285156612 +0200
++++ b/libstdc++-v3/include/experimental/any	2015-06-05 12:46:04.480365695 +0200
 @@ -94,7 +94,7 @@
        std::aligned_storage<sizeof(_M_ptr), sizeof(_M_ptr)>::type _M_buffer;
      };
@@ -1901,8 +2400,112 @@
  	     bool _Fits = (sizeof(_Tp) <= sizeof(_Storage))>
        using _Internal = std::integral_constant<bool, _Safe::value && _Fits>;
  
+--- a/libstdc++-v3/include/ext/aligned_buffer.h	2015-01-05 13:33:28.000000000 +0100
++++ b/libstdc++-v3/include/ext/aligned_buffer.h	2015-06-05 12:48:51.806904877 +0200
+@@ -39,6 +39,47 @@
+ 
+ namespace __gnu_cxx
+ {
++  // A utility type containing a POD object that can hold an object of type
++  // _Tp initialized via placement new or allocator_traits::construct.
++  // Intended for use as a data member subobject, use __aligned_buffer for
++  // complete objects.
++  template<typename _Tp>
++    struct __aligned_membuf
++    {
++      // Target macro ADJUST_FIELD_ALIGN can produce different alignment for
++      // types when used as class members. __aligned_membuf is intended
++      // for use as a class member, so align the buffer as for a class member.
++      struct _Tp2 { _Tp _M_t; };
++
++      alignas(__alignof__(_Tp2::_M_t)) unsigned char _M_storage[sizeof(_Tp)];
++
++      __aligned_membuf() = default;
++
++      // Can be used to avoid value-initialization zeroing _M_storage.
++      __aligned_membuf(std::nullptr_t) { }
++
++      void*
++      _M_addr() noexcept
++      { return static_cast<void*>(&_M_storage); }
++
++      const void*
++      _M_addr() const noexcept
++      { return static_cast<const void*>(&_M_storage); }
++
++      _Tp*
++      _M_ptr() noexcept
++      { return static_cast<_Tp*>(_M_addr()); }
++
++      const _Tp*
++      _M_ptr() const noexcept
++      { return static_cast<const _Tp*>(_M_addr()); }
++    };
++
++  // Similar to __aligned_membuf but aligned for complete objects, not members.
++  // This type is used in <forward_list>, <future>, <bits/shared_ptr_base.h>
++  // and <bits/hashtable_policy.h>, but ideally they would use __aligned_membuf
++  // instead, as it has smaller size for some types on some targets.
++  // This type is still used to avoid an ABI change.
+   template<typename _Tp>
+     struct __aligned_buffer
+     : std::aligned_storage<sizeof(_Tp), std::alignment_of<_Tp>::value>
+--- a/libstdc++-v3/include/profile/array	2015-01-05 13:33:28.000000000 +0100
++++ b/libstdc++-v3/include/profile/array	2015-06-05 12:49:47.183578968 +0200
+@@ -178,11 +178,11 @@
+ 
+       pointer
+       data() noexcept
+-      { return std::__addressof(_AT_Type::_S_ref(_M_elems, 0)); }
++      { return _AT_Type::_S_ptr(_M_elems); }
+ 
+       const_pointer
+       data() const noexcept
+-      { return std::__addressof(_AT_Type::_S_ref(_M_elems, 0)); }
++      { return _AT_Type::_S_ptr(_M_elems); }
+     };
+ 
+   // Array comparisons.
+--- a/libstdc++-v3/include/std/array	2015-01-05 13:33:28.000000000 +0100
++++ b/libstdc++-v3/include/std/array	2015-06-05 12:49:18.740757351 +0200
+@@ -51,6 +51,10 @@
+       static constexpr _Tp&
+       _S_ref(const _Type& __t, std::size_t __n) noexcept
+       { return const_cast<_Tp&>(__t[__n]); }
++
++      static constexpr _Tp*
++      _S_ptr(const _Type& __t) noexcept
++      { return const_cast<_Tp*>(__t); }
+     };
+ 
+  template<typename _Tp>
+@@ -61,6 +65,10 @@
+      static constexpr _Tp&
+      _S_ref(const _Type&, std::size_t) noexcept
+      { return *static_cast<_Tp*>(nullptr); }
++
++     static constexpr _Tp*
++     _S_ptr(const _Type&) noexcept
++     { return nullptr; }
+    };
+ 
+   /**
+@@ -219,11 +227,11 @@
+ 
+       pointer
+       data() noexcept
+-      { return std::__addressof(_AT_Type::_S_ref(_M_elems, 0)); }
++      { return _AT_Type::_S_ptr(_M_elems); }
+ 
+       const_pointer
+       data() const noexcept
+-      { return std::__addressof(_AT_Type::_S_ref(_M_elems, 0)); }
++      { return _AT_Type::_S_ptr(_M_elems); }
+     };
+ 
+   // Array comparisons.
 --- a/libstdc++-v3/include/std/limits	2015-01-05 13:33:28.000000000 +0100
-+++ b/libstdc++-v3/include/std/limits	2015-05-23 11:22:05.903763794 +0200
++++ b/libstdc++-v3/include/std/limits	2015-06-05 12:46:04.481366124 +0200
 @@ -1490,7 +1490,8 @@
        min() _GLIBCXX_USE_NOEXCEPT { return 0; } 				\
   										\

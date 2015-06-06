@@ -1,0 +1,13 @@
+--- a/cmake/FindPhononInternal.cmake	2014-12-04 09:30:26.000000000 +0000
++++ b/cmake/FindPhononInternal.cmake	2015-06-06 13:41:32.681525487 +0000
+@@ -407,9 +407,8 @@
+       set(_source "#include <QtCore/QtGlobal>\n int main()\n {\n #ifndef QT_VISIBILITY_AVAILABLE \n #error QT_VISIBILITY_AVAILABLE is not available\n #endif \n }\n")
+       set(_source_file ${CMAKE_BINARY_DIR}/CMakeTmp/check_qt_visibility.cpp)
+       file(WRITE "${_source_file}" "${_source}")
+-      set(_include_dirs "-DINCLUDE_DIRECTORIES:STRING=${QT_INCLUDES}")
+ 
+-      try_compile(_compile_result ${CMAKE_BINARY_DIR} ${_source_file} CMAKE_FLAGS "${_include_dirs}" OUTPUT_VARIABLE _compile_output_var)
++      try_compile(_compile_result ${CMAKE_BINARY_DIR} ${_source_file} CMAKE_FLAGS "${CMAKE_CXX_FLAGS}" INCLUDE_DIRECTORIES "${QT_INCLUDES}" OUTPUT_VARIABLE _compile_output_var)
+ 
+       if(NOT _compile_result)
+          message("${_compile_output_var}")

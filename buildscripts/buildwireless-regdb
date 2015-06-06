@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2015.04.06
+export VER=2015.06.05
 export DEST=/binary/wireless-regdb-${VER}
 
 pushd wireless-regdb-${VER}

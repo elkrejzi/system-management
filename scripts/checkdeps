@@ -7,7 +7,7 @@ fi
 
 rm -f ${PWD}/check
 
-find {,/usr}/{bin,lib{,32,exec},sbin} -type f ! -path */debug/* ! -path */java/* ! -path */vmware*/* \
+find {,/usr}/{bin,lib{,32},libexec,sbin} -type f ! -path */debug/* ! -path */java/* ! -path */vmware*/* \
      ! -path */syslinux/* 2>/dev/null | while read BUILD_BINARY ; do
 case "$(file -bi "${BUILD_BINARY}")" in
 *application/x-sharedlib* | *application/x-executable*)

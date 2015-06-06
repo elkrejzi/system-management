@@ -398,7 +398,7 @@ adwaita-icon-theme-3.16.0
 gnome-icon-theme-3.12.0
 gnome-icon-theme-extras-3.12.0
 gnome-icon-theme-symbolic-3.12.0
-gnome-themes-standard-3.16.0
+gnome-themes-standard-3.16.0 32 and 64 bit
 desktop-file-utils-0.22
 shared-mime-info-1.4
 qt-4.8.6 32 and 64 bit
@@ -952,3 +952,401 @@ Updated to sqlite-3.8.10
 Updated to v4l-utils-1.6.3
 
 # End Fri May  8 10:15:46 UTC 2015
+
+# Begin Fri May  8 15:36:19 UTC 2015
+
+Updated to qt-5.5.0-alpha1-13-g56a8038
+Updated to extra-cmake-modules-5.10.0
+
+Updated to attica-5.10.0
+Updated to kapidox-5.10.0
+Updated to karchive-5.10.0
+Updated to kcodecs-5.10.0
+Updated to kconfig-5.10.0
+Updated to kcoreaddons-5.10.0
+Updated to kdbusaddons-5.10.0
+Updated to kdnssd-5.10.0
+Updated to kguiaddons-5.10.0
+Updated to ki18n-5.10.0
+Updated to kidletime-5.10.0
+Updated to kimageformats-5.10.0
+Updated to kitemmodels-5.10.0
+Updated to kitemviews-5.10.0
+Updated to kplotting-5.10.0
+Updated to kwidgetsaddons-5.10.0
+Updated to kwindowsystem-5.10.0
+Updated to modemmanager-qt-5.10.0
+Updated to networkmanager-qt-5.10.0
+Updated to solid-5.10.0
+Updated to sonnet-5.10.0
+Updated to threadweaver-5.10.0
+Updated to kauth-5.10.0
+Updated to kcompletion-5.10.0
+Updated to kcrash-5.10.0
+Updated to kdoctools-5.10.0
+Updated to kpty-5.10.0
+Updated to kunitconversion-5.10.0
+Updated to kconfigwidgets-5.10.0
+Updated to kglobalaccel-5.10.0
+Updated to kpackage-5.10.0
+Updated to kservice-5.10.0
+Updated to kdesu-5.10.0
+Updated to kemoticons-5.10.0
+Updated to kiconthemes-5.10.0
+Updated to kjobwidgets-5.10.0
+Updated to kpeople-5.10.0
+Updated to knotifications-5.10.0
+Updated to ktextwidgets-5.10.0
+Updated to kwallet-5.10.0
+Updated to kxmlgui-5.10.0
+Updated to kbookmarks-5.10.0
+Updated to kio-5.10.0
+Updated to frameworkintegration-5.10.0
+Updated to kdeclarative-5.10.0
+Updated to kinit-5.10.0
+Updated to knewstuff-5.10.0
+Updated to knotifyconfig-5.10.0
+Updated to kparts-5.10.0
+Updated to kxmlrpcclient-5.10.0
+Updated to kcmutils-5.10.0
+Updated to kded-5.10.0
+Updated to kdewebkit-5.10.0
+Updated to ktexteditor-5.10.0
+Updated to kactivities-5.10.0
+Updated to kdesignerplugin-5.10.0
+Updated to plasma-framework-5.10.0
+Updated to kjs-5.10.0
+Updated to kdelibs4support-5.10.0
+Updated to khtml-5.10.0
+Updated to kjsembed-5.10.0
+Updated to kmediaplayer-5.10.0
+Updated to kross-5.10.0
+Updated to krunner-5.10.0
+
+grantlee-5.0.0
+libdmtx-0.7.4
+lmdb-0.9.14
+qrencode-3.4.4
+xerces-c-3.1.2
+xsd-4.0.0
+
+# End Fri May  8 22:27:13 UTC 2015
+
+# Begin Wed May 13 19:35:17 UTC 2015
+
+Removed epiphany-3.16.0
+Removed mysql-5.6.24
+Removed webkitgtk-2.8.1
+
+mariadb-10.0.19
+
+Updated to vte-0.40.2
+Updated to wayland-1.7.91
+Updated to adwaita-icon-theme-3.16.2.1
+Updated to aisleriot-3.16.2
+Updated to clutter-1.22.2
+Updated to eog-3.16.2
+Updated to file-roller-3.16.2
+Updated to firefox-38.0
+Updated to gcr-3.16.0
+Updated to gdk-pixbuf-2.31.4
+Updated to git-2.4.1
+Updated to glib-2.44.1
+Updated to gnome-desktop-3.16.2
+Updated to gnome-logs-3.16.2
+Updated to gnome-terminal-3.16.2
+Updated to gnome-themes-standard-3.16.2
+Updated to gtk+-2.24.28
+Updated to gtk+-3.16.3
+Updated to gucharmap-3.16.2
+Updated to kid3-3.2.1
+Updated to krb5-1.13.2
+Updated to libassuan-2.2.1
+Updated to libraw-0.16.1
+Updated to libzip-1.0.1
+Updated to linux-4.0.3-krejzi
+Updated to mate-sensors-applet-1.10.0
+Updated to mate-terminal-1.10.0
+Updated to mesa-10.5.5
+Updated to nautilus-3.16.2
+Updated to pinentry-0.9.2
+Updated to seahorse-3.16.0
+Updated to vinagre-3.16.1
+Updated to weston-1.7.91
+Updated to wireshark-1.12.5
+Updated to yelp-3.16.1
+Updated to zenity-3.16.0
+
+Rebuild ebook-tools-0.2.2 against libzip-1.0.1
+Rebuild php-5.6.8 against libzip-1.0.1
+
+# End Wed May 13 21:56:25 UTC 2015
+
+# Begin Fri May 15 09:43:57 UTC 2015
+
+Updated to dbus-1.8.18
+Updated to firefox-38.0.1
+Updated to gdb-7.9.1
+Updated to kmix-15.04.1
+Updated to konsole-15.04.1
+Updated to oxygen-icons-15.04.1
+Updated to php-5.6.9
+Updated to poppler-0.33.0
+Updated to zenity-3.16.2
+
+# End Fri May 15 11:04:01 UTC 2015
+
+# Begin Sat May 16 20:54:58 UTC 2015
+
+Removed qt-5.5.0-alpha1-13-g56a8038
+
+qtbase-5.5.0-beta
+qtimageformats-5.5.0-beta
+qtscript-5.5.0-beta
+qtsvg-5.5.0-beta
+qtwayland-5.5.0-beta
+qtx11extras-5.5.0-beta
+qtxmlpatterns-5.5.0-beta
+qtdeclarative-5.5.0-beta
+qtgraphicaleffects-5.5.0-beta
+qtlocation-5.5.0-beta
+qtmultimedia-5.5.0-beta
+qtquickcontrols-5.5.0-beta
+qtsensors-5.5.0-beta
+qtwebchannel-5.5.0-beta
+qtwebengine-5.5.0-beta
+qtwebkit-5.5.0-beta
+qtquick1-5.5.0-beta
+qttools-5.5.0-beta
+youtube-dl-2015.05.15
+
+Updated to ffmpeg-2.6.3
+Updated to flashplayer-11.2.202.460
+Updated to gedit-3.16.2
+Updated to libssh-0.7.0
+Updated to LVM2-2.02.120
+Updated to thunderbird-31.7.0
+
+# End Sun May 17 04:15:17 UTC 2015
+
+# Begin Thu May 21 16:27:36 UTC 2015
+
+Updated to bash-4.3 patchlevel 39
+Updated to btrfs-progs-4.0.1
+Updated to chromium-43.0.2357.65
+Updated to e2fsprogs-1.42.13
+Updated to gawk-4.1.3
+Updated to gtk-doc-1.23
+Updated to libXrandr-1.5.0
+Updated to lightdm-gtk-greeter-2.0.1
+Updated to mpv-0.9.2
+Updated to randrproto-1.5.0
+Updated to re2c-0.14.3
+Updated to soundtouch-1.9.0
+Updated to sqlite-3.8.10.2
+Updated to wayland-1.7.92
+Updated to webkitgtk-2.4.9
+Updated to weston-1.7.92
+Updated to whois-5.2.8
+Updated to xapian-core-1.2.21
+
+Removed brasero-3.12.1
+Removed gexiv2-0.10.3
+Removed gmime-2.6.20
+Removed gnome-icon-theme-3.12.0
+Removed gnome-icon-theme-extras-3.12.0
+Removed gnome-icon-theme-symbolic-3.12.0
+Removed gnome-system-monitor-3.16.0
+Removed grilo-0.2.12
+Removed libburn-1.3.8
+Removed libdmapsharing-2.9.30
+Removed libgee-0.18.0
+Removed libisofs-1.3.8
+Removed rest-0.7.93
+Removed rhythmbox-3.2.1
+Removed shotwell-0.22.0
+Removed totem-pl-parser-3.10.5
+
+# End Thu May 21 22:12:27 UTC 2015
+
+# Begin Sat May 23 10:14:17 UTC 2015
+
+Updated to fuse-2.9.4
+Updated to gnome-calculator-3.16.1
+Updated to postgresql-9.4.2
+Updated to systemd-220
+
+Removed ksnapshot-15.04.0-113-g2503aac
+
+libgudev-219 32 and 64 bit + separate debug info
+xcb-util-cursor-0.1.2
+xcb-util-errors-1.0
+kscreengenie-ac24dc3
+qtcurve-1.8.18-240-g721fcf3
+
+Updated to glib-2.45.1 (git snapshot)
+Updated to glib-networking-2.45.1 (git snapshot)
+Updated to gobject-introspection-1.44.0 (git snapshot)
+Updated to vala-0.28.0.16-b1323 (git snapshot)
+Updated to pango-1.37.0 (git snapshot)
+Updated to gtk+-3.17.1 (git snapshot)
+Updated to clutter-1.23.1 (git snapshot)
+
+# End Sat May 23 11:12:49 UTC 2015
+
+# Begin Sun May 24 12:14:40 UTC 2015
+
+Updated to libetonyek-0.1.2
+Updated to libmwaw-0.3.5
+Updated to libodfgen-0.1.4
+Updated to mesa-10.5.6
+Updated to python-pytz-2015.4
+
+# End Sun May 24 12:51:23 UTC 2015
+
+# Begin Thu May 28 07:25:12 UTC 2015
+
+Rebuild gstreamer-0.10.36 to remove 32 bit libraries
+Rebuild gst-plugins-base-0.10.36 to remove 32 bit libraries
+Rebuild gstreamer-1.4.5 to add 32 bit libraries
+Rebuild gst-plugins-base-1.4.5 to add 32 bit libraries
+
+Updated to chromium-43.0.2357.81
+Updated to evince-3.16.1
+Updated to git-2.4.2
+Updated to libbluray-0.8.1
+Updated to llvm-3.6.1
+Updated to mpg123-1.22.2
+Updated to Python-2.7.10
+Updated to qpdf-5.1.3
+Updated to qt-4.8.7 removed bundled QtWebKit module
+Updated to samba-4.2.2
+Updated to wayland-1.7.93
+Updated to weston-1.7.93
+Updated to xkeyboard-config-2.15
+
+qtwebkit-2.3.4 32 and 64 bit, Qt4 version
+steam-1.0.0.50
+
+# End Thu May 28 15:24:37 UTC 2015
+
+# Begin Fri May 29 08:06:19 UTC 2015
+
+fltk-1.3.3
+gl2ps-1.3.8
+glpk-4.55
+GraphicsMagick-1.3.21
+hwloc-1.10.1
+jdk-1.8.0u45
+lapack-3.5.0
+libcerf-1.4
+qhull-2012.1
+qscintilla-2.9 Python 2 and Python 3 Modules
+wxWidgets-3.0.2 32 and 64 bit
+gnuplot-5.0.0
+openmpi-1.8.5
+qrupdate-1.1.2
+suitesparse-4.4.4
+arpack-ng-3.2.0
+octave-4.0.0
+pcsxr-1.9.93
+pcsx2-1.3.1 32 bit
+
+# End Fri May 29 10:12:24 UTC 2015
+
+# Begin Mon Jun  1 18:10:03 UTC 2015
+
+bridge-utils-1.5
+celt-0.5.1.3
+dnsmasq-2.72
+libiscsi-1.14.0
+libnih-1.0.3
+python-pyparsing-2.0.3
+radvd-2.11
+spice-protocol-0.12.7
+usbredir-0.7
+vde2-2.3.2
+yajl-2.1.0
+cgmanager-0.37
+spice-0.12.5
+lxc-1.1.2
+qemu-2.3.0
+libvirt-1.2.16
+
+Updated to aspell-en-7.1.0
+Updated to gtk-doc-1.24
+Updated to hunspell-en-us-20070829
+Updated to libgusb-0.2.5
+Updated to libraw-0.16.2
+Updated to nss-3.19.1
+Updated to perl-error-0.17024
+Updated to python-setuptools-17.0
+Updated to wavpack-4.75.0
+
+# End Mon Jun  1 18:54:15 UTC 2015
+
+# Begin Tue Jun  2 14:27:13 UTC 2015
+
+Updated to cmake-3.2.3
+Updated to firefox-38.0.5
+Updated to libinput-0.16.0
+Updated to libtirpc-0.3.1
+Updated to perl-5.22.0
+Updated to pinentry-0.9.3
+
+Rebuild perl-xml-parser-2.44 against perl-5.22.0
+Rebuild perl-xml-namespacesupport-1.11 against perl-5.22.0
+Rebuild perl-xml-sax-base-1.08 against perl-5.22.0
+Rebuild perl-xml-sax-0.99 against perl-5.22.0
+Rebuild perl-xml-sax-expat-0.51 against perl-5.22.0
+Rebuild perl-xml-simple-2.20 against perl-5.22.0
+Rebuild perl-archive-zip-1.46 against perl-5.22.0
+Rebuild perl-error-0.17024 against perl-5.22.0
+Rebuild perl-sgmls-1.1 against perl-5.22.0
+Rebuild perl-uri-1.67 against perl-5.22.0
+Rebuild foomatic-db-engine-4.0-20150415 against perl-5.22.0
+Rebuild git-2.4.2 against perl-5.22.0
+Rebuild GraphicsMagick-1.3.21 against perl-5.22.0
+Rebuild graphviz-2.38.0 against perl-5.22.0
+Rebuild libproxy-0.4.11 against perl-5.22.0
+Rebuild net-snmp-5.7.3 against perl-5.22.0
+Rebuild openldap-2.4.40 against perl-5.22.0
+Rebuild postgresql-9.4.2 against perl-5.22.0
+Rebuild samba-4.2.2 against perl-5.22.0
+Rebuild subversion-1.8.13 against perl-5.22.0
+
+Updated to ImageMagick-6.9.1-4, rebuild against perl-5.22.0
+
+# End Tue Jun  2 16:13:52 UTC 2015
+
+# Begin Thu Jun  4 16:00:47 UTC 2015
+
+acpica-20150515
+ebtables-2.0.10-4
+libosinfo-0.2.12
+libvirt-glib-0.2.0
+libvirt-python-1.2.16
+python-ipaddr-2.1.11
+python-pycurl-7.19.5.1
+python-urlgrabber-3.1.0
+spice-gtk-0.28
+seabios-1.8.1
+virt-manager-1.2.0
+virt-viewer-2.0
+
+Updated to libinput-0.17.0
+Updated to postgresql-9.4.3
+Updated to run-parts-4.5.1
+Updated to wayland-1.8.0
+Updated to weston-1.8.0
+
+Updated to glib-2.45.2 (git snapshot)
+Updated to gobject-introspection-1.45.2
+Updated to vala-0.29.1
+Updated to pango-1.37.0
+Updated to gtk+-3.17.3 (git snapshot)
+Updated to clutter-1.23.1 (git snapshot)
+
+# End Thu Jun  4 16:33:16 UTC 2015
+
+todo: liborcus-0.9.1 libwps-0.4.0

@@ -5,11 +5,12 @@ export DEST=/binary/phonon-backend-gstreamer-${VER}
 
 pushd phonon-backend-gstreamer-${VER}
 
-cmake -DCMAKE_INSTALL_PREFIX=/usr  \
-      -DCMAKE_BUILD_TYPE=Release   \
-      -DCMAKE_INSTALL_LIBDIR=lib   \
-      -DCMAKE_SKIP_RPATH=ON        \
-      -DPHONON_BUILD_PHONON4QT5=ON \
+cmake -DCMAKE_INSTALL_PREFIX=/usr    \
+      -DCMAKE_BUILD_TYPE=Release     \
+      -DCMAKE_INSTALL_LIBDIR=lib     \
+      -DCMAKE_SKIP_RPATH=ON          \
+      -DPHONON_BUILD_PHONON4QT5=ON   \
+      -D__KDE_HAVE_GCC_VISIBILITY=NO \
       -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
       -Wno-dev
