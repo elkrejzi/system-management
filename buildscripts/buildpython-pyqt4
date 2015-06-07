@@ -20,12 +20,15 @@ popd
 
 pushd PyQt-x11-gpl-${VER}
 
-python3 configure-ng.py --confirm-license --qsci-api -q /usr/bin/qmake-qt4
+python3 configure-ng.py --confirm-license --no-sip-files --qsci-api -q /usr/bin/qmake-qt4
 
 find -name 'Makefile' | xargs sed -i 's|-Wl,-rpath,/usr/lib||g;s|-Wl,-rpath,.* ||g'
 
 make -j4
 make install DESTDIR=${DEST} INSTALL_ROOT=${DEST}
+
+install -dm755 ${DEST}/usr/share/sip/PyQt4
+cp -rf sip/* ${DEST}/usr/share/sip/PyQt4
 
 popd
 

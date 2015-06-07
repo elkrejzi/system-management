@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=6.3
+export VER=6.4
 export DEST=/binary/smartmontools-${VER}
 
 pushd smartmontools-${VER}

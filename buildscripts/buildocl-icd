@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.2.3
+export VER=2.2.5
 export DEST=/binary/ocl-icd-${VER}
 
 cp -a ocl-icd-${VER} ocl-icd-${VER}-32
@@ -37,7 +37,7 @@ popd
 
 rm -rf ocl-icd-${VER} ocl-icd-${VER}-32
 
-rm -rf ${DEST}/usr/share
+rm -rf ${DEST}/usr/share/doc
 
 find ${DEST} -name "*.la" -delete
 
@@ -56,6 +56,7 @@ cat > ${DEST}/INSTALL << "EOF"
 
 cp -rf --remove-destination usr /
 
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 

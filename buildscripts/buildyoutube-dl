@@ -1,15 +1,15 @@
 #!/bin/bash -e
 
-export VER=2015.05.15
+export VER=2015.06.04.1
 export DEST=/binary/youtube-dl-${VER}
 
-pushd youtube-dl
+pushd youtube-dl-${VER}
 
 python setup.py install --prefix=/usr --root=${DEST} --optimize=1
 
 popd
 
-rm -rf youtube-dl
+rm -rf youtube-dl-${VER}
 
 rm -rf ${DEST}/usr/etc ${DEST}/usr/share/doc
 
