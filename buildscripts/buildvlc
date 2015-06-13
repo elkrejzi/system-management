@@ -20,7 +20,7 @@ CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-st
             --enable-vcdx
 
 make -j4
-make install DESTDIR=${DEST}
+make -j4 install DESTDIR=${DEST}
 
 popd
 

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.57
+export VER=3.58
 export DEST=/binary/iso-codes-${VER}
 
 pushd iso-codes-${VER}

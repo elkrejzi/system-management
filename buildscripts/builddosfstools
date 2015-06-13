@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.0.27
+export VER=3.0.28
 export DEST=/binary/dosfstools-${VER}
 
 pushd dosfstools-${VER}

@@ -1,13 +1,11 @@
 #!/bin/bash -e
 
-export VER=31.7.0
+export VER=38.0.1
 export DEST=/binary/thunderbird-${VER}
 
-pushd comm-esr31
+pushd comm-esr38
 
 sed -i "s:-\$(MOZ_APP_VERSION)::g" config/baseconfig.mk mozilla/config/baseconfig.mk
-
-patch -Np1 -i /media/ntfs/Other/Linux/patches/thunderbird.patch
 
 cat > mozconfig << "EOF"
 ac_add_options --enable-application=mail
@@ -64,7 +62,7 @@ done
 
 popd
 
-rm -rf comm-esr31
+rm -rf comm-esr38
 
 install -dm755 ${DEST}/usr/lib/thunderbird/defaults/preferences ${DEST}/usr/share/applications
 

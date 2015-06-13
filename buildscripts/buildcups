@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.0.2
+export VER=2.0.3
 export DEST=/binary/cups-${VER}
 
 pushd cups-${VER}
@@ -34,8 +34,8 @@ CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-st
             --with-icondir=/usr/share/icons   \
             --with-menudir=/usr/share/applications
 
-make -j3
-make -j3 install BUILDROOT=${DEST}
+make -j4
+make -j4 install BUILDROOT=${DEST}
 
 popd
 
@@ -51,8 +51,10 @@ CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-st
             --disable-dbus      \
             --disable-pam
 
-make -j3 libs
-make -j3 install-libs BUILDROOT=${DEST}
+make -j4 libs
+make -j4 install-libs BUILDROOT=${PWD}/dest
+
+mv dest/usr/lib32 ${DEST}/usr
 
 popd
 

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.2.5
+export VER=2.2.7
 export DEST=/binary/ocl-icd-${VER}
 
 cp -a ocl-icd-${VER} ocl-icd-${VER}-32

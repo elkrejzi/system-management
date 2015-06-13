@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
-export VER=20140525
+export VER=20150521
+export TEXMFVER=20150523
 export DEST=/binary/texlive-${VER}
 
 install -dm755 texlive-${VER}-source/build
@@ -48,11 +49,14 @@ make -j4
 make install DESTDIR=${DEST}
 make texlinks DESTDIR=${DEST}
 
+# TODO: Remove
+cp -rf texk/tests/TeXLive ${DEST}/usr/share/texmf-dist/scripts/texlive
+
 popd
 
 rm -rf texlive-${VER}-source
 
-tar --exclude=*/texmf-dist/doc --exclude=*/texmf-dist/source --strip-components=1 -xf texlive-${VER}-texmf.tar.xz -C ${DEST}/usr/share
+tar --exclude=*/texmf-dist/doc --exclude=*/texmf-dist/source --strip-components=1 -xf texlive-${TEXMFVER}-texmf.tar.xz -C ${DEST}/usr/share
 
 sed -i "s@TEXMFROOT = \$SELFAUTOPARENT@TEXMFROOT = /usr/share@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
 sed -i "s@TEXMFSYSVAR = \$TEXMFROOT/texmf-var@TEXMFSYSVAR = /var/lib/texmf@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf

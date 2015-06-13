@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.5.5
+export VER=2.6
 export DEST=/binary/freetype-${VER}
 
 pushd freetype-${VER}

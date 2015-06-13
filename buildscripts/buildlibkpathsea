@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=20140525
+export VER=20150521
 export DEST=/binary/libkpathsea-${VER}
 
 pushd texlive-${VER}-source/texk/kpathsea

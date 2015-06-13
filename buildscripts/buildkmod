@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=20
+export VER=21
 export DEST=/binary/kmod-${VER}
 
 pushd kmod-${VER}
