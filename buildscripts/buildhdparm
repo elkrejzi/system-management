@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=9.45
+export VER=9.47
 export DEST=/binary/hdparm-${VER}
 
 pushd hdparm-${VER}

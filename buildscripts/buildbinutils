@@ -24,8 +24,6 @@ CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \
                  --enable-shared --enable-threads --disable-werror  \
                  --with-pic
 
-# --enable-gold
-
 make configure-host
 make tooldir=/usr -j4
 
@@ -43,18 +41,6 @@ rm -rf ${DEST}/usr/share/man/man1/{dlltool,nlmconv,windres,windmc}.1
 rm -rf ${DEST}/usr/share/info/dir ${DEST}/usr/share/info/*.gz
 gzip -9 ${DEST}/usr/share/info/*
 
-cat > ${DEST}/INSTALL << "EOF"
-#!/bin/bash
-
-cp -rf --remove-destination usr /
-
-[ -x /usr/bin/install-info ] && echo "Processing triggers for texinfo" && for file in usr/share/info/* ; do /usr/bin/install-info /$file /usr/share/info/dir ; done
-[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
-[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
-EOF
-
-chmod 755 ${DEST}/INSTALL
-
 install -dm755 ${DEST}-debug/usr/lib
 
 pushd ${DEST}
@@ -71,3 +57,15 @@ done
 popd
 
 mv ${DEST}/usr/lib/debug ${DEST}-debug/usr/lib
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/install-info ] && echo "Processing triggers for texinfo" && for file in usr/share/info/* ; do /usr/bin/install-info /$file /usr/share/info/dir ; done
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

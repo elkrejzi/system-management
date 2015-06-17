@@ -171,8 +171,27 @@ install -m644 src/nscd/nscd.conf src/posix/gai.conf ${DEST}/etc/
 install -m644 src/nscd/nscd.tmpfiles ${DEST}/usr/lib/tmpfiles.d/
 install -m644 src/nscd/nscd.service ${DEST}/lib/systemd/system/
 
+rm -rf src build64 build32
+
 ln -sf ../lib32/ld-linux.so.2 ${DEST}/lib/ld-linux.so.2
 ln -sf ../lib/locale ${DEST}/usr/lib32/locale
+
+install -dm755 ${DEST}-debug/usr/lib
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+mkdir -p usr/lib/debug/`dirname ${BUILD_BINARY}`
+objcopy --only-keep-debug ${BUILD_BINARY} usr/lib/debug/${BUILD_BINARY}
+strip --strip-unneeded ${BUILD_BINARY}
+objcopy --add-gnu-debuglink=usr/lib/debug/${BUILD_BINARY} ${BUILD_BINARY}
+esac
+done
+
+popd
+
+mv ${DEST}/usr/lib/debug ${DEST}-debug/usr/lib
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
@@ -194,22 +213,3 @@ echo -e "Replace en_US.UTF-8 with your desired locale.\n"
 EOF
 
 chmod 755 ${DEST}/INSTALL
-
-install -dm755 ${DEST}-debug/usr/lib
-
-pushd ${DEST}
-
-find * -type f 2>/dev/null | while read BUILD_BINARY ; do
-case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
-mkdir -p usr/lib/debug/`dirname ${BUILD_BINARY}`
-objcopy --only-keep-debug ${BUILD_BINARY} usr/lib/debug/${BUILD_BINARY}
-strip --strip-unneeded ${BUILD_BINARY}
-objcopy --add-gnu-debuglink=usr/lib/debug/${BUILD_BINARY} ${BUILD_BINARY}
-esac
-done
-
-popd
-
-mv ${DEST}/usr/lib/debug ${DEST}-debug/usr/lib
-
-rm -rf src build64 build32

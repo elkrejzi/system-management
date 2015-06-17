@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.8.18-240-g721fcf3
+export VER=1.8.18-241-g425f213
 export DEST=/binary/qtcurve-${VER}
 
 cp -a qtcurve-${VER} qtcurve-${VER}-32

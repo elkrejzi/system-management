@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
-export VER=10.5.7
+export VER=10.6.0
+export DEST=/binary/mesa-${VER}
 
 pushd mesa-${VER}
   patch -Np1 -i /media/ntfs/Other/Linux/patches/mesalib-xdemos.patch
@@ -33,8 +34,8 @@ CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \
 make -j4
 make -C xdemos
 
-make install DESTDIR=/binary/mesa-${VER}
-make -C xdemos install DESTDIR=/binary/mesa-${VER}
+make install DESTDIR=${DEST}
+make -C xdemos install DESTDIR=${DEST}
 
 popd
 
@@ -72,27 +73,35 @@ make -C xdemos EXT=32 CC="${CC}"
 
 make install DESTDIR=${PWD}/dest
 
-mv dest/usr/lib32 /binary/mesa-${VER}/usr/
+mv dest/usr/lib32 ${DEST}/usr/
 
-install -m755 xdemos/glxinfo32 /binary/mesa-${VER}/usr/bin/
-install -m755 xdemos/glxgears32 /binary/mesa-${VER}/usr/bin/
+install -m755 xdemos/glxinfo32 ${DEST}/usr/bin/
+install -m755 xdemos/glxgears32 ${DEST}/usr/bin/
 
 popd
 
 rm -rf mesa-${VER} mesa-${VER}-32
 
-find /binary/mesa-${VER} -name "*.la" -delete
+find ${DEST} -name "*.la" -delete
 
-pushd /binary/mesa-${VER}
-/media/ntfs/Other/Linux/makedebug
+install -dm755 ${DEST}-debug/usr/lib
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+mkdir -p usr/lib/debug/`dirname ${BUILD_BINARY}`
+objcopy --only-keep-debug ${BUILD_BINARY} usr/lib/debug/${BUILD_BINARY}
+strip --strip-unneeded ${BUILD_BINARY}
+objcopy --add-gnu-debuglink=usr/lib/debug/${BUILD_BINARY} ${BUILD_BINARY}
+esac
+done
+
 popd
 
-mkdir -p /binary/mesa-${VER}-debug/usr/lib/
-mv /binary/mesa-${VER}/usr/lib/debug /binary/mesa-${VER}-debug/usr/lib/
+mv ${DEST}/usr/lib/debug ${DEST}-debug/usr/lib
 
-unset CC CXX PKG_CONFIG_PATH LLVM_CONFIG CFLAGS CXXFLAGS
-
-cat > /binary/mesa-${VER}/INSTALL << "EOF"
+cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
 for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
@@ -101,4 +110,4 @@ for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 
-chmod 755 /binary/mesa-${VER}/INSTALL
+chmod 755 ${DEST}/INSTALL

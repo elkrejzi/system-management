@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.8.2
+export VER=0.8.3
 export DEST=/binary/speech-dispatcher-${VER}
 
 pushd speech-dispatcher-${VER}
