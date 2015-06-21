@@ -1,9 +1,7 @@
 #!/bin/bash -e
 
-export VER=0.162
+export VER=0.163
 export DEST=/binary/elfutils-${VER}
-
-#sed -i "s:GElf_Word strshndx:& = 0:" elfutils-${VER}/libdwfl/dwfl_module_getdwarf.c
 
 cp -a elfutils-${VER} elfutils-${VER}-32
 

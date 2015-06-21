@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.3.6
+export VER=0.4.0
 export DEST=/binary/appstream-glib-${VER}
 
 pushd appstream-glib-${VER}

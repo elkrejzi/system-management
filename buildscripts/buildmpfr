@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.1.2
+export VER=3.1.3
 export DEST=/binary/mpfr-${VER}
 
 pushd mpfr-${VER}

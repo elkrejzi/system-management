@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.0.0
+export VER=5.0.1
 export DEST=/binary/gnuplot-${VER}
 
 pushd gnuplot-${VER}

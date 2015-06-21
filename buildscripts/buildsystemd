@@ -1,12 +1,10 @@
 #!/bin/bash -e
 
-export VER=220
+export VER=221
 export DEST=/binary/systemd-${VER}
-export PKGDEBUG=/binary/${PKGDIR}-debug/usr/lib/
 
 pushd systemd-${VER}
   patch -Np1 -i /media/ntfs/Other/Linux/patches/systemd-compat.patch
-  rm src/journal/audit_type-to-name.h src/udev/keyboard-keys-from-name.gperf
 popd
 
 cp -a systemd-${VER} systemd-${VER}-32
@@ -21,13 +19,10 @@ CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong -fno-lto" \
             --localstatedir=/var \
             --disable-efi        \
             --disable-firstboot  \
-            --disable-gudev      \
-            --disable-kdbus      \
             --disable-ldconfig   \
             --disable-machined   \
             --disable-static     \
             --disable-sysusers   \
-            --enable-gtk-doc     \
             --enable-split-usr   \
             --with-pamlibdir=/lib/security    \
             --with-rootprefix=                \
@@ -60,8 +55,6 @@ CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong -fno-lto"  \
             --disable-efi           \
             --disable-firstboot     \
             --disable-gnutls        \
-            --disable-gudev         \
-            --disable-kdbus         \
             --disable-kmod          \
             --disable-ldconfig      \
             --disable-libcryptsetup \

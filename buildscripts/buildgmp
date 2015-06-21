@@ -3,9 +3,9 @@
 export VER=6.0.0a
 export DEST=/binary/gmp-${VER}
 
-cp -a gmp-${VER} gmp-${VER}-32
+cp -a gmp-${VER%a} gmp-${VER%a}-32
 
-pushd gmp-${VER}
+pushd gmp-${VER%a}
 
 CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \
@@ -20,7 +20,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-pushd gmp-${VER}-32
+pushd gmp-${VER%a}-32
 
 export CC="gcc -m32"
 export CXX="g++ -m32"
@@ -45,7 +45,7 @@ mv ${PWD}/dest/usr/lib32 ${DEST}/usr
 
 popd
 
-rm -rf gmp-${VER} gmp-${VER}-32
+rm -rf gmp-${VER%a} gmp-${VER%a}-32
 
 find ${DEST} -name "*.la" -delete
 

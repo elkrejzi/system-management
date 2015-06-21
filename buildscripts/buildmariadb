@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=10.0.19
+export VER=10.0.20
 export DEST=/binary/mariadb-${VER}
 
 mkdir -p mariadb-${VER}/build

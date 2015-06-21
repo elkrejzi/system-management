@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=20141019
+export VER=20150426
 export DEST=/binary/ca-certificates-${VER}
 
 pushd ca-certificates-${VER}

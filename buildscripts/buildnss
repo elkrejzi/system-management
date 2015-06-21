@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.19.1
+export VER=3.19.2
 export DEST=/binary/nss-${VER}
 
 export XCFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"

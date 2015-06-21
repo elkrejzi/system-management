@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.17.1
+export VER=1.17.2
 export DEST=/binary/xorg-server-${VER}
 
 pushd xorg-server-${VER}
@@ -8,9 +8,6 @@ pushd xorg-server-${VER}
 if [ -f /media/ntfs/Other/Linux/patches/xserver-fixes.patch ]; then
   patch -Np1 -i /media/ntfs/Other/Linux/patches/xserver-fixes.patch
 fi
-
-patch -Np1 -i /media/ntfs/Other/Linux/patches/xwayland-smooth-scrolling.patch
-patch -Np1 -i /media/ntfs/Other/Linux/patches/xorg-server-gcc5.patch
 
 CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \

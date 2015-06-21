@@ -1,12 +1,12 @@
 #!/bin/bash -e
 
-export VER=2.72
+export VER=2.73
 export DEST=/binary/dnsmasq-${VER}
 
 pushd dnsmasq-${VER}
 
 make CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" COPTS="-DHAVE_DNSSEC -DHAVE_DBUS" -j4
-make install PREFIX=/usr DESTDIR=${DEST}
+make COPTS="-DHAVE_DNSSEC -DHAVE_DBUS" install PREFIX=/usr DESTDIR=${DEST}
 
 install -Dm644 dnsmasq.conf.example ${DEST}/etc/dnsmasq.conf
 install -Dm644 dbus/dnsmasq.conf ${DEST}/etc/dbus-1/system.d/dnsmasq.conf
