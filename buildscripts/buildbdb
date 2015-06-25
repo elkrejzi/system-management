@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=6.1.23
+export VER=6.1.26
 export DEST=/binary/db-${VER}
 
 pushd db-${VER}/build_unix

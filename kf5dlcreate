@@ -1,7 +1,6 @@
 #!/bin/bash -e
 
 export KF5_VERSION=$(grep "ENTITY kf5-version " kde5/kde5.ent | cut -d \" -f 2)
-export ECM_VERSION=$(grep "ENTITY extra-cmake-modules-version " kde5/kde5.ent | cut -d \" -f 2)
 export DBUSMENUQT_VERSION=$(grep "ENTITY libdbusmenu-qt5-version " kde5/kde5.ent | cut -d \" -f 2)
 export PHONON5_VERSION=$(grep "ENTITY phonon5-version " kde5/kde5.ent | awk '{print $3}' | cut -d \" -f 2)
 export PHONON5_GST_VERSION=$(grep "ENTITY phonon-backend-gstreamer5-version " kde5/kde5.ent | cut -d \" -f 2)
@@ -37,7 +36,6 @@ done
 sed -i $HOME/frameworks-download.txt  \
     -i $HOME/frameworks-md5.txt \
     -e "s:\&kf5-version\;:$KF5_VERSION:g" \
-    -e "s:\&extra-cmake-modules-version\;:$ECM_VERSION:g" \
     -e "s:\&libdbusmenu-qt5-version\;:$DBUSMENUQT_VERSION:g" \
     -e "s:\&phonon5-version\;:$PHONON5_VERSION:g" \
     -e "s:\&phonon-backend-gstreamer5-version\;:$PHONON5_GST_VERSION:g" \
@@ -52,7 +50,6 @@ do
 done
 
 sed -i $HOME/frameworks-order.txt \
-    -e "s:extra-cmake-modules-$KF5_VERSION:extra-cmake-modules-$ECM_VERSION:g" \
     -e "s:libdbusmenu-qt-$KF5_VERSION:libdbusmenu-qt-$DBUSMENUQT_VERSION:g" \
     -e "s:phonon-$KF5_VERSION:phonon-$PHONON5_VERSION:g" \
     -e "s:phonon-backend-gstreamer-$KF5_VERSION:phonon-backend-gstreamer-$PHONON5_GST_VERSION:g" \

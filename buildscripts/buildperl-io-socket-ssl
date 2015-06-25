@@ -1,0 +1,27 @@
+#!/bin/bash -e
+
+export VER=2.016
+export DEST=/binary/perl-io-socket-ssl-${VER}
+
+pushd IO-Socket-SSL-${VER}
+
+PERL_MM_USE_DEFAULT=1 perl Makefile.PL INSTALLDIRS=vendor
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf IO-Socket-SSL-${VER}
+
+rm -rf ${DEST}/usr/lib
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

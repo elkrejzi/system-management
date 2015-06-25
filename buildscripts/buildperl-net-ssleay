@@ -1,22 +1,22 @@
 #!/bin/bash -e
 
-export VER=1.4.3
-export DEST=/binary/libevdev-${VER}
+export VER=1.69
+export DEST=/binary/perl-net-ssleay-${VER}
 
-pushd libevdev-${VER}
+pushd Net-SSLeay-${VER}
 
-CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr --disable-static
+PERL_MM_USE_DEFAULT=1 perl Makefile.PL INSTALLDIRS=vendor
 
 make -j4
 make install DESTDIR=${DEST}
 
 popd
 
-rm -rf libevdev-${VER}
+rm -rf Net-SSLeay-${VER}
 
-find ${DEST} -name "*.la" -delete
+rm -rf ${DEST}/usr/lib/perl
+
+find ${DEST} -name .packlist -delete
 
 pushd ${DEST}
 
@@ -34,7 +34,6 @@ cat > ${DEST}/INSTALL << "EOF"
 cp -rf --remove-destination usr /
 
 [ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
-[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 
 chmod 755 ${DEST}/INSTALL

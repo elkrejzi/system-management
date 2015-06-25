@@ -1,0 +1,49 @@
+#!/bin/bash -e
+
+export VER=3.2.3
+export DEST=/binary/xfsprogs-${VER}
+
+pushd xfsprogs-${VER}
+
+make DEBUG=-DNDEBUG     \
+     INSTALL_USER=root  \
+     INSTALL_GROUP=root \
+     LOCAL_CONFIGURE_OPTIONS="--enable-readline" \
+     OPTIMIZER="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
+     V=1 -j4
+
+make
+make install install-dev DESTDIR=${DEST}
+
+popd
+
+rm -rf xfsprogs-${VER}
+
+find ${DEST} -name "*.la" -delete
+
+rm -rf ${DEST}/usr/lib/libhandle.a
+rm -rf ${DEST}/usr/share/doc
+
+ln -sf ../../lib/$(readlink ${DEST}/lib/libhandle.so) ${DEST}/usr/lib/libhandle.so
+rm -rf ${DEST}/lib/libhandle.so
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in lib sbin usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL

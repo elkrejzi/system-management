@@ -1,0 +1,27 @@
+#!/bin/bash -e
+
+export VER=1.03
+export DEST=/binary/perl-net-smtp-ssl-${VER}
+
+pushd Net-SMTP-SSL-${VER}
+
+perl Makefile.PL INSTALLDIRS=vendor
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+rm -rf Net-SMTP-SSL-${VER}
+
+rm -rf ${DEST}/usr/lib
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

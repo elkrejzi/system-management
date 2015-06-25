@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.24
+export VER=0.25
 export DEST=/binary/exiv2-${VER}
 
 pushd exiv2-${VER}

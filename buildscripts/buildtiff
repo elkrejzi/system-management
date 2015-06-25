@@ -1,13 +1,7 @@
 #!/bin/bash -e
 
-export VER=4.0.3
-export DEST=/binary/libtiff-${VER}
-
-pushd tiff-${VER}
-
-patch -Np1 -i /media/ntfs/Other/Linux/patches/libtiff-fixes.patch
-
-popd
+export VER=4.0.4
+export DEST=/binary/tiff-${VER}
 
 cp -a tiff-${VER} tiff-${VER}-32
 

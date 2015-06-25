@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.0.1
+export VER=4.1
 export DEST=/binary/btrfs-progs-${VER}
 
 pushd btrfs-progs-v${VER}
@@ -41,6 +41,7 @@ cat > ${DEST}/INSTALL << "EOF"
 
 for dir in lib sbin usr ; do cp -rf --remove-destination $dir / ; done
 
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 
