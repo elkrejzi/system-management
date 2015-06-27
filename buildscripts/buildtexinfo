@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.2
+export VER=6.0
 export DEST=/binary/texinfo-${VER}
 
 pushd texinfo-${VER}

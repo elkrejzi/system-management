@@ -1,9 +1,11 @@
 #!/bin/bash -e
 
-export VER=471
+export VER=478
 export DEST=/binary/less-${VER}
 
 pushd less-${VER}
+
+autoreconf -fi
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \

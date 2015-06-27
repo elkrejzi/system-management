@@ -5,6 +5,8 @@ export DEST=/binary/polkit-${VER}
 
 pushd polkit-${VER}
 
+patch -Np1 -i /media/ntfs/Other/Linux/patches/polkit-fixes.patch
+
 sed "s:/sys/fs/cgroup/systemd/:/bin:g" -i configure
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \

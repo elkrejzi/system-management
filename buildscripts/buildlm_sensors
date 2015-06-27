@@ -1,11 +1,9 @@
 #!/bin/bash -e
 
-export VER=3.3.5
+export VER=3.4.0
 export DEST=/binary/lm_sensors-${VER}
 
 pushd lm_sensors-${VER}
-
-patch -Np1 -i /media/ntfs/Other/Linux/patches/lm_sensors-fixes.patch
 
 make PREFIX=/usr           \
      BUILD_STATIC_LIB=0    \

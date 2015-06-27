@@ -1,9 +1,11 @@
 #!/bin/bash -e
 
-export VER=5.3.0
+export VER=5.3.1
 export DEST=/binary/bluedevil-${VER}
 
 pushd bluedevil-${VER}
+
+patch -Np1 -i /media/ntfs/Other/Linux/patches/bluedevil-fixes.patch
 
 cmake -DCMAKE_INSTALL_PREFIX=/usr \
       -DCMAKE_BUILD_TYPE=Release  \

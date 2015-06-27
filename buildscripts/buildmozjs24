@@ -5,6 +5,8 @@ export DEST=/binary/mozjs-${VER}
 
 pushd mozjs-${VER}/js/src
 
+sed -i "s:defined(@TEMPLATE_FILE):@TEMPLATE_FILE:g" config/milestone.pl
+
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr       \
