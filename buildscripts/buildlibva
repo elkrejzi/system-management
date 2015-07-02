@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.5.1
+export VER=1.6.0
 export DEST=/binary/libva-${VER}
 
 cp -a libva-${VER} libva-${VER}-32

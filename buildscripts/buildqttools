@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.4.2
+export VER=5.5.0
 export DEST=/binary/qttools-${VER}
 
 pushd qttools-opensource-src-${VER}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.4.2
+export VER=5.5.0
 export DEST=/binary/qtbase-${VER}
 
 pushd qtbase-opensource-src-${VER}
@@ -21,6 +21,7 @@ export CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-prote
             -opensource         \
             -dbus-linked        \
             -openssl-linked     \
+            -gstreamer 1.0      \
             -journald           \
             -system-harfbuzz    \
             -system-sqlite      \
@@ -28,8 +29,6 @@ export CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-prote
             -no-rpath           \
             -optimized-qmake    \
             -no-use-gold-linker
-
-#           -gstreamer 1.0      \
 
 make -j4
 

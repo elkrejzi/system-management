@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.9.1
+export VER=5.9.2
 export DEST=/binary/kfilemetadata-${VER}
 
 pushd kfilemetadata-${VER}

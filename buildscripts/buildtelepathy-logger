@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.8.1
+export VER=0.8.2
 export DEST=/binary/telepathy-logger-${VER}
 
 pushd telepathy-logger-${VER}

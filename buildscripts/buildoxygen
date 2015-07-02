@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.3.1
+export VER=5.3.2
 export DEST=/binary/oxygen-${VER}
 
 pushd oxygen-${VER}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.3.4
+export VER=2.3.5
 export DEST=/binary/scons-${VER}
 
 pushd scons-${VER}

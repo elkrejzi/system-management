@@ -1,9 +1,11 @@
 #!/bin/bash -e
 
-export VER=0.12.2
+export VER=0.12.3
 export DEST=/binary/libass-${VER}
 
 pushd libass-${VER}
+
+./autogen.sh
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
