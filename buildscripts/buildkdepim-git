@@ -1,0 +1,233 @@
+#!/bin/bash -e
+
+export DEST=/binary/kdepim
+
+kdepims=(
+  akonadi
+  gpgmepp
+  kcalcore
+  kcontacts
+  kholidays
+  kldap
+  kmime
+  kontactinterface
+  kpimtextedit
+  syndication
+  kblog
+  kidentitymanagement
+  kimap
+  kmbox
+  kcalutils
+  ktnef
+  kdepimlibs
+  akonadi-search
+  kalarmcal
+  kmailtransport
+  akonadi-calendar )
+
+for kdepim in ${kdepims[@]}
+do
+
+  if [[ -d ${kdepim} ]]
+  then
+    pushd ${kdepim}
+      git clean -fdx
+      git fetch origin
+      git reset --hard origin/master
+      if [[ ${kdepim} == "akonadi" ]]
+      then
+        export VER=$(grep -m 1 AKONADI_VERSION CMakeLists.txt | cut -d \" -f2)
+      elif [[ ${kdepim} == "gpgmepp" ]]
+      then
+        export VER=$(grep -m 1 KDEPIMLIBS_VERSION CMakeLists.txt | cut -d \" -f2)
+      elif [[ ${kdepim} == "kdepimlibs" ]]
+      then
+        export VER=$(grep -m 1 KDEPIMLIBS_VERSION akonadi/CMakeLists.txt | cut -d \" -f2)
+      else
+        export VER=$(grep -m 1 _LIB_VERSION CMakeLists.txt | cut -d \" -f2)
+      fi
+    popd
+  else
+    git clone git://anongit.kde.org/${kdepim}.git
+    pushd ${kdepim}
+      if [[ ${kdepim} == "akonadi" ]]
+      then
+        export VER=$(grep -m 1 AKONADI_VERSION CMakeLists.txt | cut -d \" -f2)
+      elif [[ ${kdepim} == "gpgmepp" ]]
+      then
+        export VER=$(grep -m 1 KDEPIMLIBS_VERSION CMakeLists.txt | cut -d \" -f2)
+      elif [[ ${kdepim} == "kdepimlibs" ]]
+      then
+        export VER=$(grep -m 1 KDEPIMLIBS_VERSION akonadi/CMakeLists.txt | cut -d \" -f2)
+      else
+        export VER=$(grep -m 1 _LIB_VERSION CMakeLists.txt | cut -d \" -f2)
+      fi
+    popd
+  fi
+
+  install -dm755 ${kdepim}/build
+  pushd ${kdepim}/build
+
+  cmake -DCMAKE_INSTALL_PREFIX=/usr             \
+        -DCMAKE_BUILD_TYPE=Release              \
+        -DSYSCONF_INSTALL_DIR=/etc              \
+        -DLIB_INSTALL_DIR=lib                   \
+        -DBUILD_TESTING=OFF                     \
+        -DQML_INSTALL_DIR=lib/qt5/qml           \
+        -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
+        -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules \
+        -DCMAKE_C_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong"   \
+        -DCMAKE_CXX_FLAGS="-march=native -mtune=native -O2 -pipe -fstack-protector-strong" \
+        -Wno-dev ..
+
+  make -j4
+  make install DESTDIR=${DEST}/${kdepim}-${VER}
+
+  popd
+
+  pushd ${DEST}/${kdepim}-${VER}
+
+  find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+    case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+      strip --strip-unneeded ${BUILD_BINARY}
+    esac
+  done
+
+  popd
+
+  if [[ -e ${DEST}/${kdepim}-${VER}/etc ]]
+  then
+
+cat > ${DEST}/${kdepim}-${VER}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+EOF
+
+  else
+
+cat > ${DEST}/${kdepim}-${VER}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+  fi
+
+  if [[ -e ${DEST}/${kdepim}-${VER}/usr/share/mime ]]
+  then
+
+cat >> ${DEST}/${kdepim}-${VER}/INSTALL << "EOF"
+
+[ -x /usr/bin/update-mime-database ] && echo "Processing triggers for shared-mime-info" && /usr/bin/update-mime-database /usr/share/mime
+EOF
+
+  mimetype=1
+
+  fi
+
+  if [[ ${mimetype} == "1" ]] && [[ -e ${DEST}/${kdepim}-${VER}/usr/share/icons/hicolor ]]
+  then
+
+cat >> ${DEST}/${kdepim}-${VER}/INSTALL << "EOF"
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
+EOF
+
+  gtkicon=1
+
+  elif [[ -e ${DEST}/${kdepim}-${VER}/usr/share/icons/hicolor ]]
+  then
+
+cat >> ${DEST}/${kdepim}-${VER}/INSTALL << "EOF"
+
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
+EOF
+
+  gtkicon=1
+
+  fi
+
+  if [[ ${gtkicon} == "1" || ${mimetype} == "1" ]] && [[ -e ${DEST}/${kdepim}-${VER}/usr/share/applications ]]
+  then
+
+cat >> ${DEST}/${kdepim}-${VER}/INSTALL << "EOF"
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+EOF
+
+  desktopfile=1
+
+  elif [[ -e ${DEST}/${kdepim}-${VER}/usr/share/applications ]]
+  then
+
+cat >> ${DEST}/${kdepim}-${VER}/INSTALL << "EOF"
+
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+EOF
+
+  desktopfile=1
+
+  fi
+
+  if [[ ${desktopfile} == "1" || ${gtkicon} == "1" || ${mimetype} == "1" ]] && [[ -e ${DEST}/${kdepim}-${VER}/usr/share/man ]]
+  then
+
+cat >> ${DEST}/${kdepim}-${VER}/INSTALL << "EOF"
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+  manpage=1
+
+  elif [[ -e ${DEST}/${kdepim}-${VER}/usr/share/man ]]
+  then
+
+cat >> ${DEST}/${kdepim}-${VER}/INSTALL << "EOF"
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+  manpage=1
+
+  fi
+
+  for sofile in ${DEST}/${kdepim}-${VER}/usr/lib/*.so
+  do
+    if [[ ${sofile} != "${DEST}/${kdepim}-${VER}/usr/lib/*.so" ]]
+    then
+      solib=1
+      break
+    fi
+  done
+  unset sofile
+
+  if [[ ${desktopfile} == "1" || ${gtkicon} == "1" || ${manpage} == "1" || ${mimetype} == "1" ]] && [[ ${solib} == "1" ]]
+  then
+
+cat >> ${DEST}/${kdepim}-${VER}/INSTALL << "EOF"
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+  elif [[ ${solib} == "1" ]]
+  then
+
+cat >> ${DEST}/${kdepim}-${VER}/INSTALL << "EOF"
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+  fi
+
+  chmod +x ${DEST}/${kdepim}-${VER}/INSTALL
+
+  pushd ${DEST}/${kdepim}-${VER}
+      ./INSTALL
+  popd
+
+  unset desktopfile
+  unset gtkicon
+  unset manpage
+  unset mimetype
+  unset solib
+
+  rm -rf ${kdepim}
+
+done

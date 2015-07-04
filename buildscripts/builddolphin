@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=14.12.2-284-g8b12612
+export VER=14.12.2-291-g8d2a8a0
 export DEST=/binary/dolphin-${VER}
 
 pushd dolphin-${VER}
