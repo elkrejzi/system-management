@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=8.23
+export VER=8.24
 export DEST=/binary/coreutils-${VER}
 
 pushd coreutils-${VER}

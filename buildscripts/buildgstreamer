@@ -1,21 +1,16 @@
 #!/bin/bash -e
 
-export VER=0.10.36
+export VER=1.4.5
 export DEST=/binary/gstreamer-${VER}
+
+cp -a gstreamer-${VER} gstreamer-${VER}-32
 
 pushd gstreamer-${VER}
 
-sed -e '/YYLEX_PARAM/d'                                       \
-    -e '/parse-param.*scanner/i %lex-param { void *scanner }' \
-    -i gst/parse/grammar.y
-
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr         \
+./configure --prefix=/usr \
             --libexecdir=/usr/lib \
-            --disable-examples    \
-            --disable-static      \
-            --disable-tests       \
             --with-package-name="GStreamer ${VER} BLFS" \
             --with-package-origin="http://www.linuxfromscratch.org/blfs/view/systemd/"
 
@@ -24,7 +19,29 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf gstreamer-${VER}
+pushd gstreamer-${VER}-32
+
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
+./configure --prefix=/usr           \
+            --libdir=/usr/lib32     \
+            --libexecdir=/usr/lib32 \
+            --disable-introspection \
+            --with-package-name="GStreamer ${VER} BLFS" \
+            --with-package-origin="http://www.linuxfromscratch.org/blfs/view/systemd/"
+
+make -j4
+make install DESTDIR=${PWD}/dest
+
+mv dest/usr/lib32 ${DEST}/usr
+
+popd
+
+rm -rf gstreamer-${VER} gstreamer-${VER}-32
 
 find ${DEST} -name "*.la" -delete
 

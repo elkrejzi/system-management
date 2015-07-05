@@ -1,15 +1,9 @@
 #!/bin/bash -e
 
-export VER=0.10.19
+export VER=1.4.5
 export DEST=/binary/gst-plugins-ugly-${VER}
 
 pushd gst-plugins-ugly-${VER}
-
-patch -Np1 -i /media/ntfs/Other/Linux/patches/gst-plugins-ugly-fixes.patch
-
-sed "s:interf:opencore-amrnb/&:g" -i ext/amrnb/amrnb{de,en}c.h
-sed "s:dec_if:opencore-amrwb/&:g" -i ext/amrwbdec/amrwbdec.h
-sed "s:if_rom:opencore-amrwb/&:g" -i ext/amrwbdec/amrwbdec.h
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \

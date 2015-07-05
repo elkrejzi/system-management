@@ -5,6 +5,7 @@ export DEST=/binary/systemd-${VER}
 
 pushd systemd-${VER}
   patch -Np1 -i /media/ntfs/Other/Linux/patches/systemd-compat.patch
+  patch -Np1 -i /media/ntfs/Other/Linux/patches/systemd-fixes.patch
 popd
 
 cp -a systemd-${VER} systemd-${VER}-32
@@ -203,7 +204,7 @@ cat > ${DEST}/INSTALL << "EOF"
 for dir in bin etc lib lib32 sbin usr var ; do cp -rf --remove-destination $dir / ; done
 
 journalctl --update-catalog
-udevadm hwdb --update
+systemd-hwdb update
 
 setfacl -nm g:adm:rx,d:g:adm:rx /var/log/journal/
 
