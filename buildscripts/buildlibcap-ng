@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.7.4
+export VER=0.7.7
 export DEST=/binary/libcap-ng-${VER}
 
 pushd libcap-ng-${VER}

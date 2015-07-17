@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=20141218
+export VER=20150712
 export DEST=/binary/x264-${VER}
 
 pushd x264-snapshot-${VER}-2245

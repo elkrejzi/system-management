@@ -23,6 +23,7 @@ export CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-prote
             -openssl-linked     \
             -gstreamer 1.0      \
             -journald           \
+            -libinput           \
             -system-harfbuzz    \
             -system-sqlite      \
             -nomake examples    \

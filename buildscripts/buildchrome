@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=43.0.2357.125
+export PKGVER=43.0.2357.132
 export DEST=/binary/chromium-${PKGVER}
 
 export -n CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"

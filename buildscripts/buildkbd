@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.0.2
+export VER=2.0.3
 export DEST=/binary/kbd-${VER}
 
 pushd kbd-${VER}

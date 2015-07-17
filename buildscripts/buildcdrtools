@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export BVER=3.01
-export VER=${BVER}a29
+export VER=${BVER}a30
 export DEST=/binary/cdrtools-${VER}
 
 pushd cdrtools-${BVER}
@@ -23,6 +23,7 @@ rm -rf ${DEST}/usr/include
 rm -rf ${DEST}/usr/lib/*.a
 rm -rf ${DEST}/usr/lib/profiled
 rm -rf ${DEST}/usr/share/doc
+rm -rf ${DEST}/usr/share/man/man3
 
 pushd ${DEST}
 

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=38.0.1
+export VER=38.1.0
 export DEST=/binary/thunderbird-${VER}
 
 pushd comm-esr38

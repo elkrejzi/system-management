@@ -15,7 +15,6 @@ CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \
             --sysconfdir=/etc        \
             --localstatedir=/var     \
             --disable-install-setuid \
-            --enable-dmx             \
             --enable-dri2            \
             --enable-dri3            \
             --enable-glamor          \
@@ -28,6 +27,8 @@ CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \
             --enable-xwayland        \
             --with-systemd-daemon    \
             --with-xkb-output=/var/lib/xkb
+
+#            --enable-dmx             \
 
 make -j4
 make install DESTDIR=${DEST}

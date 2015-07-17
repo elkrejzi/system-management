@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.88
+export VER=4.89
 export DEST=/binary/lsof-${VER}
 
 install -dm755 lsof-${VER}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.04.17
+export VER=0.04.18
 export DEST=/binary/python-unidecode-${VER}
 
 cp -a Unidecode-${VER} Unidecode-${VER}-3

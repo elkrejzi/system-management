@@ -1,11 +1,10 @@
 #!/bin/bash -e
 
-export VER=221
+export VER=222
 export DEST=/binary/systemd-${VER}
 
 pushd systemd-${VER}
   patch -Np1 -i /media/ntfs/Other/Linux/patches/systemd-compat.patch
-  patch -Np1 -i /media/ntfs/Other/Linux/patches/systemd-fixes.patch
 popd
 
 cp -a systemd-${VER} systemd-${VER}-32
@@ -63,6 +62,7 @@ CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong -fno-lto"  \
             --disable-libidn        \
             --disable-libiptc       \
             --disable-machined      \
+            --disable-microhttpd    \
             --disable-networkd      \
             --disable-pam           \
             --disable-qrencode      \

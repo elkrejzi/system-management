@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.9.24
+export VER=0.9.25
 export DEST=/binary/tevent-${VER}
 
 pushd tevent-${VER}

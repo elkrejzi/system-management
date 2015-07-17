@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.11.0
+export VER=0.12.0
 export DEST=/binary/xf86-input-libinput-${VER}
 
 pushd xf86-input-libinput-${VER}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.1.0
+export VER=5.2.0
 #export VER=5.0.1-RC-20150418
 export PKGVER=${VER}
 #export PKGVER="5.0.1 20150418"

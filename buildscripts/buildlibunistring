@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.9.5
+export VER=0.9.6
 export DEST=/binary/libunistring-${VER}
 
 cp -a libunistring-${VER} libunistring-${VER}-32

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.4.12
+export VER=2.4.16
 export DEST=/binary/httpd-${VER}
 
 pushd httpd-${VER}

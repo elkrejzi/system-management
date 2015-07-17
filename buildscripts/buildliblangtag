@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.5.6
+export VER=0.5.7
 export DEST=/binary/liblangtag-${VER}
 
 pushd liblangtag-${VER}

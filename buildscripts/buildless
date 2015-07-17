@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=478
+export VER=479
 export DEST=/binary/less-${VER}
 
 pushd less-${VER}

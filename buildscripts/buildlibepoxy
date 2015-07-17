@@ -1,13 +1,13 @@
 #!/bin/bash -e
 
-export VER=1.2
+export VER=1.3.1
 export DEST=/binary/libepoxy-${VER}
 
 pushd libepoxy-${VER}
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-./autogen.sh --prefix=/usr --disable-static
+./configure --prefix=/usr --disable-static
 
 make -j4
 make install DESTDIR=${DEST}

@@ -5,8 +5,6 @@ export DEST=/binary/libass-${VER}
 
 pushd libass-${VER}
 
-./autogen.sh
-
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr --disable-static

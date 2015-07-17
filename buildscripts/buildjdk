@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export MAJOR=1.8.0
-export PATCH=45
+export PATCH=51
 export VER="${MAJOR}"u"${PATCH}"
 export DIR=jdk"${MAJOR}"_"${PATCH}"
 export DEST=/binary/jdk-${VER}
