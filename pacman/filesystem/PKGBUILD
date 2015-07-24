@@ -1,10 +1,8 @@
 pkgname=filesystem
 pkgver=1
 pkgrel=1
-pkgdesc="Filesystem Hierarchy"
+pkgdesc="Filesystem hierarchy"
 arch=('x86_64')
-url="https://github.com/elkrejzi/system-management/"
-license=('MIT')
 depends=('iana-etc')
 source=('crypttab' 'fstab' 'group' 'gshadow' 'host.conf' 'hosts' 'issue'
         'ld.so.conf' 'lfs-release' 'locale.sh' 'lsb-release' 'nsswitch.conf'
@@ -15,8 +13,8 @@ backup=('etc/crypttab' 'etc/fstab' 'etc/group' 'etc/gshadow' 'etc/hosts'
         'root/.profile')
 md5sums=('992c880a6b32c46f258c40b064daa377'
          '736fabba35993c8bff480398ccef0f89'
-         '2f263c2f16c126826b18601efe569e9c'
-         '9f9f62566b129538492024c5e172b400'
+         'b550c9a32c47afc5f23d0604e345da0a'
+         '74c0eb6c106e1f65eba3aa0ead80e567'
          '14e7aece617cc7f61e339ddbf97cbd74'
          '7c90590f8472a30286555fae632d1932'
          'df7c37b0560c55e45804e5c1a899aa47'
@@ -26,10 +24,10 @@ md5sums=('992c880a6b32c46f258c40b064daa377'
          '05e81bc2bca557baaea28e4e0341d5a2'
          '9e4533df61f0c82d6b2e2371f7376282'
          'db4f62d1876ab55b9017c81115746b23'
-         'bf31bd49236661cacf76137b6bc6149c'
+         '2da70f5519ad97e4947e84f2e6a5ba09'
          '1cc6ffead3d40b21beac1e7bc0c6fb8d'
          'e5af21af457314fbad68452ae0ba8e69'
-         'ac87e747243008d6062036af7709f931'
+         '1ac94c066254bc1ae64a557370e9cbfc'
          '2ed0cf9d92e8a8fa49a41918b8a0207f'
          'fc4c5646b57a75314786ec2dabad4589'
          '0569220958112ce0ef985bd476ca3f1e')

@@ -27,4 +27,5 @@ systemd-network:x:76:
 systemd-resolve:x:77:
 systemd-timesync:x:78:
 nogroup:x:99:
+build:x:500:
 users:x:999:
