@@ -26,4 +26,6 @@ tar xf ${SROOT}/gcc-${GCC_VER}.tar.bz2
 
 } 2>&1 | tee ${LOGDIR}/libstdc++-${GCC_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf gcc-${GCC_VER} gcc-build

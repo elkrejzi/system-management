@@ -18,4 +18,6 @@ tar xf ${SROOT}/file-${FILE_VER}.tar.gz
 
 } 2>&1 | tee ${LOGDIR}/file-${FILE_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf file-${FILE_VER}

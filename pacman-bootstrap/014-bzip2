@@ -22,4 +22,6 @@ tar xf ${SROOT}/bzip2-${BZIP2_VER}.tar.gz
 
 } 2>&1 | tee ${LOGDIR}/bzip2-${BZIP2_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf bzip2-${BZIP2_VER}

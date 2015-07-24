@@ -18,4 +18,6 @@ tar xf ${SROOT}/sed-${SED_VER}.tar.bz2
 
 } 2>&1 | tee ${LOGDIR}/sed-${SED_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf sed-${SED_VER}

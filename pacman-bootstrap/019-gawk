@@ -18,4 +18,6 @@ tar xf ${SROOT}/gawk-${GAWK_VER}.tar.xz
 
 } 2>&1 | tee ${LOGDIR}/gawk-${GAWK_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf gawk-${GAWK_VER}

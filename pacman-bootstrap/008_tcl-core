@@ -21,4 +21,6 @@ tar xf ${SROOT}/tcl-core${TCL_VER}-src.tar.gz
 
 } 2>&1 | tee ${LOGDIR}/tcl-core-${TCL_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf tcl${TCL_VER}

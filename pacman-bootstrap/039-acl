@@ -18,4 +18,6 @@ tar xf ${SROOT}/acl-${ACL_VER}.src.tar.gz
 
 } 2>&1 | tee ${LOGDIR}/acl-${ACL_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf acl-${ACL_VER}

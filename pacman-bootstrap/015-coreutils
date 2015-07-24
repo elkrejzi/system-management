@@ -18,4 +18,6 @@ tar xf ${SROOT}/coreutils-${COREUTILS_VER}.tar.xz
 
 } 2>&1 | tee ${LOGDIR}/coreutils-${COREUTILS_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf coreutils-${COREUTILS_VER}

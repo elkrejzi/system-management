@@ -22,4 +22,6 @@ tar xf ${SROOT}/curl-${CURL_VER}.tar.bz2
 
 } 2>&1 | tee ${LOGDIR}/curl-${CURL_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf curl-${CURL_VER}

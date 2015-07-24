@@ -19,4 +19,6 @@ tar xf ${SROOT}/bash-${BASH_VER}.tar.gz
 
 } 2>&1 | tee ${LOGDIR}/bash-${BASH_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf bash-${BASH_VER}

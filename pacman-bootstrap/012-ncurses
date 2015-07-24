@@ -33,4 +33,6 @@ tar xf ${SROOT}/ncurses-${NCURSES_VER}.tgz
 
 } 2>&1 | tee ${LOGDIR}/ncurses-${NCURSES_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf ncurses-${NCURSES_VER}

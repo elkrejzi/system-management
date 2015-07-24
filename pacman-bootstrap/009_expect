@@ -22,4 +22,6 @@ tar xf ${SROOT}/expect${EXPECT_VER}.tar.gz
 
 } 2>&1 | tee ${LOGDIR}/expect-${EXPECT_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf expect${EXPECT_VER}

@@ -69,4 +69,6 @@ EOF
 
 } 2>&1 | tee ${LOGDIR}/pacman-${PACMAN_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf pacman-${PACMAN_VER}

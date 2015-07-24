@@ -22,4 +22,6 @@ tar xf ${SROOT}/openssl-${OPENSSL_VER}.tar.gz
 
 } 2>&1 | tee ${LOGDIR}/openssl-${OPENSSL_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf openssl-${OPENSSL_VER}

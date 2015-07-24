@@ -18,4 +18,6 @@ tar xf ${SROOT}/attr-${ATTR_VER}.src.tar.gz
 
 } 2>&1 | tee ${LOGDIR}/attr-${ATTR_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf attr-${ATTR_VER}

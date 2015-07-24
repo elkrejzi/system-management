@@ -18,4 +18,6 @@ tar xf ${SROOT}/dejagnu-${DEJAGNU_VER}.tar.gz
 
 } 2>&1 | tee ${LOGDIR}/dejagnu-${DEJAGNU_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf dejagnu-${DEJAGNU_VER}

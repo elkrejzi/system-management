@@ -173,4 +173,6 @@ EOF
 
 } 2>&1 | tee ${LOGDIR}/ca-certs.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf certdata.txt BLFS-ca-bundle.crt certs make-cert.pl make-ca.sh

@@ -18,4 +18,6 @@ tar xf ${SROOT}/gzip-${GZIP_VER}.tar.xz
 
 } 2>&1 | tee ${LOGDIR}/gzip-${GZIP_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf gzip-${GZIP_VER}

@@ -20,4 +20,6 @@ tar xf ${SROOT}/perl-${PERL_VER}.tar.bz2
 
 } 2>&1 | tee ${LOGDIR}/perl-${PERL_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf perl-${PERL_VER}

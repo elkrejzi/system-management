@@ -18,4 +18,6 @@ tar xf ${SROOT}/fakeroot_${FAKEROOT_VER}.orig.tar.bz2
 
 } 2>&1 | tee ${LOGDIR}/fakeroot-${FAKEROOT_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf fakeroot-${FAKEROOT_VER}

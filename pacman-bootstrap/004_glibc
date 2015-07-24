@@ -61,4 +61,6 @@ tar xf ${SROOT}/glibc-${GLIBC_VER}.tar.xz
 
 } 2>&1 | tee ${LOGDIR}/glibc-${GLIBC_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf glibc-${GLIBC_VER} glibc-build64 glibc-build32

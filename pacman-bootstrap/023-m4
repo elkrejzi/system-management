@@ -18,4 +18,6 @@ tar xf ${SROOT}/m4-${M4_VER}.tar.xz
 
 } 2>&1 | tee ${LOGDIR}/m4-${M4_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf m4-${M4_VER}

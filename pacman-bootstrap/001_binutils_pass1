@@ -28,4 +28,6 @@ tar xf ${SROOT}/binutils-${BINUTILS_VER}.tar.bz2
 
 } 2>&1 | tee ${LOGDIR}/binutils-pass1-${BINUTILS_VER}.log
 
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
 rm -rf binutils-${BINUTILS_VER} binutils-build
