@@ -1,0 +1,23 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf perl-${PERL_VER} ${LOGDIR}/perl-${PERL_VER}.log
+
+tar xf ${SROOT}/perl-${PERL_VER}.tar.bz2
+
+{
+
+  time {
+  pushd perl-${PERL_VER}
+    sh Configure -des -Dprefix=/tools -Dlibs=-lm
+    make
+    cp -v perl cpan/podlators/pod2man /tools/bin
+    mkdir -pv /tools/lib/perl5/${PERL_VER}
+    cp -Rv lib/* /tools/lib/perl5/${PERL_VER}
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/perl-${PERL_VER}.log
+
+rm -rf perl-${PERL_VER}

@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf gzip-${GZIP_VER} ${LOGDIR}/gzip-${GZIP_VER}.log
+
+tar xf ${SROOT}/gzip-${GZIP_VER}.tar.xz
+
+{
+
+  time {
+  pushd gzip-${GZIP_VER}
+    ./configure --prefix=/tools
+    make
+    make install
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/gzip-${GZIP_VER}.log
+
+rm -rf gzip-${GZIP_VER}

@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf curl-${CURL_VER} ${LOGDIR}/curl-${CURL_VER}.log
+
+tar xf ${SROOT}/curl-${CURL_VER}.tar.bz2
+
+{
+
+  time {
+  pushd curl-${CURL_VER}
+    ./configure --prefix=/tools            \
+                --with-ssl=/tools          \
+                --enable-threaded-resolver \
+                --disable-shared           \
+                --with-ca-bundle=/tools/etc/ssl/certs/ca-certificates.crt
+    make
+    cp -v src/curl /tools/bin
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/curl-${CURL_VER}.log
+
+rm -rf curl-${CURL_VER}

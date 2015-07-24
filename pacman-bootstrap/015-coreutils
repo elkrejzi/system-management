@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf coreutils-${COREUTILS_VER} ${LOGDIR}/coreutils-${COREUTILS_VER}.log
+
+tar xf ${SROOT}/coreutils-${COREUTILS_VER}.tar.xz
+
+{
+
+  time {
+  pushd coreutils-${COREUTILS_VER}
+    ./configure --prefix=/tools --enable-install-program=hostname
+    make
+    make install
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/coreutils-${COREUTILS_VER}.log
+
+rm -rf coreutils-${COREUTILS_VER}

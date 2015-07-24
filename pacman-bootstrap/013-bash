@@ -1,0 +1,22 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf bash-${BASH_VER} ${LOGDIR}/bash-${BASH_VER}.log
+
+tar xf ${SROOT}/bash-${BASH_VER}.tar.gz
+
+{
+
+  time {
+  pushd bash-${BASH_VER}
+    ./configure --prefix=/tools --without-bash-malloc
+    make
+    make install
+    ln -sv bash /tools/bin/sh
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/bash-${BASH_VER}.log
+
+rm -rf bash-${BASH_VER}

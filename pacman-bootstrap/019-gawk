@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf gawk-${GAWK_VER} ${LOGDIR}/gawk-${GAWK_VER}.log
+
+tar xf ${SROOT}/gawk-${GAWK_VER}.tar.xz
+
+{
+
+  time {
+  pushd gawk-${GAWK_VER}
+    ./configure --prefix=/tools
+    make
+    make install
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/gawk-${GAWK_VER}.log
+
+rm -rf gawk-${GAWK_VER}

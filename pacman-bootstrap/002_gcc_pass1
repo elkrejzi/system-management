@@ -1,0 +1,72 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf gcc-${GCC_VER} gcc-build ${LOGDIR}/gcc-pass1-${GCC_VER}.log
+
+tar xf ${SROOT}/gcc-${GCC_VER}.tar.bz2
+
+{
+
+  time {
+  pushd gcc-${GCC_VER}
+    tar -xf ${SROOT}/mpfr-${MPFR_VER}.tar.xz
+    mv -v mpfr-${MPFR_VER} mpfr
+    tar -xf ${SROOT}/gmp-${GMP_VER}.tar.xz
+    mv -v gmp-${GMP_VER%a} gmp
+    tar -xf ${SROOT}/mpc-${MPC_VER}.tar.gz
+    mv mpc-${MPC_VER} mpc
+
+    patch -Np1 -i ${PROOT}/gcc-pure64.patch
+
+    # A hack to get /tools/lib32 recognised.
+    sed -i "s|\$(if \$(wildcard \$(shell echo \$(SYSTEM_HEADER_DIR))/../../usr/lib32),../lib32)|../lib32|" gcc/config/i386/t-linux64
+
+    for file in \
+     $(find gcc/config -name linux64.h -o -name linux.h -o -name sysv4.h)
+    do
+      cp -uv $file{,.orig}
+      sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tools&@g' \
+          -e 's@/usr@/tools@g' $file.orig > $file
+      echo '
+#undef STANDARD_STARTFILE_PREFIX_1
+#undef STANDARD_STARTFILE_PREFIX_2
+#define STANDARD_STARTFILE_PREFIX_1 "/tools/lib/"
+#define STANDARD_STARTFILE_PREFIX_2 ""' >> $file
+      touch $file.orig
+    done
+  popd
+  mkdir -v gcc-build
+  pushd gcc-build
+    ../gcc-${GCC_VER}/configure                        \
+        --target=$LFS_TGT                              \
+        --prefix=/tools                                \
+        --with-glibc-version=2.11                      \
+        --with-sysroot=$LFS                            \
+        --with-newlib                                  \
+        --without-headers                              \
+        --with-local-prefix=/tools                     \
+        --with-native-system-header-dir=/tools/include \
+        --disable-nls                                  \
+        --disable-shared                               \
+        --disable-decimal-float                        \
+        --disable-threads                              \
+        --disable-libatomic                            \
+        --disable-libgomp                              \
+        --disable-libitm                               \
+        --disable-libquadmath                          \
+        --disable-libsanitizer                         \
+        --disable-libssp                               \
+        --disable-libvtv                               \
+        --disable-libcilkrts                           \
+        --disable-libstdc++-v3                         \
+        --enable-multilib                              \
+        --enable-languages=c,c++
+    make
+    make install
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/gcc-pass1-${GCC_VER}.log
+
+rm -rf gcc-${GCC_VER} gcc-build

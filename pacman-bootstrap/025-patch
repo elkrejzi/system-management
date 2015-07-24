@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf patch-${PATCH_VER} ${LOGDIR}/patch-${PATCH_VER}.log
+
+tar xf ${SROOT}/patch-${PATCH_VER}.tar.xz
+
+{
+
+  time {
+  pushd patch-${PATCH_VER}
+    ./configure --prefix=/tools
+    make
+    make install
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/patch-${PATCH_VER}.log
+
+rm -rf patch-${PATCH_VER}

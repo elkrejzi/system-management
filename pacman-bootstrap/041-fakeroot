@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf fakeroot-${FAKEROOT_VER} ${LOGDIR}/fakeroot-${FAKEROOT_VER}.log
+
+tar xf ${SROOT}/fakeroot_${FAKEROOT_VER}.orig.tar.bz2
+
+{
+
+  time {
+  pushd fakeroot-${FAKEROOT_VER}
+    ./configure --prefix=/tools
+    make
+    make install
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/fakeroot-${FAKEROOT_VER}.log
+
+rm -rf fakeroot-${FAKEROOT_VER}

@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf acl-${ACL_VER} ${LOGDIR}/acl-${ACL_VER}.log
+
+tar xf ${SROOT}/acl-${ACL_VER}.src.tar.gz
+
+{
+
+  time {
+  pushd acl-${ACL_VER}
+    ./configure --prefix=/tools
+    make
+    make install install-dev install-lib
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/acl-${ACL_VER}.log
+
+rm -rf acl-${ACL_VER}

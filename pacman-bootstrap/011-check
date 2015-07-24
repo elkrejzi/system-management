@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf check-${CHECK_VER} ${LOGDIR}/check-${CHECK_VER}.log
+
+tar xf ${SROOT}/check-${CHECK_VER}.tar.gz
+
+{
+
+  time {
+  pushd check-${CHECK_VER}
+    PKG_CONFIG= ./configure --prefix=/tools
+    make
+    make install
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/check-${CHECK_VER}.log
+
+rm -rf check-${CHECK_VER}

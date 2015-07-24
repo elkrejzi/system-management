@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf sed-${SED_VER} ${LOGDIR}/sed-${SED_VER}.log
+
+tar xf ${SROOT}/sed-${SED_VER}.tar.bz2
+
+{
+
+  time {
+  pushd sed-${SED_VER}
+    ./configure --prefix=/tools
+    make
+    make install
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/sed-${SED_VER}.log
+
+rm -rf sed-${SED_VER}

@@ -1,0 +1,65 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf gcc-${GCC_VER} gcc-build ${LOGDIR}/gcc-pass2-${GCC_VER}.log
+
+tar xf ${SROOT}/gcc-${GCC_VER}.tar.bz2
+
+{
+
+  time {
+  pushd gcc-${GCC_VER}
+    cat gcc/limitx.h gcc/glimits.h gcc/limity.h > \
+      `dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/include-fixed/limits.h
+
+    tar -xf ${SROOT}/mpfr-${MPFR_VER}.tar.xz
+    mv -v mpfr-${MPFR_VER} mpfr
+    tar -xf ${SROOT}/gmp-${GMP_VER}.tar.xz
+    mv -v gmp-${GMP_VER%a} gmp
+    tar -xf ${SROOT}/mpc-${MPC_VER}.tar.gz
+    mv mpc-${MPC_VER} mpc
+
+    patch -Np1 -i ${PROOT}/gcc-pure64.patch
+
+    # A hack to get /tools/lib32 recognised.
+    sed -i "s|\$(if \$(wildcard \$(shell echo \$(SYSTEM_HEADER_DIR))/../../usr/lib32),../lib32)|../lib32|" gcc/config/i386/t-linux64
+
+    for file in \
+     $(find gcc/config -name linux64.h -o -name linux.h -o -name sysv4.h)
+    do
+      cp -uv $file{,.orig}
+      sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tools&@g' \
+          -e 's@/usr@/tools@g' $file.orig > $file
+      echo '
+#undef STANDARD_STARTFILE_PREFIX_1
+#undef STANDARD_STARTFILE_PREFIX_2
+#define STANDARD_STARTFILE_PREFIX_1 "/tools/lib/"
+#define STANDARD_STARTFILE_PREFIX_2 ""' >> $file
+      touch $file.orig
+    done
+  popd
+  mkdir -v gcc-build
+  pushd gcc-build
+    CC=$LFS_TGT-gcc                                    \
+    CXX=$LFS_TGT-g++                                   \
+    AR=$LFS_TGT-ar                                     \
+    RANLIB=$LFS_TGT-ranlib                             \
+    ../gcc-${GCC_VER}/configure                        \
+        --prefix=/tools                                \
+        --with-local-prefix=/tools                     \
+        --with-native-system-header-dir=/tools/include \
+        --enable-languages=c,c++                       \
+        --enable-multilib                              \
+        --disable-libstdcxx-pch                        \
+        --disable-bootstrap                            \
+        --disable-libgomp
+    make
+    make install
+    ln -sv gcc /tools/bin/cc
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/gcc-pass2-${GCC_VER}.log
+
+rm -rf gcc-${GCC_VER} gcc-build

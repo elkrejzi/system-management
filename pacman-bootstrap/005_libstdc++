@@ -1,0 +1,29 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf gcc-${GCC_VER} gcc-build ${LOGDIR}/libstdc++-${GCC_VER}.log
+
+tar xf ${SROOT}/gcc-${GCC_VER}.tar.bz2
+
+{
+
+  time {
+  mkdir -v gcc-build
+  pushd gcc-build
+    ../gcc-${GCC_VER}/libstdc++-v3/configure \
+        --host=$LFS_TGT             \
+        --prefix=/tools             \
+        --disable-multilib          \
+        --disable-nls               \
+        --disable-libstdcxx-threads \
+        --disable-libstdcxx-pch     \
+        --with-gxx-include-dir=/tools/$LFS_TGT/include/c++/${GCC_VER}
+    make
+    make install
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/libstdc++-${GCC_VER}.log
+
+rm -rf gcc-${GCC_VER} gcc-build

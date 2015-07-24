@@ -1,0 +1,72 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf pacman-${PACMAN_VER} ${LOGDIR}/pacman-${PACMAN_VER}.log
+
+tar xf ${SROOT}/pacman-${PACMAN_VER}.tar.gz
+
+{
+
+  time {
+  pushd pacman-${PACMAN_VER}
+    ./configure --prefix=/tools   \
+                --without-gpgme   \
+                --without-libcurl \
+                --without-openssl
+    make
+    make install
+
+    cat > /tools/etc/makepkg.conf << "EOF"
+DLAGENTS=('ftp::/tools/bin/curl -fC - --ftp-pasv --retry 3 --retry-delay 3 -o %o %u'
+          'http::/tools/bin/curl -fLC - --retry 3 --retry-delay 3 -o %o %u'
+          'https::/tools/bin/curl -fLC - --retry 3 --retry-delay 3 -o %o %u'
+          'rsync::/usr/bin/rsync --no-motd -z %u %o'
+          'scp::/usr/bin/scp -C %u %o')
+
+VCSCLIENTS=('bzr::bzr'
+            'git::git'
+            'hg::mercurial'
+            'svn::subversion')
+
+CARCH="x86_64"
+CHOST="x86_64-unknown-linux-gnu"
+
+CPPFLAGS=""
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
+LDFLAGS=""
+
+MAKEFLAGS="-j4"
+
+DEBUG_CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"
+DEBUG_CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"
+
+BUILDENV=(!distcc color !ccache check !sign)
+OPTIONS=(strip docs !libtool !staticlibs emptydirs zipman purge !upx !debug)
+
+INTEGRITY_CHECK=(md5)
+STRIP_BINARIES="--strip-all"
+STRIP_SHARED="--strip-unneeded"
+STRIP_STATIC="--strip-debug"
+MAN_DIRS=({usr{,/local}{,/share},opt/*}/{man,info})
+DOC_DIRS=(usr/{,local/}{,share/}{doc,gtk-doc} opt/*/{doc,gtk-doc})
+PURGE_TARGETS=(usr/{,share}/info/dir .packlist *.pod)
+
+COMPRESSGZ=(gzip -c -f -n)
+COMPRESSBZ2=(bzip2 -c -f)
+COMPRESSXZ=(xz -c -z -)
+COMPRESSLRZ=(lrzip -q)
+COMPRESSLZO=(lzop -q)
+COMPRESSZ=(compress -c -f)
+
+PKGEXT='.pkg.tar.xz'
+SRCEXT='.src.tar.gz'
+EOF
+
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/pacman-${PACMAN_VER}.log
+
+rm -rf pacman-${PACMAN_VER}

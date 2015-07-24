@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf findutils-${FINDUTILS_VER} ${LOGDIR}/findutils-${FINDUTILS_VER}.log
+
+tar xf ${SROOT}/findutils-${FINDUTILS_VER}.tar.gz
+
+{
+
+  time {
+  pushd findutils-${FINDUTILS_VER}
+    ./configure --prefix=/tools
+    make
+    make install
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/findutils-${FINDUTILS_VER}.log
+
+rm -rf findutils-${FINDUTILS_VER}

@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf m4-${M4_VER} ${LOGDIR}/m4-${M4_VER}.log
+
+tar xf ${SROOT}/m4-${M4_VER}.tar.xz
+
+{
+
+  time {
+  pushd m4-${M4_VER}
+    ./configure --prefix=/tools
+    make
+    make install
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/m4-${M4_VER}.log
+
+rm -rf m4-${M4_VER}

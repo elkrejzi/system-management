@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf linux-${LINUX_VER} ${LOGDIR}/linux-api-headers-${LINUX_VER}.log
+
+tar xf ${SROOT}/linux-${LINUX_VER}.tar.xz
+
+{
+
+  time {
+  pushd linux-${LINUX_VER}
+    if [ ! -z "${LINUX_PATCH_VER}" ]
+    then
+      xz -cd ${SROOT}/patch-${LINUX_PATCH_VER}.xz | patch -Np1 -i -
+    fi
+    make mrproper
+    make INSTALL_HDR_PATH=dest headers_install
+    cp -rv dest/include/* /tools/include
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/linux-api-headers-${LINUX_VER}.log
+
+rm -rf linux-${LINUX_VER}

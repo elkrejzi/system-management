@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf expect${EXPECT_VER} ${LOGDIR}/expect-${EXPECT_VER}.log
+
+tar xf ${SROOT}/expect${EXPECT_VER}.tar.gz
+
+{
+
+  time {
+  pushd expect${EXPECT_VER}
+    cp -v configure{,.orig}
+    sed 's:/usr/local/bin:/bin:' configure.orig > configure
+    ./configure --prefix=/tools       \
+                --with-tcl=/tools/lib \
+                --with-tclinclude=/tools/include
+    make
+    make SCRIPTS="" install
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/expect-${EXPECT_VER}.log
+
+rm -rf expect${EXPECT_VER}

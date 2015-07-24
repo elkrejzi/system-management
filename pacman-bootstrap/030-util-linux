@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf util-linux-${UTIL_LINUX_VER} ${LOGDIR}/util-linux-${UTIL_LINUX_VER}.log
+
+tar xf ${SROOT}/util-linux-${UTIL_LINUX_VER}.tar.xz
+
+{
+
+  time {
+  pushd util-linux-${UTIL_LINUX_VER}
+    ./configure --prefix=/tools                \
+                --without-python               \
+                --disable-makeinstall-chown    \
+                --without-systemdsystemunitdir \
+                PKG_CONFIG=""
+    make
+    make install
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/util-linux-${UTIL_LINUX_VER}.log
+
+rm -rf util-linux-${UTIL_LINUX_VER}

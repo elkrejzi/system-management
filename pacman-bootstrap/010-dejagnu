@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf dejagnu-${DEJAGNU_VER} ${LOGDIR}/dejagnu-${DEJAGNU_VER}.log
+
+tar xf ${SROOT}/dejagnu-${DEJAGNU_VER}.tar.gz
+
+{
+
+  time {
+  pushd dejagnu-${DEJAGNU_VER}
+    ./configure --prefix=/tools
+    make
+    make install
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/dejagnu-${DEJAGNU_VER}.log
+
+rm -rf dejagnu-${DEJAGNU_VER}

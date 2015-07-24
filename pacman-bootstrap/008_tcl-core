@@ -1,0 +1,24 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf tcl${TCL_VER} ${LOGDIR}/tcl-core-${TCL_VER}.log
+
+tar xf ${SROOT}/tcl-core${TCL_VER}-src.tar.gz
+
+{
+
+  time {
+  pushd tcl${TCL_VER}/unix
+    ./configure --prefix=/tools
+    make
+    make install
+    make install-private-headers
+    chmod -v u+w /tools/lib/libtcl8.6.so
+    ln -sv tclsh8.6 /tools/bin/tclsh
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/tcl-core-${TCL_VER}.log
+
+rm -rf tcl${TCL_VER}

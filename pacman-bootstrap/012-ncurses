@@ -1,0 +1,36 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf ncurses-${NCURSES_VER} ${LOGDIR}/ncurses-${NCURSES_VER}.log
+
+tar xf ${SROOT}/ncurses-${NCURSES_VER}.tgz
+
+{
+
+  time {
+  pushd ncurses-${NCURSES_VER}
+    sed -i '/LIBTOOL_INSTALL/d' c++/Makefile.in
+    ./configure --prefix=/tools  \
+                --with-shared    \
+                --without-debug  \
+                --without-normal \
+                --without-ada    \
+                --enable-widec   \
+                --enable-overwrite
+    make
+    make install
+    for lib in ncurses form panel menu
+    do
+        rm -vf                    /tools/lib/lib${lib}.so
+        echo "INPUT(-l${lib}w)" > /tools/lib/lib${lib}.so
+    done
+    rm -vf                     /tools/lib/libcursesw.so
+    echo "INPUT(-lncursesw)" > /tools/lib/libcursesw.so
+    ln -sfv libncurses.so      /tools/lib/libcurses.so
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/ncurses-${NCURSES_VER}.log
+
+rm -rf ncurses-${NCURSES_VER}

@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf diffutils-${DIFFUTILS_VER} ${LOGDIR}/diffutils-${DIFFUTILS_VER}.log
+
+tar xf ${SROOT}/diffutils-${DIFFUTILS_VER}.tar.xz
+
+{
+
+  time {
+  pushd diffutils-${DIFFUTILS_VER}
+    ./configure --prefix=/tools
+    make
+    make install
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/diffutils-${DIFFUTILS_VER}.log
+
+rm -rf diffutils-${DIFFUTILS_VER}

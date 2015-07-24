@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf gettext-${GETTEXT_VER} ${LOGDIR}/gettext-${GETTEXT_VER}.log
+
+tar xf ${SROOT}/gettext-${GETTEXT_VER}.tar.xz
+
+{
+
+  time {
+  pushd gettext-${GETTEXT_VER}/gettext-tools
+    EMACS="no" ./configure --prefix=/tools --disable-shared
+    make -C gnulib-lib
+    make -C intl pluralx.c
+    make -C src msgfmt
+    make -C src msgmerge
+    make -C src xgettext
+    cp -v src/{msgfmt,msgmerge,xgettext} /tools/bin
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/gettext-${GETTEXT_VER}.log
+
+rm -rf gettext-${GETTEXT_VER}

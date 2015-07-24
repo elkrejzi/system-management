@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf zlib-${ZLIB_VER} ${LOGDIR}/zlib-${ZLIB_VER}.log
+
+tar xf ${SROOT}/zlib-${ZLIB_VER}.tar.xz
+
+{
+
+  time {
+  pushd zlib-${ZLIB_VER}
+    ./configure --prefix=/tools
+    make
+    make install
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/zlib-${ZLIB_VER}.log
+
+rm -rf zlib-${ZLIB_VER}

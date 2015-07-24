@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf grep-${GREP_VER} ${LOGDIR}/grep-${GREP_VER}.log
+
+tar xf ${SROOT}/grep-${GREP_VER}.tar.xz
+
+{
+
+  time {
+  pushd grep-${GREP_VER}
+    ./configure --prefix=/tools
+    make
+    make install
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/grep-${GREP_VER}.log
+
+rm -rf grep-${GREP_VER}

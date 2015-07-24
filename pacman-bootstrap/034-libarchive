@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf libarchive-${LIBARCHIVE_VER} ${LOGDIR}/libarchive-${LIBARCHIVE_VER}.log
+
+tar xf ${SROOT}/libarchive-${LIBARCHIVE_VER}.tar.gz
+
+{
+
+  time {
+  pushd libarchive-${LIBARCHIVE_VER}
+    ./configure --prefix=/tools --without-xml2
+    make
+    make install
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/libarchive-${LIBARCHIVE_VER}.log
+
+rm -rf libarchive-${LIBARCHIVE_VER}

@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf file-${FILE_VER} ${LOGDIR}/file-${FILE_VER}.log
+
+tar xf ${SROOT}/file-${FILE_VER}.tar.gz
+
+{
+
+  time {
+  pushd file-${FILE_VER}
+    ./configure --prefix=/tools
+    make
+    make install
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/file-${FILE_VER}.log
+
+rm -rf file-${FILE_VER}
