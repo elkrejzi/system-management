@@ -1,0 +1,7 @@
+# Begin /etc/fstab
+#
+# <file system> <dir>   <type>  <options>       <dump>  <pass>
+
+
+
+# End /etc/fstab

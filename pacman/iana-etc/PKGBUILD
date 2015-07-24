@@ -1,0 +1,17 @@
+pkgname=iana-etc
+pkgver=2.30
+pkgrel=1
+pkgdesc="/etc/protocols and /etc/services provided by IANA"
+arch=('x86_64')
+url="http://sethwklein.net/iana-etc.html"
+license=('custom')
+source=('protocols' 'services')
+md5sums=('d46c8af3927f3c5f748e359871bdf236'
+         '9d39e51e6bd5a30168c26c57b66d2e37')
+
+package() {
+    for f in protocols services
+    do
+      install -Dm644 "${srcdir}/${f}" "${pkgdir}/etc/${f}"
+    done
+}

@@ -1,0 +1,77 @@
+pkgname=filesystem
+pkgver=1
+pkgrel=1
+pkgdesc="Filesystem Hierarchy"
+arch=('x86_64')
+url="https://github.com/elkrejzi/system-management/"
+license=('MIT')
+depends=('iana-etc')
+source=('crypttab' 'fstab' 'group' 'gshadow' 'host.conf' 'hosts' 'issue'
+        'ld.so.conf' 'lfs-release' 'locale.sh' 'lsb-release' 'nsswitch.conf'
+        'os-release' 'passwd' 'profile' 'securetty' 'shadow' 'shells'
+        'root.bashrc' 'root.profile')
+backup=('etc/crypttab' 'etc/fstab' 'etc/group' 'etc/gshadow' 'etc/hosts'
+        'etc/nsswitch.conf' 'etc/passwd' 'etc/shadow' 'root/.bashrc'
+        'root/.profile')
+md5sums=('992c880a6b32c46f258c40b064daa377'
+         '736fabba35993c8bff480398ccef0f89'
+         '2f263c2f16c126826b18601efe569e9c'
+         '9f9f62566b129538492024c5e172b400'
+         '14e7aece617cc7f61e339ddbf97cbd74'
+         '7c90590f8472a30286555fae632d1932'
+         'df7c37b0560c55e45804e5c1a899aa47'
+         'bd722f2ff1dd4b08e3fd8701fe7f8fd5'
+         'a42007519e7f31bd026912cdd44a8572'
+         'd3a0e0ea0e21fe180a925c17cc5edf72'
+         '05e81bc2bca557baaea28e4e0341d5a2'
+         '9e4533df61f0c82d6b2e2371f7376282'
+         'db4f62d1876ab55b9017c81115746b23'
+         'bf31bd49236661cacf76137b6bc6149c'
+         '1cc6ffead3d40b21beac1e7bc0c6fb8d'
+         'e5af21af457314fbad68452ae0ba8e69'
+         'ac87e747243008d6062036af7709f931'
+         '2ed0cf9d92e8a8fa49a41918b8a0207f'
+         'fc4c5646b57a75314786ec2dabad4589'
+         '0569220958112ce0ef985bd476ca3f1e')
+
+package() {
+    install -dm755 "${pkgdir}"/{boot,dev,home,media,mnt,opt,proc,srv,sys}
+    install -dm755 "${pkgdir}"/etc/{ld.so.conf.d,opt,profile.d,skel} "${pkgdir}"/run/lock
+
+    install -dm755 "${pkgdir}"/{,usr/}{bin,lib,lib32,sbin}
+    install -dm755 "${pkgdir}"/usr/local/{bin,lib,sbin}
+ 
+    install -dm755 "${pkgdir}"/usr/{,local/}{include,libexec,src}
+    install -dm755 "${pkgdir}"/usr/{,local/}share/{color,dict,doc,info,locale,misc}
+    install -dm755 "${pkgdir}"/usr/{,local/}share/man/man{1..8}
+
+    install -dm755 "${pkgdir}"/var/{cache,local,log,mail,opt,spool}
+    install -dm755 "${pkgdir}"/var/lib/{color,locate,misc}
+
+    ln -sf /proc/self/mounts "${pkgdir}"/etc/mtab
+
+    ln -sf lib "${pkgdir}"/lib64
+
+    ln -sf ../run "${pkgdir}"/var/run
+    ln -sf ../run/lock "${pkgdir}"/var/lock
+
+    install -dm1777 "${pkgdir}"/tmp "${pkgdir}"/var/tmp
+    install -dm750 "${pkgdir}"/root
+
+    for f in fstab group host.conf hosts issue ld.so.conf \
+             lfs-release lsb-release nsswitch.conf os-release \
+             passwd profile securetty shells
+    do
+      install -m644 "${srcdir}/${f}" "${pkgdir}/etc/"
+    done
+
+    for f in crypttab gshadow shadow
+    do
+      install -m600 "${srcdir}/${f}" "${pkgdir}/etc/"
+    done
+
+    install -m644 "${srcdir}/locale.sh" "${pkgdir}/etc/profile.d/"
+
+    install -m640 "${srcdir}/root.bashrc" "${pkgdir}/root/.bashrc"
+    install -m640 "${srcdir}/root.profile" "${pkgdir}/root/.profile"
+}
