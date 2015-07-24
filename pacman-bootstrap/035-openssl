@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf openssl-${OPENSSL_VER} ${LOGDIR}/openssl-${OPENSSL_VER}.log
+
+tar xf ${SROOT}/openssl-${OPENSSL_VER}.tar.gz
+
+{
+
+  time {
+  pushd openssl-${OPENSSL_VER}
+    ./config --prefix=/tools             \
+             --openssldir=/tools/etc/ssl \
+             --libdir=lib                \
+         shared                          \
+         zlib-dynamic
+    make
+    make -j1 MANDIR=/tools/share/man MANSUFFIX=ssl install
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/openssl-${OPENSSL_VER}.log
+
+rm -rf openssl-${OPENSSL_VER}
