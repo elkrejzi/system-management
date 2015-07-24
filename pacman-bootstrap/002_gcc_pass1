@@ -15,7 +15,7 @@ tar xf ${SROOT}/gcc-${GCC_VER}.tar.bz2
     tar -xf ${SROOT}/gmp-${GMP_VER}.tar.xz
     mv -v gmp-${GMP_VER%a} gmp
     tar -xf ${SROOT}/mpc-${MPC_VER}.tar.gz
-    mv mpc-${MPC_VER} mpc
+    mv -v mpc-${MPC_VER} mpc
 
     patch -Np1 -i ${PROOT}/gcc-pure64.patch
 
