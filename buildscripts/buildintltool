@@ -5,6 +5,8 @@ export DEST=/binary/intltool-${VER}
 
 pushd intltool-${VER}
 
+sed -i 's:\\\${:\\\$\\{:' intltool-update.in
+
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr

@@ -1,25 +1,26 @@
 #!/bin/bash -e
 
-export VER=1.15
-export DEST=/binary/automake-${VER}
+export VER=8.0.01
+export DEST=/binary/unifont-${VER}
 
-pushd automake-${VER}
+pushd unifont-${VER}
 
-sed -i 's:/\\\${:/\\\$\\{:' bin/automake.in
-
-CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr
-
-make -j4
+make CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
 make install DESTDIR=${DEST}
 
 popd
 
-rm -rf automake-${VER}
+rm -rf unifont-${VER}
 
-rm -rf ${DEST}/usr/share/doc ${DEST}/usr/share/info/dir
-gzip -9 ${DEST}/usr/share/info/*
+rm -f ${DEST}/usr/share/unifont/ChangeLog.gz
+rm -f ${DEST}/usr/share/unifont/INSTALL.gz
+rm -f ${DEST}/usr/share/unifont/NEWS.gz
+rm -f ${DEST}/usr/share/unifont/README.gz
+rm -f ${DEST}/usr/share/unifont/unifont.txt.gz
+
+install -dm755 ${DEST}/usr/share/info
+
+mv ${DEST}/usr/share/unifont/unifont.info.gz ${DEST}/usr/share/info
 
 pushd ${DEST}
 
@@ -36,6 +37,7 @@ cat > ${DEST}/INSTALL << "EOF"
 
 cp -rf --remove-destination usr /
 
+[ -x /usr/bin/fc-cache ] && echo "Processing triggers for fontconfig" && /usr/bin/fc-cache /usr/share/fonts/truetype/unifont
 [ -x /usr/bin/install-info ] && echo "Processing triggers for texinfo" && for file in usr/share/info/* ; do /usr/bin/install-info /$file /usr/share/info/dir ; done
 [ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
 EOF

@@ -5,8 +5,8 @@ export DEST=/binary/qtbase-${VER}
 
 pushd qtbase-opensource-src-${VER}
 
-export CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
-export CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
+export CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"
+export CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"
 
 ./configure -prefix         /usr               \
             -sysconfdir     /etc/xdg           \
@@ -17,18 +17,20 @@ export CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-prote
             -docdir         /usr/share/doc/qt5 \
             -translationdir /usr/share/qt5/translations \
             -examplesdir    /usr/share/doc/qt5/examples \
-            -confirm-license    \
-            -opensource         \
-            -dbus-linked        \
-            -openssl-linked     \
-            -gstreamer 1.0      \
-            -journald           \
-            -libinput           \
-            -system-harfbuzz    \
-            -system-sqlite      \
-            -nomake examples    \
-            -no-rpath           \
-            -optimized-qmake    \
+            -confirm-license        \
+            -opensource             \
+            -dbus-linked            \
+            -openssl-linked         \
+            -gstreamer 1.0          \
+            -journald               \
+            -libinput               \
+            -system-harfbuzz        \
+            -system-sqlite          \
+            -nomake examples        \
+            -no-rpath               \
+            -no-strip               \
+            -no-separate-debug-info \
+            -optimized-qmake        \
             -no-use-gold-linker
 
 make -j4
@@ -59,7 +61,10 @@ pushd ${DEST}
 
 find * -type f 2>/dev/null | while read BUILD_BINARY ; do
   case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    mkdir -p usr/lib/debug/$(dirname ${BUILD_BINARY})
+    objcopy --only-keep-debug ${BUILD_BINARY} usr/lib/debug/${BUILD_BINARY}
     strip --strip-unneeded ${BUILD_BINARY}
+    objcopy --add-gnu-debuglink=usr/lib/debug/${BUILD_BINARY} ${BUILD_BINARY}
   esac
 done
 

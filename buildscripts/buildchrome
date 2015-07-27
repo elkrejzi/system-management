@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=43.0.2357.132
+export PKGVER=44.0.2403.107
 export DEST=/binary/chromium-${PKGVER}
 
 export -n CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
@@ -155,14 +155,15 @@ EOF
          #cp -rf out/Release/icudtl.dat ${DEST}/usr/lib/chromium/
 
          cp -rf out/Release/chrome_100_percent.pak \
-                out/Release/content_resources.pak \
+                out/Release/chrome_200_percent.pak \
+                out/Release/content_resources.pak  \
                 out/Release/keyboard_resources.pak \
-                out/Release/libffmpegsumo.so \
-                out/Release/natives_blob.bin \
-                out/Release/resources.pak \
+                out/Release/natives_blob.bin  \
+                out/Release/resources.pak     \
                 out/Release/snapshot_blob.bin \
                 ${DEST}/usr/lib/chromium/
 
+#                out/Release/libffmpegsumo.so \
 #                out/Release/libpdf.so \
 #                out/Release/nacl_helper \
 #                out/Release/nacl_helper_bootstrap \
@@ -175,7 +176,7 @@ EOF
       strip --strip-unneeded ${DEST}/usr/lib/chromium/chromedriver
       #strip --strip-unneeded ${DEST}/usr/lib/chromium/nacl_helper
       #strip --strip-unneeded ${DEST}/usr/lib/chromium/nacl_helper_bootstrap
-      strip --strip-unneeded ${DEST}/usr/lib/chromium/libffmpegsumo.so
+      #strip --strip-unneeded ${DEST}/usr/lib/chromium/libffmpegsumo.so
       #strip --strip-unneeded ${DEST}/usr/lib/chromium/libpdf.so
 
 cat > ${DEST}/INSTALL << "EOF"

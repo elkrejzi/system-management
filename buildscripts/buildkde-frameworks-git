@@ -97,15 +97,15 @@ do
   pushd ${framework}/build
 
   cmake -DCMAKE_INSTALL_PREFIX=/usr             \
-        -DCMAKE_BUILD_TYPE=Release              \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo       \
         -DSYSCONF_INSTALL_DIR=/etc              \
         -DLIB_INSTALL_DIR=lib                   \
         -DBUILD_TESTING=OFF                     \
         -DQML_INSTALL_DIR=lib/qt5/qml           \
         -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
         -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules \
-        -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
-        -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
+        -DCMAKE_C_FLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"   \
+        -DCMAKE_CXX_FLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \
         -Wno-dev ..
 
   make -j4
@@ -119,7 +119,10 @@ do
 
   find * -type f 2>/dev/null | while read BUILD_BINARY ; do
     case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+      mkdir -p usr/lib/debug/$(dirname ${BUILD_BINARY})
+      objcopy --only-keep-debug ${BUILD_BINARY} usr/lib/debug/${BUILD_BINARY}
       strip --strip-unneeded ${BUILD_BINARY}
+      objcopy --add-gnu-debuglink=usr/lib/debug/${BUILD_BINARY} ${BUILD_BINARY}
     esac
   done
 

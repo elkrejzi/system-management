@@ -5,6 +5,11 @@ export DEST=/binary/speech-dispatcher-${VER}
 
 pushd speech-dispatcher-${VER}
 
+sed -i "s/cicero //g" configure.ac
+sed -i "s/sd_cicero//g" src/modules/Makefile.am
+
+autoreconf -fi
+
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr     \
@@ -23,6 +28,8 @@ find ${DEST} -name "*.la" -delete
 
 rm -rf ${DEST}/usr/share/info/dir ${DEST}/usr/share/info/*.gz
 gzip -9 ${DEST}/usr/share/info/*
+
+sed -i 's|includedir=.*|includedir=${prefix}/include/speech-dispatcher|g' ${DEST}/usr/lib/pkgconfig/speech-dispatcher.pc
 
 mkdir -p ${DEST}/lib/systemd/system ${DEST}/var/log/speech-dispatcher
 

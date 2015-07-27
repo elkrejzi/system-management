@@ -7,6 +7,10 @@ pushd qtwebkit-opensource-src-${VER}
 
 qmake-qt5
 
+# No debug symbols for this module. Taken from Debian
+echo "QMAKE_CXXFLAGS -= -g" >> .qmake.conf
+echo "QMAKE_CXXFLAGS -= -gstabs" >> .qmake.conf
+
 make -j4
 
 find . -name "*.pc" -exec perl -pi -e "s, -L$PWD/?\S+,,g" {} \;

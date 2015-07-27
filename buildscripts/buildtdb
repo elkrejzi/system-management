@@ -1,7 +1,11 @@
 #!/bin/bash -e
 
-export VER=1.3.6
+export VER=1.3.7
 export DEST=/binary/tdb-${VER}
+
+pushd tdb-${VER}
+  patch -Np1 -i /media/ntfs/Other/Linux/patches/tdb-fixes.patch
+popd
 
 cp -a tdb-${VER} tdb-${VER}-32
 

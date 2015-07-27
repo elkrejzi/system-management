@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.7.3
+export VER=2.8
 export DEST=/binary/python-jinja2-${VER}
 
 cp -a Jinja2-${VER} Jinja2-${VER}-3

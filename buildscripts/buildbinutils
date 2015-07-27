@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.25
+export VER=2.25.1
 export DEST=/binary/binutils-${VER}
 
 mv binutils-${VER} src

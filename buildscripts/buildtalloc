@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.1.2
+export VER=2.1.3
 export DEST=/binary/talloc-${VER}
 
 pushd talloc-${VER}
