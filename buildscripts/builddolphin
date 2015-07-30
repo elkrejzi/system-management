@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=14.12.2-291-g8d2a8a0
+export VER=15.07.80
 export DEST=/binary/dolphin-${VER}
 
 pushd dolphin-${VER}
@@ -11,8 +11,8 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr \
       -DLIB_INSTALL_DIR=lib       \
       -DBUILD_TESTING=OFF         \
       -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
-      -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"      \
-      -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"    \
+      -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
       -Wno-dev
 
 make -j4

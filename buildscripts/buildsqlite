@@ -1,17 +1,18 @@
 #!/bin/bash -e
 
-export VER=3.8.11
-export PKGVER=3081100
+export VER=3.8.11,1
+export PKGVER=3081101
 export DEST=/binary/sqlite-${VER}
 
 pushd sqlite-autoconf-${PKGVER}
 
 ./configure --prefix=/usr --disable-static \
-            CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong\
-           -DSQLITE_ENABLE_FTS3=1 \
-           -DSQLITE_ENABLE_COLUMN_METADATA=1 \
-           -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 \
-           -DSQLITE_SECURE_DELETE=1"
+            CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong \
+            -DSQLITE_ENABLE_FTS3=1 \
+            -DSQLITE_ENABLE_COLUMN_METADATA=1 \
+            -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 \
+            -DSQLITE_ENABLE_DBSTAT_VTAB=1 \
+            -DSQLITE_SECURE_DELETE=1"
 
 make -j4
 make install DESTDIR=${DEST}
@@ -38,10 +39,11 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 ./configure --prefix=/usr       \
             --libdir=/usr/lib32 \
             --disable-static    \
-            CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong\
+            CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong \
             -DSQLITE_ENABLE_FTS3=1 \
             -DSQLITE_ENABLE_COLUMN_METADATA=1 \
             -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 \
+            -DSQLITE_ENABLE_DBSTAT_VTAB=1 \
             -DSQLITE_SECURE_DELETE=1"
 
 make -j4

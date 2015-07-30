@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=9.10.2-P2
+export VER=9.10.2-P3
 export DEST=/binary/bind-${VER}
 
 pushd bind-${VER}
@@ -8,8 +8,6 @@ pushd bind-${VER}
 if [ -f /media/ntfs/Other/Linux/patches/bind-fixes.patch ]; then
   patch -Np1 -i /media/ntfs/Other/Linux/patches/bind-fixes.patch
 fi
-
-export CC="clang" CXX="clang++"
 
 CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \

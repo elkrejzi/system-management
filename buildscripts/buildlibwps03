@@ -1,24 +1,24 @@
 #!/bin/bash -e
 
-export VER=2012.1
-export DEST=/binary/qhull-${VER}
+export VER=0.3.1
+export DEST=/binary/libwps-${VER}
 
-pushd qhull-${VER}
+pushd libwps-${VER}
 
-cmake -DCMAKE_INSTALL_PREFIX=/usr \
-      -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -fPIC"   \
-      -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -fPIC" \
-      -Wno-dev
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
+./configure --prefix=/usr --disable-static
 
 make -j4
 make install DESTDIR=${DEST}
 
 popd
 
-rm -rf qhull-${VER}
+rm -rf libwps-${VER}
 
-rm -rf ${DEST}/usr/share/doc
+find ${DEST} -name "*.la" -delete
+
+rm -rf ${DEST}/usr/share
 
 pushd ${DEST}
 

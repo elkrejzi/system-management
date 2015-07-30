@@ -5,8 +5,8 @@ export DEST=/binary/libproxy-${VER}
 
 pushd libproxy-${VER}
 
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
       -DCMAKE_SKIP_RPATH=ON       \
       -DPERL_VENDORINSTALL=yes    \
       -DWITH_WEBKIT=OFF           \

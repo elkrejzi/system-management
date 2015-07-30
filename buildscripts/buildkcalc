@@ -1,15 +1,14 @@
 #!/bin/bash -e
 
-export VER=0.8.0
-export DEST=/binary/libqzeitgeist-${VER}
+export VER=15.07.80
+export DEST=/binary/kcalc-${VER}
 
-pushd libqzeitgeist-${VER}
+pushd kcalc-${VER}
 
-patch -Np1 -i /media/ntfs/Other/Linux/patches/libqzeitgeist-fixes.patch
-
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
-      -DDECLARATIVE_IMPORT_PREFIX=/usr/lib/qt4/imports          \
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
+      -DLIB_INSTALL_DIR=lib       \
+      -DBUILD_TESTING=OFF         \
       -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
       -Wno-dev
@@ -19,7 +18,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf libqzeitgeist-${VER}
+rm -rf kcalc-${VER}
 
 pushd ${DEST}
 
@@ -36,6 +35,7 @@ cat > ${DEST}/INSTALL << "EOF"
 
 cp -rf --remove-destination usr /
 
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 

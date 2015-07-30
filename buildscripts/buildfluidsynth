@@ -5,8 +5,8 @@ export DEST=/binary/fluidsynth-${VER}
 
 pushd fluidsynth-${VER}
 
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
       -Denable-ladspa=ON \
       -DLIB_SUFFIX=""    \
       -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"

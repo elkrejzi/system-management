@@ -1,18 +1,18 @@
 #!/bin/bash -e
 
-export VER=14.12.2-412-g79b4d66
-export DEST=/binary/kde-baseapps-${VER}
+export VER=15.07.80
+export DEST=/binary/kwalletmanager-${VER}
 
-pushd kde-baseapps-${VER}
+pushd kwalletmanager-${VER}
 
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
       -DSYSCONF_INSTALL_DIR=/etc  \
       -DLIB_INSTALL_DIR=lib       \
       -DBUILD_TESTING=OFF         \
       -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
-      -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"      \
-      -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"    \
+      -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
       -Wno-dev
 
 make -j4
@@ -20,7 +20,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf kde-baseapps-${VER}
+rm -rf kwalletmanager-${VER}
 
 pushd ${DEST}
 
@@ -39,8 +39,6 @@ for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
 
 [ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
 [ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
-[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
-[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 
 chmod 755 ${DEST}/INSTALL

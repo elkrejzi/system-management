@@ -6,7 +6,6 @@ plasmas=(
   kde-cli-tools
   kdecoration
   kfilemetadata
-  kio-extras
   kwayland
   libkscreen
   libksysguard

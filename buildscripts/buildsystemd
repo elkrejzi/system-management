@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=222
+export VER=223
 export DEST=/binary/systemd-${VER}
 
 pushd systemd-${VER}

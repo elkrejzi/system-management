@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.4.6
+export VER=2.5.0
 export DEST=/binary/git-${VER}
 
 pushd git-${VER}

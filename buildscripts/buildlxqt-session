@@ -5,8 +5,8 @@ export DEST=/binary/lxqt-session-${VER}
 
 pushd lxqt-session-${VER}
 
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
       -DLIB_SUFFIX=""             \
       -DUSE_QT5=ON                \
       -DBUNDLE_XDG_UTILS=NO       \

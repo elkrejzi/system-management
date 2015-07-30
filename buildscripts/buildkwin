@@ -5,8 +5,8 @@ export DEST=/binary/kwin-${VER}
 
 pushd kwin-${VER}
 
-cmake -DCMAKE_BUILD_TYPE=Release    \
-      -DCMAKE_INSTALL_PREFIX=/usr   \
+cmake -DCMAKE_INSTALL_PREFIX=/usr   \
+      -DCMAKE_BUILD_TYPE=Release    \
       -DSYSCONF_INSTALL_DIR=/etc    \
       -DLIB_INSTALL_DIR=lib         \
       -DBUILD_TESTING=OFF           \

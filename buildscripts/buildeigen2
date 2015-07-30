@@ -9,8 +9,8 @@ wget https://bitbucket.org/eigen/eigen/get/${VER}.tar.bz2 -O - | tar xfj - --str
 
 pushd eigen-${VER}
 
-cmake -DCMAKE_BUILD_TYPE=Release  \
-      -DCMAKE_INSTALL_PREFIX=/usr \
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
       -Wno-dev
 
 make -j4
