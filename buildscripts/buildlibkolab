@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.4.1-126-g779b8f9
+export VER=1.0.1
 export DEST=/binary/libkolab-${VER}
 
 pushd libkolab-${VER}

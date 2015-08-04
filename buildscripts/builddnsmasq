@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.73
+export VER=2.75
 export DEST=/binary/dnsmasq-${VER}
 
 pushd dnsmasq-${VER}

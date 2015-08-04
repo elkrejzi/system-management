@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.48
+export VER=1.49
 export DEST=/binary/perl-archive-zip-${VER}
 
 pushd Archive-Zip-${VER}

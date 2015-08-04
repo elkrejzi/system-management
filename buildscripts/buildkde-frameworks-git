@@ -30,6 +30,7 @@ frameworks=(
   kcompletion
   kcrash
   kdoctools
+  kfilemetadata
   kpty
   kunitconversion
   kconfigwidgets
@@ -47,6 +48,7 @@ frameworks=(
   kxmlgui
   kbookmarks
   kio
+  baloo
   frameworkintegration
   kdeclarative
   kinit

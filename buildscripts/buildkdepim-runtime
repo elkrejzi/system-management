@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.77.0
+export VER=5.0.40
 export DEST=/binary/kdepim-runtime-${VER}
 
 pushd kdepim-runtime-${VER}
@@ -9,6 +9,7 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr \
       -DCMAKE_BUILD_TYPE=Release  \
       -DSYSCONF_INSTALL_DIR=/etc  \
       -DLIB_INSTALL_DIR=lib       \
+      -DBUILD_TESTING=OFF         \
       -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
       -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \

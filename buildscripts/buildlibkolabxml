@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.8.1-103-g06823bc
+export VER=1.1.1
 export DEST=/binary/libkolabxml-${VER}
 
 pushd libkolabxml-${VER}

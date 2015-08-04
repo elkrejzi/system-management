@@ -1,16 +1,14 @@
 #!/bin/bash -e
 
-export VER=5.9.2
-export DEST=/binary/baloo-${VER}
+export VER=
+export DEST=/binary/kwayland-integration #-${VER}
 
-pushd baloo-${VER}
+pushd kwayland-integration #-${VER}
 
-cmake -DCMAKE_INSTALL_PREFIX=/usr   \
-      -DCMAKE_BUILD_TYPE=Release    \
-      -DSYSCONF_INSTALL_DIR=/etc    \
-      -DLIB_INSTALL_DIR=lib         \
-      -DBUILD_TESTING=OFF           \
-      -DQML_INSTALL_DIR=lib/qt5/qml \
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
+      -DLIB_INSTALL_DIR=lib       \
+      -DBUILD_TESTING=OFF         \
       -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
       -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
@@ -21,7 +19,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf baloo-${VER}
+rm -rf kwayland-integration #-${VER}
 
 pushd ${DEST}
 
@@ -36,10 +34,7 @@ popd
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
-for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
-
-[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
-[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+cp -rf --remove-destination usr /
 EOF
 
 chmod 755 ${DEST}/INSTALL
