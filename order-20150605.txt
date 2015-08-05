@@ -1748,6 +1748,220 @@ Updated to kdeplasma-addons-5.3.90 (git snapshot)
 
 # Begin Thu Jul 23 16:13:25 UTC 2015
 
-
+Updated to appstream-glib-0.4.1
+Updated to binutils-2.25.1
+Updated to caja-1.10.3
+Updated to chromium-44.0.2403.89
+Updated to dbus-1.8.20
+Updated to ffmpeg-2.7.2
+Updated to gdk-pixbuf-2.31.5
+Updated to gettext-0.19.5.1
+Updated to gnome-control-center-3.16.3
+Updated to gnome-settings-daemon-3.16.3
+Updated to gtk+-3.16.6
+Updated to mate-sensors-applet-1.10.4
+Updated to postfix-3.0.2
+Updated to sudo-1.8.14p3
+Updated to talloc-2.1.3
+Updated to tdb-1.3.7
+Updated to unrar-5.3.1
 
 # End Thu Jul 23 19:34:00 UTC 2015
+
+# Begin Mon Jul 27 15:02:33 UTC 2015
+
+Updated to chromium-44.0.2403.107
+Updated to chromium-pepper-flash-18.0.0.209
+Updated to cmake-3.3.0
+Updated to harfbuzz-1.0.1
+Updated to ldb-1.1.21
+Updated to linux-4.1.3-krejzi
+Updated to LVM2-2.02.126
+Updated to man-pages-4.01
+Updated to mesa-10.6.3
+Updated to pango-1.37.2
+Updated to perl-uri-1.69
+Updated to python-babel-2.0
+Updated to python-jinja2-2.8
+Updated to python-sip-4.16.9
+Updated to sqlite-3.8.11
+
+# End Mon Jul 27 18:37:41 UTC 2015
+
+# Begin Thu Jul 30 10:54:11 UTC 2015
+
+libwps-0.4.0, installed side by side with libwps-0.3.1
+
+Updated to baloo-widgets-15.07.80
+Updated to bind-9.10.2-P3
+Updated to bluez-5.33
+Updated to chromium-44.0.2403.125
+Updated to dolphin-15.07.80
+Updated to git-2.5.0
+Updated to kate-15.07.80
+Updated to kio-extras-15.07.80
+Updated to kmix-15.07.80
+Updated to konsole-15.07.80
+Updated to libvisio-0.1.3
+Updated to libreoffice-5.0.0.4
+Updated to sqlite-3.8.11,1
+Updated to systemd-223
+Updated to whois-5.2.10
+Updated to wine-1.7.48
+Updated to xfsprogs-3.2.4
+
+ark-15.07.80
+gwenview-15.07.80
+kcalc-15.07.80
+kwalletmanager-15.07.80
+
+Updated to attica-5.13.0 (git snapshot)
+Updated to bluez-qt-5.13.0 (git snapshot)
+Updated to kapidox-5.13.0 (git snapshot)
+Updated to karchive-5.13.0 (git snapshot)
+Updated to kcodecs-5.13.0 (git snapshot)
+Updated to kconfig-5.13.0 (git snapshot)
+Updated to kcoreaddons-5.13.0 (git snapshot)
+Updated to kdbusaddons-5.13.0 (git snapshot)
+Updated to kdnssd-5.13.0 (git snapshot)
+Updated to kguiaddons-5.13.0 (git snapshot)
+Updated to ki18n-5.13.0 (git snapshot)
+Updated to kidletime-5.13.0 (git snapshot)
+Updated to kimageformats-5.13.0 (git snapshot)
+Updated to kitemmodels-5.13.0 (git snapshot)
+Updated to kitemviews-5.13.0 (git snapshot)
+Updated to kplotting-5.13.0 (git snapshot)
+Updated to kwidgetsaddons-5.13.0 (git snapshot)
+Updated to kwindowsystem-5.13.0 (git snapshot)
+Updated to modemmanager-qt-5.13.0 (git snapshot)
+Updated to networkmanager-qt-5.13.0 (git snapshot)
+Updated to solid-5.13.0 (git snapshot)
+Updated to sonnet-5.13.0 (git snapshot)
+Updated to threadweaver-5.13.0 (git snapshot)
+Updated to kauth-5.13.0 (git snapshot)
+Updated to kcompletion-5.13.0 (git snapshot)
+Updated to kcrash-5.13.0 (git snapshot)
+Updated to kdoctools-5.13.0 (git snapshot)
+Updated to kpty-5.13.0 (git snapshot)
+Updated to kunitconversion-5.13.0 (git snapshot)
+Updated to kconfigwidgets-5.13.0 (git snapshot)
+Updated to kglobalaccel-5.13.0 (git snapshot)
+Updated to kpackage-5.13.0 (git snapshot)
+Updated to kservice-5.13.0 (git snapshot)
+Updated to kdesu-5.13.0 (git snapshot)
+Updated to kemoticons-5.13.0 (git snapshot)
+Updated to kiconthemes-5.13.0 (git snapshot)
+Updated to kjobwidgets-5.13.0 (git snapshot)
+Updated to kpeople-5.13.0 (git snapshot)
+Updated to knotifications-5.13.0 (git snapshot)
+Updated to ktextwidgets-5.13.0 (git snapshot)
+Updated to kwallet-5.13.0 (git snapshot)
+Updated to kxmlgui-5.13.0 (git snapshot)
+Updated to kbookmarks-5.13.0 (git snapshot)
+Updated to kio-5.13.0 (git snapshot)
+Updated to frameworkintegration-5.13.0 (git snapshot)
+Updated to kdeclarative-5.13.0 (git snapshot)
+Updated to kinit-5.13.0 (git snapshot)
+Updated to knewstuff-5.13.0 (git snapshot)
+Updated to knotifyconfig-5.13.0 (git snapshot)
+Updated to kparts-5.13.0 (git snapshot)
+Updated to kxmlrpcclient-5.13.0 (git snapshot)
+Updated to kcmutils-5.13.0 (git snapshot)
+Updated to kded-5.13.0 (git snapshot)
+Updated to kdewebkit-5.13.0 (git snapshot)
+Updated to ktexteditor-5.13.0 (git snapshot)
+Updated to kactivities-5.13.0 (git snapshot)
+Updated to kdesignerplugin-5.13.0 (git snapshot)
+Updated to plasma-framework-5.13.0 (git snapshot)
+Updated to kjs-5.13.0 (git snapshot)
+Updated to kdelibs4support-5.13.0 (git snapshot)
+Updated to khtml-5.13.0 (git snapshot)
+Updated to kjsembed-5.13.0 (git snapshot)
+Updated to kmediaplayer-5.13.0 (git snapshot)
+Updated to kross-5.13.0 (git snapshot)
+Updated to krunner-5.13.0 (git snapshot)
+Updated to kde-cli-tools-5.3.90 (git snapshot)
+Updated to kdecoration-5.3.90 (git snapshot)
+Updated to kfilemetadata-5.9.90 (git snapshot)
+Updated to kwayland-5.3.90 (git snapshot)
+Updated to libkscreen-5.3.90 (git snapshot)
+Updated to libksysguard-5.3.90 (git snapshot)
+Updated to baloo-5.9.90 (git snapshot)
+Updated to breeze-5.3.90 (git snapshot)
+Updated to kwin-5.3.90 (git snapshot)
+Updated to oxygen-5.3.90 (git snapshot)
+Updated to oxygen-fonts-5.3.90 (git snapshot)
+Updated to khelpcenter-5.3.90 (git snapshot)
+Updated to kinfocenter-5.3.90 (git snapshot)
+Updated to ksysguard-5.3.90 (git snapshot)
+Updated to systemsettings-5.3.90 (git snapshot)
+Updated to plasma-workspace-5.3.90 (git snapshot)
+Updated to bluedevil-5.3.90 (git snapshot)
+Updated to kde-gtk-config-5.3.90 (git snapshot)
+Updated to khotkeys-5.3.90 (git snapshot)
+Updated to kmenuedit-5.3.90 (git snapshot)
+Updated to kscreen-5.3.90 (git snapshot)
+Updated to kwrited-5.3.90 (git snapshot)
+Updated to milou-5.3.90 (git snapshot)
+Updated to plasma-nm-5.3.90 (git snapshot)
+Updated to plasma-workspace-wallpapers-5.3.90 (git snapshot)
+Updated to polkit-kde-agent-5.3.90 (git snapshot)
+Updated to powerdevil-5.3.90 (git snapshot)
+Updated to plasma-desktop-5.3.90 (git snapshot)
+Updated to kdeplasma-addons-5.3.90 (git snapshot)
+
+# End Thu Jul 30 21:58:59 UTC 2015
+
+# Begin Tue Aug  4 19:08:21 UTC 2015
+
+Updated to check-0.10.0
+Updated to cups-2.0.4
+Updated to dnsmasq-2.75
+Updated to gparted-0.23.0
+Updated to hplip-3.15.7
+Updated to iso-codes-3.60
+Updated to libidn-1.32
+Updated to libinput-0.21.0
+Updated to libkolabxml-1.1.1
+Updated to libpng-1.6.18
+Updated to libsecret-0.18.3
+Updated to libvirt-1.2.18
+Updated to libvirt-glib-0.2.2
+Updated to libvirt-python-1.2.18
+Updated to linux-4.1.4-krejzi
+Updated to mpg123-1.22.3
+Updated to perl-archive-zip-1.49
+Updated to python-setuptools-18.1
+Updated to scons-2.3.6
+Updated to swig-3.0.7
+Updated to systemd-224
+Updated to xf86-input-libinput-0.13.0
+
+Removed libkolab-0.4.1-126-g779b8f9
+
+Updated to akonadi-5.1.50 (git snapshot)
+Updated to gpgmepp-4.79.0 (git snapshot)
+Updated to kcalcore-4.81.0 (git snapshot)
+Updated to kcontacts-4.91.0 (git snapshot)
+Updated to kholidays-4.79.0 (git snapshot)
+Updated to kldap-4.80.0 (git snapshot)
+Updated to kmime-4.83.0 (git snapshot)
+Updated to kontactinterface-4.81.0 (git snapshot)
+Updated to kpimtextedit-4.84.0 (git snapshot)
+Updated to syndication-4.79.0 (git snapshot)
+Updated to kblog-4.79.0 (git snapshot)
+Updated to kidentitymanagement-4.81.0 (git snapshot)
+Updated to kimap-4.82.0 (git snapshot)
+Updated to kmbox-4.79.0 (git snapshot)
+Updated to kcalutils-4.80.0 (git snapshot)
+Updated to ktnef-4.79.0 (git snapshot)
+Updated to kdepimlibs-5.0.41 (git snapshot)
+Updated to akonadi-search-4.87.0 (git snapshot)
+Updated to kalarmcal-4.79.0 (git snapshot)
+Updated to kmailtransport-4.81.0 (git snapshot)
+Updated to akonadi-calendar-4.80.0 (git snapshot)
+Updated to libkgapi-4.80.0
+Updated to kdepim-runtime-5.0.40 (git snapshot)
+Updated to kdepim-5.0.41 (git snapshot)
+
+# End Tue Aug  4 21:21:42 UTC 2015
