@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVERSION=5.6.11
+export PKGVERSION=5.6.12
 export DEST=/binary/php-${PKGVERSION}
 
 export EXTENSION_DIR=/usr/lib/php/modules

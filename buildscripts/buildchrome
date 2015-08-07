@@ -6,15 +6,15 @@ export DEST=/binary/chromium-${PKGVER}
 export -n CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
 export -n CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
 
-export CC=clang
-export CXX=clang++
+#export CC=clang
+#export CXX=clang++
 
 chromium_conf=(
     -Dgoogle_api_key=AIzaSyCnwAWeKPGN7pGmQJyDitvcb1uTSlE2R1w
     -Dgoogle_default_client_id=11433373901.apps.googleusercontent.com
     -Dgoogle_default_client_secret=xZ5yO6MG_uMyrh0srUAkJ4KG
     -Dwerror=
-    -Dclang=1
+    -Dclang=0
     -Dclang_use_chrome_plugins=0
     -Dpython_ver=2.7
     -Dlinux_link_gsettings=1
@@ -75,10 +75,12 @@ case "$1" in
             patch -Np1 -i /media/ntfs/Other/Linux/patches/chromium-fixes.patch
          fi
 
-        mkdir -p third_party/llvm-build/Release+Asserts/bin
-        ln -sf /usr/bin/clang third_party/llvm-build/Release+Asserts/bin/
-        ln -sf /usr/bin/clang++ third_party/llvm-build/Release+Asserts/bin/
-        ln -sf /usr/bin/llvm-symbolizer third_party/llvm-build/Release+Asserts/bin/
+         sed -i "/POSIX_SOURCE/i #define _GNU_SOURCE" third_party/boringssl/src/crypto/bio/socket_helper.c
+
+         #mkdir -p third_party/llvm-build/Release+Asserts/bin
+         #ln -sf /usr/bin/clang third_party/llvm-build/Release+Asserts/bin/
+         #ln -sf /usr/bin/clang++ third_party/llvm-build/Release+Asserts/bin/
+         #ln -sf /usr/bin/llvm-symbolizer third_party/llvm-build/Release+Asserts/bin/
 
       popd
    ;;
