@@ -6,6 +6,7 @@ export DEST=/binary/firefox-${VER}
 pushd mozilla-release
 
 sed -i "s:-\$(MOZ_APP_VERSION)::g" config/baseconfig.mk
+sed -i '/^ftglyph.h/ i ftfntfmt.h' config/system-headers
 
 cat > mozconfig << "EOF"
 ac_add_options --enable-application=browser

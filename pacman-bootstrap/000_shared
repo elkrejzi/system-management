@@ -129,7 +129,6 @@ https://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2/libcap-${LIBC
 http://http.debian.net/debian/pool/main/f/fakeroot/fakeroot_${FAKEROOT_VER}.orig.tar.bz2
 https://sources.archlinux.org/other/pacman/pacman-${PACMAN_VER}.tar.gz
 https://raw.githubusercontent.com/elkrejzi/system-management/master/patches/gcc-pure64.patch
-https://raw.githubusercontent.com/elkrejzi/system-management/master/patches/glibc-fixes.patch
 https://raw.githubusercontent.com/elkrejzi/system-management/master/patches/glibc-pure64.patch
 EOF
 

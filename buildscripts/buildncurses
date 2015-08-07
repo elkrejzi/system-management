@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.9-20150530
+export VER=6.0-20150725
 export DEST=/binary/ncurses-${VER}
 
 pushd ncurses-${VER}
@@ -20,8 +20,7 @@ CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-st
              --without-debug \
              --enable-pc-files \
              --enable-widec \
-             --enable-ext-colors \
-             --enable-ext-mouse
+             --with-abi-version=6
 
 make -j4
 make install DESTDIR=${DEST}
@@ -37,7 +36,8 @@ CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-st
              --mandir=/usr/share/man \
              --with-shared \
              --without-debug \
-             --enable-widec
+             --enable-widec \
+             --with-abi-version=5
 
 make -j4
 
@@ -57,7 +57,8 @@ CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-st
              --mandir=/usr/share/man \
              --with-shared \
              --without-debug \
-             --with-chtype=long
+             --with-chtype=long \
+             --with-abi-version=5
 
 make -j4
 
@@ -84,8 +85,7 @@ CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-st
              --without-debug \
              --enable-pc-files \
              --enable-widec \
-             --enable-ext-colors \
-             --enable-ext-mouse
+             --with-abi-version=6
 
 make -j4
 make install DESTDIR=${PWD}/dest
@@ -103,7 +103,8 @@ CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-st
              --mandir=/usr/share/man \
              --with-shared \
              --without-debug \
-             --enable-widec
+             --enable-widec \
+             --with-abi-version=5
 
 make -j4
 
@@ -123,7 +124,8 @@ CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-st
              --mandir=/usr/share/man \
              --with-shared \
              --without-debug \
-             --with-chtype=long
+             --with-chtype=long \
+             --with-abi-version=5
 
 make -j4
 

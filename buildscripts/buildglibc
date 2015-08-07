@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.21
+export VER=2.22
 export DEST=/binary/glibc-${VER}
 
 mv glibc-${VER} src

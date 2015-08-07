@@ -1,18 +1,15 @@
 #!/bin/bash -e
 
-export VER=15.07.80
-export DEST=/binary/kmix-${VER}
+export VER=
+export DEST=/binary/plasma-pa #-${VER}
 
-pushd kmix-${VER}
-
-sed -i "s:\${ECM_MODULE_PATH}:\${CMAKE_SOURCE_DIR}/cmake/modules &:g" CMakeLists.txt
+pushd plasma-pa #-${VER}
 
 cmake -DCMAKE_INSTALL_PREFIX=/usr \
       -DCMAKE_BUILD_TYPE=Release  \
-      -DSYSCONF_INSTALL_DIR=/etc  \
       -DLIB_INSTALL_DIR=lib       \
       -DBUILD_TESTING=OFF         \
-      -DKMIX_KF5_BUILD=1          \
+      -DQML_INSTALL_DIR=lib/qt5/qml           \
       -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
       -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
@@ -23,7 +20,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf kmix-${VER}
+rm -rf plasma-pa #-${VER}
 
 pushd ${DEST}
 
@@ -38,10 +35,8 @@ popd
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
-for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+cp -rf --remove-destination usr /
 
-[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
-[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 

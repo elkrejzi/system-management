@@ -9,6 +9,7 @@ CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-stro
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr     \
             --sysconfdir=/etc \
+            --with-platform=gtk-only \
             --with-card-theme-formats=all \
             --with-kde-card-theme-path=/usr/share/apps/carddecks \
             --with-pysol-card-theme-path=/usr/share/PySolFC
@@ -33,9 +34,8 @@ popd
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
-for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+cp -rf --remove-destination usr /
 
-[ -x /usr/bin/gconftool-2 ] && echo "Processing triggers for gconf-2" && for schema in etc/gconf/schemas/*.schemas ; do GCONF_CONFIG_SOURCE=xml:merged:/etc/gconf/gconf.xml.defaults /usr/bin/gconftool-2 --makefile-install-rule /$schema > /dev/null ; done
 [ -x /usr/bin/glib-compile-schemas ] && echo "Processing triggers for glib-2.0" && /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas
 [ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
 [ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database

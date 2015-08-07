@@ -27,6 +27,7 @@ export CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"
             -system-harfbuzz        \
             -system-sqlite          \
             -nomake examples        \
+            -no-reduce-relocations  \
             -no-rpath               \
             -no-strip               \
             -no-separate-debug-info \

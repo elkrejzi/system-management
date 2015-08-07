@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.12.8
+export VER=0.12.9
 export DEST=/binary/spice-protocol-${VER}
 
 pushd spice-protocol-${VER}

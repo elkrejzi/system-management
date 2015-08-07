@@ -6,6 +6,7 @@ export DEST=/binary/thunderbird-${VER}
 pushd comm-esr38
 
 sed -i "s:-\$(MOZ_APP_VERSION)::g" config/baseconfig.mk mozilla/config/baseconfig.mk
+sed -i '/^ftglyph.h/ i ftfntfmt.h' mozilla/config/system-headers
 
 cat > mozconfig << "EOF"
 ac_add_options --enable-application=mail

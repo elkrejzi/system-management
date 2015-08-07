@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.9.96-7-g0743659
+export VER=1.9.97.1-3-g2b496e4
 export DEST=/binary/kscreengenie-${VER}
 
 pushd kscreengenie-${VER}

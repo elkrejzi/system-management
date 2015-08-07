@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.19.6
+export VER=0.19.7
 export DEST=/binary/fribidi-${VER}
 
 pushd fribidi-${VER}

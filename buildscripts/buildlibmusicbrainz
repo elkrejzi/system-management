@@ -1,15 +1,15 @@
 #!/bin/bash -e
 
-export VER=2.1.5
+export VER=5.1.0
 export DEST=/binary/libmusicbrainz-${VER}
 
 pushd libmusicbrainz-${VER}
 
-patch -Np1 -i /media/ntfs/Other/Linux/patches/libmusicbrainz-fixes.patch
-
-CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr --disable-static
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
+      -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
+      -Wno-dev
 
 make -j4
 make install DESTDIR=${DEST}
@@ -17,8 +17,6 @@ make install DESTDIR=${DEST}
 popd
 
 rm -rf libmusicbrainz-${VER}
-
-find ${DEST} -name "*.la" -delete
 
 pushd ${DEST}
 

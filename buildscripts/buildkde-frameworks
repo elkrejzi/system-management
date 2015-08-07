@@ -34,6 +34,7 @@ frameworks=(
   kcrash
   kdoctools
   kfilemetadata
+  knotifications
   kpty
   kunitconversion
   kconfigwidgets
@@ -45,7 +46,6 @@ frameworks=(
   kiconthemes
   kjobwidgets
   kpeople
-  knotifications
   ktextwidgets
   kwallet
   kxmlgui

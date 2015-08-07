@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.8.11,1
+export VER=3.8.11.1
 export PKGVER=3081101
 export DEST=/binary/sqlite-${VER}
 

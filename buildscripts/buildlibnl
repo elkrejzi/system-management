@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.2.25
+export VER=3.2.26
 export DEST=/binary/libnl-${VER}
 
 pushd libnl-${VER}

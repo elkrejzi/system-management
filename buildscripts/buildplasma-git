@@ -5,11 +5,9 @@ export DEST=/binary/plasma
 plasmas=(
   kde-cli-tools
   kdecoration
-  kfilemetadata
   kwayland
   libkscreen
   libksysguard
-  baloo
   breeze
   kwin
   oxygen
@@ -24,15 +22,16 @@ plasmas=(
   khotkeys
   kmenuedit
   kscreen
+  kwayland-integration
   kwrited
   milou
   plasma-nm
+  plasma-pa
   plasma-workspace-wallpapers
   polkit-kde-agent-1
   powerdevil
   plasma-desktop
-  kdeplasma-addons
- )
+  kdeplasma-addons )
 
 for plasma in ${plasmas[@]}
 do

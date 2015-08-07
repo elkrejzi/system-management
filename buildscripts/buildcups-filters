@@ -7,6 +7,9 @@ pushd cups-filters-${VER}
 
 sed -i "s:cups.service:org.cups.cupsd.service:g" utils/cups-browsed.service
 
+sed -i "/maskSplash->drawImage/s#&imgMaskData#NULL, &#g" filter/pdftoopvp/OPVPOutputDev.cxx
+sed -i "/splash->drawImage/s#srcData#NULL,&#g" filter/pdftoopvp/oprs/OPRS.cxx
+
 # Uses libpoppler.so
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \

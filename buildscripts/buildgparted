@@ -7,7 +7,7 @@ pushd gparted-${VER}
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr
+./configure --prefix=/usr --disable-doc
 
 make -j4
 make install DESTDIR=${DEST}
