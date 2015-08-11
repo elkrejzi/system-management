@@ -1,16 +1,15 @@
 #!/bin/bash -e
 
-export VER=1.0.1
-export DEST=/binary/libkolab-${VER}
+export VER=15.07.90
+export DEST=/binary/kdebugsettings-${VER}
 
-pushd libkolab-${VER}
-
-patch -Np1 -i /media/ntfs/Other/Linux/patches/libkolab-fixes.patch
+pushd kdebugsettings-${VER}
 
 cmake -DCMAKE_INSTALL_PREFIX=/usr \
       -DCMAKE_BUILD_TYPE=Release  \
-      -DBUILD_TESTS=OFF           \
-      -DCMAKE_SKIP_RPATH=ON       \
+      -DSYSCONF_INSTALL_DIR=/etc  \
+      -DLIB_INSTALL_DIR=lib       \
+      -DBUILD_TESTING=OFF         \
       -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
       -Wno-dev
@@ -20,7 +19,7 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf libkolab-${VER}
+rm -rf kdebugsettings-${VER}
 
 pushd ${DEST}
 
@@ -35,9 +34,9 @@ popd
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
-cp -rf --remove-destination usr /
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
 
-[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
 EOF
 
 chmod 755 ${DEST}/INSTALL

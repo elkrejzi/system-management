@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=39.0.3
+export VER=40.0
 export DEST=/binary/firefox-${VER}
 
 pushd mozilla-release

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.40.9
+export VER=2.40.10
 export DEST=/binary/librsvg-${VER}
 
 pushd librsvg-${VER}

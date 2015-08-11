@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.34.0
+export VER=0.35.0
 export DEST=/binary/poppler-${VER}
 
 cp -a poppler-${VER} poppler-${VER}-static

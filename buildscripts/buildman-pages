@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.01
+export VER=4.02
 export DEST=/binary/man-pages-${VER}
 
 pushd man-pages-${VER}

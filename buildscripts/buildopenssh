@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=6.9p1
+export VER=7.0p1
 export DEST=/binary/openssh-${VER}
 
 pushd openssh-${VER}
@@ -84,15 +84,12 @@ cat > ${DEST}/etc/ssh/ssh_config << "EOF"
 Host *
 #   ForwardAgent no
 #   ForwardX11 no
-#   ForwardX11Trusted yes
 #   RhostsRSAAuthentication no
 #   RSAAuthentication yes
 #   PasswordAuthentication yes
 #   HostbasedAuthentication no
 #   GSSAPIAuthentication no
 #   GSSAPIDelegateCredentials no
-#   GSSAPIKeyExchange no
-#   GSSAPITrustDNS no
 #   BatchMode no
 #   CheckHostIP yes
 #   AddressFamily any
@@ -112,10 +109,7 @@ Host *
 #   PermitLocalCommand no
 #   VisualHostKey no
 #   ProxyCommand ssh -q -W %h:%p gateway.example.com
-#   GSSAPIAuthentication yes
-#   GSSAPIDelegateCredentials no
-    SendEnv LANG LC_*
-    HashKnownHosts yes
+#   RekeyLimit 1G 1h
 EOF
 
 cat > ${DEST}/etc/ssh/sshd_config << "EOF"
@@ -127,61 +121,70 @@ cat > ${DEST}/etc/ssh/sshd_config << "EOF"
 # possible, but leave them commented.  Uncommented options override the
 # default value.
 
-Port 22
+#Port 22
 #AddressFamily any
 #ListenAddress 0.0.0.0
 #ListenAddress ::
 
 # The default requires explicit activation of protocol 1
-Protocol 2
+#Protocol 2
 
 # HostKey for protocol version 1
 #HostKey /etc/ssh/ssh_host_key
 # HostKeys for protocol version 2
-HostKey /etc/ssh/ssh_host_rsa_key
-HostKey /etc/ssh/ssh_host_dsa_key
-HostKey /etc/ssh/ssh_host_ecdsa_key
+#HostKey /etc/ssh/ssh_host_rsa_key
+#HostKey /etc/ssh/ssh_host_dsa_key
+#HostKey /etc/ssh/ssh_host_ecdsa_key
+#HostKey /etc/ssh/ssh_host_ed25519_key
 
 # Lifetime and size of ephemeral version 1 server key
-KeyRegenerationInterval 3600
-ServerKeyBits 768
+#KeyRegenerationInterval 1h
+#ServerKeyBits 1024
+
+# Ciphers and keying
+#RekeyLimit default none
 
 # Logging
-SyslogFacility AUTH
-LogLevel INFO
+# obsoletes QuietMode and FascistLogging
+#SyslogFacility AUTH
+#LogLevel INFO
 
 # Authentication:
 
-LoginGraceTime 120
-PermitRootLogin yes
-StrictModes yes
+#LoginGraceTime 2m
+#PermitRootLogin prohibit-password
+#StrictModes yes
+#MaxAuthTries 6
+#MaxSessions 10
 
-RSAAuthentication yes
-PubkeyAuthentication yes
+#RSAAuthentication yes
+#PubkeyAuthentication yes
 
 # The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2
 # but this is overridden so installations will only check .ssh/authorized_keys
-#AuthorizedKeysFile	.ssh/authorized_keys
+AuthorizedKeysFile	.ssh/authorized_keys
+
+#AuthorizedPrincipalsFile none
+
+#AuthorizedKeysCommand none
+#AuthorizedKeysCommandUser nobody
 
 # For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
-RhostsRSAAuthentication no
+#RhostsRSAAuthentication no
 # similar for protocol version 2
-HostbasedAuthentication no
+#HostbasedAuthentication no
 # Change to yes if you don't trust ~/.ssh/known_hosts for
 # RhostsRSAAuthentication and HostbasedAuthentication
-#IgnoreUserKnownHosts yes
-
+#IgnoreUserKnownHosts no
 # Don't read the user's ~/.rhosts and ~/.shosts files
-IgnoreRhosts yes
+#IgnoreRhosts yes
 
-# Change to no to disable tunnelled clear text passwords
-PasswordAuthentication no
-
-# To enable empty passwords, change to yes (NOT RECOMMENDED)
-PermitEmptyPasswords no
+# To disable tunneled clear text passwords, change to no here!
+#PasswordAuthentication yes
+#PermitEmptyPasswords no
 
 # Change to no to disable s/key passwords
-ChallengeResponseAuthentication no
+#ChallengeResponseAuthentication yes
 
 # Kerberos options
 #KerberosAuthentication no
@@ -192,8 +195,6 @@ ChallengeResponseAuthentication no
 # GSSAPI options
 #GSSAPIAuthentication no
 #GSSAPICleanupCredentials yes
-#GSSAPIStrictAcceptorCheck yes
-#GSSAPIKeyExchange no
 
 # Set this to 'yes' to enable PAM authentication, account processing,
 # and session processing. If this is enabled, PAM authentication will
@@ -206,20 +207,33 @@ ChallengeResponseAuthentication no
 # and ChallengeResponseAuthentication to 'no'.
 UsePAM yes
 
+#AllowAgentForwarding yes
+#AllowTcpForwarding yes
+#GatewayPorts no
 X11Forwarding yes
-X11DisplayOffset 10
-PrintMotd yes
-PrintLastLog yes
-TCPKeepAlive yes
+#X11DisplayOffset 10
+#X11UseLocalhost yes
+#PermitTTY yes
+#PrintMotd yes
+#PrintLastLog yes
+#TCPKeepAlive yes
 #UseLogin no
+UsePrivilegeSeparation sandbox		# Default for new installations.
+#PermitUserEnvironment no
+#Compression delayed
+#ClientAliveInterval 0
+#ClientAliveCountMax 3
+#UseDNS no
+#PidFile /var/run/sshd.pid
+#MaxStartups 10:30:100
+#PermitTunnel no
+#ChrootDirectory none
+#VersionAddendum none
 
-# For security
-UsePrivilegeSeparation yes
+Banner /etc/issue.net
 
-#MaxStartups 10:30:60
-#Banner /etc/issue.net
-
-Subsystem sftp /usr/libexec/sftp-server
+# override default of no subsystems
+Subsystem	sftp	/usr/libexec/sftp-server
 EOF
 
 cat > ${DEST}/usr/lib/tmpfiles.d/sshd.conf << "EOF"

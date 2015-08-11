@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=10.6.3
+export VER=10.6.4
 export DEST=/binary/mesa-${VER}
 
 pushd mesa-${VER}

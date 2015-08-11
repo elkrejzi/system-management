@@ -294,7 +294,7 @@ password include        system-password
 
 session  required       pam_limits.so
 session  include        system-session
--session  optional      pam_gnome_keyring.so auto_start
+-session optional       pam_gnome_keyring.so auto_start
 
 # End /etc/pam.d/lightdm
 EOF

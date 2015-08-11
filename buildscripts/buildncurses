@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=6.0-20150725
+export VER=6.0
 export DEST=/binary/ncurses-${VER}
 
 pushd ncurses-${VER}

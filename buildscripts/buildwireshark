@@ -23,16 +23,16 @@ CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-st
 ./configure --prefix=/usr     \
             --sysconfdir=/etc \
             --with-gtk3       \
-            --without-qt
+            --with-qt
 
 make -j4
 make install DESTDIR=${DEST}
 
 install -Dm644 wireshark.desktop ${DEST}/usr/share/applications/wireshark.desktop
 
-#install -Dm644 wireshark.desktop ${DEST}/usr/share/applications/wireshark-qt.desktop
-#sed -i "s:Exec.*wireshark:&-qt:g" ${DEST}/usr/share/applications/wireshark-qt.desktop
-#sed -i "s:Name.*Wireshark:& (Qt):g" ${DEST}/usr/share/applications/wireshark-qt.desktop
+install -Dm644 wireshark.desktop ${DEST}/usr/share/applications/wireshark-qt.desktop
+sed -i "s:Exec.*wireshark:&-qt:g" ${DEST}/usr/share/applications/wireshark-qt.desktop
+sed -i "s:Name.*Wireshark:& (Qt):g" ${DEST}/usr/share/applications/wireshark-qt.desktop
 
 for size in 16 24 32 48 64 128 256 ; do
     install -Dm644 image/wsicon${size}.png ${DEST}/usr/share/icons/hicolor/${size}x${size}/apps/wireshark.png
