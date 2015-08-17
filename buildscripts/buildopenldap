@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.4.41
+export VER=2.4.42
 export DEST=/binary/openldap-${VER}
 
 pushd openldap-${VER}

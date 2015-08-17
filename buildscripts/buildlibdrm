@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.4.62
+export VER=2.4.63
 export DEST=/binary/libdrm-${VER}
 
 pushd libdrm-${VER}
