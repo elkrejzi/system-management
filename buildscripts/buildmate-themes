@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.10.2
+export VER=1.10.4
 export GTKVER=3.16
 export DEST=/binary/mate-themes-${VER}
 

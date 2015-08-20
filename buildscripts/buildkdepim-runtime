@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.0.40
+export VER=15.08.0
 export DEST=/binary/kdepim-runtime-${VER}
 
 pushd kdepim-runtime-${VER}

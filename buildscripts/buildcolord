@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.2.11
+export VER=1.2.12
 export DEST=/binary/colord-${VER}
 
 pushd colord-${VER}

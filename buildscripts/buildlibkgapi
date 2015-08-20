@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.80.0
+export VER=5.0.0
 export DEST=/binary/libkgapi-${VER}
 
 pushd libkgapi-${VER}

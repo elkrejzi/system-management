@@ -1,22 +1,5 @@
---- a/CMakeLists.txt	2015-07-31 15:43:01.000000000 +0200
-+++ b/CMakeLists.txt	2015-08-10 16:07:20.833446822 +0200
-@@ -68,12 +68,13 @@
- endif()
- 
- set(KDEPIMLIBS_LIB_VERSION "4.71.0")
-+set(KMIME_LIB_VERSION "4.83.0")
- find_package(KF5Akonadi ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
- find_package(KF5Contacts ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
- find_package(KF5CalendarCore ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
- find_package(KF5CalendarUtils ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
--find_package(KF5Mime ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
- find_package(KF5AkonadiNotes ${KDEPIMLIBS_LIB_VERSION} CONFIG REQUIRED)
-+find_package(KF5Mime ${KMIME_LIB_VERSION} CONFIG REQUIRED)
- 
- find_package(SWIG)
- 
 --- a/conversion/kabcconversion.cpp	2015-07-31 15:43:01.000000000 +0200
-+++ b/conversion/kabcconversion.cpp	2015-08-10 16:07:15.618348910 +0200
++++ b/conversion/kabcconversion.cpp	2015-08-20 16:38:41.947928730 +0200
 @@ -488,7 +488,9 @@
        addressee.setTitle(fromStdString(contact.titles().at(0))); //TODO support multiple
    }
@@ -48,43 +31,8 @@
      if (!addressee.photo().isEmpty()) {
          std::string mimetype;
          const std::string &photo = fromPicture(addressee.photo(), mimetype);
---- a/icalendar/imip.cpp	2015-07-31 15:43:01.000000000 +0200
-+++ b/icalendar/imip.cpp	2015-08-10 16:07:20.833446822 +0200
-@@ -84,7 +84,7 @@
- 
-     if ( !attachment.isEmpty() ) {
-       KMime::Headers::ContentDisposition *disposition =
--        new KMime::Headers::ContentDisposition( message.get() );
-+        new KMime::Headers::ContentDisposition( message.data() );
-       disposition->setDisposition( KMime::Headers::CDinline );
-       message->setHeader( disposition );
-       message->contentTransferEncoding()->setEncoding( KMime::Headers::CEquPr );
---- a/kolabformat/mimeobject.cpp	2015-07-31 15:43:01.000000000 +0200
-+++ b/kolabformat/mimeobject.cpp	2015-08-10 16:07:20.833446822 +0200
-@@ -373,7 +373,7 @@
-     }
-     Kolab::ObjectType objectType = InvalidObject;
-     if (mOverrideObjectType == InvalidObject) {
--        if (KMime::Headers::Base *xKolabHeader = msg->getHeaderByType(X_KOLAB_TYPE_HEADER)) {
-+        if (KMime::Headers::Base *xKolabHeader = msg->headerByType(X_KOLAB_TYPE_HEADER)) {
-             objectType = getObjectType(xKolabHeader->asUnicodeString().trimmed().toStdString());
-         } else {
-             Warning() << "could not find the X-Kolab-Type Header, trying autodetection" ;
-@@ -390,10 +390,10 @@
-     }
- 
-     if (!mDoOverrideVersion) {
--        KMime::Headers::Base *xKolabVersion = msg->getHeaderByType(X_KOLAB_MIME_VERSION_HEADER);
-+        KMime::Headers::Base *xKolabVersion = msg->headerByType(X_KOLAB_MIME_VERSION_HEADER);
-         if (!xKolabVersion) {
-             //For backwards compatibility to development versions, can be removed in future versions
--            xKolabVersion = msg->getHeaderByType(X_KOLAB_MIME_VERSION_HEADER_COMPAT);
-+            xKolabVersion = msg->headerByType(X_KOLAB_MIME_VERSION_HEADER_COMPAT);
-         }
-         if (!xKolabVersion || xKolabVersion->asUnicodeString() == KOLAB_VERSION_V2) {
-             mVersion = KolabV2;
 --- a/kolabformatV2/contact.cpp	2015-07-31 15:43:01.000000000 +0200
-+++ b/kolabformatV2/contact.cpp	2015-08-10 16:07:15.618348910 +0200
++++ b/kolabformatV2/contact.cpp	2015-08-20 16:38:41.947928730 +0200
 @@ -947,7 +947,7 @@
    setPrefix( addressee->prefix() );
    setSuffix( addressee->suffix() );
@@ -113,53 +61,3 @@
    addressee->insertCustom( "KADDRESSBOOK", "X-IMAddress", imAddress() );
    addressee->setDepartment( department() );
    addressee->insertCustom( "KADDRESSBOOK", "X-Office", officeLocation() );
---- a/mime/mimeutils.cpp	2015-07-31 15:43:01.000000000 +0200
-+++ b/mime/mimeutils.cpp	2015-08-10 16:07:20.833446822 +0200
-@@ -28,6 +28,7 @@
- namespace Kolab {
-     namespace Mime {
- 
-+
- KMime::Content* findContentByType(const KMime::Message::Ptr &data, const QByteArray &type)
- {
-     if (type.isEmpty()) {
-@@ -153,9 +154,9 @@
- {
-     KMime::Message::Ptr message(new KMime::Message);
-     message->date()->setDateTime(KDateTime::currentUtcDateTime().dateTime());
--    message->appendHeader(new KMime::Headers::Generic(X_KOLAB_TYPE_HEADER, message.get(), xKolabType, "utf-8"));
-+    message->appendHeader(new KMime::Headers::Generic(X_KOLAB_TYPE_HEADER, message.data(), xKolabType, "utf-8"));
-     if (v3) {
--        message->appendHeader(new KMime::Headers::Generic(X_KOLAB_MIME_VERSION_HEADER, message.get(), KOLAB_VERSION_V3, "utf-8"));
-+        message->appendHeader(new KMime::Headers::Generic(X_KOLAB_MIME_VERSION_HEADER, message.data(), KOLAB_VERSION_V3, "utf-8"));
-     }
-     message->userAgent()->from7BitString(prodid);
-     message->contentType()->setMimeType("multipart/mixed");
---- a/tests/formattest.cpp	2015-07-31 15:43:01.000000000 +0200
-+++ b/tests/formattest.cpp	2015-08-10 16:07:20.834446841 +0200
-@@ -385,12 +385,12 @@
-     QCOMPARE(Kolab::ErrorHandler::instance().error(), Kolab::ErrorHandler::Debug);
- 
-     KMime::Message::Ptr convertedNote = reader.getNote();
--    QVERIFY(convertedNote.get());
-+    QVERIFY(convertedNote.data());
- 
-     //Parse note
-     const KMime::Message::Ptr &realNote = readMimeFile( noteFileName, ok );
-     QVERIFY(ok);
--    QVERIFY(realNote.get());
-+    QVERIFY(realNote.data());
- 
-     QString expected = realNote->encodedContent();
-     normalizeMimemessage(expected);
-@@ -402,8 +402,8 @@
-     
-     //Write
-     const KMime::Message::Ptr &convertedMime = Kolab::KolabObjectWriter::writeNote(realNote, version);
--    QVERIFY(convertedMime.get());
--    QVERIFY(msg.get());
-+    QVERIFY(convertedMime.data());
-+    QVERIFY(msg.data());
- 
-     QString expected2 = msg->encodedContent();
-     normalizeMimemessage(expected2);

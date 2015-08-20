@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.24.1
+export VER=1.24.2
 export DEST=/binary/gvfs-${VER}
 
 pushd gvfs-${VER}

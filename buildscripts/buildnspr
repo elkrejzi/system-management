@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.10.8
+export VER=4.10.9
 export DEST=/binary/nspr-${VER}
 
 pushd nspr-${VER}/nspr
