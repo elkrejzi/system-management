@@ -1,11 +1,12 @@
 #!/bin/bash -e
 
-tar xf git/llvm.tar.xz
 tar xf git/clang.tar.xz
 tar xf git/clang-tools-extra.tar.xz
 tar xf git/compiler-rt.tar.xz
+tar xf git/lldb.tar.xz
+tar xf git/llvm.tar.xz
 
-for dir in llvm clang clang-tools-extra compiler-rt
+for dir in clang clang-tools-extra compiler-rt lldb llvm
 do
   pushd $dir
   svn up
@@ -13,17 +14,27 @@ do
 done
 
 pushd llvm
-  export VER=$(svn info | grep "Revision:" | awk '{print $2}')
+  VER=$(grep "PACKAGE_VERSION=" configure | cut -d \' -f 2)$(svn info | grep "Revision:" | awk '{print $2}')
+  export VER=${VER/svn/.svn}
 popd
 
-rm -rf llvm/tools/clang
+export DEST=/binary/llvm-${VER}
+
+# Don't build unittests, saves some time
+sed -i "s#cmake unittests#cmake#g" llvm/Makefile
+sed -i "s#runtime docs unittests#runtime docs#g" clang/Makefile
+sed -i "s#clang-query unittests#clang-query#g" clang-tools-extra/Makefile
+
 rm -rf llvm/projects/compiler-rt
+rm -rf llvm/tools/clang
+rm -rf llvm/tools/lldb
 
 mv compiler-rt llvm/projects/compiler-rt
 mv clang llvm/tools/clang
 
 cp -a llvm llvm-32
 
+mv lldb llvm/tools/lldb
 mv clang-tools-extra llvm/tools/clang/tools/extra
 
 pushd llvm
@@ -33,34 +44,37 @@ sed -i '/@LLVM_CONFIG_CMAKE_DIR@/s:$(PROJ_cmake):$(PROJ_prefix)/share/llvm/cmake
 
 sed -i "/ld-linux-x86-64/s/lib64/lib/" tools/clang/lib/Driver/Tools.cpp
 
+popd
+
+install -dm755 llvm-build
+
+pushd llvm-build
+
 export CC="gcc"
 export CXX="g++"
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr --sysconfdir=/etc  --enable-shared   \
-            --enable-libffi --enable-targets=x86,r600          \
-            --disable-expensive-checks --disable-debug-runtime \
-            --disable-assertions --enable-optimized
+../llvm/configure --prefix=/usr --sysconfdir=/etc --enable-shared --enable-optimized  \
+            --enable-libffi --enable-targets=x86,amdgpu  --disable-assertions         \
+            --with-binutils-include=/usr/include
 
-make -j3
-make -C docs -f Makefile.sphinx man
+make REQUIRES_RTTI=1 -j4
+make install DESTDIR=${DEST}
 
-make install DESTDIR=/binary/llvm-${VER}
+rm -rf ${DEST}/usr/lib/LLVMHello.so
+rm -rf ${DEST}/usr/share/doc
 
-rm -rf /binary/llvm-${VER}/usr/lib/LLVMHello.so
-rm -rf /binary/llvm-${VER}/usr/share/doc
+install -dm755 ${DEST}/usr/lib/bfd-plugins
+ln -sf ../LLVMgold.so ${DEST}/usr/lib/bfd-plugins/LLVMgold.so
 
-#install -dm755 /binary/llvm-${VER}/usr/lib/bfd-plugins
-#ln -sf ../LLVMgold.so /binary/llvm-${VER}/usr/lib/bfd-plugins/LLVMgold.so
+chmod 644 ${DEST}/usr/lib/*.a
+chmod 755 ${DEST}/usr/lib/*.so
 
-chmod 644 /binary/llvm-${VER}/usr/lib/*.a
-chmod 755 /binary/llvm-${VER}/usr/lib/*.so
+mv ${DEST}/usr/include/llvm/Config/config.h ${DEST}/usr/include/llvm/Config/config-64.h
+mv ${DEST}/usr/include/llvm/Config/llvm-config.h ${DEST}/usr/include/llvm/Config/llvm-config-64.h
 
-mv /binary/llvm-${VER}/usr/include/llvm/Config/config.h /binary/llvm-${VER}/usr/include/llvm/Config/config-64.h
-mv /binary/llvm-${VER}/usr/include/llvm/Config/llvm-config.h /binary/llvm-${VER}/usr/include/llvm/Config/llvm-config-64.h
-
-cat > /binary/llvm-${VER}/usr/include/llvm/Config/config.h << "EOF"
+cat > ${DEST}/usr/include/llvm/Config/config.h << "EOF"
 #include <bits/wordsize.h>
 
 #if __WORDSIZE == 32
@@ -72,7 +86,7 @@ cat > /binary/llvm-${VER}/usr/include/llvm/Config/config.h << "EOF"
 #endif
 EOF
 
-cat > /binary/llvm-${VER}/usr/include/llvm/Config/llvm-config.h << "EOF"
+cat > ${DEST}/usr/include/llvm/Config/llvm-config.h << "EOF"
 #include <bits/wordsize.h>
 
 #if __WORDSIZE == 32
@@ -84,23 +98,46 @@ cat > /binary/llvm-${VER}/usr/include/llvm/Config/llvm-config.h << "EOF"
 #endif
 EOF
 
-mkdir -p /binary/llvm-${VER}/usr/share/man/man1
-cp docs/_build/man/*.1 /binary/llvm-${VER}/usr/share/man/man1
-
-mkdir -p /binary/llvm-${VER}/usr/lib/clang-analyzer
-
-for _tool in scan-build scan-view; do
-   cp -rf tools/clang/tools/$_tool /binary/llvm-${VER}/usr/lib/clang-analyzer/
-   ln -sf ../lib/clang-analyzer/$_tool/$_tool /binary/llvm-${VER}//usr/bin/
-done
-
-ln -sf /usr/bin/clang /binary/llvm-${VER}/usr/lib/clang-analyzer/scan-build/
-mv /binary/llvm-${VER}/usr/lib/clang-analyzer/scan-build/scan-build.1 /binary/llvm-${VER}/usr/share/man/man1/
-
-python -m compileall /binary/llvm-${VER}/usr/lib/clang-analyzer
-python -O -m compileall /binary/llvm-${VER}/usr/lib/clang-analyzer
+python -m compileall ${DEST}/usr/lib/python2.7/site-packages/lldb
+python -O -m compileall ${DEST}/usr/lib/python2.7/site-packages/lldb
 
 popd
+
+pushd llvm
+
+make -C docs -f Makefile.sphinx man
+make -C tools/clang/docs -f Makefile.sphinx man
+
+install -dm755 ${DEST}/usr/share/man/man1
+
+install -m644 docs/_build/man/*.1 ${DEST}/usr/share/man/man1
+install -m644 tools/clang/docs/_build/man/*.1 ${DEST}/usr/share/man/man1
+
+install -m644 tools/lldb/docs/lldb.1 ${DEST}/usr/share/man/man1
+
+mkdir -p ${DEST}/usr/lib/clang-analyzer
+
+for _tool in scan-build scan-view; do
+   cp -rf tools/clang/tools/$_tool ${DEST}/usr/lib/clang-analyzer/
+   ln -sf ../lib/clang-analyzer/$_tool/$_tool ${DEST}/usr/bin/
+done
+
+ln -sf /usr/bin/clang ${DEST}/usr/lib/clang-analyzer/scan-build/
+
+mv ${DEST}/usr/lib/clang-analyzer/scan-build/scan-build.1 ${DEST}/usr/share/man/man1
+
+find ${DEST}/usr/lib/clang-analyzer -type d -exec chmod 755 {} \;
+find ${DEST}/usr/lib/clang-analyzer -type f -exec chmod 644 {} \;
+
+chmod 755 ${DEST}/usr/lib/clang-analyzer/scan-build/{c++-analyzer,ccc-analyzer,scan-build,set-xcode-analyzer}
+chmod 755 ${DEST}/usr/lib/clang-analyzer/scan-view/scan-view
+
+python -m compileall ${DEST}/usr/lib/clang-analyzer
+python -O -m compileall ${DEST}/usr/lib/clang-analyzer
+
+popd
+
+rm -rf llvm llvm-build
 
 pushd llvm-32
 
@@ -115,19 +152,28 @@ sed -e 's:LLVM_LIBDIR="${prefix}/lib":LLVM_LIBDIR="${prefix}/lib32":' \
 sed -e '/ActiveLibDir = ActivePrefix/s:lib:lib32:' \
     -i tools/llvm-config/llvm-config.cpp
 
+# Hack to get 32 bit compiler-rt to build properly
+sed -ri "/ifeq.*CompilerTargetArch/s#i386#i686#g" projects/compiler-rt/make/platform/clang_linux.mk
+
+popd
+
+install -dm755 llvm-build-32
+
+pushd llvm-build-32
+
 export CC="gcc -m32"
 export CXX="g++ -m32"
 export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr --sysconfdir=/etc --libdir=/usr/lib32       \
-            --enable-shared --enable-libffi --enable-targets=x86,r600 \
-            --disable-expensive-checks --disable-debug-runtime        \
-            --disable-assertions --enable-optimized                   \
-            --host=i686-pc-linux-gnu --target=i686-pc-linux-gnu
+../llvm-32/configure --prefix=/usr --sysconfdir=/etc --libdir=/usr/lib32              \
+            --enable-shared --enable-optimized --enable-libffi                        \
+            --enable-targets=x86,amdgpu --disable-assertions                          \
+            --with-binutils-include=/usr/include --build=i686-pc-linux-gnu            \
+            --host=i686-pc-linux-gnu
 
-make -j3
+make REQUIRES_RTTI=1 -j4
 make install DESTDIR=${PWD}/dest
 
 rm -rf dest/usr/lib32/LLVMHello.so
@@ -135,22 +181,27 @@ rm -rf dest/usr/lib32/LLVMHello.so
 chmod 644 dest/usr/lib32/*.a
 chmod 755 dest/usr/lib32/*.so
 
-mv dest/usr/bin/i686-pc-linux-gnu-llvm-config /binary/llvm-${VER}/usr/bin/llvm-config32
+mv dest/usr/bin/llvm-config ${DEST}/usr/bin/llvm-config32
 
-mv dest/usr/include/llvm/Config/config.h /binary/llvm-${VER}/usr/include/llvm/Config/config-32.h
-mv dest/usr/include/llvm/Config/llvm-config.h /binary/llvm-${VER}/usr/include/llvm/Config/llvm-config-32.h
+mv dest/usr/include/llvm/Config/config.h ${DEST}/usr/include/llvm/Config/config-32.h
+mv dest/usr/include/llvm/Config/llvm-config.h ${DEST}/usr/include/llvm/Config/llvm-config-32.h
 
-mv dest/usr/lib32 /binary/llvm-${VER}/usr/
-mv dest/usr/lib/* /binary/llvm-${VER}/usr/lib32/
+mv dest/usr/lib32 ${DEST}/usr/
+mv dest/usr/lib/* ${DEST}/usr/lib32/
+
+install -dm755 ${DEST}/usr/lib32/bfd-plugins
+ln -sf ../LLVMgold.so ${DEST}/usr/lib32/bfd-plugins/LLVMgold.so
 
 popd
 
-rm -rf llvm llvm-32
+rm -rf llvm-32 llvm-build-32
 
-pushd /binary/llvm-${VER}/
+pushd ${DEST}
+
 find * -type f 2>/dev/null | while read BUILD_BINARY ; do
   case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
     strip --strip-unneeded ${BUILD_BINARY}
+    chrpath -d ${BUILD_BINARY}
   esac
 done
 
@@ -158,7 +209,7 @@ find * -type f -name "*.a" | xargs strip --strip-unneeded
 
 popd
 
-cat > /binary/llvm-${VER}/INSTALL << "EOF"
+cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
 cp -rf --remove-destination usr /
@@ -167,4 +218,4 @@ cp -rf --remove-destination usr /
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 
-chmod 755 /binary/llvm-${VER}/INSTALL
+chmod 755 ${DEST}/INSTALL

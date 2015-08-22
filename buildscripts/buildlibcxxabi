@@ -1,0 +1,83 @@
+#!/bin/bash -e
+
+export VER=3.7.0rc2
+export DEST=/binary/libcxxabi-${VER}
+
+pushd libcxxabi-${VER}.src
+
+sed -i "/include_directories.*LIBUNWIND_SOURCES/s:^:#&:g" CMakeLists.txt
+
+mkdir build64 && pushd build64
+
+export CC="clang"
+export CXX="clang++"
+export LDFLAGS="-Wl,-rpath,/usr/lib/llvm -L/usr/lib/llvm"
+
+cmake -DCMAKE_INSTALL_PREFIX=/usr      \
+      -DCMAKE_BUILD_TYPE=Release       \
+      -DLLVM_ENABLE_RTTI=ON            \
+      -DLIBCXXABI_ENABLE_STATIC=OFF    \
+      -DLIBCXXABI_USE_LLVM_UNWINDER=ON \
+      -DLIBCXXABI_LIBUNWIND_INCLUDES="/usr/include/llvm/libunwind" \
+      -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
+      -Wno-dev ..
+
+make -j4
+make install DESTDIR=${DEST}
+
+popd
+
+mkdir build32 && pushd build32
+
+export CC="clang -m32"
+export CXX="clang++ -m32"
+export LDFLAGS="-Wl,-rpath,/usr/lib32/llvm -L/usr/lib32/llvm"
+
+cmake -DCMAKE_INSTALL_PREFIX=/usr          \
+      -DCMAKE_BUILD_TYPE=Release           \
+      -DLLVM_ENABLE_RTTI=ON                \
+      -DLIBCXXABI_LIBDIR_SUFFIX=32         \
+      -DLIBCXXABI_ENABLE_STATIC=OFF        \
+      -DLIBCXXABI_USE_LLVM_UNWINDER=ON     \
+      -DLLVM_CONFIG=/usr/bin/llvm-config32 \
+      -DLIBCXXABI_LIBUNWIND_INCLUDES="/usr/include/llvm/libunwind" \
+      -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
+      -Wno-dev ..
+
+make -j4
+make install DESTDIR=${PWD}/dest
+
+mv dest/usr/lib32 ${DEST}/usr
+
+popd
+
+install -dm755 ${DEST}/usr/include/cxxabi
+install -m644 include/* ${DEST}/usr/include/cxxabi
+
+popd
+
+rm -rf libcxxabi-${VER}.src
+
+find ${DEST} -name "*.la" -delete
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL
