@@ -5,7 +5,7 @@ export DEST=/binary/llvm-${VER}
 
 for tarball in cfe-${VER}.src.tar.xz clang-tools-extra-${VER}.src.tar.xz \
                compiler-rt-${VER}.src.tar.xz lldb-${VER}.src.tar.xz      \
-               llvm-${VER}.src.tar.xz
+               llvm-${VER}.src.tar.xz polly-${VER}.src.tar.xz
 do
   tar xf ${tarball}
 done
@@ -18,11 +18,13 @@ sed -i "s#clang-query unittests#clang-query#g" clang-tools-extra-${VER}.src/Make
 rm -rf llvm-${VER}.src/projects/compiler-rt
 rm -rf llvm-${VER}.src/tools/clang
 rm -rf llvm-${VER}.src/tools/lldb
+rm -rf llvm-${VER}.src/tools/polly
 
 rm -rf cfe-${VER}.src/tools/extra
 
 mv compiler-rt-${VER}.src llvm-${VER}.src/projects/compiler-rt
 mv cfe-${VER}.src llvm-${VER}.src/tools/clang
+mv polly-${VER}.src llvm-${VER}.src/tools/polly
 
 cp -a llvm-${VER}.src llvm-${VER}.src-32
 

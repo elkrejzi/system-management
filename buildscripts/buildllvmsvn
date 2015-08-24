@@ -5,8 +5,9 @@ tar xf git/clang-tools-extra.tar.xz
 tar xf git/compiler-rt.tar.xz
 tar xf git/lldb.tar.xz
 tar xf git/llvm.tar.xz
+tar xf git/polly.tar.xz
 
-for dir in clang clang-tools-extra compiler-rt lldb llvm
+for dir in clang clang-tools-extra compiler-rt lldb llvm polly
 do
   pushd $dir
   svn up
@@ -28,9 +29,11 @@ sed -i "s#clang-query unittests#clang-query#g" clang-tools-extra/Makefile
 rm -rf llvm/projects/compiler-rt
 rm -rf llvm/tools/clang
 rm -rf llvm/tools/lldb
+rm -rf llvm/tools/polly
 
 mv compiler-rt llvm/projects/compiler-rt
 mv clang llvm/tools/clang
+mv polly llvm/tools/polly
 
 cp -a llvm llvm-32
 
