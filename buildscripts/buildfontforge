@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=20150612
+export VER=20150824
 export DEST=/binary/fontforge-${VER}
 
 pushd fontforge-${VER}

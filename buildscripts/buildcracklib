@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.9.5
+export VER=2.9.6
 export DEST=/binary/cracklib-${VER}
 
 pushd cracklib-${VER}

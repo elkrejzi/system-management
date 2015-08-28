@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.8.8
+export VER=1.10.0
 export DEST=/binary/openmpi-${VER}
 
 pushd openmpi-${VER}

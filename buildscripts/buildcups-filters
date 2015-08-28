@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.0.73
+export VER=1.0.74
 export DEST=/binary/cups-filters-${VER}
 
 pushd cups-filters-${VER}

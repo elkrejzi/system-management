@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.3.5
+export VER=0.3.6
 export DEST=/binary/libmwaw-${VER}
 
 pushd libmwaw-${VER}

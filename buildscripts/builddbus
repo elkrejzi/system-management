@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.8.20
+export VER=1.10.0
 export DEST=/binary/dbus-${VER}
 
 cp -a dbus-${VER} dbus-${VER}-32
@@ -14,6 +14,7 @@ CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-st
             --localstatedir=/var                  \
             --disable-static                      \
             --enable-systemd                      \
+            --enable-user-session                 \
             --with-console-auth-dir=/run/console/ \
             --with-systemdsystemunitdir=/lib/systemd/system
 
@@ -30,12 +31,13 @@ export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr                  \
-            --sysconfdir=/etc              \
-            --localstatedir=/var           \
-            --libdir=/usr/lib32            \
-            --disable-static               \
-            --disable-systemd              \
+./configure --prefix=/usr         \
+            --sysconfdir=/etc     \
+            --localstatedir=/var  \
+            --libdir=/usr/lib32   \
+            --disable-static      \
+            --enable-systemd      \
+            --enable-user-session \
             --without-x
 
 make -C dbus libdbus-1.la -j4
