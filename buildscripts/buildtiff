@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.0.4
+export VER=4.0.5
 export DEST=/binary/tiff-${VER}
 
 cp -a tiff-${VER} tiff-${VER}-32

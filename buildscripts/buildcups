@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.0.4
+export VER=2.1.0
 export DEST=/binary/cups-${VER}
 
 pushd cups-${VER}
@@ -24,9 +24,8 @@ cp -a cups-${VER} cups-${VER}-32
 
 pushd cups-${VER}
 
-CC="clang" CXX="clang++"                      \
-CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"      \
-CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"    \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --libdir=/usr/lib                 \
             --with-rcdir=/tmp/cupsinit        \
             --with-docdir=/usr/share/cups/doc \
@@ -35,14 +34,12 @@ CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-st
             --with-menudir=/usr/share/applications
 
 make -j4
-make -j4 install BUILDROOT=${DEST}
+make install BUILDROOT=${DEST}
 
 popd
 
 pushd cups-${VER}-32
 
-CC="clang -m32" CXX="clang++ -m32"         \
-PKG_CONFIG_PATH=/usr/lib32/pkgconfig       \
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --libdir=/usr/lib32 \
@@ -51,8 +48,8 @@ CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-st
             --disable-dbus      \
             --disable-pam
 
-make -j4 libs
-make -j4 install-libs BUILDROOT=${PWD}/dest
+make libs -j4
+make install-libs BUILDROOT=${PWD}/dest
 
 mv dest/usr/lib32 ${DEST}/usr
 
@@ -75,15 +72,25 @@ EOF
 chmod 600 ${DEST}/etc/cups/classes.conf ${DEST}/etc/cups/printers.conf
 chmod 640 ${DEST}/etc/cups/subscriptions.conf
 
-mkdir -p ${DEST}/etc/systemd/system/multi-user.target.wants \
-         ${DEST}/etc/systemd/system/printer.target.wants    \
-         ${DEST}/etc/systemd/system/sockets.target.wants
+install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants \
+               ${DEST}/etc/systemd/system/printer.target.wants    \
+               ${DEST}/etc/systemd/system/sockets.target.wants
 
 ln -sf /lib/systemd/system/org.cups.cupsd.path ${DEST}/etc/systemd/system/multi-user.target.wants/org.cups.cupsd.path
 ln -sf /lib/systemd/system/org.cups.cupsd.service ${DEST}/etc/systemd/system/printer.target.wants/org.cups.cupsd.service
 ln -sf /lib/systemd/system/org.cups.cupsd.socket ${DEST}/etc/systemd/system/sockets.target.wants/org.cups.cupsd.socket
 
 chgrp -R lp ${DEST}/etc/cups
+
+pushd ${DEST}
+
+find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+    strip --strip-unneeded ${BUILD_BINARY}
+  esac
+done
+
+popd
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
@@ -99,15 +106,3 @@ getent group lpadmin > /dev/null || groupadd -g 19 lpadmin
 EOF
 
 chmod 755 ${DEST}/INSTALL
-
-pushd ${DEST}
-
-find * -type f 2>/dev/null | while read BUILD_BINARY ; do
-  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
-    strip --strip-unneeded ${BUILD_BINARY}
-  esac
-done
-
-popd
-
-unset VER DEST

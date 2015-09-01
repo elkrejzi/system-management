@@ -1,12 +1,33 @@
 #!/bin/bash -e
 
+export VER=4.1
+export PATCH=4.1.6
+export ZENPATCH=c4b5b1647820109d67dde4abba0da75d738abb98
+
 export EXTRA="-krejzi"
 export KBUILD_BUILD_USER="krejzi"
 export KBUILD_BUILD_HOST="email.com"
 
+pushd linux-${VER}
+
 patch -Np1 -i /media/ntfs/Other/Linux/patches/linux-march-native.patch
 
-install -m644 /media/ntfs/Other/Linux/kernel-config .config
+# Stable updates
+if [[ ! -z ${PATCH} ]]
+then
+   xz -cd /media/ntfs/Other/Linux/sources/patch-${PATCH}.xz | patch -Np1 -i -
+fi
+
+# Zen patches
+#wget -O - https://github.com/zen-kernel/zen-kernel/commit/${ZENPATCH}.patch | patch -Np1 -i -
+
+# Remove -zen extraversion
+#sed -i "/EXTRAVERSION/s#-zen##" Makefile
+
+if [[ ! -e ".config" ]]
+then
+   install -m644 /media/ntfs/Other/Linux/kernel-config .config
+fi
 
 make prepare
 make scripts
@@ -17,19 +38,20 @@ sed -i "s:-ltinfo ::g" tools/thermal/tmon/Makefile
 
 for DIR in tools/thermal/tmon tools/power/cpupower tools/power/x86/turbostat
 do
-  make -C ${DIR} -j4
+   make -C ${DIR} -j4
 done
 
-unset DIR
+export KERNELVERSION=$(make kernelrelease)
 
-KERNELVERSION=$(make kernelrelease)
-PKGHEADERS=/binary/linux-headers-${KERNELVERSION}
-PKGAPIHDR=/binary/linux-api-headers-$(echo ${KERNELVERSION} | sed "s/$EXTRA//")
-PKGKERNEL=/binary/linux-${KERNELVERSION}
-PKGTOOLS=/binary/linux-tools-$(echo ${KERNELVERSION} | sed "s/$EXTRA//")
-HEADERSDIR=${PKGHEADERS}/usr/src/linux-headers-${KERNELVERSION}
+export PKGHEADERS=/binary/linux-headers-${KERNELVERSION}
+export PKGAPIHDR=/binary/linux-api-headers-$(echo ${KERNELVERSION} | sed "s/$EXTRA//")
+export PKGKERNEL=/binary/linux-${KERNELVERSION}
+export PKGTOOLS=/binary/linux-tools-$(echo ${KERNELVERSION} | sed "s/$EXTRA//")
 
-make headers_install INSTALL_HDR_PATH=${PKGAPIHDR}/usr/
+# Begin linux-api-headers
+
+make headers_install INSTALL_HDR_PATH=${PKGAPIHDR}/usr
+
 find ${PKGAPIHDR}/usr/include \( -name .install -o -name ..install.cmd \) -delete
 
 rm -rf ${PKGAPIHDR}/usr/include/drm
@@ -42,67 +64,73 @@ EOF
 
 chmod 755 ${PKGAPIHDR}/INSTALL
 
-mkdir -p ${PKGKERNEL}/boot
+# End linux-api-headers
+
+# Begin linux
+
+install -dm755 ${PKGKERNEL}/boot
 
 install -m644 .config ${PKGKERNEL}/boot/config-${KERNELVERSION}
 install -m644 System.map ${PKGKERNEL}/boot/System.map-${KERNELVERSION}
 install -m644 arch/x86/boot/bzImage ${PKGKERNEL}/boot/vmlinuz-${KERNELVERSION}
 
-ln -s vmlinuz-${KERNELVERSION} ${PKGKERNEL}/boot/vmlinuz
+ln -sf vmlinuz-${KERNELVERSION} ${PKGKERNEL}/boot/vmlinuz
 
 make modules_install INSTALL_MOD_PATH=${PKGKERNEL}
 
 rm -rf ${PKGKERNEL}/lib/firmware
-
-rm -f ${PKGKERNEL}/lib/modules/${KERNELVERSION}/{build,source}
+rm -rf ${PKGKERNEL}/lib/modules/${KERNELVERSION}/{build,source}
 
 cat > ${PKGKERNEL}/INSTALL << "EOF"
 #!/bin/bash
 
 for dir in boot lib ; do cp -rf --remove-destination $dir / ; done
-
 EOF
 
 chmod 755 ${PKGKERNEL}/INSTALL
 
-mkdir -p ${PKGHEADERS}/lib/modules/${KERNELVERSION}
+# End linux
+
+# Begin linux-headers
+
+export HEADERSDIR=${PKGHEADERS}/usr/src/linux-headers-${KERNELVERSION}
+
+install -dm755 ${PKGHEADERS}/lib/modules/${KERNELVERSION}
 
 ln -sf /usr/src/linux-headers-${KERNELVERSION} ${PKGHEADERS}/lib/modules/${KERNELVERSION}/build
 ln -sf /usr/src/linux-headers-${KERNELVERSION} ${PKGHEADERS}/lib/modules/${KERNELVERSION}/source
 
-mkdir -p ${HEADERSDIR}/arch/x86/kernel
-mkdir -p ${HEADERSDIR}/scripts/{basic,genksyms,kconfig,mod}
+install -dm755 ${HEADERSDIR}/arch/x86/kernel
+install -dm755 ${HEADERSDIR}/scripts/{basic,genksyms,kconfig,mod}
 
-cp -r .config ${HEADERSDIR}/
-cp -r Makefile ${HEADERSDIR}/
-cp -r Module.symvers ${HEADERSDIR}/
+install -m644 .config ${HEADERSDIR}
+install -m644 Makefile ${HEADERSDIR}
+install -m644 Module.symvers ${HEADERSDIR}
+install -m644 arch/x86/Makefile ${HEADERSDIR}/arch/x86
+install -m644 arch/x86/kernel/asm-offsets.s ${HEADERSDIR}/arch/x86/kernel
 
-cp -r arch/x86/Makefile ${HEADERSDIR}/arch/x86/
-cp -r arch/x86/kernel/asm-offsets.s ${HEADERSDIR}/arch/x86/kernel/
-cp -r arch/x86/include ${HEADERSDIR}/arch/x86/
-
-cp -r include ${HEADERSDIR}/
+cp -r arch/x86/include ${HEADERSDIR}/arch/x86
+cp -r include ${HEADERSDIR}
 
 ln -sf ../generated/uapi/linux/version.h ${HEADERSDIR}/include/linux/version.h
 
 find ${HEADERSDIR}/arch/x86 -name ".*.cmd" -delete
 
-for SCRIPT in Kbuild.include Lindent \
-   Makefile.{build,clean,extrawarn,host,kasan,lib,modpost} \
-   check{includes,stack,version}.pl conmakehash \
-   {depmod,gcc-goto,gcc-version,gen_initramfs_list,mkuboot}.sh \
-   gcc-x86_{32,64}-has-stack-protector.sh \
-   kallsyms kernel-doc makelst mksysmap mkuboot.sh mkversion \
-   module-common.lds namespace.pl patch-kernel \
-   setlocalversion ver_linux
+for SCRIPT in Kbuild.include Lindent Makefile.build                       \
+              Makefile.{clean,extrawarn,host,kasan,lib,modpost}           \
+              check{includes,stack,version}.pl conmakehash                \
+              {depmod,gcc-goto,gcc-version,gen_initramfs_list,mkuboot}.sh \
+              gcc-x86_{32,64}-has-stack-protector.sh kallsyms kernel-doc  \
+              makelst mksysmap mkuboot.sh mkversion module-common.lds     \
+              namespace.pl patch-kernel setlocalversion ver_linux
 do
-   cp -r scripts/${SCRIPT} ${HEADERSDIR}/scripts/
+   cp scripts/${SCRIPT} ${HEADERSDIR}/scripts
 done
 
-cp -r scripts/basic/fixdep ${HEADERSDIR}/scripts/basic/
-cp -r scripts/genksyms/genksyms ${HEADERSDIR}/scripts/genksyms/
-cp -r scripts/kconfig/conf ${HEADERSDIR}/scripts/kconfig/
-cp -r scripts/mod/modpost ${HEADERSDIR}/scripts/mod/
+cp scripts/basic/fixdep ${HEADERSDIR}/scripts/basic
+cp scripts/genksyms/genksyms ${HEADERSDIR}/scripts/genksyms
+cp scripts/kconfig/conf ${HEADERSDIR}/scripts/kconfig
+cp scripts/mod/modpost ${HEADERSDIR}/scripts/mod
 
 find ${HEADERSDIR}/scripts -type f 2>/dev/null | while read BUILD_BINARY ; do
   case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
@@ -118,20 +146,24 @@ EOF
 
 chmod 755 ${PKGHEADERS}/INSTALL
 
+# End linux-headers
+
+# Begin linux-tools
+
 install -dm755 ${PKGTOOLS}/usr/bin ${PKGTOOLS}/usr/share/man/man8
 
 pushd tools/thermal/tmon
-  install -m755 tmon ${PKGTOOLS}/usr/bin
-  install -m644 tmon.8 ${PKGTOOLS}/usr/share/man/man8
+   install -m755 tmon ${PKGTOOLS}/usr/bin
+   install -m644 tmon.8 ${PKGTOOLS}/usr/share/man/man8
 popd
 
 pushd tools/power/cpupower
-  make mandir=/usr/share/man install DESTDIR=${PKGTOOLS}
-  rm -rf ${PKGTOOLS}/usr/share/doc
+   make mandir=/usr/share/man install DESTDIR=${PKGTOOLS}
+   rm -rf ${PKGTOOLS}/usr/share/doc
 popd
 
 pushd tools/power/x86/turbostat
-  make install DESTDIR=${PKGTOOLS}
+   make install DESTDIR=${PKGTOOLS}
 popd
 
 find ${PKGTOOLS} -type f 2>/dev/null | while read BUILD_BINARY ; do
@@ -150,3 +182,9 @@ for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
 EOF
 
 chmod 755 ${PKGTOOLS}/INSTALL
+
+# End linux-tools
+
+popd
+
+rm -rf linux-${VER}

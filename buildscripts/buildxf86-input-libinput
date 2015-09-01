@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.13.0
+export VER=0.14.0
 export DEST=/binary/xf86-input-libinput-${VER}
 
 pushd xf86-input-libinput-${VER}
@@ -12,45 +12,13 @@ CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \
 make -j4
 make install DESTDIR=${DEST}
 
+install -Dm644 conf/99-libinput.conf ${DEST}/usr/share/X11/xorg.conf.d/90-libinput.conf
+
 popd
 
 rm -rf xf86-input-libinput-${VER}
 
 find ${DEST} -name "*.la" -delete
-
-install -dm755 ${DEST}/usr/share/X11/xorg.conf.d
-
-cat > ${DEST}/usr/share/X11/xorg.conf.d/90-libinput.conf << "EOF"
-# Match on all types of devices but tablet devices and joysticks
-
-Section "InputClass"
-        Identifier "libinput pointer catchall"
-        MatchIsPointer "on"
-        MatchDevicePath "/dev/input/event*"
-        Driver "libinput"
-EndSection
-
-Section "InputClass"
-        Identifier "libinput keyboard catchall"
-        MatchIsKeyboard "on"
-        MatchDevicePath "/dev/input/event*"
-        Driver "libinput"
-EndSection
-
-Section "InputClass"
-        Identifier "libinput touchpad catchall"
-        MatchIsTouchpad "on"
-        MatchDevicePath "/dev/input/event*"
-        Driver "libinput"
-EndSection
-
-Section "InputClass"
-        Identifier "libinput touchscreen catchall"
-        MatchIsTouchscreen "on"
-        MatchDevicePath "/dev/input/event*"
-        Driver "libinput"
-EndSection
-EOF
 
 pushd ${DEST}
 
