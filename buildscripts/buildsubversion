@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.9.0
+export VER=1.9.1
 export DEST=/binary/subversion-${VER}
 
 pushd subversion-${VER}

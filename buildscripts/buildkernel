@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
-export VER=4.1
-export PATCH=4.1.6
-export ZENPATCH=c4b5b1647820109d67dde4abba0da75d738abb98
+export VER=4.2
+export PATCH=
+export ZENPATCH=
 
 export EXTRA="-krejzi"
 export KBUILD_BUILD_USER="krejzi"

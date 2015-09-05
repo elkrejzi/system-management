@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.1.1
+export VER=4.2.0
 export DEST=/binary/iproute2-${VER}
 
 pushd iproute2-${VER}

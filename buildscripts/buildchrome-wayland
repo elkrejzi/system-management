@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGVER=45.0.2454.85
-export DEST=/binary/chromium-${PKGVER}
+export DEST=/binary/chromium-wayland-${PKGVER}
 
 export -n CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
 export -n CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
@@ -57,7 +57,11 @@ chromium_conf=(
     -Ddisable_nacl=1
     -Ddisable_pnacl=1
     -Ddisable_sse2=1
-    -Ddisable_glibc=1)
+    -Ddisable_glibc=1
+    -Duse_ash=1
+    -Duse_aura=1
+    -Duse_ozone=1
+    -Duse_xkbcommon=1)
 
 #     -Duse_system_libvpx=1
 
@@ -74,6 +78,17 @@ case "$1" in
          if [ -e /media/ntfs/Other/Linux/patches/chromium-fixes.patch ]; then
             patch -Np1 -i /media/ntfs/Other/Linux/patches/chromium-fixes.patch
          fi
+
+         # Begin Ozone-Wayland
+         install -dm755 ozone
+
+         wget -O - https://github.com/01org/ozone-wayland/archive/45.0.2454.37.tar.gz | tar -xz -C ozone --strip-components=1 -f -
+
+         for p in ozone/patches/*.patch
+         do
+            patch -p1 -i ${p}
+         done
+         # End Ozone-Wayland
 
          sed -i "/POSIX_SOURCE/i #define _GNU_SOURCE" third_party/boringssl/src/crypto/bio/socket_helper.c
 
@@ -93,29 +108,29 @@ case "$1" in
       popd
    ;;
    install)
-      install -dm755 ${DEST}/etc/chromium \
-                     ${DEST}/usr/bin \
-                     ${DEST}/usr/lib/chromium
+      install -dm755 ${DEST}/etc/chromium-wayland \
+                     ${DEST}/usr/bin              \
+                     ${DEST}/usr/lib/chromium-wayland
 
-cat > ${DEST}/etc/chromium/default << "EOF"
-# Default settings for chromium. This file is sourced by /usr/bin/chromium
+cat > ${DEST}/etc/chromium-wayland/default << "EOF"
+# Default settings for chromium. This file is sourced by /usr/bin/chromium-wayland
 
 # Options to pass to chromium
 CHROMIUM_FLAGS=""
 EOF
 
-cat > ${DEST}/usr/bin/chromium << "EOF"
+cat > ${DEST}/usr/bin/chromium-wayland << "EOF"
 #!/bin/bash
 
 # Allow users to override command-line options
 # Based on Gentoo's chromium package
-if [[ -f /etc/chromium/default ]]; then
-	. /etc/chromium/default
+if [[ -f /etc/chromium-wayland/default ]]; then
+	. /etc/chromium-wayland/default
 fi
 # Source additional configuration files
-for file in /etc/chromium/*; do
-	# Don't source /etc/chromium/default again
-	[[ $file == /etc/chromium/default ]] && continue
+for file in /etc/chromium-wayland/*; do
+	# Don't source /etc/chromium-wayland/default again
+	[[ $file == /etc/chromium-wayland/default ]] && continue
 
 	if [[ -f $file ]]; then
 		. $file
@@ -123,38 +138,38 @@ for file in /etc/chromium/*; do
 done
 
 # Prefer user defined CHROMIUM_USER_FLAGS (from env) over system
-# default CHROMIUM_FLAGS (from /etc/chromium/default)
+# default CHROMIUM_FLAGS (from /etc/chromium-wayland/default)
 CHROMIUM_FLAGS=${CHROMIUM_USER_FLAGS:-$CHROMIUM_FLAGS}
 
 export CHROME_WRAPPER=$(readlink -f "$0")
 export CHROME_DESKTOP=chromium.desktop
 
-exec /usr/lib/chromium/chromium $CHROMIUM_FLAGS "$@"
+exec /usr/lib/chromium-wayland/chromium $CHROMIUM_FLAGS "$@"
 EOF
 
-      chmod 644 ${DEST}/etc/chromium/default
-      chmod 755 ${DEST}/usr/bin/chromium
+      chmod 644 ${DEST}/etc/chromium-wayland/default
+      chmod 755 ${DEST}/usr/bin/chromium-wayland
 
-      install -Dm644 /media/ntfs/Other/Linux/chromium.desktop ${DEST}/usr/share/applications/chromium.desktop
+      #install -Dm644 /media/ntfs/Other/Linux/chromium.desktop ${DEST}/usr/share/applications/chromium-wayland.desktop
 
       pushd chromium-${PKGVER}
-         install -m755 -o root -g root out/Release/chrome ${DEST}/usr/lib/chromium/chromium
-         install -m4755 -o root -g root out/Release/chrome_sandbox ${DEST}/usr/lib/chromium/chrome-sandbox
-         install -m755 -o root -g root out/Release/chromedriver ${DEST}/usr/lib/chromium/chromedriver
+         install -m755 -o root -g root out/Release/chrome ${DEST}/usr/lib/chromium-wayland/chromium
+         install -m4755 -o root -g root out/Release/chrome_sandbox ${DEST}/usr/lib/chromium-wayland/chrome-sandbox
+         install -m755 -o root -g root out/Release/chromedriver ${DEST}/usr/lib/chromium-wayland/chromedriver
 
-         ln -sf ../lib/chromium/chromedriver ${DEST}/usr/bin/chromedriver
+         ln -sf ../lib/chromium-wayland/chromedriver ${DEST}/usr/bin/chromedriver-wayland
 
-         install -Dm644 out/Release/chrome.1 ${DEST}/usr/share/man/man1/chromium.1
+         install -Dm644 out/Release/chrome.1 ${DEST}/usr/share/man/man1/chromium-wayland.1
 
-         for size in 22 24 48 64 128 256; do
-            install -Dm644 chrome/app/theme/chromium/product_logo_${size}.png \
-                           ${DEST}/usr/share/icons/hicolor/${size}x${size}/apps/chromium.png
-         done
+         #for size in 22 24 48 64 128 256; do
+         #   install -Dm644 chrome/app/theme/chromium/product_logo_${size}.png \
+         #                  ${DEST}/usr/share/icons/hicolor/${size}x${size}/apps/chromium.png
+         #done
 
-         cp -rf out/Release/locales ${DEST}/usr/lib/chromium/
+         cp -rf out/Release/locales ${DEST}/usr/lib/chromium-wayland/
 
          # Bundled ICU
-         #cp -rf out/Release/icudtl.dat ${DEST}/usr/lib/chromium/
+         #cp -rf out/Release/icudtl.dat ${DEST}/usr/lib/chromium-wayland/
 
          cp -rf out/Release/chrome_100_percent.pak \
                 out/Release/chrome_200_percent.pak \
@@ -163,7 +178,7 @@ EOF
                 out/Release/natives_blob.bin  \
                 out/Release/resources.pak     \
                 out/Release/snapshot_blob.bin \
-                ${DEST}/usr/lib/chromium/
+                ${DEST}/usr/lib/chromium-wayland/
 
 #                out/Release/libffmpegsumo.so \
 #                out/Release/libpdf.so \
@@ -173,23 +188,23 @@ EOF
 
       popd
 
-      strip --strip-unneeded ${DEST}/usr/lib/chromium/chromium
-      strip --strip-unneeded ${DEST}/usr/lib/chromium/chrome-sandbox
-      strip --strip-unneeded ${DEST}/usr/lib/chromium/chromedriver
-      #strip --strip-unneeded ${DEST}/usr/lib/chromium/nacl_helper
-      #strip --strip-unneeded ${DEST}/usr/lib/chromium/nacl_helper_bootstrap
-      #strip --strip-unneeded ${DEST}/usr/lib/chromium/libffmpegsumo.so
-      #strip --strip-unneeded ${DEST}/usr/lib/chromium/libpdf.so
+      strip --strip-unneeded ${DEST}/usr/lib/chromium-wayland/chromium
+      strip --strip-unneeded ${DEST}/usr/lib/chromium-wayland/chrome-sandbox
+      strip --strip-unneeded ${DEST}/usr/lib/chromium-wayland/chromedriver
+      #strip --strip-unneeded ${DEST}/usr/lib/chromium-wayland/nacl_helper
+      #strip --strip-unneeded ${DEST}/usr/lib/chromium-wayland/nacl_helper_bootstrap
+      #strip --strip-unneeded ${DEST}/usr/lib/chromium-wayland/libffmpegsumo.so
+      #strip --strip-unneeded ${DEST}/usr/lib/chromium-wayland/libpdf.so
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
 for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
 
-chmod 4755 /usr/lib/chromium/chrome-sandbox
+chmod 4755 /usr/lib/chromium-wayland/chrome-sandbox
 
-[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
-[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+#[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/hicolor
+#[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
 [ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
 EOF
 

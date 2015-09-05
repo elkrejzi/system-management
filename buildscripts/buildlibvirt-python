@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.2.18
+export VER=1.2.19
 export DEST=/binary/libvirt-python-${VER}
 
 pushd libvirt-python-${VER}

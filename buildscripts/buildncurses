@@ -167,6 +167,12 @@ ln -sf libncurses.so ${DEST}/usr/lib32/libcurses.so
 rm -rf ${DEST}/usr/lib/*.a
 rm -rf ${DEST}/usr/lib32/*.a
 
+# libtinfo compat
+for lib in lib lib32
+do
+   ln -sf libncurses.so.5 ${DEST}/usr/${lib}/libtinfo.so.5
+done
+
 pushd ${DEST}
 
 find * -type f 2>/dev/null | while read BUILD_BINARY ; do

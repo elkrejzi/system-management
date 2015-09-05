@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.7.0rc2
+export VER=3.7.0
 export DEST=/binary/libcxxabi-${VER}
 
 pushd libcxxabi-${VER}.src

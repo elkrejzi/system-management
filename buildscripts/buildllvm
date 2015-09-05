@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.7.0rc2
+export VER=3.7.0
 export DEST=/binary/llvm-${VER}
 
 for tarball in cfe-${VER}.src.tar.xz clang-tools-extra-${VER}.src.tar.xz \

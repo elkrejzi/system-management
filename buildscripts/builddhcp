@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-VER=4.3.2
+VER=4.3.3
 DEST=/binary/dhcp-${VER}
 
 pushd dhcp-${VER}
@@ -19,7 +19,7 @@ CFLAGS="-D_PATH_DHCLIENT_SCRIPT='\"/sbin/dhclient-script\"'             \
             --with-cli-lease-file=/var/lib/dhclient/dhclient.leases     \
             --with-cli6-lease-file=/var/lib/dhclient/dhclient6.leases
 
-make -j4
+make
 
 make -C dhcpctl install DESTDIR=${DEST}/client
 make -C client install DESTDIR=${DEST}/client

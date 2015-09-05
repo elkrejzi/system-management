@@ -24,6 +24,9 @@ cp -a cups-${VER} cups-${VER}-32
 
 pushd cups-${VER}
 
+export CC="gcc"
+export CXX="g++"
+
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --libdir=/usr/lib                 \
@@ -39,6 +42,10 @@ make install BUILDROOT=${DEST}
 popd
 
 pushd cups-${VER}-32
+
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \

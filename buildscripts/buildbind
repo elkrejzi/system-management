@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=9.10.2-P3
+export VER=9.10.2-P4
 export DEST=/binary/bind-${VER}
 
 pushd bind-${VER}
