@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.30.0
+export VER=2.31.90
 export DEST=/binary/libgtop-${VER}
 
 pushd libgtop-${VER}

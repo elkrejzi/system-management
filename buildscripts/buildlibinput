@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.0.0
+export VER=1.0.1
 export DEST=/binary/libinput-${VER}
 
 pushd libinput-${VER}

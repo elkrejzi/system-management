@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.16.3
+export VER=3.17.2
 export DEST=/binary/gnome-online-accounts-${VER}
 
 pushd gnome-online-accounts-${VER}
@@ -9,8 +9,7 @@ CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-stro
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr     \
             --disable-static  \
-            --enable-kerberos \
-            --enable-yahoo
+            --enable-kerberos
 
 make -j4
 make install DESTDIR=${DEST}

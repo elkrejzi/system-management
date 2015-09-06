@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.14.0
+export VER=1.15.0
 export DEST=/binary/libpeas-${VER}
 
 pushd libpeas-${VER}

@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
-export VER=6.0
-export SHLIBVER=${VER}
-#export SHLIBVER=5.99
+export VER=6.99.1
+#export SHLIBVER=${VER}
+export SHLIBVER=6.99
 export DEST=/binary/pulseaudio-${VER}
 
 cp -a pulseaudio-${VER} pulseaudio-${VER}-32

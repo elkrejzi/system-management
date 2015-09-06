@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.16.1
+export VER=3.17.2
 export DEST=/binary/libgweather-${VER}
 
 pushd libgweather-${VER}
