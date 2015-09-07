@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=7.5.0
+export VER=7.5.99
 export DEST=/binary/xf86-video-ati-${VER}
 
 pushd xf86-video-ati-${VER}

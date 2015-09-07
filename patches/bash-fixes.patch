@@ -1,5 +1,5 @@
 --- a/arrayfunc.c	2014-10-01 18:57:35.000000000 +0200
-+++ b/arrayfunc.c	2015-05-21 18:21:02.877941074 +0200
++++ b/arrayfunc.c	2015-09-06 22:57:56.328941059 +0200
 @@ -404,6 +404,9 @@
        (*var->assign_func) (var, l->word->word, i, 0);
      else
@@ -22,7 +22,7 @@
  }
  
 --- a/assoc.c	2011-11-05 21:39:05.000000000 +0100
-+++ b/assoc.c	2015-05-21 18:21:00.158956999 +0200
++++ b/assoc.c	2015-09-06 22:57:56.328941059 +0200
 @@ -436,6 +436,8 @@
  #if 1
  	if (sh_contains_shell_metas (tlist->key))
@@ -33,7 +33,7 @@
  	  istr = tlist->key;	
  #else
 --- a/bashline.c	2014-10-01 18:57:30.000000000 +0200
-+++ b/bashline.c	2015-05-21 18:20:20.630188508 +0200
++++ b/bashline.c	2015-09-06 22:58:34.711768943 +0200
 @@ -202,6 +202,7 @@
  extern int last_command_exit_value;
  extern int array_needs_making;
@@ -42,7 +42,31 @@
  extern char *current_prompt_string, *ps1_prompt;
  extern STRING_INT_ALIST word_token_alist[];
  extern sh_builtin_func_t *last_shell_builtin, *this_shell_builtin;
-@@ -4208,8 +4209,9 @@
+@@ -1467,10 +1468,23 @@
+ 
+       os = start;
+       n = 0;
++      was_assignment = 0;
+       s = find_cmd_start (os);
+       e = find_cmd_end (end);
+       do
+ 	{
++	  /* Don't read past the end of rl_line_buffer */
++	  if (s > rl_end)
++	    {
++	      s1 = s = e1;
++	      break;
++	    }
++	  /* Or past point if point is within an assignment statement */
++	  else if (was_assignment && s > rl_point)
++	    {
++	      s1 = s = e1;
++	      break;
++	    }
+ 	  /* Skip over assignment statements preceding a command name.  If we
+ 	     don't find a command name at all, we can perform command name
+ 	     completion.  If we find a partial command name, we should perform
+@@ -4208,8 +4222,9 @@
  {
    /* If we're going to longjmp to top_level, make sure we clean up readline.
       check_signals will call QUIT, which will eventually longjmp to top_level,
@@ -55,7 +79,7 @@
    bashline_reset_event_hook ();
    check_signals_and_traps ();	/* XXX */
 --- a/builtins/common.h	2014-10-01 18:57:47.000000000 +0200
-+++ b/builtins/common.h	2015-05-21 18:20:20.631188502 +0200
++++ b/builtins/common.h	2015-09-06 22:57:56.330941103 +0200
 @@ -122,6 +122,10 @@
  /* Functions from getopts.def */
  extern void getopts_reset __P((int));
@@ -68,7 +92,7 @@
  extern int minus_o_option_value __P((char *));
  extern void list_minus_o_opts __P((int, int));
 --- a/builtins/read.def	2014-10-01 18:57:38.000000000 +0200
-+++ b/builtins/read.def	2015-05-21 18:20:20.631188502 +0200
++++ b/builtins/read.def	2015-09-06 22:57:56.335941212 +0200
 @@ -140,10 +140,12 @@
  procenv_t alrmbuf;
  int sigalrm_seen;
@@ -162,7 +186,7 @@
  
  #if defined (READLINE)
 --- a/builtins/set.def	2013-04-19 13:20:34.000000000 +0200
-+++ b/builtins/set.def	2015-05-21 18:20:57.876970364 +0200
++++ b/builtins/set.def	2015-09-06 22:57:56.336941234 +0200
 @@ -751,9 +751,11 @@
    WORD_LIST *list;
  {
@@ -208,7 +232,7 @@
        unset_array = 0;
        if (!unset_function && valid_array_reference (name))
 --- a/jobs.c	2014-10-01 18:57:26.000000000 +0200
-+++ b/jobs.c	2015-05-21 18:20:20.632188497 +0200
++++ b/jobs.c	2015-09-06 22:57:56.340941321 +0200
 @@ -3339,7 +3339,9 @@
        if (posixly_correct && this_shell_builtin && this_shell_builtin == wait_builtin)
  	{
@@ -220,8 +244,19 @@
  	  wait_signal_received = SIGCHLD;
  	  /* If we're in a signal handler, let CHECK_WAIT_INTR pick it up;
  	     run_pending_traps will call run_sigchld_trap later  */
+--- a/lib/readline/complete.c	2013-10-14 15:27:10.000000000 +0200
++++ b/lib/readline/complete.c	2015-09-06 22:58:34.712768964 +0200
+@@ -689,6 +689,8 @@
+ 
+   if (temp == 0 || *temp == '\0')
+     return (pathname);
++  else if (temp[1] == 0 && temp == pathname)
++    return (pathname);
+   /* If the basename is NULL, we might have a pathname like '/usr/src/'.
+      Look for a previous slash and, if one is found, return the portion
+      following that slash.  If there's no previous slash, just return the
 --- a/lib/sh/unicode.c	2014-01-30 22:47:19.000000000 +0100
-+++ b/lib/sh/unicode.c	2015-05-21 18:20:58.415967207 +0200
++++ b/lib/sh/unicode.c	2015-09-06 22:57:56.341941343 +0200
 @@ -78,13 +78,15 @@
    s = strrchr (locale, '.');
    if (s)
@@ -241,7 +276,7 @@
  }
  #endif
 --- a/parse.y	2014-10-05 19:52:50.000000000 +0200
-+++ b/parse.y	2015-05-21 18:21:00.695953854 +0200
++++ b/parse.y	2015-09-06 22:58:35.245780313 +0200
 @@ -2818,11 +2818,16 @@
      case AND_AND:
      case OR_OR:
@@ -260,18 +295,27 @@
      case BANG:		/* ! time pipeline */
      case TIME:		/* time time pipeline */
      case TIMEOPT:	/* time -p time pipeline */
+@@ -3703,6 +3708,8 @@
+ /*itrace("parse_comsub:%d: lex_inword -> 1 ch = `%c' (%d)", line_number, ch, __LINE__);*/
+ 	      tflags |= LEX_INWORD;
+ 	      lex_wlen = 0;
++	      if (tflags & LEX_RESWDOK)
++		lex_rwlen = 0;
+ 	    }
+ 	}
+ 
 --- a/patchlevel.h	2014-10-05 19:52:50.000000000 +0200
-+++ b/patchlevel.h	2015-05-21 18:21:02.880941057 +0200
++++ b/patchlevel.h	2015-09-06 22:58:35.248780377 +0200
 @@ -25,6 +25,6 @@
     regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
     looks for to find the patch level (for the sccs version string). */
  
 -#define PATCHLEVEL 30
-+#define PATCHLEVEL 39
++#define PATCHLEVEL 42
  
  #endif /* _PATCHLEVEL_H_ */
 --- a/shell.c	2014-01-14 14:04:32.000000000 +0100
-+++ b/shell.c	2015-05-21 18:20:20.632188497 +0200
++++ b/shell.c	2015-09-06 22:57:56.343941387 +0200
 @@ -73,6 +73,7 @@
  #endif
  
@@ -296,7 +340,7 @@
       passed to us. */
    if (signal_is_trapped (0))
 --- a/sig.c	2014-01-10 21:06:06.000000000 +0100
-+++ b/sig.c	2015-05-21 18:20:20.632188497 +0200
++++ b/sig.c	2015-09-06 22:57:56.344941408 +0200
 @@ -532,8 +532,10 @@
  #if defined (READLINE)
    /* Set the event hook so readline will call it after the signal handlers
@@ -310,8 +354,19 @@
      bashline_set_event_hook ();
  #endif
  
+--- a/subst.c	2014-10-01 18:57:47.000000000 +0200
++++ b/subst.c	2015-09-06 22:58:34.177757570 +0200
+@@ -5782,7 +5782,7 @@
+       /* XXX - does this leak if name[@] or name[*]? */
+       if (pflags & PF_ASSIGNRHS)
+         {
+-          temp = array_variable_name (name, &tt, (int *)0);
++          var = array_variable_part (name, &tt, (int *)0);
+           if (ALL_ELEMENT_SUB (tt[0]) && tt[1] == ']')
+ 	    temp = array_value (name, quoted|Q_DOUBLE_QUOTES, 0, &atype, &ind);
+ 	  else
 --- a/subst.h	2014-10-01 18:57:43.000000000 +0200
-+++ b/subst.h	2015-05-21 18:20:20.633188491 +0200
++++ b/subst.h	2015-09-06 22:57:56.344941408 +0200
 @@ -47,6 +47,7 @@
  #define ASS_MKASSOC	0x0004
  #define ASS_MKGLOBAL	0x0008	/* force global assignment */
@@ -321,7 +376,7 @@
  /* Flags for the string extraction functions. */
  #define SX_NOALLOC	0x0001	/* just skip; don't return substring */
 --- a/variables.c	2014-10-01 18:57:51.000000000 +0200
-+++ b/variables.c	2015-05-21 18:20:59.606960232 +0200
++++ b/variables.c	2015-09-06 22:57:56.345941430 +0200
 @@ -2516,10 +2516,27 @@
       HASH_TABLE *table;
       int hflags, aflags;
@@ -396,7 +451,7 @@
    return (v);
  }
 --- a/y.tab.c	2014-10-05 19:52:50.000000000 +0200
-+++ b/y.tab.c	2015-05-21 18:21:00.783953338 +0200
++++ b/y.tab.c	2015-09-06 22:58:35.247780356 +0200
 @@ -5130,11 +5130,16 @@
      case AND_AND:
      case OR_OR:
@@ -415,3 +470,12 @@
      case BANG:		/* ! time pipeline */
      case TIME:		/* time time pipeline */
      case TIMEOPT:	/* time -p time pipeline */
+@@ -6015,6 +6020,8 @@
+ /*itrace("parse_comsub:%d: lex_inword -> 1 ch = `%c' (%d)", line_number, ch, __LINE__);*/
+ 	      tflags |= LEX_INWORD;
+ 	      lex_wlen = 0;
++	      if (tflags & LEX_RESWDOK)
++		lex_rwlen = 0;
+ 	    }
+ 	}
+ 

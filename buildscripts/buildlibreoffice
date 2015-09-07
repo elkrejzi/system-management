@@ -19,6 +19,8 @@ sed -e "/distro-install-file-lists/d" -i Makefile.in
 
 chmod +x bin/unpack-sources
 
+patch -Np1 -i /media/ntfs/Other/Linux/patches/libreoffice-fixes.patch
+
 # Uses libpoppler.so
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \

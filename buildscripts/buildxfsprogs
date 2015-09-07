@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.2.4
+export VER=4.2.0
 export DEST=/binary/xfsprogs-${VER}
 
 pushd xfsprogs-${VER}
@@ -21,7 +21,7 @@ rm -rf xfsprogs-${VER}
 
 find ${DEST} -name "*.la" -delete
 
-rm -rf ${DEST}/usr/lib/libhandle.a
+rm -rf ${DEST}/lib/libhandle.a ${DEST}/usr/lib/libhandle.a
 rm -rf ${DEST}/usr/share/doc
 
 ln -sf ../../lib/$(readlink ${DEST}/lib/libhandle.so) ${DEST}/usr/lib/libhandle.so

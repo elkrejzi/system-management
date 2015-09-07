@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.7.50
+export VER=1.7.51
 export DEST=/binary/wine-${VER}
 
 # Wine staging
@@ -30,7 +30,8 @@ popd
 
 pushd wine-${VER}/build32
 
-PKG_CONFIG=/usr/lib32/pkgconfig  \
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
 ../configure --prefix=/usr       \
              --libdir=/usr/lib32 \
              --with-x            \

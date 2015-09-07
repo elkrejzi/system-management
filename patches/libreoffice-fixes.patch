@@ -1,0 +1,11 @@
+--- a/solenv/gbuild/platform/com_GCC_defs.mk	2015-08-22 08:41:35.000000000 +0200
++++ b/solenv/gbuild/platform/com_GCC_defs.mk	2015-09-06 22:26:51.924173302 +0200
+@@ -47,6 +47,8 @@
+ gb_AFLAGS := $(AFLAGS)
+ 
+ gb_COMPILERDEFS := \
++	-DBOOST_ERROR_CODE_HEADER_ONLY \
++	-DBOOST_SYSTEM_NO_DEPRECATED \
+ 	-DCPPU_ENV=$(gb_CPPU_ENV) \
+ 
+ gb_CFLAGS_COMMON := \

@@ -3,6 +3,8 @@
 export VER=1.2.12
 export DEST=/binary/colord-${VER}
 
+cp -a colord-${VER} colord-${VER}-32
+
 pushd colord-${VER}
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
@@ -22,7 +24,36 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf colord-${VER}
+pushd colord-${VER}-32
+
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \
+./configure --prefix=/usr              \
+            --sysconfdir=/etc          \
+            --localstatedir=/var       \
+            --libdir=/usr/lib32        \
+            --with-daemon-user=colord  \
+            --disable-argyllcms-sensor \
+            --disable-bash-completion  \
+            --disable-gusb             \
+            --disable-introspection    \
+            --disable-polkit           \
+            --disable-sane             \
+            --disable-static           \
+            --disable-vala
+
+make -j4
+make install DESTDIR=${PWD}/dest
+
+mv dest/usr/lib32 ${DEST}/usr
+
+popd
+
+rm -rf colord-${VER} colord-${VER}-32
 
 find ${DEST} -name "*.la" -delete
 

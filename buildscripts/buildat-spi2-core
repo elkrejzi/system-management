@@ -3,6 +3,8 @@
 export VER=2.17.90
 export DEST=/binary/at-spi2-core-${VER}
 
+cp -a at-spi2-core-${VER} at-spi2-core-${VER}-32
+
 pushd at-spi2-core-${VER}
 
 CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"   \
@@ -14,7 +16,27 @@ make install DESTDIR=${DEST}
 
 popd
 
-rm -rf at-spi2-core-${VER}
+pushd at-spi2-core-${VER}-32
+
+export CC="gcc -m32"
+export CXX="g++ -m32"
+export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
+
+CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \
+./configure --prefix=/usr       \
+            --sysconfdir=/etc   \
+            --libdir=/usr/lib32 \
+            --disable-introspection
+
+make -j4
+make install DESTDIR=${PWD}/dest
+
+mv dest/usr/lib32 ${DEST}/usr
+
+popd
+
+rm -rf at-spi2-core-${VER} at-spi2-core-${VER}-32
 
 find ${DEST} -name "*.la" -delete
 
