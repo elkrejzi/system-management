@@ -1,6 +1,6 @@
---- a/Makefile.am	2015-08-28 04:12:09.071804070 +0200
-+++ b/Makefile.am	2015-08-28 04:22:56.286146263 +0200
-@@ -2994,7 +2994,11 @@
+--- a/Makefile.am	2015-09-09 10:36:27.158927043 +0200
++++ b/Makefile.am	2015-09-09 10:51:55.358352001 +0200
+@@ -3016,7 +3016,11 @@
  UNINSTALL_EXEC_HOOKS += libsystemd-uninstall-hook
  
  pkgconfiglib_DATA += \
@@ -13,7 +13,7 @@
  
  pkginclude_HEADERS += \
  	src/systemd/sd-bus.h \
-@@ -5634,12 +5638,6 @@
+@@ -5663,12 +5667,6 @@
  	libsystemd-id128.la \
  	libsystemd-daemon.la
  
@@ -26,9 +26,9 @@
  # move lib from $(libdir) to $(rootlibdir) and update devel link, if needed
  compat-lib-install-hook:
  	libname=libsystemd-login.so && $(move-to-rootlibdir)
---- a/Makefile.in	2015-08-28 04:13:20.252164363 +0200
-+++ b/Makefile.in	2015-08-28 04:23:20.814613219 +0200
-@@ -1218,34 +1218,28 @@
+--- a/Makefile.in	2015-09-09 10:37:05.776337343 +0200
++++ b/Makefile.in	2015-09-09 10:52:17.380662434 +0200
+@@ -1220,34 +1220,28 @@
  @ENABLE_COMPAT_LIBS_TRUE@	libsystemd-id128.la \
  @ENABLE_COMPAT_LIBS_TRUE@	libsystemd-daemon.la
  
@@ -72,7 +72,7 @@
  @HAVE_SYSV_COMPAT_TRUE@	poweroff.target runlevel0.target \
  @HAVE_SYSV_COMPAT_TRUE@	rescue.target runlevel1.target \
  @HAVE_SYSV_COMPAT_TRUE@	multi-user.target runlevel2.target \
-@@ -1254,25 +1248,25 @@
+@@ -1256,25 +1250,25 @@
  @HAVE_SYSV_COMPAT_TRUE@	graphical.target runlevel5.target \
  @HAVE_SYSV_COMPAT_TRUE@	reboot.target runlevel6.target
  
@@ -103,7 +103,7 @@
  @ENABLE_SPLIT_USR_FALSE@	--disable-split-usr
  
  subdir = .
-@@ -4932,10 +4926,10 @@
+@@ -4950,10 +4944,10 @@
  	install-touch-usr-hook install-busnames-target-wants-hook \
  	systemd-detect-virt-install-hook dbus1-generator-install-hook \
  	$(am__append_109) libsystemd-install-hook libudev-install-hook \
@@ -116,7 +116,7 @@
  INSTALL_DATA_HOOKS = units-install-hook $(am__append_117) \
  	catalog-update-hook
  UNINSTALL_DATA_HOOKS = units-uninstall-hook catalog-remove-hook
-@@ -4972,7 +4966,10 @@
+@@ -4990,7 +4984,10 @@
  noinst_DATA = $(am__append_61) $(am__append_63)
  pkgconfigdata_DATA = src/core/systemd.pc src/udev/udev.pc
  pkgconfiglib_DATA = src/libsystemd/libsystemd.pc \
@@ -128,7 +128,7 @@
  polkitpolicy_in_in_files =  \
  	src/core/org.freedesktop.systemd1.policy.in.in
  polkitpolicy_in_files =  \
-@@ -5068,7 +5065,7 @@
+@@ -5091,7 +5088,7 @@
  	$(nodist_zshcompletion_DATA) $(am__append_62) $(am__append_64) \
  	$(gperf_txt_sources:-list.txt=-from-name.gperf) \
  	$(gperf_txt_sources) $(am__append_106) $(am__append_154) \
@@ -137,7 +137,7 @@
  	test-libsystemd-sym.c test-libudev-sym.c
  AM_CPPFLAGS = \
  	-include $(top_builddir)/config.h \
-@@ -5145,7 +5142,7 @@
+@@ -5169,7 +5166,7 @@
  # ------------------------------------------------------------------------------
  INSTALL_DIRS = $(am__append_88) $(am__append_92) \
  	$(sysconfdir)/udev/rules.d $(am__append_114) $(am__append_158) \
@@ -146,7 +146,7 @@
  	$(prefix)/lib/modules-load.d $(sysconfdir)/modules-load.d \
  	$(prefix)/lib/systemd/network $(sysconfdir)/systemd/network \
  	$(prefix)/lib/sysctl.d $(sysconfdir)/sysctl.d \
-@@ -5160,9 +5157,9 @@
+@@ -5184,9 +5181,9 @@
  LOCAL_FS_TARGET_WANTS = systemd-remount-fs.service tmp.mount \
  	var-lib-machines.mount
  MULTI_USER_TARGET_WANTS = $(am__append_289) $(am__append_296) \
@@ -159,7 +159,7 @@
  SYSINIT_TARGET_WANTS = $(am__append_71) $(am__append_78) \
  	$(am__append_80) $(am__append_85) $(am__append_91) \
  	$(am__append_95) systemd-machine-id-commit.service \
-@@ -5171,7 +5168,7 @@
+@@ -5195,7 +5192,7 @@
  	systemd-journal-flush.service \
  	systemd-journal-catalog-update.service $(am__append_159) \
  	$(am__append_163) $(am__append_171) $(am__append_179) \
@@ -168,7 +168,7 @@
  	dev-hugepages.mount dev-mqueue.mount sys-kernel-config.mount \
  	sys-kernel-debug.mount sys-fs-fuse-connections.mount \
  	systemd-sysctl.service systemd-ask-password-console.path
-@@ -5190,7 +5187,7 @@
+@@ -5214,7 +5211,7 @@
  SYSTEM_UNIT_ALIASES = $(am__append_186) $(am__append_197) \
  	$(am__append_208) $(am__append_232) $(am__append_239) \
  	$(am__append_251) $(am__append_270) $(am__append_290) \
@@ -177,7 +177,7 @@
  	reboot.target ctrl-alt-del.target getty@.service \
  	autovt@.service
  USER_UNIT_ALIASES = $(systemunitdir)/shutdown.target shutdown.target \
-@@ -8732,8 +8729,8 @@
+@@ -8777,8 +8774,8 @@
  	--with-pamlibdir=$$dc_install_base/$(pamlibdir) \
  	--with-pamconfdir=$$dc_install_base/$(pamconfdir) \
  	--with-rootprefix=$$dc_install_base --enable-compat-libs \

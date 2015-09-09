@@ -23,6 +23,10 @@ popd
 
 rm -rf pciutils-${VER}
 
+install -dm755 ${DEST}/usr/bin
+
+mv ${DEST}/usr/sbin/lspci ${DEST}/usr/bin
+
 chmod 755 ${DEST}/usr/lib/libpci.so
 
 pushd ${DEST}
