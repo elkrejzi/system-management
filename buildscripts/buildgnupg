@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.0.28
+export VER=2.0.29
 export DEST=/binary/gnupg-${VER}
 
 pushd gnupg-${VER}

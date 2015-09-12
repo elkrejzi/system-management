@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.6.1.pre1
+export VER=1.6.1
 export DEST=/binary/libva-intel-driver-${VER}
 
 pushd libva-intel-driver-${VER}
