@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.0.19
+export VER=1.0.20
 export DEST=/binary/libusb-${VER}
 
 pushd libusb-${VER}
@@ -9,7 +9,7 @@ CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-stro
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr --disable-static
 
-make -j4
+make
 make install DESTDIR=${DEST}
 
 popd

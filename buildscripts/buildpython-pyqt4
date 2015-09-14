@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.11.4
+export VER=4.11.5-snapshot-ec8ff8d8e222
 export DEST=/binary/python-pyqt-${VER}
 
 cp -a PyQt-x11-gpl-${VER} PyQt-x11-gpl-${VER}-2

@@ -1,11 +1,9 @@
 #!/bin/bash -e
 
-export VER=2.11
+export VER=2.12
 export DEST=/binary/cpio-${VER}
 
 pushd cpio-${VER}
-
-sed -i -e '/gets is a/d' gnu/stdio.in.h
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \

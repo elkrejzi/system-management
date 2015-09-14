@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
-export MAJORVER=3.4
-export VER=${MAJORVER}.3
+export MAJORVER=3.5
+export VER=${MAJORVER}.0
 export DEST=/binary/Python-${VER}
 
 pushd Python-${VER}

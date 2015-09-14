@@ -121,7 +121,7 @@ pushd frameworks
     make -j4
     make install DESTDIR=${DEST}/${framework}-${VER}
 
-    rm -rf ${DEST}/${framework}-${VER}/usr/share/man/{de,it,nl,pt_BR,ru,sv,uk}
+    rm -rf ${DEST}/${framework}-${VER}/usr/share/man/{ca,de,it,nl,pt_BR,ru,sv,uk}
 
     popd
 
