@@ -1,0 +1,35 @@
+#!/bin/bash -e
+
+# Fetch
+wget -c https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+
+# Unpack
+ar x google-chrome-stable_current_amd64.deb data.tar.xz
+tar -xJf data.tar.xz ./opt/google/chrome/PepperFlash --strip-components=4
+
+# Clean up
+rm -rf google-chrome-stable_current_amd64.deb data.tar.xz
+
+export VER=$(grep version PepperFlash/manifest.json | awk '{print $2}' | cut -d \" -f2)
+export DEST=/binary/chromium-pepper-flash-${VER}
+
+chmod 755 PepperFlash/*.so
+
+install -dm755 ${DEST}/etc/chromium ${DEST}/usr/lib
+
+mv PepperFlash ${DEST}/usr/lib
+
+cat > ${DEST}/etc/chromium/default.flash << EOF
+# Default settings for chromium. This file is sourced by /usr/bin/chromium
+
+# Options to pass to chromium
+CHROMIUM_FLAGS="--ppapi-flash-path=/usr/lib/PepperFlash/libpepflashplayer.so --ppapi-flash-version='${VER}' --allow-outdated-plugins --ignore-gpu-blacklist"
+EOF
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+EOF
+
+chmod 755 ${DEST}/INSTALL
