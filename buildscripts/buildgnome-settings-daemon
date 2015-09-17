@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.17.90
+export VER=3.17.92
 export DEST=/binary/gnome-settings-daemon-${VER}
 
 pushd gnome-settings-daemon-${VER}

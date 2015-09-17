@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.17.2
+export VER=0.17.3
 export DEST=/binary/libgdata-${VER}
 
 pushd libgdata-${VER}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.24
+export VER=5.25
 export DEST=/binary/file-${VER}
 
 pushd file-${VER}

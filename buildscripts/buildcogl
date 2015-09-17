@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.21.2
+export VER=1.22.0
 export DEST=/binary/cogl-${VER}
 
 pushd cogl-${VER}
