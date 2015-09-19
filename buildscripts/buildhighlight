@@ -5,8 +5,10 @@ export DEST=/binary/highlight-${VER}
 
 pushd highlight-${VER}
 
+sed -i "/TEMPLATE/a QT += widgets" src/gui-qt/highlight.pro
+
 make CFLAGS="-Wall -O2 -pipe -fstack-protector-strong -march=sandybridge -fomit-frame-pointer -DNDEBUG" -j4
-make CFLAGS="-Wall -O2 -pipe -fstack-protector-strong -march=sandybridge -fomit-frame-pointer -DNDEBUG" -j4 gui
+make CFLAGS="-Wall -O2 -pipe -fstack-protector-strong -march=sandybridge -fomit-frame-pointer -DNDEBUG" QMAKE=qmake-qt5 gui -j4
 
 make install DESTDIR=${DEST}
 make install-gui DESTDIR=${DEST}

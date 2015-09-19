@@ -5,6 +5,8 @@ export DEST=/binary/doxygen-${VER}
 
 pushd doxygen-${VER}
 
+patch -Np1 -i /media/ntfs/Other/Linux/patches/doxygen-qt5.patch
+
 cmake -DCMAKE_INSTALL_PREFIX=/usr \
       -DCMAKE_BUILD_TYPE=Release  \
       -Dbuild_search=ON           \
