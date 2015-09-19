@@ -1,20 +1,21 @@
 #!/bin/bash -e
 
-export VER=3.3.1
+export VER=3.3.2
 export DEST=/binary/cmake-${VER}
 
 pushd cmake-${VER}
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-./bootstrap --prefix=/usr       \
-            --parallel=4        \
-            --qt-gui            \
-            --sphinx-man        \
-            --system-libs       \
-            --no-system-jsoncpp \
-            --mandir=/share/man \
-            --docdir=/share/doc/cmake
+./bootstrap --prefix=/usr             \
+            --parallel=4              \
+            --qt-gui                  \
+            --sphinx-man              \
+            --system-libs             \
+            --no-system-jsoncpp       \
+            --mandir=/share/man       \
+            --docdir=/share/doc/cmake \
+            --qt-qmake=/usr/bin/qmake-qt5
 
 make -j4
 make install DESTDIR=${DEST}

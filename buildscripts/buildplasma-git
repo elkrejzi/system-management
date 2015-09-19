@@ -39,24 +39,16 @@ do
   if [[ -d ${plasma} ]]
   then
     pushd ${plasma}
+      git clean -fdx
+      git fetch origin
+      git reset --hard origin/master
       if [[ ${plasma} != "plasma-workspace-wallpapers" ]]
       then
-        git clean -fdx
-        git fetch origin
-        git reset --hard origin/master
         export VER=$(grep "PROJECT_VERSION " CMakeLists.txt | cut -d \" -f2)
-      else
-        rm -rf ${plasma}/build
-        svn up
       fi
     popd
   else
-    if [[ ${plasma} != "plasma-workspace-wallpapers" ]]
-    then
-      git clone git://anongit.kde.org/${plasma}.git
-    else
-      svn co svn://svn.kde.org/home/kde/trunk/KDE/${plasma}
-    fi
+    git clone git://anongit.kde.org/${plasma}.git
     pushd ${plasma}
       if [[ ${plasma} != "plasma-workspace-wallpapers" ]]
       then
