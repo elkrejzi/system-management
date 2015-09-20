@@ -10,7 +10,6 @@ export CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"
 
 ./configure -prefix         /usr               \
             -sysconfdir     /etc/xdg           \
-            -bindir         /usr/lib/qt5/bin   \
             -headerdir      /usr/include/qt5   \
             -archdatadir    /usr/lib/qt5       \
             -datadir        /usr/share/qt5     \
@@ -51,11 +50,10 @@ rm -rf qtbase-opensource-src-${VER}
 
 rm -rf ${DEST}/usr/lib/*.la ${DEST}/usr/share
 
-install -dm755 ${DEST}/usr/bin
-
-for file in ${DEST}/usr/lib/qt5/bin/*
+# Transitional
+for file in ${DEST}/usr/bin/*
 do
-  ln -sf ../lib/qt5/bin/$(basename $file) ${DEST}/usr/bin/$(basename $file)-qt5
+  ln -sf $(basename $file) ${DEST}/usr/bin/$(basename $file)-qt5
 done
 
 pushd ${DEST}

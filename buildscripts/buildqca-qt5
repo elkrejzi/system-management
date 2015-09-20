@@ -24,10 +24,6 @@ popd
 
 rm -rf qca-qt5-${VER}
 
-install -dm755 ${DEST}/usr/bin
-
-for file in ${DEST}/usr/lib/qt5/bin/* ; do ln -sfr ${file} ${DEST}/usr/bin/$(basename ${file}) ; done
-
 pushd ${DEST}
 
 find * -type f 2>/dev/null | while read BUILD_BINARY ; do

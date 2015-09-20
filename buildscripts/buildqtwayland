@@ -21,11 +21,10 @@ rm -rf qtwayland-opensource-src-${VER}
 
 rm -rf ${DEST}/usr/lib/*.la
 
-install -dm755 ${DEST}/usr/bin
-
-for file in ${DEST}/usr/lib/qt5/bin/*
+# Transitional
+for file in ${DEST}/usr/bin/*
 do
-  ln -sf ../lib/qt5/bin/$(basename $file) ${DEST}/usr/bin/$(basename $file)-qt5
+  ln -sf $(basename $file) ${DEST}/usr/bin/$(basename $file)-qt5
 done
 
 pushd ${DEST}

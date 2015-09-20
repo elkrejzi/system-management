@@ -21,6 +21,12 @@ rm -rf qtquick1-opensource-src-${VER}
 
 rm -rf ${DEST}/usr/lib/*.la
 
+# Transitional
+for file in ${DEST}/usr/bin/*
+do
+  ln -sf $(basename $file) ${DEST}/usr/bin/$(basename $file)-qt5
+done
+
 pushd ${DEST}
 
 find * -type f 2>/dev/null | while read BUILD_BINARY ; do
