@@ -9,7 +9,7 @@ WX_CONFIG=/usr/bin/wx-config \
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr \
-            --with-qt=qt4 \
+            --with-qt=qt5 \
             --libexecdir=/usr/bin
 
 make pkglibexecdir=/usr/bin -j4

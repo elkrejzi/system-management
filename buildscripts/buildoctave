@@ -5,12 +5,16 @@ export DEST=/binary/octave-${VER}
 
 pushd octave-${VER}
 
+patch -Np1 -i /media/ntfs/Other/Linux/patches/octave-qt5.patch
+
+autoreconf -fi
+
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr --with-umfpack="-lumfpack -lsuitesparseconfig" \
             LEXLIB=/usr/lib/libfl.a
 
-make -j3
+make -j4
 make install DESTDIR=${DEST}
 
 popd

@@ -9,7 +9,9 @@ patch -Np1 -i /media/ntfs/Other/Linux/patches/zbar-fixes.patch
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr --disable-static
+./configure --prefix=/usr    \
+            --disable-static \
+            --without-qt
 
 make -j4
 make install DESTDIR=${DEST}

@@ -30,6 +30,10 @@ if [ -e /usr/bin/tclsh ]; then
   export TCLDEST=/usr/lib/tcl${TCLVER}
 fi
 
+patch -Np1 -i /media/ntfs/Other/Linux/patches/graphviz-qt5.patch
+
+autoreconf -fi
+
 sed -i "s:ruby-1.9:ruby-2.2:g" -i configure
 
 export C_INCLUDE_PATH=/usr/lib/java/include:/usr/lib/java/include/linux

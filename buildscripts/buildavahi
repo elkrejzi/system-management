@@ -12,16 +12,17 @@ sed -i -e 's/-DG_DISABLE_DEPRECATED=1//' \
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr \
-            --sysconfdir=/etc \
-            --localstatedir=/var \
-            --disable-static \
-            --disable-qt3 \
-            --disable-mono \
-            --disable-monodoc \
+./configure --prefix=/usr             \
+            --sysconfdir=/etc         \
+            --localstatedir=/var      \
+            --disable-static          \
+            --disable-qt3             \
+            --disable-qt4             \
+            --disable-mono            \
+            --disable-monodoc         \
             --enable-compat-libdns_sd \
-            --enable-compat-howl \
-            --with-distro=none \
+            --enable-compat-howl      \
+            --with-distro=none        \
             --with-systemdsystemunitdir=/lib/systemd/system
 
 make -j4

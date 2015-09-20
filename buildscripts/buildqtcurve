@@ -10,7 +10,7 @@ pushd qtcurve-${VER}
 cmake -DCMAKE_INSTALL_PREFIX=/usr \
       -DCMAKE_BUILD_TYPE=Release  \
       -DENABLE_TEST=OFF           \
-      -DQTC_QT4_ENABLE_KDE=OFF    \
+      -DENABLE_QT4=OFF            \
       -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
 
@@ -25,14 +25,12 @@ export CC="gcc -m32"
 export CXX="g++ -m32"
 export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
-cmake -DCMAKE_INSTALL_PREFIX=/usr             \
-      -DCMAKE_BUILD_TYPE=Release              \
-      -DQT_PLUGINS_DIR=/usr/lib32/qt4/plugins \
-      -DQT_LIBRARY_DIR=/usr/lib32             \
-      -DLIB_INSTALL_DIR=/usr/lib32            \
-      -DENABLE_TEST=OFF                       \
-      -DENABLE_QT5=OFF                        \
-      -DQTC_QT4_ENABLE_KDE=OFF                \
+cmake -DCMAKE_INSTALL_PREFIX=/usr  \
+      -DCMAKE_BUILD_TYPE=Release   \
+      -DLIB_INSTALL_DIR=/usr/lib32 \
+      -DENABLE_TEST=OFF            \
+      -DENABLE_QT4=OFF             \
+      -DENABLE_QT5=OFF             \
       -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
       -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
 

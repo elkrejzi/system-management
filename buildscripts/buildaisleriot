@@ -7,11 +7,10 @@ pushd aisleriot-${VER}
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr     \
-            --sysconfdir=/etc \
+./configure --prefix=/usr            \
+            --sysconfdir=/etc        \
             --with-platform=gtk-only \
-            --with-card-theme-formats=all \
-            --with-kde-card-theme-path=/usr/share/apps/carddecks \
+            --with-card-theme-formats=svg,fixed,pysol \
             --with-pysol-card-theme-path=/usr/share/PySolFC
 
 make -j4

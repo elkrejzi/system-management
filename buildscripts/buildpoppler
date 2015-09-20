@@ -9,9 +9,10 @@ pushd poppler-${VER}
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr     \
-            --sysconfdir=/etc \
-            --disable-static  \
+./configure --prefix=/usr         \
+            --sysconfdir=/etc     \
+            --disable-poppler-qt4 \
+            --disable-static      \
             --enable-xpdf-headers
 
 make -j4
@@ -24,7 +25,7 @@ pushd poppler-${VER}-static
 # Build static library with -fPIC
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -fPIC"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -fPIC" \
-./configure --prefix=/usr
+./configure --prefix=/usr --disable-poppler-qt4
 
 make -C goo     -j4
 make -C fofi    -j4

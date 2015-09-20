@@ -5,7 +5,6 @@ export DEST=/binary/lightdm-${VER}
 
 pushd lightdm-${VER}
 
-export MOC4=moc-qt4
 export MOC5=moc-qt5
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
@@ -13,6 +12,7 @@ CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-st
 ./configure --prefix=/usr               \
             --sysconfdir=/etc           \
             --localstatedir=/var        \
+            --disable-liblightdm-qt     \
             --disable-static            \
             --disable-tests             \
             --with-greeter-user=lightdm \

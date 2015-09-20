@@ -5,15 +5,11 @@ export DEST=/binary/qscintilla-${VER}
 
 pushd QScintilla-gpl-${VER}
 
-patch -Np1 -i /media/ntfs/Other/Linux/patches/qscintilla-fixes.patch
-
 popd
-
-cp -a QScintilla-gpl-${VER}/Python QScintilla-gpl-${VER}/Python3
 
 pushd QScintilla-gpl-${VER}/Qt4Qt5
 
-qmake-qt4 qscintilla.pro "QMAKE_CFLAGS=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" "QMAKE_CXXFLAGS=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
+qmake-qt5 qscintilla.pro "QMAKE_CFLAGS+=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" "QMAKE_CXXFLAGS+=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
 
 make -j4
 make install INSTALL_ROOT=${DEST}
@@ -22,28 +18,10 @@ popd
 
 pushd QScintilla-gpl-${VER}/designer-Qt4Qt5
 
-QMAKEFEATURES=../Qt4Qt5/features qmake-qt4 designer.pro "QMAKE_CFLAGS=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" "QMAKE_CXXFLAGS=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" INCLUDEPATH+=../Qt4Qt5 QMAKE_LIBDIR+=../Qt4Qt5
+qmake-qt5 designer.pro INCLUDEPATH+=../Qt4Qt5 QMAKE_LIBDIR+=../Qt4Qt5 "QMAKE_CFLAGS+=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" "QMAKE_CXXFLAGS+=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
 
 make -j4
 make install INSTALL_ROOT=${DEST}
-
-popd
-
-pushd QScintilla-gpl-${VER}/Python
-
-QMAKEFEATURES=../Qt4Qt5/features python configure.py -n ../Qt4Qt5/ -o ../Qt4Qt5/ -c --qmake /usr/bin/qmake-qt4
-
-make -j4
-make install DESTDIR=${DEST} INSTALL_ROOT=${DEST}
-
-popd
-
-pushd QScintilla-gpl-${VER}/Python3
-
-QMAKEFEATURES=../Qt4Qt5/features python3 configure.py -n ../Qt4Qt5/ -o ../Qt4Qt5/ -c --qmake /usr/bin/qmake-qt4
-
-make -j4
-make install DESTDIR=${DEST} INSTALL_ROOT=${DEST}
 
 popd
 
