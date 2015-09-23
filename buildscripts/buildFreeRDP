@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
-export VER=1.0.2
-export DEST=/binary/freerdp-${VER}
+export VER=1.2.0-beta1-android9
+export DEST=/binary/FreeRDP-${VER}
 
 pushd FreeRDP-${VER}
 
@@ -10,8 +10,11 @@ patch -Np1 -i /media/ntfs/Other/Linux/patches/freerdp-fixes.patch
 cmake -DCMAKE_INSTALL_PREFIX=/usr \
       -DCMAKE_BUILD_TYPE=Release  \
       -DCMAKE_INSTALL_LIBDIR=lib  \
-      -DWITH_PULSEAUDIO=ON        \
-      -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
+      -DWITH_CUPS=ON              \
+      -DWITH_GSM=ON               \
+      -DWITH_JPEG=ON              \
+      -DWITH_PULSE=ON             \
+      -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong $(pkg-config --cflags gstreamer-1.0)"
 
 make -j4
 make install DESTDIR=${DEST}
@@ -25,6 +28,7 @@ pushd ${DEST}
 find * -type f 2>/dev/null | while read BUILD_BINARY ; do
   case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
     strip --strip-unneeded ${BUILD_BINARY}
+    chrpath -d ${BUILD_BINARY}
   esac
 done
 

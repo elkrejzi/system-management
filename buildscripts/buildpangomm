@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.37.2
+export VER=2.38.1
 export DEST=/binary/pangomm-${VER}
 
 pushd pangomm-${VER}

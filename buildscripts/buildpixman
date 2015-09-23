@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.32.6
+export VER=0.32.8
 export DEST=/binary/pixman-${VER}
 
 cp -a pixman-${VER} pixman-${VER}-32

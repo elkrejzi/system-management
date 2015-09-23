@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.17.90
+export VER=2.18.0
 export DEST=/binary/atk-${VER}
 
 cp -a atk-${VER} atk-${VER}-32

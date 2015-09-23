@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.4.1
+export VER=1.4.2
 export DEST=/binary/libjpeg-turbo-${VER}
 
 cp -a libjpeg-turbo-${VER} libjpeg-turbo-${VER}-32

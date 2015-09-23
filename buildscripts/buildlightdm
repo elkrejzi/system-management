@@ -1,9 +1,11 @@
 #!/bin/bash -e
 
-export VER=1.16.0
+export VER=1.16.2
 export DEST=/binary/lightdm-${VER}
 
 pushd lightdm-${VER}
+
+sed -i "/audit_event (A/d" src/session-child.c
 
 export MOC5=moc-qt5
 

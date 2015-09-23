@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.23.3
+export VER=2.24.1
 export DEST=/binary/atkmm-${VER}
 
 pushd atkmm-${VER}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.17.90
+export VER=2.18.0
 export DEST=/binary/at-spi2-atk-${VER}
 
 cp -a at-spi2-atk-${VER} at-spi2-atk-${VER}-32

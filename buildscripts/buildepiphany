@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=3.17.91
+export VER=3.18.0
 export DEST=/binary/epiphany-${VER}
 
 pushd epiphany-${VER}
@@ -11,6 +11,8 @@ CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-st
 
 make -j4
 make install DESTDIR=${DEST}
+
+sed -i "s#multipart/related;##" ${DEST}/usr/share/applications/epiphany.desktop
 
 popd
 

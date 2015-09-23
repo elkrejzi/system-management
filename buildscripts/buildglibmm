@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.45.80
+export VER=2.46.1
 export DEST=/binary/glibmm-${VER}
 
 pushd glibmm-${VER}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.37.5
+export VER=1.38.0
 export DEST=/binary/pango-${VER}
 
 cp -a pango-${VER} pango-${VER}-32

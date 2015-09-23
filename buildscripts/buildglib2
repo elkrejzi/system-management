@@ -1,7 +1,11 @@
 #!/bin/bash -e
 
-export VER=2.45.8
+export VER=2.46.0
 export DEST=/binary/glib-${VER}
+
+pushd glib-${VER}
+  patch -Np1 -i /media/ntfs/Other/Linux/patches/glib-compile-schemas-quiet.patch
+popd
 
 cp -a glib-${VER} glib-${VER}-32
 
