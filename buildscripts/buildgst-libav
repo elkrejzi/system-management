@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.5.90
+export VER=1.5.91
 export DEST=/binary/gst-libav-${VER}
 
 pushd gst-libav-${VER}

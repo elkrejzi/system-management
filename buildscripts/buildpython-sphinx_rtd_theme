@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.1.8
+export VER=0.1.9
 export DEST=/binary/python-sphinx_rtd_theme-${VER}
 
 cp -a sphinx_rtd_theme-${VER} sphinx_rtd_theme-${VER}-3

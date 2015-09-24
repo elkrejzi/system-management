@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=15.07.80-262-g1dd033d
+export VER=15.08.0+709121c
 export DEST=/binary/okular-${VER}
 
 pushd okular-${VER}

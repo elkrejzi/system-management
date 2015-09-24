@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=20150717
+export VER=20150818
 export DEST=/binary/acpica-${VER}
 
 pushd acpica-unix-${VER}/generate/unix

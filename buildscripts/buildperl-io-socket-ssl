@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.016
+export VER=2.020
 export DEST=/binary/perl-io-socket-ssl-${VER}
 
 pushd IO-Socket-SSL-${VER}

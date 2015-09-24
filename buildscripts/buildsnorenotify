@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.5.2
+export VER=0.5.3
 export DEST=/binary/snorenotify-${VER}
 
 pushd Snorenotify-${VER}

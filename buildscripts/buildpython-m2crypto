@@ -3,7 +3,25 @@
 export VER=0.22.3
 export DEST=/binary/python-m2crypto-${VER}
 
+export SWIG_VER=3.0.4
+
 pushd M2Crypto-${VER}
+
+# swig-3.0.5 and later produce a broken package.
+wget -c http://downloads.sourceforge.net/swig/swig-${SWIG_VER}.tar.gz
+
+tar xf swig-${SWIG_VER}.tar.gz
+
+pushd swig-${SWIG_VER}
+
+./configure --prefix=${PWD}/../swig
+
+make -j4
+make install
+
+popd
+
+export PATH=${PWD}/swig/bin:$PATH
 
 python setup.py build
 python setup.py install --root=${DEST} --optimize=1

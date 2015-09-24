@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.14.1-120-gbba8e5f
+export VER=4.14.1+b80b1a3
 export DEST=/binary/libkexiv2-${VER}
 
 pushd libkexiv2-${VER}

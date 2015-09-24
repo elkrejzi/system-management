@@ -5,8 +5,8 @@ export DEST=/binary/gnome-shell-${VER}
 
 pushd gnome-shell-${VER}
 
-CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"   \
+CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr
 
 make -j4
@@ -26,9 +26,12 @@ ln -sf ../../gnome-shell/mozilla/libgnome-shell-browser-plugin.so ${DEST}/usr/li
 pushd ${DEST}
 
 find * -type f 2>/dev/null | while read BUILD_BINARY ; do
-  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
-    strip --strip-unneeded ${BUILD_BINARY}
-  esac
+case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+mkdir -p usr/lib/debug/`dirname ${BUILD_BINARY}`
+objcopy --only-keep-debug ${BUILD_BINARY} usr/lib/debug/${BUILD_BINARY}
+strip --strip-unneeded ${BUILD_BINARY}
+objcopy --add-gnu-debuglink=usr/lib/debug/${BUILD_BINARY} ${BUILD_BINARY}
+esac
 done
 
 popd

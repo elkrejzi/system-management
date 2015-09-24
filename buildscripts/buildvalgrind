@@ -1,13 +1,11 @@
 #!/bin/bash -e
 
-export VER=3.10.1
+export VER=3.11.0
 export DEST=/binary/valgrind-${VER}
 
 pushd valgrind-${VER}
 
 sed -i "s/-mt//g" configure
-sed -i "s/2.20/2.22/g" configure
-sed -i 's#|3.\*#&|4.\*#' configure
 
 ./configure --prefix=/usr
 

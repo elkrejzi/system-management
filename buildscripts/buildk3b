@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.0.1-615-gd5b1016
+export VER=2.9.90+d5b1016
 export DEST=/binary/k3b-${VER}
 
 pushd k3b-${VER}

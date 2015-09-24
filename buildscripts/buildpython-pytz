@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2015.4
+export VER=2015.6
 export DEST=/binary/python-pytz-${VER}
 
 cp -a pytz-${VER} pytz-${VER}-3

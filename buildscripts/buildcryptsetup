@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.6.7
+export VER=1.6.8
 export DEST=/binary/cryptsetup-${VER}
 
 pushd cryptsetup-${VER}

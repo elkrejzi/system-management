@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=4.13.80-19-g1b6ba68
+export VER=4.13.80+1b6ba68
 export DEST=/binary/libkcddb-${VER}
 
 pushd libkcddb-${VER}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.2.0
+export VER=1.2.1
 export DEST=/binary/prison-${VER}
 
 pushd prison-${VER}

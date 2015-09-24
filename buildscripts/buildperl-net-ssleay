@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.70
+export VER=1.72
 export DEST=/binary/perl-net-ssleay-${VER}
 
 pushd Net-SSLeay-${VER}

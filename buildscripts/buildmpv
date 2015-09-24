@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.10.0
+export VER=0.11.0
 export DEST=/binary/mpv-${VER}
 
 pushd mpv-${VER}
