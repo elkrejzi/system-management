@@ -9,8 +9,7 @@ CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-stro
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
 ./configure --prefix=/usr     \
             --sysconfdir=/etc \
-            --disable-static  \
-            --disable-goa
+            --disable-static
 
 make -j4
 make install DESTDIR=${DEST}

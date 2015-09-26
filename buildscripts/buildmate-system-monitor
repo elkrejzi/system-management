@@ -5,8 +5,8 @@ export DEST=/binary/mate-system-monitor-${VER}
 
 pushd mate-system-monitor-${VER}
 
-CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"              \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -std=c++11" \
 ./configure --prefix=/usr    \
             --with-gtk=3.0   \
             --disable-static

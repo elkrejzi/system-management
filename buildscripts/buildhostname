@@ -3,7 +3,7 @@
 export VER=3.16
 export DEST=/binary/hostname-${VER}
 
-pushd hostname
+pushd hostname-${VER}
 
 make CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -Wall" -j4
 
@@ -11,7 +11,7 @@ make install BASEDIR=${DEST}
 
 popd
 
-rm -rf hostname
+rm -rf hostname-${VER}
 
 pushd ${DEST}
 

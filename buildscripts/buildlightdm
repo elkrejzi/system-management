@@ -7,7 +7,7 @@ pushd lightdm-${VER}
 
 sed -i "/audit_event (A/d" src/session-child.c
 
-export MOC5=moc-qt5
+export MOC5=moc
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \

@@ -17,7 +17,8 @@ CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-st
             --enable-opus     \
             --enable-realrtsp \
             --enable-upnp     \
-            --enable-vcdx
+            --enable-vcdx     \
+            --disable-freerdp
 
 make -j4
 make -j4 install DESTDIR=${DEST}

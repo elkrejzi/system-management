@@ -6,8 +6,8 @@ export DEST=/binary/inkscape-${VER}
 pushd inkscape-${VER}
 
 # Uses libpoppler.so
-CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"              \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -std=c++11" \
 ./configure --prefix=/usr
 
 make -j4

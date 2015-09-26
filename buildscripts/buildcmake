@@ -15,7 +15,7 @@ CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-st
             --no-system-jsoncpp       \
             --mandir=/share/man       \
             --docdir=/share/doc/cmake \
-            --qt-qmake=/usr/bin/qmake-qt5
+            --qt-qmake=/usr/bin/qmake
 
 make -j4
 make install DESTDIR=${DEST}

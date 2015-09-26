@@ -5,7 +5,7 @@ export DEST=/binary/qtwayland-${VER}
 
 pushd qtwayland-opensource-src-${VER}
 
-qmake-qt5
+qmake
 
 make -j4
 

@@ -9,7 +9,7 @@ popd
 
 pushd QScintilla-gpl-${VER}/Qt4Qt5
 
-qmake-qt5 qscintilla.pro "QMAKE_CFLAGS+=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" "QMAKE_CXXFLAGS+=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
+qmake qscintilla.pro "QMAKE_CFLAGS+=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" "QMAKE_CXXFLAGS+=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
 
 make -j4
 make install INSTALL_ROOT=${DEST}
@@ -18,7 +18,7 @@ popd
 
 pushd QScintilla-gpl-${VER}/designer-Qt4Qt5
 
-qmake-qt5 designer.pro INCLUDEPATH+=../Qt4Qt5 QMAKE_LIBDIR+=../Qt4Qt5 "QMAKE_CFLAGS+=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" "QMAKE_CXXFLAGS+=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
+qmake designer.pro INCLUDEPATH+=../Qt4Qt5 QMAKE_LIBDIR+=../Qt4Qt5 "QMAKE_CFLAGS+=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" "QMAKE_CXXFLAGS+=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
 
 make -j4
 make install INSTALL_ROOT=${DEST}

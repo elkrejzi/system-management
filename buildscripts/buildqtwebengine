@@ -5,7 +5,7 @@ export DEST=/binary/qtwebengine-${VER}
 
 pushd qtwebengine-opensource-src-${VER}
 
-qmake-qt5
+qmake
 
 # No debug symbols for this module. Taken from Debian
 echo "QMAKE_CXXFLAGS -= -g" >> .qmake.conf

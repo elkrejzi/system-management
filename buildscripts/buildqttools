@@ -5,7 +5,7 @@ export DEST=/binary/qttools-${VER}
 
 pushd qttools-opensource-src-${VER}
 
-qmake-qt5
+qmake
 
 make -j4
 

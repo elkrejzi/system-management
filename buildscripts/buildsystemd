@@ -33,7 +33,8 @@ CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong -fno-lto" \
             --with-rc-local-script-path-start=/etc/rc.local         \
             --with-dbuspolicydir=/etc/dbus-1/system.d               \
             --with-dbussessionservicedir=/usr/share/dbus-1/services \
-            --with-dbussystemservicedir=/usr/share/dbus-1/system-services
+            --with-dbussystemservicedir=/usr/share/dbus-1/system-services \
+            cc_cv_CFLAGS__flto=no
 
 make -j4
 make install DESTDIR=${DEST}
@@ -69,7 +70,8 @@ CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong -fno-lto"  \
             --disable-static        \
             --disable-sysusers      \
             --disable-xkbcommon     \
-            --without-python
+            --without-python        \
+            cc_cv_CFLAGS__flto=no
 
 make -j4
 make install DESTDIR=${PWD}/dest

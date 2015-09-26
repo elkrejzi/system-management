@@ -5,7 +5,7 @@ export DEST=/binary/qtsensors-${VER}
 
 pushd qtsensors-opensource-src-${VER}
 
-qmake-qt5
+qmake
 
 make -j4
 

@@ -5,7 +5,7 @@ export DEST=/binary/qtwebchannel-${VER}
 
 pushd qtwebchannel-opensource-src-${VER}
 
-qmake-qt5
+qmake
 
 make -j4
 

@@ -50,7 +50,7 @@ cd wpa_supplicant
 make BINDIR=/sbin LIBDIR=/lib V=1 -j4
 
 pushd wpa_gui-qt4
-qmake-qt5 "QMAKE_CFLAGS=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" "QMAKE_CXXFLAGS=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" wpa_gui.pro
+qmake "QMAKE_CFLAGS+=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" "QMAKE_CXXFLAGS+=-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" wpa_gui.pro
 make V=1 -j4
 popd
 

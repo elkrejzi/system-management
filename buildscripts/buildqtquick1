@@ -5,7 +5,7 @@ export DEST=/binary/qtquick1-${VER}
 
 pushd qtquick1-opensource-src-${VER}
 
-qmake-qt5
+qmake
 
 make -j4
 

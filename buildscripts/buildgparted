@@ -5,8 +5,10 @@ export DEST=/binary/gparted-${VER}
 
 pushd gparted-${VER}
 
-CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
+sed -i "/sigc++\/class_slot/d" include/Win_GParted.h
+
+CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"              \
+CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -std=c++11" \
 ./configure --prefix=/usr --disable-doc
 
 make -j4

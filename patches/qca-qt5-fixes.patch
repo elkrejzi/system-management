@@ -1,0 +1,37 @@
+--- a/include/QtCrypto/qca_basic.h	2015-01-13 16:22:06.000000000 +0000
++++ b/include/QtCrypto/qca_basic.h	2015-09-25 22:03:34.493225878 +0000
+@@ -35,6 +35,8 @@
+ 
+ #include "qca_core.h"
+ 
++#include <QIODevice>
++
+ // Qt5 comes with QStringLiteral for wrapping string literals, which Qt4 does
+ // not have. It is needed if the headers are built with QT_NO_CAST_FROM_ASCII.
+ // Defining it here as QString::fromUtf8 for convenience.
+@@ -595,7 +597,7 @@
+ 		CFB, ///< operate in %Cipher FeedBack mode
+ 		ECB, ///< operate in Electronic Code Book mode
+ 		OFB, ///< operate in Output FeedBack Mode
+-		CTR, ///< operate in CounTer Mode
++		CTR  ///< operate in CounTer Mode
+ 	};
+ 
+ 	/**
+--- a/include/QtCrypto/qca_safetimer.h	2015-01-13 16:22:06.000000000 +0000
++++ b/include/QtCrypto/qca_safetimer.h	2015-09-25 22:03:49.363500975 +0000
+@@ -44,12 +44,12 @@
+ 	void setSingleShot(bool singleShot);
+ 	int timerId() const;
+ 
+-public slots:
++public Q_SLOTS:
+ 	void start(int msec);
+ 	void start();
+ 	void stop();
+ 
+-signals:
++Q_SIGNALS:
+ 	void timeout();
+ 
+ protected:

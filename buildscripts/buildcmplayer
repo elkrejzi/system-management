@@ -13,7 +13,7 @@ CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-st
             --enable-portaudio  \
             --enable-pulseaudio \
             --parallel=4        \
-            --qmake=/usr/bin/qmake-qt5
+            --qmake=/usr/bin/qmake
 
 make
 make install DEST_DIR=${DEST}
