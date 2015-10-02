@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.0
+export VER=2.1.1
 export DEST=/binary/python-babel-${VER}
 
 cp -a Babel-${VER} Babel-${VER}-3

@@ -1,12 +1,9 @@
 #!/bin/bash -e
 
-export VER=2.4
+export VER=2.5
 export DEST=/binary/wpa_supplicant-${VER}
 
 pushd wpa_supplicant-${VER}
-
-# Qt5 support, remove when next version is released.
-patch -Np1 -i /media/ntfs/Other/Linux/patches/wpa_supplicant-fixes.patch
 
 export CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -MMD"
 export CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong -MMD"

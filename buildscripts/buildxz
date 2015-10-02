@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=5.2.1
+export VER=5.2.2
 export DEST=/binary/xz-${VER}
 
 cp -a xz-${VER} xz-${VER}-32

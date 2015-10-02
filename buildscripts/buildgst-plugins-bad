@@ -1,14 +1,9 @@
 #!/bin/bash -e
 
-export VER=1.5.91
+export VER=1.6.0
 export DEST=/binary/gst-plugins-bad-${VER}
 
 pushd gst-plugins-bad-${VER}
-
-sed -i -e 's/ GST_CHECK_FAAD_VERSION / /' \
-       -e '/"GST_CHECK_FAAD_VERSION/{
-           s/GST_CHECK_FAAD_VERSION //
-           s/""/"$"/ }' configure
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \

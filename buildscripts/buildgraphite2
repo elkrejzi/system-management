@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.3.2
+export VER=1.3.3
 export DEST=/binary/graphite2-${VER}
 
 pushd graphite2-${VER}

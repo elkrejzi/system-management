@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.32.0
+export VER=2.32.1
 export DEST=/binary/gdk-pixbuf-${VER}
 
 cp -a gdk-pixbuf-${VER} gdk-pixbuf-${VER}-32

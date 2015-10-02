@@ -1,29 +1,27 @@
 #!/bin/bash -e
 
-export VER=5.34
+export VER=5.35
 export DEST=/binary/bluez-${VER}
 
 pushd bluez-${VER}
 
-patch -Np1 -i /media/ntfs/Other/Linux/patches/bluez.patch
-
-autoreconf -fi
-
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr        \
-            --sysconfdir=/etc    \
-            --localstatedir=/var \
+./configure --prefix=/usr         \
+            --sysconfdir=/etc     \
+            --localstatedir=/var  \
+            --enable-experimental \
             --enable-library
 
 make -j4
 make install DESTDIR=${DEST}
 
-install -dm755 ${DEST}/etc/bluetooth ${DEST}/etc/systemd/system/bluetooth.target.wants
+install -dm755 ${DEST}/etc/bluetooth ${DEST}/etc/systemd/system/bluetooth.target.wants ${DEST}/usr/lib/systemd/user
 install -m644 src/main.conf ${DEST}/etc/bluetooth
 
 ln -sf /lib/systemd/system/bluetooth.service ${DEST}/etc/systemd/system/dbus-org.bluez.service
 ln -sf /lib/systemd/system/bluetooth.service ${DEST}/etc/systemd/system/bluetooth.target.wants/bluetooth.service
+ln -sf /usr/lib/systemd/user/obex.service ${DEST}/usr/lib/systemd/user/dbus-org.bluez.obex.service
 
 popd
 
