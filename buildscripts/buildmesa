@@ -5,6 +5,8 @@ export DEST=/binary/mesa-${VER}
 
 pushd mesa-${VER}
   patch -Np1 -i /media/ntfs/Other/Linux/patches/mesalib-xdemos.patch
+
+  sed -i 's/LLVM_SO_NAME=.*/LLVM_SO_NAME=LLVM/' configure
 popd
 
 cp -a mesa-${VER} mesa-${VER}-32

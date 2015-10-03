@@ -3,82 +3,115 @@
 export VER=3.7.0
 export DEST=/binary/llvm-${VER}
 
-for tarball in cfe-${VER}.src.tar.xz clang-tools-extra-${VER}.src.tar.xz \
-               compiler-rt-${VER}.src.tar.xz lldb-${VER}.src.tar.xz      \
-               llvm-${VER}.src.tar.xz polly-${VER}.src.tar.xz
+proj=(
+  cfe
+  clang-tools-extra
+  compiler-rt
+  libcxx
+  libcxxabi
+  libunwind
+  lld
+  lldb
+  llvm
+  openmp
+  polly
+)
+
+for f in ${proj[@]}
 do
-  tar xf ${tarball}
+  if [ -e ${f}-${VER}.src.tar.xz ]
+  then
+    tar xf ${f}-${VER}.src.tar.xz
+  elif [ -e /media/ntfs/Other/Linux/sources/${f}-${VER}.src.tar.xz ]
+  then
+    tar xf /media/ntfs/Other/Linux/sources/${f}-${VER}.src.tar.xz
+  else
+    wget http://llvm.org/releases/${VER}/${f}-${VER}.src.tar.xz
+    tar xf ${f}-${VER}.src.tar.xz
+  fi
+
+  if [ ${f} == "cfe" ]
+  then
+    mv ${f}-${VER}.src clang
+  else
+    mv ${f}-${VER}.src ${f}
+  fi
+
+  rm -f ${f}-${VER}.src.tar.xz
 done
 
-# Don't build unittests, saves some time
-sed -i "s#cmake unittests#cmake#g" llvm-${VER}.src/Makefile
-sed -i "s#runtime docs unittests#runtime docs#g" cfe-${VER}.src/Makefile
-sed -i "s#clang-query unittests#clang-query#g" clang-tools-extra-${VER}.src/Makefile
+# clang: use /lib instead of /lib64 for x86-64
+sed -i "/ld-linux-x86-64/s/lib64/lib/" clang/lib/Driver/Tools.cpp
 
-rm -rf llvm-${VER}.src/projects/compiler-rt
-rm -rf llvm-${VER}.src/tools/clang
-rm -rf llvm-${VER}.src/tools/lldb
-rm -rf llvm-${VER}.src/tools/polly
-
-rm -rf cfe-${VER}.src/tools/extra
-
-mv compiler-rt-${VER}.src llvm-${VER}.src/projects/compiler-rt
-mv cfe-${VER}.src llvm-${VER}.src/tools/clang
-mv polly-${VER}.src llvm-${VER}.src/tools/polly
-
-cp -a llvm-${VER}.src llvm-${VER}.src-32
-
-mv lldb-${VER}.src llvm-${VER}.src/tools/lldb
-mv clang-tools-extra-${VER}.src llvm-${VER}.src/tools/clang/tools/extra
-
-pushd llvm-${VER}.src
-
-sed -i 's:$(PROJ_prefix)/docs/llvm:$(PROJ_prefix)/share/doc/llvm:' Makefile.config.in
-sed -i '/@LLVM_CONFIG_CMAKE_DIR@/s:$(PROJ_cmake):$(PROJ_prefix)/share/llvm/cmake:' cmake/modules/Makefile
-
-sed -i "/ld-linux-x86-64/s/lib64/lib/" tools/clang/lib/Driver/Tools.cpp
-
+pushd llvm
+  # llvm: backport LLVM_LINK_LLVM_DYLIB option (fixed in 3.8.0)
+  patch -Np1 -i /media/ntfs/Other/Linux/patches/llvm-link-tools-against-libLLVM.patch
+  # llvm: export all symbols
+  patch -Np1 -i /media/ntfs/Other/Linux/patches/llvm-export-more-symbols.patch
 popd
+
+pushd lldb
+  # lldb: don't link to libLLVM.so
+  patch -Np1 -i /media/ntfs/Other/Linux/patches/lldb-avoid-linking-to-libLLVM.patch
+popd
+
+pushd clang-tools-extra
+  # clang-tools-extra: install clang-query program (fixed in 3.8.0)
+  patch -Np1 -i /media/ntfs/Other/Linux/patches/clang-tools-extra-install-clang-query.patch
+popd
+
+rm -rf llvm/projects/{compiler-rt,libcxx,libcxxabi,libunwind,openmp}
+rm -rf llvm/tools/{clang,lld,lldb,polly}
+
+mv {compiler-rt,libcxx,libcxxabi,libunwind,openmp} llvm/projects/
+mv {clang,polly} llvm/tools/
+
+cp -a llvm llvm-32
+
+mv {lld,lldb} llvm/tools/
+mv clang-tools-extra llvm/tools/clang/tools/extra
 
 install -dm755 llvm-build
 
 pushd llvm-build
 
-export CC="gcc"
-export CXX="g++"
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
+      -DCLANG_INCLUDE_TESTS=OFF   \
+      -DLLVM_BUILD_DOCS=ON        \
+      -DLLVM_BUILD_LLVM_DYLIB=ON  \
+      -DLLVM_DYLIB_EXPORT_ALL=ON  \
+      -DLLVM_ENABLE_DOXYGEN=OFF   \
+      -DLLVM_ENABLE_FFI=ON        \
+      -DLLVM_ENABLE_LIBCXXABI=ON  \
+      -DLLVM_ENABLE_RTTI=ON       \
+      -DLLVM_ENABLE_SPHINX=ON     \
+      -DLLVM_INCLUDE_EXAMPLES=OFF \
+      -DLLVM_INCLUDE_TESTS=OFF    \
+      -DLLVM_LINK_LLVM_DYLIB=ON   \
+      -DSPHINX_OUTPUT_HTML=OFF    \
+      -DSPHINX_WARNINGS_AS_ERRORS=OFF      \
+      -DLIBCXX_ENABLE_ASSERTIONS=OFF       \
+      -DLIBCXXABI_ENABLE_ASSERTIONS=OFF    \
+      -DLIBCXXABI_ENABLE_STATIC=OFF        \
+      -DLIBCXXABI_USE_LLVM_UNWINDER=ON     \
+      -DLIBUNWIND_ENABLE_ASSERTIONS=OFF    \
+      -DLIBUNWIND_ENABLE_SHARED=OFF        \
+      -DLLVM_TARGETS_TO_BUILD="AMDGPU;X86" \
+      -DLLVM_BINUTILS_INCDIR=/usr/include  \
+      -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
+      ../llvm
 
-CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-../llvm-${VER}.src/configure --prefix=/usr --sysconfdir=/etc --enable-shared          \
-            --enable-optimized --enable-libffi --enable-targets=x86,amdgpu            \
-            --disable-assertions --with-binutils-include=/usr/include
-
-make REQUIRES_RTTI=1 -j4
+make -j4
 make install DESTDIR=${DEST}
 
-rm -rf ${DEST}/usr/lib/LLVMHello.so
-rm -rf ${DEST}/usr/share/doc
+rm -f ${DEST}/usr/lib/libgomp.so
 
 install -dm755 ${DEST}/usr/lib/bfd-plugins
 ln -sf ../LLVMgold.so ${DEST}/usr/lib/bfd-plugins/LLVMgold.so
 
-chmod 644 ${DEST}/usr/lib/*.a
-chmod 755 ${DEST}/usr/lib/*.so
-
-mv ${DEST}/usr/include/llvm/Config/config.h ${DEST}/usr/include/llvm/Config/config-64.h
 mv ${DEST}/usr/include/llvm/Config/llvm-config.h ${DEST}/usr/include/llvm/Config/llvm-config-64.h
-
-cat > ${DEST}/usr/include/llvm/Config/config.h << "EOF"
-#include <bits/wordsize.h>
-
-#if __WORDSIZE == 32
-#include "config-32.h"
-#elif __WORDSIZE == 64
-#include "config-64.h"
-#else
-#error "Unknown word size"
-#endif
-EOF
 
 cat > ${DEST}/usr/include/llvm/Config/llvm-config.h << "EOF"
 #include <bits/wordsize.h>
@@ -97,59 +130,33 @@ python -O -m compileall ${DEST}/usr/lib/python2.7/site-packages/lldb
 
 popd
 
-pushd llvm-${VER}.src
+pushd llvm
 
-make -C docs -f Makefile.sphinx man
-make -C tools/clang/docs -f Makefile.sphinx man
+install -m644 tools/lldb/docs/lldb.1 ${DEST}/usr/share/man/man1/lldb.1
 
-install -dm755 ${DEST}/usr/share/man/man1
+cp -r tools/clang/bindings/python/clang ${DEST}/usr/lib/python2.7/site-packages/
 
-install -m644 docs/_build/man/*.1 ${DEST}/usr/share/man/man1
-install -m644 tools/clang/docs/_build/man/*.1 ${DEST}/usr/share/man/man1
+python -m compileall ${DEST}/usr/lib/python2.7/site-packages/clang
+python -O -m compileall ${DEST}/usr/lib/python2.7/site-packages/clang
 
-install -m644 tools/lldb/docs/lldb.1 ${DEST}/usr/share/man/man1
+install -dm755 ${DEST}/usr/lib/clang-analyzer
 
-mkdir -p ${DEST}/usr/lib/clang-analyzer
-
-for _tool in scan-build scan-view; do
-   cp -rf tools/clang/tools/$_tool ${DEST}/usr/lib/clang-analyzer/
+for _tool in scan-build scan-view
+do
+   cp -r tools/clang/tools/$_tool ${DEST}/usr/lib/clang-analyzer/
    ln -sf ../lib/clang-analyzer/$_tool/$_tool ${DEST}/usr/bin/
 done
 
-ln -sf /usr/bin/clang ${DEST}/usr/lib/clang-analyzer/scan-build/
+ln -sf /usr/bin/clang ${DEST}/usr/lib/clang-analyzer/scan-build/clang
 
 mv ${DEST}/usr/lib/clang-analyzer/scan-build/scan-build.1 ${DEST}/usr/share/man/man1
-
-find ${DEST}/usr/lib/clang-analyzer -type d -exec chmod 755 {} \;
-find ${DEST}/usr/lib/clang-analyzer -type f -exec chmod 644 {} \;
-
-chmod 755 ${DEST}/usr/lib/clang-analyzer/scan-build/{c++-analyzer,ccc-analyzer,scan-build,set-xcode-analyzer}
-chmod 755 ${DEST}/usr/lib/clang-analyzer/scan-view/scan-view
 
 python -m compileall ${DEST}/usr/lib/clang-analyzer
 python -O -m compileall ${DEST}/usr/lib/clang-analyzer
 
 popd
 
-rm -rf llvm-${VER}.src llvm-build
-
-pushd llvm-${VER}.src-32
-
-sed -e 's:\$(PROJ_prefix)/lib:$(PROJ_prefix)/lib32:' \
-    -e 's:\$(PROJ_prefix)/docs/llvm:$(PROJ_prefix)/share/doc/llvm:' \
-    -i Makefile.config.in
-
-sed -e 's:LLVM_LIBDIR="${prefix}/lib":LLVM_LIBDIR="${prefix}/lib32":' \
-    -i autoconf/configure.ac \
-    -i configure
-
-sed -e '/ActiveLibDir = ActivePrefix/s:lib:lib32:' \
-    -i tools/llvm-config/llvm-config.cpp
-
-# Hack to get 32 bit compiler-rt to build properly
-sed -ri "/ifeq.*CompilerTargetArch/s#i386#i686#g" projects/compiler-rt/make/platform/clang_linux.mk
-
-popd
+rm -rf llvm llvm-build
 
 install -dm755 llvm-build-32
 
@@ -159,25 +166,42 @@ export CC="gcc -m32"
 export CXX="g++ -m32"
 export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
 
-CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-../llvm-${VER}.src-32/configure --prefix=/usr --sysconfdir=/etc --libdir=/usr/lib32   \
-            --enable-shared --enable-optimized --enable-libffi                        \
-            --enable-targets=x86,amdgpu --disable-assertions                          \
-            --with-binutils-include=/usr/include --build=i686-pc-linux-gnu            \
-            --host=i686-pc-linux-gnu
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release  \
+      -DCLANG_INCLUDE_DOCS=OFF    \
+      -DCLANG_INCLUDE_TESTS=OFF   \
+      -DLLVM_BUILD_LLVM_DYLIB=ON  \
+      -DLLVM_DYLIB_EXPORT_ALL=ON  \
+      -DLLVM_ENABLE_DOXYGEN=OFF   \
+      -DLLVM_ENABLE_FFI=ON        \
+      -DLLVM_ENABLE_LIBCXXABI=ON  \
+      -DLLVM_ENABLE_RTTI=ON       \
+      -DLLVM_INCLUDE_EXAMPLES=OFF \
+      -DLLVM_INCLUDE_TESTS=OFF    \
+      -DLLVM_LIBDIR_SUFFIX=32     \
+      -DLLVM_LINK_LLVM_DYLIB=ON   \
+      -DLLVM_TARGET_ARCH="i686"   \
+      -DLIBCXX_ENABLE_ASSERTIONS=OFF       \
+      -DLIBCXX_INCLUDE_DOCS=OFF            \
+      -DLIBCXXABI_ENABLE_ASSERTIONS=OFF    \
+      -DLIBCXXABI_ENABLE_STATIC=OFF        \
+      -DLIBCXXABI_USE_LLVM_UNWINDER=ON     \
+      -DLIBUNWIND_ENABLE_ASSERTIONS=OFF    \
+      -DLIBUNWIND_ENABLE_SHARED=OFF        \
+      -DLLVM_TARGETS_TO_BUILD="AMDGPU;X86" \
+      -DLLVM_BINUTILS_INCDIR=/usr/include  \
+      -DLLVM_DEFAULT_TARGET_TRIPLE="i686-pc-linux-gnu" \
+      -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
+      -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
+      ../llvm-32
 
-make REQUIRES_RTTI=1 -j4
+make -j4
 make install DESTDIR=${PWD}/dest
 
-rm -rf dest/usr/lib32/LLVMHello.so
-
-chmod 644 dest/usr/lib32/*.a
-chmod 755 dest/usr/lib32/*.so
+rm -f ${DEST}/usr/lib32/libgomp.so
 
 mv dest/usr/bin/llvm-config ${DEST}/usr/bin/llvm-config32
 
-mv dest/usr/include/llvm/Config/config.h ${DEST}/usr/include/llvm/Config/config-32.h
 mv dest/usr/include/llvm/Config/llvm-config.h ${DEST}/usr/include/llvm/Config/llvm-config-32.h
 
 mv dest/usr/lib32 ${DEST}/usr/
@@ -188,7 +212,7 @@ ln -sf ../LLVMgold.so ${DEST}/usr/lib32/bfd-plugins/LLVMgold.so
 
 popd
 
-rm -rf llvm-${VER}.src-32 llvm-build-32
+rm -rf llvm-32 llvm-build-32
 
 pushd ${DEST}
 
@@ -199,7 +223,7 @@ find * -type f 2>/dev/null | while read BUILD_BINARY ; do
   esac
 done
 
-find * -type f -name "*.a" | xargs strip --strip-unneeded
+find * -type f -name "*.a" -exec strip --strip-unneeded {} \;
 
 popd
 
