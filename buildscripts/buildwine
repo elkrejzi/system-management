@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.7.51
+export VER=1.7.52
 export DEST=/binary/wine-${VER}
 
 # Wine staging

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=2.6
+export VER=2.6.1
 export DEST=/binary/freetype-${VER}
 
 pushd freetype-${VER}
@@ -9,7 +9,7 @@ pushd freetype-${VER}
           modules.cfg
 
   sed -ri -e 's:.*(#.*SUBPIXEL.*) .*:\1:' \
-          include/config/ftoption.h
+          include/freetype/config/ftoption.h
 popd
 
 cp -a freetype-${VER} freetype-${VER}-32
