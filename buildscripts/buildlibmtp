@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=1.1.9
+export VER=1.1.10
 export DEST=/binary/libmtp-${VER}
 
 pushd libmtp-${VER}

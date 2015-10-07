@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export VER=0.12.3
+export VER=0.13.0
 export DEST=/binary/libass-${VER}
 
 pushd libass-${VER}

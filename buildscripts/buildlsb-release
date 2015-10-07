@@ -1,0 +1,27 @@
+#!/bin/bash -e
+
+export VER=1.4
+export DEST=/binary/lsb-release-${VER}
+
+pushd lsb-release-${VER}
+
+sed -i "s|n/a|unavailable|" lsb_release
+
+install -dm755 ${DEST}/usr/share/man/man1
+install -Dm755 lsb_release ${DEST}/usr/bin/lsb_release
+
+gunzip -c lsb_release.1.gz > ${DEST}/usr/share/man/man1/lsb_release.1
+
+popd
+
+rm -rf lsb-release-${VER}
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL

@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 4.3.0-rc1 Kernel Configuration
+# Linux/x86 4.3.0-rc4 Kernel Configuration
 #
 CONFIG_64BIT=y
 CONFIG_X86_64=y
@@ -1437,6 +1437,7 @@ CONFIG_USB_KC2190=y
 # CONFIG_USB_IPHETH is not set
 # CONFIG_USB_SIERRA_NET is not set
 # CONFIG_USB_VL600 is not set
+# CONFIG_USB_NET_CH9200 is not set
 CONFIG_WLAN=y
 # CONFIG_LIBERTAS_THINFIRM is not set
 # CONFIG_AIRO is not set
@@ -1998,10 +1999,6 @@ CONFIG_X86_PKG_TEMP_THERMAL=y
 # CONFIG_INTEL_SOC_DTS_THERMAL is not set
 # CONFIG_INT340X_THERMAL is not set
 CONFIG_INTEL_PCH_THERMAL=m
-
-#
-# Texas Instruments thermal drivers
-#
 CONFIG_WATCHDOG=y
 CONFIG_WATCHDOG_CORE=y
 # CONFIG_WATCHDOG_NOWAYOUT is not set

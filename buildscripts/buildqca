@@ -1,13 +1,11 @@
 #!/bin/bash -e
 
-export VER=2.1.0.3
-export DEST=/binary/qca-qt5-${VER}
+export VER=2.1.1
+export DEST=/binary/qca-${VER}
 
-pushd qca-qt5-${VER}
+pushd qca-${VER}
 
 sed -i "/BSD_SOURCE/d" CMakeLists.txt
-
-patch -Np1 -i /media/ntfs/Other/Linux/patches/qca-qt5-fixes.patch
 
 cmake -DCMAKE_INSTALL_PREFIX=/usr   \
       -DCMAKE_BUILD_TYPE=Release    \
@@ -15,15 +13,14 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr   \
       -DQCA_SUFFIX=qt5              \
       -DQCA_INSTALL_IN_QT_PREFIX=ON \
       -DCMAKE_C_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
-      -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-      -Wno-dev
+      -DCMAKE_CXX_FLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
 
 make -j4
 make install DESTDIR=${DEST}
 
 popd
 
-rm -rf qca-qt5-${VER}
+rm -rf qca-${VER}
 
 pushd ${DEST}
 

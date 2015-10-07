@@ -1,13 +1,11 @@
 #!/bin/bash -e
 
-export VER=1.0.24
+export VER=1.0.25
 export DEST=/binary/sane-backends-${VER}
 
 pushd sane-backends-${VER}
 
 patch -Np1 -i /media/ntfs/Other/Linux/patches/sane-backends-fixes.patch
-
-sed -i "s:systemd-daemon:systemd:g" configure configure.in
 
 CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
 CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
@@ -21,11 +19,6 @@ CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-st
 
 make -j4
 make install DESTDIR=${DEST}
-
-sed -i "s|NAME="%k", ||g" tools/udev/libsane.rules
-
-install -dm755 ${DEST}/lib/udev/rules.d
-install -m644 tools/udev/libsane.rules ${DEST}/lib/udev/rules.d/49-sane.rules
 
 popd
 
