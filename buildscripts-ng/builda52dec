@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+export PKGNAME=a52dec
+export PKGVER=0.7.4
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://liba52.sourceforge.net/files/${PKGNAME}-${PKGVER}.tar.gz"
+export MAKE_JOBS_FLAGS="-j4"
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination $dir /usr ; done")
+export PATCHES_LIST=("a52dec-fixes.patch")
+export CONFIGURE_FLAGS="--enable-shared"
+
+configure_pre() {
+  autoreconf -fi
+}
+
+make_install_post() {
+  install -m644 liba52/a52_internal.h ${DEST}/usr/include/a52dec
+}
+
+. $(dirname $0)/master.sh
