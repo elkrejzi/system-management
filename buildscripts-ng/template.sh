@@ -77,10 +77,13 @@ export MAKE_JOBS_FLAGS="-j4"
 # export CMAKE_FLAGS=""
 # export CMAKE_FLAGS_32=""
 
-# Additional per pacmage make/make install flags for 64/32 bit package version
+# Additional per package make flags for 64/32 bit package version
 # export MAKE_FLAGS=""
 # export MAKE_FLAGS_32=""
+
+# Additional per package make install flags for 64/32 bit package version
 # export MAKE_INSTALL_FLAGS=""
+# export MAKE_INSTALL_FLAGS_32=""
 
 # Default C and C++ compiler used to build 64 bit packages
 # export DEFAULT_CC="gcc"

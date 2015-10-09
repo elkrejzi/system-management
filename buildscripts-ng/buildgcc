@@ -1,0 +1,69 @@
+#!/bin/bash -e
+
+export PKGNAME=gcc
+export PKGVER=5.2.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="http://mirror.checkdomain.de/gnu/gcc/${PKGNAME}-${PKGVER}/${PKGNAME}-${PKGVER}.tar.bz2"
+export MAKE_JOBS_FLAGS="-j4"
+export PKGDIR=src
+export PKGBUILD=build
+export PATH_TO_CONFIGURE="../src"
+export DEBUG_BUILD=1
+export KEEP_STATIC=1
+export PATCHES_LIST=("gcc-pure64.patch")
+
+post_extract_action() {
+  mv ${PKGNAME}-${PKGVER} src
+  install -dm755 build
+  pushd src
+    sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
+    sed -i 's/\(install.*:\) install-.*recursive/\1/' libffi/Makefile.in
+    sed -i 's/\(install-data-am:\).*/\1/' libffi/include/Makefile.in
+  popd
+}
+
+make_install_post() {
+  install -m644 libiberty/pic/libiberty.a ${DEST}/usr/lib
+  install -dm755 ${DEST}/usr/lib/bfd-plugins
+  ln -sf ../../libexec/gcc/$(gcc/xgcc -dumpmachine)/$(cat ../src/gcc/BASE-VER)/liblto_plugin.so ${DEST}/usr/lib/bfd-plugins/
+  install -dm755 ${DEST}/lib
+  mv ${DEST}/usr/lib/libgcc_s.so.1 ${DEST}/lib/
+  ln -sf ../../lib/libgcc_s.so.1 ${DEST}/usr/lib/libgcc_s.so
+  ln -sf ../usr/bin/cpp ${DEST}/lib/cpp
+  pushd ${DEST}/usr/bin/
+    ln gcc cc
+  popd
+  rm -rf ${DEST}/usr/lib64
+  rm -rf ${DEST}/usr/lib{,32}/*.py
+  rm -rf ${DEST}/usr/share/gcc-*
+}
+
+configure_override() {
+  ../src/configure --prefix=/usr \
+                   --libdir=/usr/lib \
+                   --disable-bootstrap \
+                   --disable-cloog-version-check \
+                   --disable-libssp \
+                   --disable-libstdcxx-pch \
+                   --disable-libunwind-exceptions \
+                   --enable-__cxa_atexit \
+                   --enable-checking=release \
+                   --enable-clocale=gnu \
+                   --enable-gnu-unique-object \
+                   --enable-install-libiberty \
+                   --enable-languages=c,c++,fortran,lto,objc,obj-c++ \
+                   --enable-linker-build-id \
+                   --enable-lto \
+                   --enable-multilib \
+                   --enable-objc-gc \
+                   --enable-plugin \
+                   --enable-shared \
+                   --enable-threads=posix \
+                   --with-linker-hash-style=gnu \
+                   --with-pkgversion="Krejzi ${PKGVER}" \
+                   --with-system-zlib
+}
+
+export SED=sed
+
+. $(dirname $0)/master.sh

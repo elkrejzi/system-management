@@ -1,0 +1,36 @@
+#!/bin/bash -e
+
+export PKGNAME=binutils
+export PKGVER=2.25.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="http://mirror.checkdomain.de/gnu/binutils/${PKGNAME}-${PKGVER}.tar.bz2"
+export PKGDIR=src
+export PKGBUILD=build
+export MAKE_JOBS_FLAGS="-j4"
+export DEBUG_BUILD=1
+export MAKE_FLAGS="tooldir=/usr"
+export MAKE_INSTALL_FLAGS="tooldir=/usr"
+
+post_extract_action() {
+  mv ${PKGNAME}-${PKGVER} src
+  install -dm755 build
+}
+
+configure_override() {
+  ../src/configure --prefix=/usr --with-pkgversion="Krejzi ${PKGVER}" \
+                   --enable-gold --enable-ld=default --enable-plugins \
+                   --enable-shared --enable-threads --disable-werror  \
+                   --with-pic
+}
+
+configure_post() {
+  make configure-host
+}
+
+make_install_post() {
+  rm -rf ${DEST}/usr/lib/lib{bfd,opcodes}.so
+  rm -rf ${DEST}/usr/lib64
+  rm -rf ${DEST}/usr/share/man/man1/{dlltool,nlmconv,windres,windmc}.1
+}
+
+. $(dirname $0)/master.sh

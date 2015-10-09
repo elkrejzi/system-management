@@ -4,7 +4,6 @@ export PKGNAME=expat
 export PKGVER=2.1.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://downloads.sourceforge.net/expat/${PKGNAME}-${PKGVER}.tar.gz"
-
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 

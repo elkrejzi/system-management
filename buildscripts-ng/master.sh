@@ -99,11 +99,14 @@ prepare_src() {
     then
       echo "Warning: Old package installation dir exits. Removing."
       rm -rf ${DEST} ${DEST}-debug
-      export PKG_BUILDING=1
     fi
   fi
 
+  export PKG_BUILDING=1
+
   bsdtar xf ${SROOT}/${PKGTAR}
+
+  function_exists post_extract_action && post_extract_action || true
 }
 
 patch_apply() {
@@ -178,8 +181,8 @@ post_install_clean() {
 
   if [ -z ${KEEP_DOC} ]
   then
-    rm -rf ${DEST}/usr/share/doc
     rm -rf ${DEST}/usr/share/doc*
+    rm -rf ${DEST}/usr/doc*
   fi
 
   if [ ! -z ${DEBUG_BUILD} ]
@@ -268,6 +271,19 @@ printf '[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for h
     fi
 
 printf '[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database\n' >> ${DEST}/INSTALL
+
+  fi
+
+  if [ -e ${DEST}/usr/share/info ]
+  then
+
+    if [ ${SPACE_ADDED} != 1 ]
+    then
+      printf "\n" >> ${DEST}/INSTALL
+      SPACE_ADDED=1
+    fi
+
+printf '[ -x /usr/bin/install-info ] && echo "Processing triggers for texinfo" && for file in usr/share/info/* ; do /usr/bin/install-info /$file /usr/share/info/dir ; done\n' >> ${DEST}/INSTALL
 
   fi
 
@@ -363,7 +379,7 @@ build_autotools() {
     export PKG_CONFIG_PATH=/usr/lib32/pkgconfig:/usr/share/pkgconfig
     local ADITIONAL_CONFIGURE_FLAGS="--libdir=/usr/lib32 ${CONFIGURE_FLAGS_32}"
     local ADITIONAL_MAKE_FLAGS="${MAKE_FLAGS_32} ${MAKE_JOBS_FLAGS}"
-    local ADITIONAL_MAKE_INSTALL_FLAGS="${MAKE_INSTALL_FLAGS} DESTDIR=\${PWD}/dest"
+    local ADITIONAL_MAKE_INSTALL_FLAGS="${MAKE_INSTALL_FLAGS_32} DESTDIR=\${PWD}/dest"
   fi
 
   if [ -z ${KEEP_STATIC} ]
@@ -380,12 +396,21 @@ build_autotools() {
       function_exists configure_pre_32 && configure_pre_32
     fi
 
+    if [ ${MULTILIB} == 0 ]
+    then
+      cfg_override=configure_override
+    else
+      cfg_override=configure_override_32
+    fi
+
+    function_exists $cfg_override && $cfg_override || {
     ${PATH_TO_CONFIGURE}/configure --prefix=/usr             \
                                    --sysconfdir=/etc         \
                                    --localstatedir=/var      \
                                    --mandir=/usr/share/man   \
                                    --infodir=/usr/share/info \
                                    ${ADITIONAL_CONFIGURE_FLAGS}
+    }
 
     if [ ${MULTILIB} == 0 ]
     then
@@ -402,8 +427,6 @@ build_autotools() {
     else
       function_exists make_post_32 && make_post_32
     fi
-
-    function_exists make_post && make_post
 
     function_exists make_install_override && make_install_override || make install ${ADITIONAL_MAKE_INSTALL_FLAGS}
 
@@ -454,6 +477,8 @@ function_exists build_override && build_override || build_autotools
 if [ ! -z ${MULTILIB_BUILD} ]
 then
 
+  function_exists prepare_src_override && prepare_src_override ${PKGTAR} || prepare_src ${PKGTAR}
+
   if [ ! -z ${PATCHES_LIST_32} ]
   then
     LEN=${#PATCHES_LIST_32[@]}
@@ -466,7 +491,6 @@ then
     unset LEN i
   fi
 
-  function_exists prepare_src_override && prepare_src_override ${PKGTAR} || prepare_src ${PKGTAR}
   function_exists build_32_override && build_32_override || build_autotools 1
 fi
 
