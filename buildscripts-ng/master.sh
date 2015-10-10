@@ -537,4 +537,18 @@ function_exists post_install_config && post_install_config || true
 function_exists post_install_clean_override && post_install_clean_override || post_install_clean
 function_exists generate_install_override && generate_install_override || generate_install
 
+if [ ! -z ${PKG_AUTO_INSTALL} ]
+then
+  pushd ${DEST}
+    ./INSTALL
+  popd
+fi
+
+if [ ! -z ${PKG_AUTO_INSTALL_DEBUG} ] && [ -e ${DEST}-debug ]
+then
+  pushd ${DEST}-debug
+    cp -a * /
+  popd
+fi
+
 unset PKG_BUILDING

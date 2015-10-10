@@ -13,10 +13,16 @@ export PKGURL="http://url"
 # Build directory. Mostly the same as the source directory
 # export PKGBUILD=${PKGDIR}
 
+# Set to 1 to install the package after building
+# export PKG_AUTO_INSTALL=1
+
+# Set to 1 to install the package debug data after building (if DEBUG_BUILD was set to 1)
+# export PKG_AUTO_INSTALL_DEBUG=1
+
 # Number of make jobs used to build the package.
 export MAKE_JOBS_FLAGS="-j4"
 
-# Relative path to the source dir in case of builddir != srcdir, where configure script and cmake root directory are located.
+# Relative path to the source dir in case of builddir != srcdir, where configure script and cmake root directory are located
 # export PATH_TO_SOURCE="."
 
 # Location where the package will be installed

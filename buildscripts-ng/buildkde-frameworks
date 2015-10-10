@@ -1,0 +1,258 @@
+#!/bin/bash -e
+
+export PKGVER=5.15.0
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export DEBUG_BUILD=1
+
+build_all() {
+  export PKG_AUTO_INSTALL=1
+
+  $(dirname $0)/buildattica $1
+  $(dirname $0)/buildbluez-qt $1
+  $(dirname $0)/buildkapidox $1
+  $(dirname $0)/buildkarchive $1
+  $(dirname $0)/buildkcodecs $1
+  $(dirname $0)/buildkconfig $1
+  $(dirname $0)/buildkcoreaddons $1
+  $(dirname $0)/buildkdbusaddons $1
+  $(dirname $0)/buildkdnssd $1
+  $(dirname $0)/buildkguiaddons $1
+  $(dirname $0)/buildki18n $1
+  $(dirname $0)/buildkidletime $1
+  $(dirname $0)/buildkimageformats $1
+  $(dirname $0)/buildkitemmodels $1
+  $(dirname $0)/buildkitemviews $1
+  $(dirname $0)/buildkplotting $1
+  $(dirname $0)/buildkwidgetsaddons $1
+  $(dirname $0)/buildkwindowsystem $1
+  $(dirname $0)/buildmodemmanager-qt $1
+  $(dirname $0)/buildnetworkmanager-qt $1
+  $(dirname $0)/buildsolid $1
+  $(dirname $0)/buildsonnet $1
+  $(dirname $0)/buildthreadweaver $1
+  $(dirname $0)/buildkauth $1
+  $(dirname $0)/buildkcompletion $1
+  $(dirname $0)/buildkcrash $1
+  $(dirname $0)/buildkdoctools $1
+  $(dirname $0)/buildkfilemetadata $1
+  $(dirname $0)/buildknotifications $1
+  $(dirname $0)/buildkpty $1
+  $(dirname $0)/buildkunitconversion $1
+  $(dirname $0)/buildkconfigwidgets $1
+  $(dirname $0)/buildkglobalaccel $1
+  $(dirname $0)/buildkpackage $1
+  $(dirname $0)/buildkservice $1
+  $(dirname $0)/buildkdesu $1
+  $(dirname $0)/buildkemoticons $1
+  $(dirname $0)/buildkiconthemes $1
+  $(dirname $0)/buildkjobwidgets $1
+  $(dirname $0)/buildkpeople $1
+  $(dirname $0)/buildktextwidgets $1
+  $(dirname $0)/buildkwallet $1
+  $(dirname $0)/buildkxmlgui $1
+  $(dirname $0)/buildkbookmarks $1
+  $(dirname $0)/buildkio $1
+  $(dirname $0)/buildbaloo $1
+  $(dirname $0)/buildframeworkintegration $1
+  $(dirname $0)/buildkdeclarative $1
+  $(dirname $0)/buildkinit $1
+  $(dirname $0)/buildknewstuff $1
+  $(dirname $0)/buildknotifyconfig $1
+  $(dirname $0)/buildkparts $1
+  $(dirname $0)/buildkxmlrpcclient $1
+  $(dirname $0)/buildkcmutils $1
+  $(dirname $0)/buildkded $1
+  $(dirname $0)/buildkdewebkit $1
+  $(dirname $0)/buildktexteditor $1
+  $(dirname $0)/buildkactivities $1
+  $(dirname $0)/buildkdesignerplugin $1
+  $(dirname $0)/buildplasma-framework $1
+  $(dirname $0)/buildkjs $1
+  $(dirname $0)/buildkdelibs4support $1
+  $(dirname $0)/buildkhtml $1
+  $(dirname $0)/buildkjsembed $1
+  $(dirname $0)/buildkmediaplayer $1
+  $(dirname $0)/buildkross $1
+  $(dirname $0)/buildkrunner $1
+
+  exit 0
+}
+
+case $(basename $0) in
+  buildkde-frameworks )
+    build_all
+  ;;
+  buildkde-frameworks-git )
+    build_all git
+  ;;
+esac
+
+case $(basename $0) in
+  buildkdesu )
+    export POSTINST_TRIGGER=("chgrp nogroup /usr/lib/libexec/kf5/kdesud"
+                             "chmod 2755 /usr/lib/libexec/kf5/kdesud")
+  ;;
+  buildkdelibs4support )
+    export POSTINST_TRIGGER=("chmod 4755 /usr/lib/libexec/kf5/fileshareset")
+  ;;
+esac
+
+export CMAKE_FLAGS="-DSYSCONF_INSTALL_DIR=/etc              \
+                    -DLIB_INSTALL_DIR=lib                   \
+                    -DBUILD_TESTING=OFF                     \
+                    -DQML_INSTALL_DIR=lib/qt5/qml           \
+                    -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
+                    -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules"
+
+frameworks=(
+  attica
+  bluez-qt
+  kapidox
+  karchive
+  kcodecs
+  kconfig
+  kcoreaddons
+  kdbusaddons
+  kdnssd
+  kguiaddons
+  ki18n
+  kidletime
+  kimageformats
+  kitemmodels
+  kitemviews
+  kplotting
+  kwidgetsaddons
+  kwindowsystem
+  modemmanager-qt
+  networkmanager-qt
+  solid
+  sonnet
+  threadweaver
+  kauth
+  kcompletion
+  kcrash
+  kdoctools
+  kfilemetadata
+  knotifications
+  kpty
+  kunitconversion
+  kconfigwidgets
+  kglobalaccel
+  kpackage
+  kservice
+  kdesu
+  kemoticons
+  kiconthemes
+  kjobwidgets
+  kpeople
+  ktextwidgets
+  kwallet
+  kxmlgui
+  kbookmarks
+  kio
+  baloo
+  frameworkintegration
+  kdeclarative
+  kinit
+  knewstuff
+  knotifyconfig
+  kparts
+  kxmlrpcclient
+  kcmutils
+  kded
+  kdewebkit
+  ktexteditor
+  kactivities
+  kdesignerplugin
+  plasma-framework )
+
+aids=(
+  kjs
+  kdelibs4support
+  khtml
+  kjsembed
+  kmediaplayer
+  kross
+  krunner )
+
+if [ -z $1 ]
+then
+  export BUILD_TYPE="rel"
+elif [ $1 == "git" ]
+then
+  export BUILD_TYPE="git"
+fi
+
+for framework in ${frameworks[@]}
+do
+  case $(basename $0) in
+    build${framework} )
+      export PKGNAME=${framework}
+      export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+      export PKGURL="http://download.kde.org/stable/frameworks/${PKGVER%.0}/${PKGTAR}"
+      if [ ${BUILD_TYPE} == "git" ]
+      then
+        export PKGDIR=${framework}
+      fi
+    ;;
+  esac
+done
+
+for framework in ${aids[@]}
+do
+  case $(basename $0) in
+    build${framework} )
+      export PKGNAME=${framework}
+      export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+      export PKGURL="http://download.kde.org/stable/frameworks/${PKGVER%.0}/portingAids/${PKGTAR}"
+      if [ ${BUILD_TYPE} == "git" ]
+      then
+        export PKGDIR=${framework}
+      fi
+    ;;
+  esac
+done
+
+if [ ${BUILD_TYPE} == "git" ]
+then
+  prepare_src_override() {
+    if [ -d ${PKGNAME} ]
+    then
+      pushd ${PKGNAME}
+        git clean -fdx
+        git fetch origin
+        git reset --hard origin/master
+      popd
+    else
+      git clone git://anongit.kde.org/${PKGNAME}.git
+    fi
+
+    if [ ${PKGNAME} != "kapidox" ] && [ ${PKGNAME} != "kimageformats" ]
+    then
+      export PKGVER=$(grep "KF5_VERSION " ${PKGDIR}/CMakeLists.txt | cut -d \" -f2)
+      export DEST=/binary/${PKGNAME}-${PKGVER}
+    fi
+
+    if [ -d ${PKGBUILD} ]
+    then
+      echo "Old build dir exists. Removing"
+      rm -rf ${PKGBUILD}
+    fi
+
+    install -dm755 ${PKGBUILD}
+
+    if [ -e ${DEST} ] || [ -e ${DEST}-debug ]
+    then
+      if [ ${PKG_BUILDING} != 1 ]
+      then
+        echo "Warning: Old package installation dir exits. Removing."
+        rm -rf ${DEST} ${DEST}-debug
+      fi
+    fi
+
+    export PKG_BUILDING=1
+  }
+fi
+
+. $(dirname $0)/master.sh
