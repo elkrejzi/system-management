@@ -35,6 +35,7 @@ patch -Np1 -i /media/ntfs/Other/Linux/patches/graphviz-qt5.patch
 autoreconf -fi
 
 sed -i "s:ruby-1.9:ruby-2.2:g" -i configure
+sed -i "s:e_VMerror:-25:g;s:e_unregistered:-28:g;s:e_invalidid:-30:g" plugin/gs/gvloadimage_gs.c
 
 export C_INCLUDE_PATH=/usr/lib/java/include:/usr/lib/java/include/linux
 export CPLUS_INCLUDE_PATH=$C_INCLUDE_PATH

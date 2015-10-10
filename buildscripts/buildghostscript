@@ -28,6 +28,8 @@ rm -rf ${DEST}/usr/share/man/de
 rm -rf ${DEST}/usr/bin/*.sh
 rm -rf ${DEST}/usr/bin/gsx
 
+install -m644 base/gserrors.h /usr/include/ghostscript
+
 popd
 
 rm -rf ghostscript-${VER}
