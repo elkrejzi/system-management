@@ -145,9 +145,7 @@ make_install_override() {
       $(dirname $0)/buildperl-digest-hmac
       $(dirname $0)/buildperl-authen-sasl
     fi
-
     exit 0
-
   ;;
 
 esac

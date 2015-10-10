@@ -185,7 +185,6 @@ post_install_clean() {
 
   find ${DEST} -name "*.so" -exec chmod 755 {} \;
   find ${DEST} \( -name .packlist -o -name perllocal.pod \) -delete
-  find ${DEST} -type d -empty -delete
 
   rm -rf ${DEST}/usr/share/info/dir
 
@@ -204,6 +203,8 @@ post_install_clean() {
     rm -rf ${DEST}/usr/share/doc*
     rm -rf ${DEST}/usr/doc*
   fi
+
+  find ${DEST} -type d -empty -delete
 
   if [ ! -z ${DEBUG_BUILD} ]
   then

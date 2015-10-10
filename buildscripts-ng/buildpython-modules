@@ -1,0 +1,343 @@
+#!/bin/bash -e
+
+case $(basename $0) in
+
+  buildpython-alabaster )
+    export PKGNAME=alabaster
+    export PKGVER=0.7.6
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/a/alabaster/${PKGTAR}"
+    export DEST=/binary/python-alabaster-${PKGVER}
+  ;;
+  buildpython-babel )
+    export PKGNAME=Babel
+    export PKGVER=2.1.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/B/Babel/${PKGTAR}"
+    export DEST=/binary/python-babel-${PKGVER}
+    make_install_post() {
+      mv ${DEST}/usr/bin/pybabel{,3}
+    }
+  ;;
+  buildpython-beaker )
+    export PKGNAME=Beaker
+    export PKGVER=1.7.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/B/Beaker/${PKGTAR}"
+    export DEST=/binary/python-beaker-${PKGVER}
+  ;;
+  buildpython-cssselect )
+    export PKGNAME=cssselect
+    export PKGVER=0.9.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/c/cssselect/${PKGTAR}"
+    export DEST=/binary/python-cssselect-${PKGVER}
+  ;;
+  buildpython-docutils )
+    export PKGNAME=docutils
+    export PKGVER=0.12
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://downloads.sourceforge.net/docutils/${PKGTAR}"
+    export DEST=/binary/python-docutils-${PKGVER}
+    make_install_post() {
+      for file in ${DEST}/usr/bin/*.py
+      do
+        ln -sf $(basename ${file}) ${file%.py}
+        mv ${file} ${file%.py}3.py
+      done
+    }
+  ;;
+  buildpython-jinja2 )
+    export PKGNAME=Jinja2
+    export PKGVER=2.8
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/J/Jinja2/${PKGTAR}"
+    export DEST=/binary/python-jinja2-${PKGVER}
+  ;;
+  buildpython-lxml )
+    export PKGNAME=lxml
+    export PKGVER=3.4.4
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/l/lxml/${PKGTAR}"
+    export DEST=/binary/python-lxml-${PKGVER}
+  ;;
+  buildpython-mako )
+    export PKGNAME=Mako
+    export PKGVER=1.0.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/M/Mako/${PKGTAR}"
+    export DEST=/binary/python-mako-${PKGVER}
+    make_install_post() {
+      mv ${DEST}/usr/bin/mako-render{,3}
+    }
+  ;;
+  buildpython-markupsafe )
+    export PKGNAME=MarkupSafe
+    export PKGVER=0.23
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/M/MarkupSafe/${PKGTAR}"
+    export DEST=/binary/python-markupsafe-${PKGVER}
+  ;;
+  buildpython-pillow )
+    export PKGNAME=Pillow
+    export PKGVER=3.0.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/P/Pillow/${PKGTAR}"
+    export DEST=/binary/python-pillow-${PKGVER}
+    make_install_post() {
+      for file in ${DEST}/usr/bin/*.py
+      do
+        mv ${file} ${file%.py}3
+      done
+      install -dm755 ${DEST}/usr/include/python$(pkg-config --modversion python3)m
+      cp -rf libImaging/*.h ${DEST}/usr/include/python$(pkg-config --modversion python3)m
+    }
+    make_install_post_32() {
+      for file in ${DEST}/usr/bin/*.py
+      do
+        mv ${file} ${file%.py}
+      done
+      install -dm755 ${DEST}/usr/include/python$(pkg-config --modversion python2)
+      cp -rf libImaging/*.h ${DEST}/usr/include/python$(pkg-config --modversion python2)
+    }
+  ;;
+  buildpython-pycurl )
+    export PKGNAME=pycurl
+    export PKGVER=7.19.5.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/p/pycurl/${PKGTAR}"
+    export DEST=/binary/python-pycurl-${PKGVER}
+    export EXTRA_CFG="--with-ssl"
+  ;;
+  buildpython-pygments )
+    export PKGNAME=Pygments
+    export PKGVER=2.0.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/P/Pygments/${PKGTAR}"
+    export DEST=/binary/python-pygments-${PKGVER}
+    make_install_post() {
+      mv ${DEST}/usr/bin/pygmentize{,3}
+    }
+  ;;
+  buildpython-pyparsing )
+    export PKGNAME=pyparsing
+    export PKGVER=2.0.3
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/p/pyparsing/${PKGTAR}"
+    export DEST=/binary/python-pyparsing-${PKGVER}
+  ;;
+  buildpython-pytz )
+    export PKGNAME=pytz
+    export PKGVER=2015.6
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/p/pytz/${PKGTAR}"
+    export DEST=/binary/python-pytz-${PKGVER}
+  ;;
+  buildpython-pyxdg )
+    export PKGNAME=pyxdg
+    export PKGVER=0.25
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/p/pyxdg/${PKGTAR}"
+    export DEST=/binary/python-pyxdg-${PKGVER}
+  ;;
+  buildpython-pyyaml )
+    export PKGNAME=PyYAML
+    export PKGVER=3.11
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://pyyaml.org/download/pyyaml/${PKGTAR}"
+    export DEST=/binary/python-pyyaml-${PKGVER}
+  ;;
+  buildpython-reportlab )
+    export PKGNAME=reportlab
+    export PKGVER=3.2.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/r/reportlab/${PKGTAR}"
+    export DEST=/binary/python-reportlab-${PKGVER}
+  ;;
+  buildpython-setuptools )
+    export PKGNAME=setuptools
+    export PKGVER=18.3.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/s/setuptools/${PKGTAR}"
+    export DEST=/binary/python-setuptools-${PKGVER}
+  ;;
+  buildpython-six )
+    export PKGNAME=six
+    export PKGVER=1.10.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/s/six/${PKGTAR}"
+    export DEST=/binary/python-six-${PKGVER}
+  ;;
+  buildpython-snowballstemmer )
+    export PKGNAME=snowballstemmer
+    export PKGVER=1.2.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/s/snowballstemmer/${PKGTAR}"
+    export DEST=/binary/python-snowballstemmer-${PKGVER}
+  ;;
+  buildpython-sphinx )
+    export PKGNAME=Sphinx
+    export PKGVER=1.3.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/S/Sphinx/${PKGTAR}"
+    export DEST=/binary/python-sphinx-${PKGVER}
+    make_install_post() {
+      for file in ${DEST}/usr/bin/*
+      do
+        mv ${file} ${file}3
+      done
+    }
+  ;;
+  buildpython-sphinx_rtd_theme )
+    export PKGNAME=sphinx_rtd_theme
+    export PKGVER=0.1.9
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/s/sphinx_rtd_theme/${PKGTAR}"
+    export DEST=/binary/python-sphinx_rtd_theme-${PKGVER}
+  ;;
+  buildpython-unidecode )
+    export PKGNAME=Unidecode
+    export PKGVER=0.04.18
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/U/Unidecode/${PKGTAR}"
+    export DEST=/binary/python-unidecode-${PKGVER}
+  ;;
+  buildpython-modules )
+    if [ -z $1 ]
+    then
+      echo "$(basename $0) 1|2"
+      exit 1
+    fi
+
+    if [ $1 == 1 ]
+    then
+      $(dirname $0)/buildpython-setuptools
+      $(dirname $0)/buildpython-alabaster
+      $(dirname $0)/buildpython-beaker
+      $(dirname $0)/buildpython-cssselect
+      $(dirname $0)/buildpython-markupsafe
+      $(dirname $0)/buildpython-pygments
+      $(dirname $0)/buildpython-pytz
+      $(dirname $0)/buildpython-pyxdg
+      $(dirname $0)/buildpython-six
+      $(dirname $0)/buildpython-snowballstemmer
+      $(dirname $0)/buildpython-babel
+      $(dirname $0)/buildpython-docutils
+      $(dirname $0)/buildpython-jinja2
+      $(dirname $0)/buildpython-lxml
+      $(dirname $0)/buildpython-mako
+      $(dirname $0)/buildpython-sphinx
+      $(dirname $0)/buildpython-sphinx_rtd_theme
+    elif [ $1 == 2 ]
+    then
+      $(dirname $0)/buildpython-m2crypto
+      $(dirname $0)/buildpython-notify
+      $(dirname $0)/buildpython-pillow
+      $(dirname $0)/buildpython-pyyaml
+      $(dirname $0)/buildpython-reportlab
+      $(dirname $0)/buildpython-unidecode
+      $(dirname $0)/buildpython-ipaddr
+      $(dirname $0)/buildpython-pycurl
+      $(dirname $0)/buildpython-pyparsing
+      $(dirname $0)/buildpython-urlgrabber
+    fi
+    exit 0
+  ;;
+
+esac
+
+if [ $(basename $0) != "buildpython-notify" ]
+then
+
+  export NO_OPTIMIZATION=1
+
+  if [ $(basename $0) == "buildpython-ipaddr" ]     ||
+     [ $(basename $0) == "buildpython-m2crypto" ]   ||
+     [ $(basename $0) == "buildpython-urlgrabber" ]
+  then
+    export PYTHON=python
+  else
+    export PYTHON=python3
+  fi
+
+  configure_override() {
+    true
+  }
+  make_override() {
+    ${PYTHON} setup.py build ${EXTRA_CFG}
+  }
+  make_install_override() {
+    if [ ${MULTILIB} == 0 ]
+    then
+      ${PYTHON} setup.py install --root=${DEST} --optimize=1
+    else
+      python setup.py install --root=${DEST} --optimize=1
+    fi
+  }
+fi
+
+case $(basename $0) in
+  buildpython-ipaddr)
+    export PKGNAME=ipaddr
+    export PKGVER=2.1.11
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/i/ipaddr/${PKGTAR}"
+    export DEST=/binary/python-ipaddr-${PKGVER}
+  ;;
+  buildpython-m2crypto)
+    export PKGNAME=M2Crypto
+    export PKGVER=0.22.3
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/M/M2Crypto/${PKGTAR}"
+    export DEST=/binary/python-m2crypto-${PKGVER}
+    configure_pre() {
+      export SWIG_VER=3.0.4
+      # swig-3.0.5 and later produce a broken package.
+      wget -c http://downloads.sourceforge.net/swig/swig-${SWIG_VER}.tar.gz
+      bsdtar xf swig-${SWIG_VER}.tar.gz
+      pushd swig-${SWIG_VER}
+        ./configure --prefix=${PWD}/../swig
+        make -j4
+        make install
+      popd
+      export PATH=${PWD}/swig/bin:$PATH
+    }
+  ;;
+  buildpython-notify)
+    export PKGNAME=notify-python
+    export PKGVER=0.1.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://www.galago-project.org/files/releases/source/notify-python/${PKGTAR}"
+    export DEST=/binary/python-notify-${PKGVER}
+    export PATCHES_LIST=("notify-python-fixes.patch")
+    make_post() {
+      touch src/pynotify.override
+      make clean
+    }
+    make_install_post() {
+      rm -rf ${DEST}/usr/share
+    }
+  ;;
+  buildpython-urlgrabber)
+    export PKGNAME=urlgrabber
+    export PKGVER=3.1.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/u/urlgrabber/${PKGTAR}"
+    export DEST=/binary/python-urlgrabber-${PKGVER}
+    make_install_post() {
+      rm -rf ${DEST}/usr/share
+    }
+  ;;
+  *)
+    export MULTILIB_BUILD=1
+    export DEFAULT_CC_M32="gcc"
+    configure_override_32() {
+      true
+    }
+    make_override_32() {
+      python setup.py build ${EXTRA_CFG}
+    }
+  ;;
+esac
+
+. $(dirname $0)/master.sh
