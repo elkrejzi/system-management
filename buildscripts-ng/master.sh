@@ -473,11 +473,13 @@ build_package() {
 
     if [ ${MULTILIB} == 1 ]
     then
-      mv ${PWD}/dest/usr/lib32 ${DEST}/usr
-      if [ -d "${PWD}/dest/lib32" ]
-      then
-        mv ${PWD}/dest/lib32 ${DEST}
-      fi
+      for d in lib32 usr/lib32
+      do
+        if [ -d "${PWD}/dest/${d}" ]
+        then
+          mv ${PWD}/dest/${d} ${DEST}/${d}
+        fi
+      done
     fi
 
     if [ ${MULTILIB} == 0 ]

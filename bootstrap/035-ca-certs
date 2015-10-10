@@ -9,7 +9,7 @@ rm -rf BLFS-ca-bundle.crt certs make-cert.pl make-ca.sh ${LOGDIR}/ca-certs.log
   time {
     if [ ! -e certdata.txt ]
     then
-      wget -c http://anduin.linuxfromscratch.org/sources/other/certdata.txt
+      wget -c http://anduin.linuxfromscratch.org/BLFS/other/certdata.txt
     fi
 
     cat > make-cert.pl << "EOF"
