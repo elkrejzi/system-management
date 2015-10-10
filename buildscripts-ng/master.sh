@@ -169,8 +169,11 @@ make_separate_debug_info() {
       esac
     done
 
-    install -dm755 ${DEST}-debug/usr/lib
-    mv usr/lib/debug ${DEST}-debug/usr/lib
+    if [ -e usr/lib/debug ]
+    then
+      install -dm755 ${DEST}-debug/usr/lib
+      mv usr/lib/debug ${DEST}-debug/usr/lib
+    fi
   popd
 }
 
