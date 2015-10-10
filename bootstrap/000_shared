@@ -44,7 +44,7 @@ MPFR_VER=3.1.3
 MPC_VER=1.0.3
 GCC_VER=5.2.0
 LINUX_VER=4.2
-LINUX_PATCH_VER=4.2.1
+LINUX_PATCH_VER=4.3-rc4
 GLIBC_VER=2.22
 TCL_VER=8.6.4
 EXPECT_VER=5.45
@@ -69,7 +69,7 @@ SED_VER=4.2.2
 TAR_VER=1.28
 TEXINFO_VER=6.0
 UTIL_LINUX_VER=2.27
-XZ_VER=5.2.1
+XZ_VER=5.2.2
 ZLIB_VER=1.2.8
 LIBARCHIVE_VER=3.1.2
 OPENSSL_VER=1.0.2d
@@ -111,7 +111,7 @@ http://www.cpan.org/src/5.0/perl-${PERL_VER}.tar.bz2
 ${GNU_MIRROR}/sed/sed-${SED_VER}.tar.bz2
 ${GNU_MIRROR}/tar/tar-${TAR_VER}.tar.xz
 ${GNU_MIRROR}/texinfo/texinfo-${TEXINFO_VER}.tar.xz
-https://www.kernel.org/pub/linux/utils/util-linux/v${UTIL_LINUX_VER%.*}/util-linux-${UTIL_LINUX_VER}.tar.xz
+https://www.kernel.org/pub/linux/utils/util-linux/v${UTIL_LINUX_VER:0:4}/util-linux-${UTIL_LINUX_VER}.tar.xz
 http://tukaani.org/xz/xz-${XZ_VER}.tar.xz
 http://zlib.net/zlib-${ZLIB_VER}.tar.xz
 http://libarchive.org/downloads/libarchive-${LIBARCHIVE_VER}.tar.gz
