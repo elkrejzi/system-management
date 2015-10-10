@@ -1,6 +1,0 @@
-# Begin /etc/hosts
-
-127.0.0.1	localhost	localhost.localdomain
-::1		localhost	localhost.localdomain
-
-# End /etc/hosts
