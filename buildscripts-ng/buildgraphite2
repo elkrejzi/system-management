@@ -1,0 +1,16 @@
+#!/bin/bash -e
+
+export PKGNAME=graphite2
+export PKGVER=1.3.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tgz
+export PKGURL="http://downloads.sourceforge.net/silgraphite/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export MULTILIB_BUILD=1
+export CMAKE_FLAGS_32="-DLIB_SUFFIX=32"
+
+configure_pre() {
+  sed -i "s:share/graphite2:lib\${LIB_SUFFIX}/graphite2:" ../${PKGDIR}/src/CMakeLists.txt
+}
+
+. $(dirname $0)/master.sh

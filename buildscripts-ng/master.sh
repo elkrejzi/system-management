@@ -40,7 +40,7 @@ if [ -z ${PKGNAME} ] || [ -z ${PKGVER} ]
 then
   echo "Missing either PKGNAME or PKGVER variables for your package."
   exit 1
-fi 
+fi
 
 if [ -z ${PKGTAR} ]
 then
@@ -54,7 +54,13 @@ fi
 
 if [ -z ${PKGBUILD} ]
 then
-  export PKGBUILD=${PKGDIR}
+  if [ -z ${CMAKE_BUILD} ]
+  then
+    export PKGBUILD=${PKGDIR}
+  else
+    export PKGBUILD=build
+    export PATH_TO_SOURCE="../${PKGDIR}"
+  fi
 fi
 
 if [ -z ${DEST} ]
@@ -105,6 +111,14 @@ prepare_src() {
   export PKG_BUILDING=1
 
   bsdtar xf ${SROOT}/${PKGTAR}
+
+  if [ ! -z ${CMAKE_BUILD} ]
+  then
+    if [ "${PKGDIR}" != "${PKGBUILD}" ]
+    then
+      install -dm755 ${PKGBUILD}
+    fi
+  fi
 
   function_exists post_extract_action && post_extract_action || true
 }
@@ -327,7 +341,7 @@ printf '[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/l
   chmod 755 ${DEST}/INSTALL
 }
 
-build_autotools() {
+build_package() {
   if [ -z $1 ]
   then
     local MULTILIB=0
@@ -335,9 +349,9 @@ build_autotools() {
     local MULTILIB=1
   fi
 
-  if [ -z ${PATH_TO_CONFIGURE} ]
+  if [ -z ${PATH_TO_SOURCE} ]
   then
-    local PATH_TO_CONFIGURE="."
+    local PATH_TO_SOURCE="."
   fi
 
   if [ -z ${NO_OPTIMIZATION} ]
@@ -370,21 +384,33 @@ build_autotools() {
     export CC=${DEFAULT_CC}
     export CXX=${DEFAULT_CXX}
     export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/share/pkgconfig
-    local ADITIONAL_CONFIGURE_FLAGS="--libdir=/usr/lib ${CONFIGURE_FLAGS}"
-    local ADITIONAL_MAKE_FLAGS="${MAKE_FLAGS} ${MAKE_JOBS_FLAGS}"
-    local ADITIONAL_MAKE_INSTALL_FLAGS="${MAKE_INSTALL_FLAGS} DESTDIR=${DEST}"
+    if [ -z ${DEBUG_BUILD} ]
+    then
+      local ADDITIONAL_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Release ${CMAKE_FLAGS}"
+    else
+      local ADDITIONAL_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=RelWithDebInfo ${CMAKE_FLAGS}"
+    fi
+    local ADDITIONAL_CONFIGURE_FLAGS="--libdir=/usr/lib ${CONFIGURE_FLAGS}"
+    local ADDITIONAL_MAKE_FLAGS="${MAKE_FLAGS} ${MAKE_JOBS_FLAGS}"
+    local ADDITIONAL_MAKE_INSTALL_FLAGS="${MAKE_INSTALL_FLAGS} DESTDIR=${DEST}"
   else
     export CC=${DEFAULT_CC_M32}
     export CXX=${DEFAULT_CXX_M32}
     export PKG_CONFIG_PATH=/usr/lib32/pkgconfig:/usr/share/pkgconfig
-    local ADITIONAL_CONFIGURE_FLAGS="--libdir=/usr/lib32 ${CONFIGURE_FLAGS_32}"
-    local ADITIONAL_MAKE_FLAGS="${MAKE_FLAGS_32} ${MAKE_JOBS_FLAGS}"
-    local ADITIONAL_MAKE_INSTALL_FLAGS="${MAKE_INSTALL_FLAGS_32} DESTDIR=\${PWD}/dest"
+    if [ -z ${DEBUG_BUILD} ]
+    then
+      local ADDITIONAL_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Release ${CMAKE_FLAGS_32}"
+    else
+      local ADDITIONAL_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=RelWithDebInfo ${CMAKE_FLAGS_32}"
+    fi
+    local ADDITIONAL_CONFIGURE_FLAGS="--libdir=/usr/lib32 ${CONFIGURE_FLAGS_32}"
+    local ADDITIONAL_MAKE_FLAGS="${MAKE_FLAGS_32} ${MAKE_JOBS_FLAGS}"
+    local ADDITIONAL_MAKE_INSTALL_FLAGS="${MAKE_INSTALL_FLAGS_32} DESTDIR=\${PWD}/dest"
   fi
 
   if [ -z ${KEEP_STATIC} ]
   then
-     ADITIONAL_CONFIGURE_FLAGS="--disable-static ${ADITIONAL_CONFIGURE_FLAGS}"
+     ADDITIONAL_CONFIGURE_FLAGS="--disable-static ${ADDITIONAL_CONFIGURE_FLAGS}"
   fi
 
   pushd ${PKGBUILD}
@@ -404,12 +430,22 @@ build_autotools() {
     fi
 
     function_exists $cfg_override && $cfg_override || {
-    ${PATH_TO_CONFIGURE}/configure --prefix=/usr             \
-                                   --sysconfdir=/etc         \
-                                   --localstatedir=/var      \
-                                   --mandir=/usr/share/man   \
-                                   --infodir=/usr/share/info \
-                                   ${ADITIONAL_CONFIGURE_FLAGS}
+    if [ ! -z ${CMAKE_BUILD} ]
+    then
+      cmake -DCMAKE_INSTALL_PREFIX=/usr     \
+            -DCMAKE_C_FLAGS="${CFLAGS}"     \
+            -DCMAKE_CXX_FLAGS="${CXXFLAGS}" \
+            ${ADDITIONAL_CMAKE_FLAGS}       \
+            -Wno-dev ${PATH_TO_SOURCE}
+    else
+      ${PATH_TO_SOURCE}/configure --prefix=/usr             \
+                                  --sysconfdir=/etc         \
+                                  --localstatedir=/var      \
+                                  --mandir=/usr/share/man   \
+                                  --infodir=/usr/share/info \
+                                  ${ADDITIONAL_CONFIGURE_FLAGS}
+    fi
+
     }
 
     if [ ${MULTILIB} == 0 ]
@@ -419,7 +455,7 @@ build_autotools() {
       function_exists configure_post_32 && configure_post_32
     fi
 
-    function_exists make_override && make_override || make ${ADITIONAL_MAKE_FLAGS}
+    function_exists make_override && make_override || make ${ADDITIONAL_MAKE_FLAGS}
 
     if [ ${MULTILIB} == 0 ]
     then
@@ -428,7 +464,7 @@ build_autotools() {
       function_exists make_post_32 && make_post_32
     fi
 
-    function_exists make_install_override && make_install_override || make install ${ADITIONAL_MAKE_INSTALL_FLAGS}
+    function_exists make_install_override && make_install_override || make install ${ADDITIONAL_MAKE_INSTALL_FLAGS}
 
     if [ ${MULTILIB} == 1 ]
     then
@@ -472,7 +508,7 @@ then
   unset LEN i
 fi
 
-function_exists build_override && build_override || build_autotools
+function_exists build_package_override && build_package_override || build_package
 
 if [ ! -z ${MULTILIB_BUILD} ]
 then
@@ -491,10 +527,10 @@ then
     unset LEN i
   fi
 
-  function_exists build_32_override && build_32_override || build_autotools 1
+  function_exists build_package_32_override && build_package_32_override || build_package 1
 fi
 
-function_exists post_install_config && post_install_config
+function_exists post_install_config && post_install_config || true
 function_exists post_install_clean_override && post_install_clean_override || post_install_clean
 function_exists generate_install_override && generate_install_override || generate_install
 

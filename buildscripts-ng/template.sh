@@ -16,11 +16,14 @@ export PKGURL="http://url"
 # Number of make jobs used to build the package.
 export MAKE_JOBS_FLAGS="-j4"
 
-# Path to the configure script in case of builddir != srcdir
-# export PATH_TO_CONFIGURE="."
+# Relative path to the source dir in case of builddir != srcdir, where configure script and cmake root directory are located.
+# export PATH_TO_SOURCE="."
 
 # Location where the package will be installed
 # export DEST=/binary/${PKGNAME}-${PKGVER}
+
+# Set to 1 if the package uses cmake instead of autotools
+# export CMAKE_BUILD=1
 
 # Set to 1 to enable separate debug info
 # export DEBUG_BUILD=1
