@@ -181,8 +181,11 @@ post_install_clean() {
   fi
 
   find ${DEST} -name "*.so" -exec chmod 755 {} \;
+  find ${DEST} \( -name .packlist -o -name perllocal.pod \) -delete
+  find ${DEST} -type d -empty -delete
 
   rm -rf ${DEST}/usr/share/info/dir
+
   if [ -z ${NO_COMPRESS_INFO} ] && [ -e ${DEST}/usr/share/info ]
   then
     gzip -9 ${DEST}/usr/share/info/*

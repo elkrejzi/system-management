@@ -1,0 +1,162 @@
+#!/bin/bash -e
+
+case $(basename $0) in
+
+  buildperl-archive-zip )
+    export PKGNAME=Archive-Zip
+    export PKGVER=1.53
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://search.cpan.org/CPAN/authors/id/P/PH/PHRED/${PKGTAR}"
+    export DEST=/binary/perl-archive-zip-${PKGVER}
+  ;;
+  buildperl-authen-sasl )
+    export PKGNAME=Authen-SASL
+    export PKGVER=2.16
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://search.cpan.org/CPAN/authors/id/G/GB/GBARR/${PKGTAR}"
+    export DEST=/binary/perl-authen-sasl-${PKGVER}
+  ;;
+  buildperl-digest-hmac )
+    export PKGNAME=Digest-HMAC
+    export PKGVER=1.03
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://search.cpan.org/CPAN/authors/id/G/GA/GAAS/${PKGTAR}"
+    export DEST=/binary/perl-digest-hmac-${PKGVER}
+  ;;
+  buildperl-error )
+    export PKGNAME=Error
+    export PKGVER=0.17024
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://search.cpan.org/CPAN/authors/id/S/SH/SHLOMIF/${PKGTAR}"
+    export DEST=/binary/perl-error-${PKGVER}
+  ;;
+  buildperl-io-socket-ssl )
+    export PKGNAME=IO-Socket-SSL
+    export PKGVER=2.020
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://search.cpan.org/CPAN/authors/id/S/SU/SULLR/${PKGTAR}"
+    export DEST=/binary/perl-io-socket-ssl-${PKGVER}
+    export PERL_MM_USE_DEFAULT=1
+  ;;
+  buildperl-net-smtp-ssl )
+    export PKGNAME=Net-SMTP-SSL
+    export PKGVER=1.03
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://search.cpan.org/CPAN/authors/id/R/RJ/RJBS/${PKGTAR}"
+    export DEST=/binary/perl-net-smtp-ssl-${PKGVER}
+  ;;
+  buildperl-net-ssleay )
+    export PKGNAME=Net-SSLeay
+    export PKGVER=1.72
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://search.cpan.org/CPAN/authors/id/M/MI/MIKEM/${PKGTAR}"
+    export DEST=/binary/perl-net-ssleay-${PKGVER}
+    export PERL_MM_USE_DEFAULT=1
+  ;;
+  buildperl-sgmls )
+    export PKGNAME=SGMLSpm
+    export PKGVER=1.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://anduin.linuxfromscratch.org/BLFS/perl-modules/${PKGTAR}"
+    export DEST=/binary/perl-sgmls-${PKGVER}
+
+make_install_post() {
+  ln -sf sgmlspl.pl ${DEST}/usr/bin/sgmlspl
+}
+  ;;
+  buildperl-uri )
+    export PKGNAME=URI
+    export PKGVER=1.69
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/${PKGTAR}"
+    export DEST=/binary/perl-uri-${PKGVER}
+  ;;
+  buildperl-xml-namespace-support )
+    export PKGNAME=XML-NamespaceSupport
+    export PKGVER=1.11
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://search.cpan.org/CPAN/authors/id/P/PE/PERIGRIN/${PKGTAR}"
+    export DEST=/binary/perl-xml-namespace-support-${PKGVER}
+  ;;
+  buildperl-xml-parser )
+    export PKGNAME=XML-Parser
+    export PKGVER=2.44
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://search.cpan.org/CPAN/authors/id/T/TO/TODDR/${PKGTAR}"
+    export DEST=/binary/perl-xml-parser-${PKGVER}
+  ;;
+  buildperl-xml-sax )
+    export PKGNAME=XML-SAX
+    export PKGVER=0.99
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://search.cpan.org/CPAN/authors/id/G/GR/GRANTM/${PKGTAR}"
+    export DEST=/binary/perl-xml-sax-${PKGVER}
+    export PATCHES_LIST=("perl-xml-sax.patch")
+  ;;
+  buildperl-xml-sax-base )
+    export PKGNAME=XML-SAX-Base
+    export PKGVER=1.08
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://search.cpan.org/CPAN/authors/id/G/GR/GRANTM/${PKGTAR}"
+    export DEST=/binary/perl-xml-sax-base-${PKGVER}
+  ;;
+  buildperl-xml-sax-expat )
+    export PKGNAME=XML-SAX-Expat
+    export PKGVER=0.51
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://search.cpan.org/CPAN/authors/id/B/BJ/BJOERN/${PKGTAR}"
+    export DEST=/binary/perl-xml-sax-expat-${PKGVER}
+
+make_install_override() {
+  make pure_install DESTDIR=${DEST}
+}
+  ;;
+  buildperl-xml-simple )
+    export PKGNAME=XML-Simple
+    export PKGVER=2.20
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://search.cpan.org/CPAN/authors/id/G/GR/GRANTM/${PKGTAR}"
+    export DEST=/binary/perl-xml-simple-${PKGVER}
+  ;;
+  buildperl-modules )
+    if [ -z $1 ]
+    then
+      echo "$(basename $0) 1|2"
+      exit 1
+    fi
+
+    if [ $1 == 1 ]
+    then
+      $(dirname $0)/buildperl-xml-parser
+      $(dirname $0)/buildperl-xml-namespace-support
+      $(dirname $0)/buildperl-xml-sax-base
+      $(dirname $0)/buildperl-xml-sax
+      $(dirname $0)/buildperl-xml-sax-expat
+      $(dirname $0)/buildperl-xml-simple
+      $(dirname $0)/buildperl-archive-zip
+      $(dirname $0)/buildperl-error
+      $(dirname $0)/buildperl-sgmls
+      $(dirname $0)/buildperl-uri
+    elif [ $1 == 2 ]
+    then
+      $(dirname $0)/buildperl-net-ssleay
+      $(dirname $0)/buildperl-io-socket-ssl
+      $(dirname $0)/buildperl-net-smtp-ssl
+      $(dirname $0)/buildperl-digest-hmac
+      $(dirname $0)/buildperl-authen-sasl
+    fi
+
+    exit 0
+
+  ;;
+
+esac
+
+configure_override() {
+  perl Makefile.PL INSTALLDIRS=vendor
+}
+
+export MAKE_JOBS_FLAGS="-j4"
+export NO_OPTIMIZATION=1
+
+. $(dirname $0)/master.sh
