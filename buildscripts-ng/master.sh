@@ -264,7 +264,6 @@ generate_install() {
     fi
 
 printf '[ -x /usr/bin/update-mime-database ] && echo "Processing triggers for shared-mime-info" && /usr/bin/update-mime-database /usr/share/mime\n' >> ${DEST}/INSTALL
-EOF
 
   fi
 
