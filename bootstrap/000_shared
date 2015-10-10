@@ -70,16 +70,11 @@ TAR_VER=1.28
 TEXINFO_VER=6.0
 UTIL_LINUX_VER=2.27
 XZ_VER=5.2.1
-SHADOW_VER=4.2.1
 ZLIB_VER=1.2.8
 LIBARCHIVE_VER=3.1.2
 OPENSSL_VER=1.0.2d
-CURL_VER=7.43.0
-ATTR_VER=2.4.47
-ACL_VER=2.2.52
-LIBCAP_VER=2.24
-FAKEROOT_VER=1.20.2
-PACMAN_VER=4.2.1
+WGET_VER=1.16.3
+NANO_VER=2.4.2
 
 if [ ! -z $1 ]
 then
@@ -118,16 +113,12 @@ ${GNU_MIRROR}/tar/tar-${TAR_VER}.tar.xz
 ${GNU_MIRROR}/texinfo/texinfo-${TEXINFO_VER}.tar.xz
 https://www.kernel.org/pub/linux/utils/util-linux/v${UTIL_LINUX_VER%.*}/util-linux-${UTIL_LINUX_VER}.tar.xz
 http://tukaani.org/xz/xz-${XZ_VER}.tar.xz
-https://pkg-shadow.alioth.debian.org/releases/shadow-${SHADOW_VER}.tar.xz
 http://zlib.net/zlib-${ZLIB_VER}.tar.xz
 http://libarchive.org/downloads/libarchive-${LIBARCHIVE_VER}.tar.gz
 https://www.openssl.org/source/openssl-${OPENSSL_VER}.tar.gz
-http://curl.haxx.se/download/curl-${CURL_VER}.tar.bz2
-http://download.savannah.gnu.org/releases/attr/attr-${ATTR_VER}.src.tar.gz
-http://download.savannah.gnu.org/releases/acl/acl-${ACL_VER}.src.tar.gz
-https://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2/libcap-${LIBCAP_VER}.tar.xz
-http://http.debian.net/debian/pool/main/f/fakeroot/fakeroot_${FAKEROOT_VER}.orig.tar.bz2
-https://sources.archlinux.org/other/pacman/pacman-${PACMAN_VER}.tar.gz
+${GNU_MIRROR}/wget/wget-${WGET_VER}.tar.xz
+${GNU_MIRROR}/nano/nano-${NANO_VER}.tar.gz
+
 https://raw.githubusercontent.com/elkrejzi/system-management/master/patches/gcc-pure64.patch
 https://raw.githubusercontent.com/elkrejzi/system-management/master/patches/glibc-pure64.patch
 EOF

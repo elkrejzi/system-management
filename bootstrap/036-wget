@@ -1,0 +1,27 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+rm -rf wget-${WGET_VER} ${LOGDIR}/wget-${WGET_VER}.log
+
+tar xf ${SROOT}/wget-${WGET_VER}.tar.xz
+
+{
+
+  time {
+  pushd wget-${WGET_VER}
+    ./configure --prefix=/tools    \
+                --with-ssl=openssl \
+                --without-libidn   \
+                --with-libssl-prefix=/tools
+    make
+    make install
+  popd
+  echo "ca_certificate = /tools/etc/ssl/certs/ca-certificates.crt" > /tools/etc/wgetrc
+  }
+
+} 2>&1 | tee ${LOGDIR}/wget-${WGET_VER}.log
+
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
+rm -rf wget-${WGET_VER}
