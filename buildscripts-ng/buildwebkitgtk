@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=webkitgtk
+export PKGVER=2.10.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://webkitgtk.org/releases/${PKGVER}"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export CMAKE_FLAGS="-DCMAKE_SKIP_RPATH=ON       \
+                    -DPORT=GTK                  \
+                    -DLIB_INSTALL_DIR=/usr/lib"
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,60 @@
+#!/bin/bash -e
+
+export PKGNAME=mesa
+export PKGVER=11.0.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="ftp://ftp.freedesktop.org/pub/mesa/${PKGVER}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export DEBUG_BUILD=1
+export MULTILIB_BUILD=1
+export PATCHES_LIST=("mesalib-xdemos.patch")
+export PATCHES_LIST_32=("mesalib-xdemos.patch")
+
+configure_pre() {
+  sed -i 's/LLVM_SO_NAME=.*/LLVM_SO_NAME=LLVM/' configure
+}
+
+configure_pre_32() {
+  sed -i 's/LLVM_SO_NAME=.*/LLVM_SO_NAME=LLVM/' configure
+  export LLVM_CONFIG=/usr/bin/llvm-config32
+}
+
+make_post() {
+  make -C xdemos
+}
+
+make_post_32() {
+  make -C xdemos EXT=32 CC="${CC}"
+}
+
+make_install_post() {
+  make -C xdemos install DESTDIR=${DEST}
+}
+
+make_install_post_32() {
+  install -m755 xdemos/glxinfo32 ${DEST}/usr/bin
+  install -m755 xdemos/glxgears32 ${DEST}/usr/bin
+}
+
+export COMMON_FLAGS="--disable-xvmc            \
+                     --enable-texture-float    \
+                     --enable-gles1            \
+                     --enable-gles2            \
+                     --enable-gbm              \
+                     --enable-vdpau            \
+                     --enable-omx              \
+                     --enable-va               \
+                     --enable-opencl           \
+                     --enable-opencl-icd       \
+                     --enable-glx-tls          \
+                     --enable-llvm-shared-libs \
+                     --with-dri-drivers=i965   \
+                     --with-egl-platforms=drm,x11,wayland \
+                     --with-gallium-drivers=r600,swrast"
+
+export CONFIGURE_FLAGS=${COMMON_FLAGS}
+export CONFIGURE_FLAGS_32="${COMMON_FLAGS}           \
+                           --build=i686-pc-linux-gnu \
+                           --host=i686-pc-linux-gnu"
+
+. $(dirname $0)/master.sh
