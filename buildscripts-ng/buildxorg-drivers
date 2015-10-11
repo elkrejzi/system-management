@@ -1,0 +1,97 @@
+#!/bin/bash -e
+
+case $(basename $0) in
+  buildxf86-input-evdev )
+    export PKGNAME=xf86-input-evdev
+    export PKGVER=2.9.99
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/driver/${PKGTAR}"
+  ;;
+  buildxf86-input-libinput )
+    export PKGNAME=xf86-input-libinput
+    export PKGVER=0.14.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/driver/${PKGTAR}"
+    make_install_post() {
+      install -dm755 ${DEST}/usr/share/X11/xorg.conf.d
+
+cat > ${DEST}/usr/share/X11/xorg.conf.d/90-libinput.conf << "EOF"
+# Match on all types of devices but tablet devices and joysticks
+
+Section "InputClass"
+        Identifier "libinput pointer catchall"
+        MatchIsPointer "on"
+        MatchDevicePath "/dev/input/event*"
+        Driver "libinput"
+EndSection
+
+Section "InputClass"
+        Identifier "libinput keyboard catchall"
+        MatchIsKeyboard "on"
+        MatchDevicePath "/dev/input/event*"
+        Driver "libinput"
+EndSection
+
+Section "InputClass"
+        Identifier "libinput touchpad catchall"
+        MatchIsTouchpad "on"
+        MatchDevicePath "/dev/input/event*"
+        Driver "libinput"
+EndSection
+
+Section "InputClass"
+        Identifier "libinput touchscreen catchall"
+        MatchIsTouchscreen "on"
+        MatchDevicePath "/dev/input/event*"
+        Driver "libinput"
+EndSection
+EOF
+    }
+  ;;
+  buildxf86-input-synaptics )
+    export PKGNAME=xf86-input-synaptics
+    export PKGVER=1.8.99
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/driver/${PKGTAR}"
+  ;;
+  buildxf86-input-wacom )
+    export PKGNAME=xf86-input-wacom
+    export PKGVER=0.31.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://downloads.sourceforge.net/linuxwacom/${PKGTAR}"
+    export CONFIGURE_FLAGS="--with-udev-rules-dir=/lib/udev/rules.d \
+                            --with-systemd-unit-dir=/lib/systemd/system"
+  ;;
+  buildxf86-video-ati )
+    export PKGNAME=xf86-video-ati
+    export PKGVER=7.5.99
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/driver/${PKGTAR}"
+  ;;
+  buildxf86-video-intel )
+    export PKGNAME=xf86-video-intel
+    export PKGVER=2.99.917
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/driver/${PKGTAR}"
+    export CONFIGURE_FLAGS="--enable-kms-only \
+                            --disable-sna"
+    export POSTINST_TRIGGER=("chmod 4755 /usr/libexec/xf86-video-intel-backlight-helper")
+  ;;
+  buildxorg-drivers )
+    export PKG_AUTO_INSTALL=1
+
+    $(dirname $0)/buildxf86-input-evdev
+    $(dirname $0)/buildxf86-input-libinput
+    $(dirname $0)/buildxf86-input-synaptics
+    $(dirname $0)/buildxf86-video-ati
+    $(dirname $0)/buildxf86-video-intel
+
+    exit 0
+  ;;
+esac
+
+export MAKE_JOBS_FLAGS="-j4"
+export DEBUG_BUILD=1
+export DEST=/binary/xorg/drivers/${PKGNAME}-${PKGVER}
+
+. $(dirname $0)/master.sh

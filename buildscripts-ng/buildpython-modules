@@ -248,7 +248,6 @@ esac
 
 if [ $(basename $0) != "buildpython-notify" ]
 then
-
   export NO_OPTIMIZATION=1
 
   if [ $(basename $0) == "buildpython-ipaddr" ]     ||

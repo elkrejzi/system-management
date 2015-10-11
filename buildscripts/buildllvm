@@ -198,7 +198,7 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr \
 make -j4
 make install DESTDIR=${PWD}/dest
 
-rm -f ${DEST}/usr/lib32/libgomp.so
+rm -f dest/usr/lib32/libgomp.so
 
 mv dest/usr/bin/llvm-config ${DEST}/usr/bin/llvm-config32
 

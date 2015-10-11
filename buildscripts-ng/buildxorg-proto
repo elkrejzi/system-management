@@ -1,0 +1,218 @@
+#!/bin/bash -e
+
+case $(basename $0) in
+  buildbigreqsproto )
+    export PKGNAME=bigreqsproto
+    export PKGVER=1.1.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildcompositeproto )
+    export PKGNAME=compositeproto
+    export PKGVER=0.4.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  builddamageproto )
+    export PKGNAME=damageproto
+    export PKGVER=1.2.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  builddmxproto )
+    export PKGNAME=dmxproto
+    export PKGVER=2.3.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  builddri2proto )
+    export PKGNAME=dri2proto
+    export PKGVER=2.8
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  builddri3proto )
+    export PKGNAME=dri3proto
+    export PKGVER=1.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildfixesproto )
+    export PKGNAME=fixesproto
+    export PKGVER=5.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildfontsproto )
+    export PKGNAME=fontsproto
+    export PKGVER=2.1.3
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildglproto )
+    export PKGNAME=glproto
+    export PKGVER=1.4.17
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildinputproto )
+    export PKGNAME=inputproto
+    export PKGVER=2.3.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildkbproto )
+    export PKGNAME=kbproto
+    export PKGVER=1.0.7
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildpresentproto )
+    export PKGNAME=presentproto
+    export PKGVER=1.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildrandrproto )
+    export PKGNAME=randrproto
+    export PKGVER=1.5.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildrecordproto )
+    export PKGNAME=recordproto
+    export PKGVER=1.14.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildrenderproto )
+    export PKGNAME=renderproto
+    export PKGVER=0.11.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildresourceproto )
+    export PKGNAME=resourceproto
+    export PKGVER=1.2.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildscrnsaverproto )
+    export PKGNAME=scrnsaverproto
+    export PKGVER=1.2.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildvideoproto )
+    export PKGNAME=videoproto
+    export PKGVER=2.3.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildxcb-proto )
+    export PKGNAME=xcb-proto
+    export PKGVER=1.11
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/xcb/${PKGTAR}"
+  ;;
+  buildxcmiscproto )
+    export PKGNAME=xcmiscproto
+    export PKGVER=1.2.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildxextproto )
+    export PKGNAME=xextproto
+    export PKGVER=7.3.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildxf86bigfontproto )
+    export PKGNAME=xf86bigfontproto
+    export PKGVER=1.2.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildxf86dgaproto )
+    export PKGNAME=xf86dgaproto
+    export PKGVER=2.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildxf86driproto )
+    export PKGNAME=xf86driproto
+    export PKGVER=2.1.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildxf86vidmodeproto )
+    export PKGNAME=xf86vidmodeproto
+    export PKGVER=2.3.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildxineramaproto )
+    export PKGNAME=xineramaproto
+    export PKGVER=1.2.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildxproto )
+    export PKGNAME=xproto
+    export PKGVER=7.0.28
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
+  ;;
+  buildxtrans )
+    export PKGNAME=xtrans
+    export PKGVER=1.3.5
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildxorg-proto )
+    export PKG_AUTO_INSTALL=1
+
+    $(dirname $0)/buildbigreqsproto
+    $(dirname $0)/buildcompositeproto
+    $(dirname $0)/builddamageproto
+    $(dirname $0)/builddmxproto
+    $(dirname $0)/builddri2proto
+    $(dirname $0)/builddri3proto
+    $(dirname $0)/buildfixesproto
+    $(dirname $0)/buildfontsproto
+    $(dirname $0)/buildglproto
+    $(dirname $0)/buildinputproto
+    $(dirname $0)/buildkbproto
+    $(dirname $0)/buildpresentproto
+    $(dirname $0)/buildrandrproto
+    $(dirname $0)/buildrecordproto
+    $(dirname $0)/buildrenderproto
+    $(dirname $0)/buildresourceproto
+    $(dirname $0)/buildscrnsaverproto
+    $(dirname $0)/buildvideoproto
+    $(dirname $0)/buildxcmiscproto
+    $(dirname $0)/buildxextproto
+    $(dirname $0)/buildxf86bigfontproto
+    $(dirname $0)/buildxf86dgaproto
+    $(dirname $0)/buildxf86driproto
+    $(dirname $0)/buildxf86vidmodeproto
+    $(dirname $0)/buildxineramaproto
+    $(dirname $0)/buildxproto
+    $(dirname $0)/buildxcb-proto
+    $(dirname $0)/buildxtrans
+
+    exit 0
+  ;;
+esac
+
+export NO_OPTIMIZATION=1
+export NO_STRIP=1
+
+if [ ${PKGNAME} != "xtrans" ] && [ ${PKGNAME} != "xcb-proto" ]
+then
+  export DEST=/binary/xorg/proto/${PKGNAME}-${PKGVER}
+else
+  export DEST=/binary/xorg/${PKGNAME}-${PKGVER}
+fi
+
+. $(dirname $0)/master.sh

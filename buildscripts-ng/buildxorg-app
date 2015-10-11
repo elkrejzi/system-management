@@ -1,0 +1,292 @@
+#!/bin/bash -e
+
+case $(basename $0) in
+  buildbdftopcf )
+    export PKGNAME=bdftopcf
+    export PKGVER=1.0.5
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildiceauth )
+    export PKGNAME=iceauth
+    export PKGVER=1.0.7
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildluit )
+    export PKGNAME=luit
+    export PKGVER=1.1.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+
+    configure_pre() {
+      line1="#ifdef _XOPEN_SOURCE"
+      line2="#  undef _XOPEN_SOURCE"
+      line3="#  define _XOPEN_SOURCE 600"
+      line4="#endif"
+
+      sed -i -e "s@#ifdef HAVE_CONFIG_H@$line1\n$line2\n$line3\n$line4\n\n&@" sys.c
+      unset line1 line2 line3 line4
+    }
+  ;;
+  buildmkfontdir )
+    export PKGNAME=mkfontdir
+    export PKGVER=1.0.7
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildmkfontscale )
+    export PKGNAME=mkfontscale
+    export PKGVER=1.1.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildsessreg )
+    export PKGNAME=sessreg
+    export PKGVER=1.1.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+    export CPPFLAGS="-P"
+  ;;
+  buildsetxkbmap )
+    export PKGNAME=setxkbmap
+    export PKGVER=1.3.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildsmproxy )
+    export PKGNAME=smproxy
+    export PKGVER=1.0.6
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildx11perf )
+    export PKGNAME=x11perf
+    export PKGVER=1.6.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxauth )
+    export PKGNAME=xauth
+    export PKGVER=1.0.9
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxbacklight )
+    export PKGNAME=xbacklight
+    export PKGVER=1.2.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxcmsdb )
+    export PKGNAME=xcmsdb
+    export PKGVER=1.0.5
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxcursorgen )
+    export PKGNAME=xcursorgen
+    export PKGVER=1.0.6
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxdpyinfo )
+    export PKGNAME=xdpyinfo
+    export PKGVER=1.3.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxdriinfo )
+    export PKGNAME=xdriinfo
+    export PKGVER=1.0.5
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxev )
+    export PKGNAME=xev
+    export PKGVER=1.2.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxgamma )
+    export PKGNAME=xgamma
+    export PKGVER=1.0.6
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxhost )
+    export PKGNAME=xhost
+    export PKGVER=1.0.7
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxinput )
+    export PKGNAME=xinput
+    export PKGVER=1.6.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxkbcomp )
+    export PKGNAME=xkbcomp
+    export PKGVER=1.3.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxkbevd )
+    export PKGNAME=xkbevd
+    export PKGVER=1.1.4
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxkbutils )
+    export PKGNAME=xkbutils
+    export PKGVER=1.0.4
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxkill )
+    export PKGNAME=xkill
+    export PKGVER=1.0.4
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxlsatoms )
+    export PKGNAME=xlsatoms
+    export PKGVER=1.1.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxlsclients )
+    export PKGNAME=xlsclients
+    export PKGVER=1.1.3
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxmessage )
+    export PKGNAME=xmessage
+    export PKGVER=1.0.4
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxmodmap )
+    export PKGNAME=xmodmap
+    export PKGVER=1.0.9
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxpr )
+    export PKGNAME=xpr
+    export PKGVER=1.0.4
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxprop )
+    export PKGNAME=xprop
+    export PKGVER=1.2.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxrandr )
+    export PKGNAME=xrandr
+    export PKGVER=1.4.3
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxrdb )
+    export PKGNAME=xrdb
+    export PKGVER=1.1.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxrefresh )
+    export PKGNAME=xrefresh
+    export PKGVER=1.0.5
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxset )
+    export PKGNAME=xset
+    export PKGVER=1.2.3
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxsetroot )
+    export PKGNAME=xsetroot
+    export PKGVER=1.1.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxvinfo )
+    export PKGNAME=xvinfo
+    export PKGVER=1.1.3
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxwd )
+    export PKGNAME=xwd
+    export PKGVER=1.0.6
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxwininfo )
+    export PKGNAME=xwininfo
+    export PKGVER=1.1.3
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxwud )
+    export PKGNAME=xwud
+    export PKGVER=1.0.4
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
+  ;;
+  buildxorg-app )
+    export PKG_AUTO_INSTALL=1
+
+    $(dirname $0)/buildbdftopcf
+    $(dirname $0)/buildiceauth
+    $(dirname $0)/buildluit
+    $(dirname $0)/buildmkfontdir
+    $(dirname $0)/buildmkfontscale
+    $(dirname $0)/buildsessreg
+    $(dirname $0)/buildsetxkbmap
+    $(dirname $0)/buildsmproxy
+    $(dirname $0)/buildx11perf
+    $(dirname $0)/buildxauth
+    $(dirname $0)/buildxbacklight
+    $(dirname $0)/buildxcmsdb
+    $(dirname $0)/buildxcursorgen
+    $(dirname $0)/buildxdpyinfo
+    $(dirname $0)/buildxdriinfo
+    $(dirname $0)/buildxev
+    $(dirname $0)/buildxgamma
+    $(dirname $0)/buildxhost
+    $(dirname $0)/buildxinput
+    $(dirname $0)/buildxkbcomp
+    $(dirname $0)/buildxkbevd
+    $(dirname $0)/buildxkbutils
+    $(dirname $0)/buildxkill
+    $(dirname $0)/buildxlsatoms
+    $(dirname $0)/buildxlsclients
+    $(dirname $0)/buildxmessage
+    $(dirname $0)/buildxmodmap
+    $(dirname $0)/buildxpr
+    $(dirname $0)/buildxprop
+    $(dirname $0)/buildxrandr
+    $(dirname $0)/buildxrdb
+    $(dirname $0)/buildxrefresh
+    $(dirname $0)/buildxset
+    $(dirname $0)/buildxsetroot
+    $(dirname $0)/buildxvinfo
+    $(dirname $0)/buildxwd
+    $(dirname $0)/buildxwininfo
+    $(dirname $0)/buildxwud
+
+    exit 0
+  ;;
+esac
+
+export MAKE_JOBS_FLAGS="-j4"
+export DEST=/binary/xorg/app/${PKGNAME}-${PKGVER}
+
+. $(dirname $0)/master.sh

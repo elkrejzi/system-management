@@ -1,0 +1,269 @@
+#!/bin/bash -e
+
+case $(basename $0) in
+  buildlibdmx )
+    export PKGNAME=libdmx
+    export PKGVER=1.1.3
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibfontenc )
+    export PKGNAME=libfontenc
+    export PKGVER=1.1.3
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibFS )
+    export PKGNAME=libFS
+    export PKGVER=1.0.7
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibICE )
+    export PKGNAME=libICE
+    export PKGVER=1.0.9
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibpciaccess )
+    export PKGNAME=libpciaccess
+    export PKGVER=0.13.4
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibSM )
+    export PKGNAME=libSM
+    export PKGVER=1.2.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibX11 )
+    export PKGNAME=libX11
+    export PKGVER=1.6.3
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXau )
+    export PKGNAME=libXau
+    export PKGVER=1.0.8
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXaw )
+    export PKGNAME=libXaw
+    export PKGVER=1.0.13
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibxcb )
+    export PKGNAME=libxcb
+    export PKGVER=1.11.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/xcb/${PKGTAR}"
+
+    configure_pre() {
+      sed -e "s/pthread-stubs//" -i configure.ac
+      autoreconf -fi
+    }
+    configure_pre_32() {
+      sed -e "s/pthread-stubs//" -i configure.ac
+      autoreconf -fi
+    }
+
+    export CONFIGURE_FLAGS="--enable-xinput"
+    export CONFIGURE_FLAGS_32="--enable-xinput"
+  ;;
+  buildlibXcomposite )
+    export PKGNAME=libXcomposite
+    export PKGVER=0.4.4
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXcursor )
+    export PKGNAME=libXcursor
+    export PKGVER=1.1.14
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXdamage )
+    export PKGNAME=libXdamage
+    export PKGVER=1.1.4
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXdmcp )
+    export PKGNAME=libXdmcp
+    export PKGVER=1.1.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXext )
+    export PKGNAME=libXext
+    export PKGVER=1.3.3
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXfixes )
+    export PKGNAME=libXfixes
+    export PKGVER=5.0.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXfont )
+    export PKGNAME=libXfont
+    export PKGVER=1.5.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXft )
+    export PKGNAME=libXft
+    export PKGVER=2.3.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXi )
+    export PKGNAME=libXi
+    export PKGVER=1.7.5
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXinerama )
+    export PKGNAME=libXinerama
+    export PKGVER=1.1.3
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibxkbfile )
+    export PKGNAME=libxkbfile
+    export PKGVER=1.0.9
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXmu )
+    export PKGNAME=libXmu
+    export PKGVER=1.1.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXpm )
+    export PKGNAME=libXpm
+    export PKGVER=3.5.11
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXrandr )
+    export PKGNAME=libXrandr
+    export PKGVER=1.5.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXrender )
+    export PKGNAME=libXrender
+    export PKGVER=0.9.9
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXres )
+    export PKGNAME=libXres
+    export PKGVER=1.0.7
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXScrnSaver )
+    export PKGNAME=libXScrnSaver
+    export PKGVER=1.2.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibxshmfence )
+    export PKGNAME=libxshmfence
+    export PKGVER=1.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXt )
+    export PKGNAME=libXt
+    export PKGVER=1.1.5
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXtst )
+    export PKGNAME=libXtst
+    export PKGVER=1.2.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+    make_install_post() {
+      find ${DEST}/usr/share/man -type f -name '*.[[:digit:]]' -exec sed -ri '1s|^\.so (.*)\.([0-9]+)|.so man\2/\1.\2|' {} +
+    }
+  ;;
+  buildlibXv )
+    export PKGNAME=libXv
+    export PKGVER=1.0.10
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXvMC )
+    export PKGNAME=libXvMC
+    export PKGVER=1.0.9
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXxf86dga )
+    export PKGNAME=libXxf86dga
+    export PKGVER=1.1.4
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildlibXxf86vm )
+    export PKGNAME=libXxf86vm
+    export PKGVER=1.1.4
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  ;;
+  buildxorg-lib )
+    export PKG_AUTO_INSTALL=1
+
+    $(dirname $0)/buildlibXau
+    $(dirname $0)/buildlibXdmcp
+    $(dirname $0)/buildlibxcb
+    $(dirname $0)/buildlibX11
+    $(dirname $0)/buildlibXext
+    $(dirname $0)/buildlibFS
+    $(dirname $0)/buildlibICE
+    $(dirname $0)/buildlibSM
+    $(dirname $0)/buildlibXScrnSaver
+    $(dirname $0)/buildlibXt
+    $(dirname $0)/buildlibXmu
+    $(dirname $0)/buildlibXpm
+    $(dirname $0)/buildlibXaw
+    $(dirname $0)/buildlibXfixes
+    $(dirname $0)/buildlibXcomposite
+    $(dirname $0)/buildlibXrender
+    $(dirname $0)/buildlibXcursor
+    $(dirname $0)/buildlibXdamage
+    $(dirname $0)/buildlibfontenc
+    $(dirname $0)/buildlibXfont
+    $(dirname $0)/buildlibXft
+    $(dirname $0)/buildlibXi
+    $(dirname $0)/buildlibXinerama
+    $(dirname $0)/buildlibXrandr
+    $(dirname $0)/buildlibXres
+    $(dirname $0)/buildlibXtst
+    $(dirname $0)/buildlibXv
+    $(dirname $0)/buildlibXvMC
+    $(dirname $0)/buildlibXxf86dga
+    $(dirname $0)/buildlibXxf86vm
+    $(dirname $0)/buildlibdmx
+    $(dirname $0)/buildlibpciaccess
+    $(dirname $0)/buildlibxkbfile
+    $(dirname $0)/buildlibxshmfence
+
+    exit 0
+  ;;
+esac
+
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export DEST=/binary/xorg/lib/${PKGNAME}-${PKGVER}
+
+. $(dirname $0)/master.sh

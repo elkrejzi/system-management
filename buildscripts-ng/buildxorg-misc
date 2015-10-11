@@ -1,0 +1,86 @@
+#!/bin/bash -e
+
+export NO_OPTIMIZATION=1
+export NO_STRIP=1
+
+case $(basename $0) in
+  buildfont-util )
+    export PKGNAME=font-util
+    export PKGVER=1.3.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/font/${PKGTAR}"
+    unset NO_OPTIMIZATION NO_STRIP
+  ;;
+  buildutil-macros )
+    export PKGNAME=util-macros
+    export PKGVER=1.19.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/util/${PKGTAR}"
+  ;;
+  buildxbitmaps )
+    export PKGNAME=xbitmaps
+    export PKGVER=1.1.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/data/${PKGTAR}"
+  ;;
+  buildxcursor-themes )
+    export PKGNAME=xcursor-themes
+    export PKGVER=1.0.4
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/data/${PKGTAR}"
+  ;;
+  buildxkeyboard-config )
+    export PKGNAME=xkeyboard-config
+    export PKGVER=2.15
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/data/xkeyboard-config/${PKGTAR}"
+    export CONFIGURE_FLAGS="--with-xkb-rules-symlink=xorg"
+  ;;
+  buildxorg-server )
+    export PKGNAME=xorg-server
+    export PKGVER=1.17.99.901
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://xorg.freedesktop.org/releases/individual/data/xserver/${PKGTAR}"
+    export DEBUG_BUILD=1
+    export CONFIGURE_FLAGS="--disable-install-setuid \
+                            --enable-dri2            \
+                            --enable-dri3            \
+                            --enable-glamor          \
+                            --enable-present         \
+                            --enable-suid-wrapper    \
+                            --enable-systemd-logind  \
+                            --enable-xephyr          \
+                            --enable-xnest           \
+                            --enable-xvfb            \
+                            --enable-xwayland        \
+                            --with-systemd-daemon    \
+                            --with-xkb-output=/var/lib/xkb"
+
+    make_install_post() {
+      rm -rf ${DEST}/var/log
+      install -dm755 ${DEST}/etc/X11/xorg.conf.d
+      touch ${DEST}/etc/X11/xorg.conf.d/.keepdir
+      mv ${DEST}/usr/lib/xorg/modules/extensions/libglx.so{,.xorg}
+      ln -sf libglx.so.xorg ${DEST}/usr/lib/xorg/modules/extensions/libglx.so
+    }
+    post_install_config() {
+      rm -f ${DEST}/etc/X11/xorg.conf.d/.keepdir
+    }
+    unset NO_OPTIMIZATION NO_STRIP
+  ;;
+  buildxorg-misc )
+    export PKG_AUTO_INSTALL=1
+
+    $(dirname $0)/buildfont-util
+    $(dirname $0)/buildxcursor-themes
+    $(dirname $0)/buildxkeyboard-config
+    $(dirname $0)/buildxorg-server
+
+    exit 0
+  ;;
+esac
+
+export MAKE_JOBS_FLAGS="-j4"
+export DEST=/binary/xorg/${PKGNAME}-${PKGVER}
+
+. $(dirname $0)/master.sh

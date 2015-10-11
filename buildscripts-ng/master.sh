@@ -95,8 +95,11 @@ prepare_src() {
 
   if [ -e ${PKGDIR} ] || [ -e ${PKGBUILD} ]
   then
-    echo "Warning: Old source and/or build dir exists. Removing."
-    rm -rf ${PKGDIR} ${PKGBUILD}
+    if [ -z ${RECURSIVE_CALL} ]
+    then
+      echo "Warning: Old source and/or build dir exists. Removing."
+      rm -rf ${PKGDIR} ${PKGBUILD}
+    fi
   fi
 
   if [ -e ${DEST} ] || [ -e ${DEST}-debug ]
@@ -141,6 +144,18 @@ patch_apply() {
 
   pushd ${PKGDIR}
     patch -Np1 -i ${PNAME}
+  popd
+}
+
+remove_rpath() {
+  pushd ${DEST}
+
+    find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+      case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+        chrpath -d ${BUILD_BINARY}
+      esac
+    done
+
   popd
 }
 
@@ -385,41 +400,43 @@ build_package() {
 
   fi
 
-  if [ ${MULTILIB} == 0 ]
-  then
-    export CC=${DEFAULT_CC}
-    export CXX=${DEFAULT_CXX}
-    export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/share/pkgconfig
-    if [ -z ${DEBUG_BUILD} ]
-    then
-      local ADDITIONAL_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Release ${CMAKE_FLAGS}"
-    else
-      local ADDITIONAL_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=RelWithDebInfo ${CMAKE_FLAGS}"
-    fi
-    local ADDITIONAL_CONFIGURE_FLAGS="--libdir=/usr/lib ${CONFIGURE_FLAGS}"
-    local ADDITIONAL_MAKE_FLAGS="${MAKE_FLAGS} ${MAKE_JOBS_FLAGS}"
-    local ADDITIONAL_MAKE_INSTALL_FLAGS="${MAKE_INSTALL_FLAGS} DESTDIR=${DEST}"
-  else
-    export CC=${DEFAULT_CC_M32}
-    export CXX=${DEFAULT_CXX_M32}
-    export PKG_CONFIG_PATH=/usr/lib32/pkgconfig:/usr/share/pkgconfig
-    if [ -z ${DEBUG_BUILD} ]
-    then
-      local ADDITIONAL_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Release ${CMAKE_FLAGS_32}"
-    else
-      local ADDITIONAL_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=RelWithDebInfo ${CMAKE_FLAGS_32}"
-    fi
-    local ADDITIONAL_CONFIGURE_FLAGS="--libdir=/usr/lib32 ${CONFIGURE_FLAGS_32}"
-    local ADDITIONAL_MAKE_FLAGS="${MAKE_FLAGS_32} ${MAKE_JOBS_FLAGS}"
-    local ADDITIONAL_MAKE_INSTALL_FLAGS="${MAKE_INSTALL_FLAGS_32} DESTDIR=\${PWD}/dest"
-  fi
-
-  if [ -z ${KEEP_STATIC} ]
-  then
-     ADDITIONAL_CONFIGURE_FLAGS="--disable-static ${ADDITIONAL_CONFIGURE_FLAGS}"
-  fi
-
   pushd ${PKGBUILD}
+
+    if [ ${MULTILIB} == 0 ]
+    then
+      export CC=${DEFAULT_CC}
+      export CXX=${DEFAULT_CXX}
+      export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/share/pkgconfig
+
+      if [ -z ${DEBUG_BUILD} ]
+      then
+        local ADDITIONAL_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Release ${CMAKE_FLAGS}"
+      else
+        local ADDITIONAL_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=RelWithDebInfo ${CMAKE_FLAGS}"
+      fi
+      local ADDITIONAL_CONFIGURE_FLAGS="--libdir=/usr/lib ${CONFIGURE_FLAGS}"
+      local ADDITIONAL_MAKE_FLAGS="${MAKE_FLAGS} ${MAKE_JOBS_FLAGS}"
+      local ADDITIONAL_MAKE_INSTALL_FLAGS="${MAKE_INSTALL_FLAGS} DESTDIR=${DEST}"
+    else
+      export CC=${DEFAULT_CC_M32}
+      export CXX=${DEFAULT_CXX_M32}
+      export PKG_CONFIG_PATH=/usr/lib32/pkgconfig:/usr/share/pkgconfig
+      if [ -z ${DEBUG_BUILD} ]
+      then
+        local ADDITIONAL_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Release ${CMAKE_FLAGS_32}"
+      else
+        local ADDITIONAL_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=RelWithDebInfo ${CMAKE_FLAGS_32}"
+      fi
+      local ADDITIONAL_CONFIGURE_FLAGS="--libdir=/usr/lib32 ${CONFIGURE_FLAGS_32}"
+      local ADDITIONAL_MAKE_FLAGS="${MAKE_FLAGS_32} ${MAKE_JOBS_FLAGS}"
+      local ADDITIONAL_MAKE_INSTALL_FLAGS="${MAKE_INSTALL_FLAGS_32} DESTDIR=${PWD}/dest"
+    fi
+
+    if [ -z ${KEEP_STATIC} ]
+    then
+       ADDITIONAL_CONFIGURE_FLAGS="--disable-static ${ADDITIONAL_CONFIGURE_FLAGS}"
+    fi
+
 
     if [ ${MULTILIB} == 0 ]
     then
@@ -538,8 +555,8 @@ then
   function_exists build_package_32_override && build_package_32_override || build_package 1
 fi
 
-function_exists post_install_config && post_install_config || true
 function_exists post_install_clean_override && post_install_clean_override || post_install_clean
+function_exists post_install_config && post_install_config || true
 function_exists generate_install_override && generate_install_override || generate_install
 
 if [ ! -z ${PKG_AUTO_INSTALL} ]
