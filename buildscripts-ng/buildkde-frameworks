@@ -231,7 +231,7 @@ then
     if [ ${PKGNAME} != "kapidox" ] && [ ${PKGNAME} != "kimageformats" ]
     then
       export PKGVER=$(grep "KF5_VERSION " ${PKGDIR}/CMakeLists.txt | cut -d \" -f2)
-      export DEST=/binary/${PKGNAME}-${PKGVER}
+      export DEST=/binary/frameworks/${PKGNAME}-${PKGVER}
     fi
 
     if [ -d ${PKGBUILD} ]
@@ -253,6 +253,11 @@ then
 
     export PKG_BUILDING=1
   }
+fi
+
+if [ -z ${DEST} ]
+then
+  export DEST=/binary/frameworks/${PKGNAME}-${PKGVER}
 fi
 
 . $(dirname $0)/master.sh

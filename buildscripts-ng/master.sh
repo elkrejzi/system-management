@@ -236,7 +236,7 @@ generate_install() {
 
   if [ -z "${INSTALL_CMD}" ]
   then
-    local DIRS=$(find ${DEST} -maxdepth 1 ! -path ${DEST} -type d -exec basename {} \; | xargs)
+    local DIRS=$(find ${DEST} -maxdepth 1 ! -path ${DEST} -type d -exec basename {} \; | sort | xargs)
     local NUM=$(find ${DEST} -maxdepth 1 ! -path ${DEST} -type d -exec basename {} \; | wc -l)
 
     if [ ${NUM} == 1 ]
@@ -268,7 +268,10 @@ generate_install() {
     done
   fi
 
-  local SPACE_ADDED=0
+  if [ -z ${SPACE_ADDED} ]
+  then
+     local SPACE_ADDED=0
+  fi
 
   if [ -e ${DEST}/usr/share/mime ]
   then

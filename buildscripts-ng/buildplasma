@@ -1,0 +1,189 @@
+#!/bin/bash -e
+
+export PKGVER=5.4.2
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+
+build_all() {
+  export PKG_AUTO_INSTALL=1
+
+  $(dirname $0)/buildkde-cli-tools $1
+  $(dirname $0)/buildkdecoration $1
+  $(dirname $0)/buildkwayland $1
+  $(dirname $0)/buildlibkscreen $1
+  $(dirname $0)/buildlibksysguard $1
+  $(dirname $0)/buildbreeze $1
+  $(dirname $0)/buildkwin $1
+  $(dirname $0)/buildoxygen $1
+  $(dirname $0)/buildoxygen-fonts $1
+  $(dirname $0)/buildkhelpcenter $1
+  $(dirname $0)/buildkinfocenter $1
+  $(dirname $0)/buildksysguard $1
+  $(dirname $0)/buildsystemsettings $1
+  $(dirname $0)/buildplasma-workspace $1
+  $(dirname $0)/buildbluedevil $1
+  $(dirname $0)/buildkde-gtk-config $1
+  $(dirname $0)/buildkhotkeys $1
+  $(dirname $0)/buildkmenuedit $1
+  $(dirname $0)/buildkscreen $1
+  $(dirname $0)/buildkwayland-integration $1
+  $(dirname $0)/buildkwrited $1
+  $(dirname $0)/buildmilou $1
+  $(dirname $0)/buildplasma-nm $1
+  $(dirname $0)/buildplasma-pa $1
+  $(dirname $0)/buildplasma-workspace-wallpapers $1
+  $(dirname $0)/buildpolkit-kde-agent-1 $1
+  $(dirname $0)/buildpowerdevil $1
+  $(dirname $0)/buildplasma-desktop $1
+  $(dirname $0)/buildkdeplasma-addons $1
+
+  exit 0
+}
+
+case $(basename $0) in
+  buildplasma )
+    build_all
+  ;;
+  buildplasma-git )
+    build_all git
+  ;;
+esac
+
+case $(basename $0) in
+  buildbreeze )
+    export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-update-icon-cache ] && echo \"Processing triggers for breeze-icon-theme\" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/breeze"
+                             "[ -x /usr/bin/gtk-update-icon-cache ] && echo \"Processing triggers for breeze-dark-icon-theme\" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/breeze-dark")
+    export SPACE_ADDED=1
+  ;;
+  buildoxygen-fonts )
+    export POSTINST_TRIGGER=("[ -x /usr/bin/fc-cache ] && echo \"Processing triggers for fontconfig\" && /usr/bin/fc-cache /usr/share/fonts/truetype/oxygen")
+    export SPACE_ADDED=1
+  ;;
+  buildplasma-workspace )
+    make_install_post() {
+      install -dm755 ${DEST}/etc/pam.d
+
+cat > ${DEST}/etc/pam.d/kde << "EOF"
+# Begin /etc/pam.d/kde
+
+auth     include        system-auth
+-auth    optional       pam_gnome_keyring.so
+
+account  include        system-account
+password include        system-password
+session  include        system-session
+
+# End /etc/pam.d/kde
+EOF
+    }
+  ;;
+esac
+
+export CMAKE_FLAGS="-DSYSCONF_INSTALL_DIR=/etc              \
+                    -DLIB_INSTALL_DIR=lib                   \
+                    -DBUILD_TESTING=OFF                     \
+                    -DQML_INSTALL_DIR=lib/qt5/qml           \
+                    -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
+                    -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules"
+
+plasmas=(
+  kde-cli-tools
+  kdecoration
+  kwayland
+  libkscreen
+  libksysguard
+  breeze
+  kwin
+  oxygen
+  oxygen-fonts
+  khelpcenter
+  kinfocenter
+  ksysguard
+  systemsettings
+  plasma-workspace
+  bluedevil
+  kde-gtk-config
+  khotkeys
+  kmenuedit
+  kscreen
+  kwayland-integration
+  kwrited
+  milou
+  plasma-nm
+  plasma-pa
+  plasma-workspace-wallpapers
+  polkit-kde-agent-1
+  powerdevil
+  plasma-desktop
+  kdeplasma-addons )
+
+if [ -z $1 ]
+then
+  export BUILD_TYPE="rel"
+elif [ $1 == "git" ]
+then
+  export BUILD_TYPE="git"
+fi
+
+for plasma in ${plasmas[@]}
+do
+  case $(basename $0) in
+    build${plasma} )
+      export PKGNAME=${plasma}
+      export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+      export PKGURL="http://download.kde.org/stable/plasma/${PKGVER}/${PKGTAR}"
+      if [ ${BUILD_TYPE} == "git" ]
+      then
+        export PKGDIR=${plasma}
+      fi
+    ;;
+  esac
+done
+
+if [ ${BUILD_TYPE} == "git" ]
+then
+  prepare_src_override() {
+    if [ -d ${PKGNAME} ]
+    then
+      pushd ${PKGNAME}
+        git clean -fdx
+        git fetch origin
+        git reset --hard origin/master
+      popd
+    else
+      git clone git://anongit.kde.org/${PKGNAME}.git
+    fi
+
+    if [ ${PKGNAME} != "plasma-workspace-wallpapers" ]
+    then
+      export PKGVER=$(grep "PROJECT_VERSION " ${PKGDIR}/CMakeLists.txt | cut -d \" -f2)
+      export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
+    fi
+
+    if [ -d ${PKGBUILD} ]
+    then
+      echo "Old build dir exists. Removing"
+      rm -rf ${PKGBUILD}
+    fi
+
+    install -dm755 ${PKGBUILD}
+
+    if [ -e ${DEST} ]
+    then
+      if [ ${PKG_BUILDING} != 1 ]
+      then
+        echo "Warning: Old package installation dir exits. Removing."
+        rm -rf ${DEST}
+      fi
+    fi
+
+    export PKG_BUILDING=1
+  }
+fi
+
+if [ -z ${DEST} ]
+then
+  export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
+fi
+
+. $(dirname $0)/master.sh
