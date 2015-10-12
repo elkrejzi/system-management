@@ -1,0 +1,154 @@
+#!/bin/bash -e
+
+export PKGNAME=php
+export PKGVER=5.6.14
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://www.php.net/distributions/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export PATCHES_LIST=("php-configure.patch" "phpdb6.patch")
+export MAKE_INSTALL_FLAGS="INSTALL_ROOT=\${DEST}"
+export POSTINST_TRIGGER=("if [ ! -e /etc/php/php.ini ]" "then" "  cp -r /etc/php/php.ini.dist /etc/php/php.ini" "fi")
+
+configure_pre() {
+  export EXTENSION_DIR=/usr/lib/php/modules
+  export PEAR_INSTALLDIR=/usr/share/pear
+
+  sed -i "s|lsystemd-daemon|lsystemd|g" configure
+  sed -i "s|-i -a -n php5|-i -n php5|g" configure
+
+  sed -i "/APACHE_THREADED_MPM=/d" sapi/apache2handler/config.m4 configure
+}
+
+export CONFIGURE_FLAGS="--sysconfdir=/etc/php \
+                        --libdir=/usr/lib/php \
+                        --disable-rpath \
+                        --with-apxs2 \
+                        --enable-cli \
+                        --enable-fpm \
+                        --with-fpm-user=httpd \
+                        --with-fpm-group=httpd \
+                        --with-fpm-systemd \
+                        --enable-phpdbg \
+                        --enable-cgi \
+                        --with-layout=GNU \
+                        --with-config-file-path=/etc/php \
+                        --with-config-file-scan-dir=/etc/php/conf.d \
+                        --with-openssl=shared \
+                        --with-pcre-regex=/usr \
+                        --with-sqlite3=shared,/usr \
+                        --with-zlib \
+                        --enable-bcmath=shared \
+                        --with-bz2=shared \
+                        --enable-calendar=shared \
+                        --with-curl=shared \
+                        --enable-dba=shared \
+                        --with-gdbm \
+                        --with-db4=/usr \
+                        --with-enchant=shared,/usr \
+                        --enable-exif=shared \
+                        --enable-ftp=shared \
+                        --with-gd=shared,/usr \
+                        --with-vpx-dir=/usr \
+                        --with-jpeg-dir=/usr \
+                        --with-png-dir=/usr \
+                        --with-xpm-dir=/usr \
+                        --with-freetype-dir=/usr \
+                        --with-t1lib=shared,/usr \
+                        --enable-gd-native-ttf \
+                        --with-gettext=shared \
+                        --with-gmp=shared \
+                        --with-mhash \
+                        --with-iconv=shared \
+                        --with-imap=shared \
+                        --with-imap-ssl \
+                        --enable-intl=shared \
+                        --with-icu-dir=/usr \
+                        --with-ldap=shared \
+                        --with-ldap-sasl \
+                        --enable-mbstring \
+                        --with-mcrypt=shared \
+                        --with-mysql=shared,mysqlnd \
+                        --with-mysql-sock=/run/mysqld/mysqld.sock \
+                        --with-mysqli=shared,mysqlnd \
+                        --with-unixODBC=shared,/usr \
+                        --enable-pcntl \
+                        --with-pdo-mysql=shared,mysqlnd \
+                        --with-pdo-odbc=shared,unixODBC,/usr \
+                        --with-pdo-pgsql=shared \
+                        --with-pdo-sqlite=shared,/usr \
+                        --with-pgsql=shared \
+                        --enable-phar=shared \
+                        --enable-posix=shared \
+                        --with-pspell=shared \
+                        --with-readline \
+                        --enable-shmop=shared \
+                        --enable-soap=shared \
+                        --enable-sockets=shared \
+                        --enable-sysvmsg=shared \
+                        --enable-sysvsem=shared \
+                        --enable-sysvshm=shared \
+                        --with-tidy=shared \
+                        --with-xmlrpc=shared \
+                        --with-xsl=shared \
+                        --enable-zip=shared \
+                        --with-libzip \
+                        --with-pear"
+
+make_install_post() {
+  rm -rf ${DEST}/etc/httpd ${DEST}/etc/php/php-fpm.conf.default ${DEST}/var
+  rm -rf ${DEST}/.{channels,depdb,depdblock,filemap,lock,registry}
+
+  find ${DEST} -name "*.a" -delete
+
+  install -m644 /media/ntfs/Other/Linux/php-fpm.conf ${DEST}/etc/php/php-fpm.conf
+  install -m644 /media/ntfs/Other/Linux/php.ini ${DEST}/etc/php/php.ini.dist
+
+  install -dm755 ${DEST}/etc/httpd/extra ${DEST}/etc/php/fpm.d ${DEST}/etc/systemd/system/multi-user.target.wants
+  install -dm755 ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d
+
+  touch ${DEST}/etc/php/fpm.d/.keepdir ${DEST}/usr/include/php/include/.keepdir
+
+cat > ${DEST}/etc/httpd/extra/php.conf << "EOF"
+LoadModule php5_module /usr/lib/httpd/modules/libphp5.so
+
+<IfModule dir_module>
+	<IfModule php5_module>
+		DirectoryIndex index.php index.html
+		<FilesMatch "\.php$">
+			SetHandler application/x-httpd-php
+		</FilesMatch>
+		<FilesMatch "\.phps$">
+			SetHandler application/x-httpd-php-source
+		</FilesMatch>
+	</IfModule>
+</IfModule>
+EOF
+
+cat > ${DEST}/lib/systemd/system/php-fpm.service << "EOF"
+[Unit]
+Description=The PHP FastCGI Process Manager
+After=network.target
+
+[Service]
+Type=notify
+PIDFile=/run/php-fpm/php-fpm.pid
+PrivateTmp=true
+ExecStart=/usr/sbin/php-fpm --nodaemonize --pid /run/php-fpm/php-fpm.pid
+ExecReload=/bin/kill -USR2 $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > ${DEST}/usr/lib/tmpfiles.d/php-fpm.conf << "EOF"
+d /run/php-fpm 755 root root
+EOF
+
+  ln -sf /lib/systemd/system/php-fpm.service ${DEST}/etc/systemd/system/multi-user.target.wants/php-fpm.service
+}
+
+post_install_config() {
+  find ${DEST} -type f -name .keepdir -delete
+}
+
+. $(dirname $0)/master.sh

@@ -106,7 +106,7 @@ chown postfix /var/lib/postfix
 [ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
 EOF
 
-chmod 755 ${DEST}/INSTALL
+  chmod 755 ${DEST}/INSTALL
 }
 
 . $(dirname $0)/master.sh
