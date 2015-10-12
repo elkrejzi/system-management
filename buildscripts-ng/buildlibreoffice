@@ -1,0 +1,138 @@
+#!/bin/bash -e
+
+export PKGVER=5.0.2.2
+export SHARED_URL="https://download.documentfoundation.org/libreoffice/src/${PKGVER:0:4}/"
+
+export PKGNAME=libreoffice
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="${SHARED_URL}/${PKGTAR}"
+export PATCHES_LIST=("libreoffice-fixes.patch")
+
+post_extract_action() {
+  for c in dictionaries help translations
+  do
+    COMPONENT=libreoffice-${c}-${PKGVER}.tar.xz
+    if [ ! -e ${SROOT}/${COMPONENT} ]
+    then
+      wget -c ${SHARED_URL}/${COMPONENT} -O ${SROOT}/${COMPONENT} || exit ${PIPESTATUS}
+    fi
+  done
+}
+
+configure_pre() {
+  install -dm755 external/tarballs
+  for c in dictionaries help translations
+  do
+    COMPONENT=libreoffice-${c}-${PKGVER}.tar.xz
+    if [ -e ${SROOT}/${COMPONENT} ]
+    then
+      ln -sf ${SROOT}/${COMPONENT} external/tarballs/
+    fi
+  done
+  sed -e "/gzip -f/d"   \
+      -e "s|.1.gz|.1|g" \
+      -i bin/distro-install-desktop-integration
+  sed -e "/distro-install-file-lists/d" -i Makefile.in
+  chmod +x bin/unpack-sources
+}
+
+configure_override() {
+  ./autogen.sh --prefix=/usr               \
+               --sysconfdir=/etc           \
+               --with-lang="en-US hr"      \
+               --with-help                 \
+               --with-alloc=system         \
+               --without-java              \
+               --disable-coinmp            \
+               --disable-collada           \
+               --disable-gconf             \
+               --disable-odk               \
+               --enable-avahi              \
+               --enable-dbus               \
+               --enable-gio                \
+               --enable-gtk3               \
+               --enable-lockdown           \
+               --enable-python=system      \
+               --enable-release-build      \
+               --enable-vlc                \
+               --with-myspell-dicts        \
+               --with-system-altlinuxhyph  \
+               --with-system-apr           \
+               --with-system-bluez         \
+               --with-system-boost         \
+               --with-system-cairo         \
+               --with-system-clucene       \
+               --with-system-cppunit       \
+               --with-system-curl          \
+               --with-system-expat         \
+               --with-system-firebird      \
+               --with-system-glew          \
+               --with-system-glm           \
+               --with-system-graphite      \
+               --with-system-harfbuzz      \
+               --with-system-hunspell      \
+               --with-system-icu           \
+               --with-system-jpeg          \
+               --with-system-lcms2         \
+               --with-system-libabw        \
+               --with-system-libatomic_ops \
+               --with-system-libcdr        \
+               --with-system-libcmis       \
+               --with-system-libebook      \
+               --with-system-libetonyek    \
+               --with-system-libexttextcat \
+               --with-system-libfreehand   \
+               --with-system-libgltf       \
+               --with-system-liblangtag    \
+               --with-system-libmspub      \
+               --with-system-libmwaw       \
+               --with-system-libodfgen     \
+               --with-system-libpagemaker  \
+               --with-system-libpng        \
+               --with-system-librevenge    \
+               --with-system-libvisio      \
+               --with-system-libwpd        \
+               --with-system-libwpg        \
+               --with-system-libwps        \
+               --with-system-libxml        \
+               --with-system-lpsolve       \
+               --with-system-mariadb       \
+               --with-system-mdds          \
+               --with-system-mesa-headers  \
+               --with-system-mythes        \
+               --with-system-neon          \
+               --with-system-npapi-headers \
+               --with-system-nss           \
+               --with-system-odbc          \
+               --with-system-openldap      \
+               --with-system-openssl       \
+               --with-system-orcus         \
+               --with-system-poppler       \
+               --with-system-postgresql    \
+               --with-system-redland       \
+               --with-system-sane          \
+               --with-system-serf          \
+               --with-system-vigra         \
+               --with-system-zlib          \
+               --without-system-dicts      \
+               --with-vendor="Krejzi"      \
+               --with-parallelism=4        \
+               --with-build-version="${PKGVER} Krejzi"
+}
+
+make_override() {
+  export DISPLAY=:0
+  eval $(dbus-launch --exit-with-session)
+  make build
+}
+
+make_install_override() {
+  make distro-pack-install DESTDIR=${DEST}
+}
+
+make_install_post() {
+  install -m644 sysui/desktop/appstream-appdata/*.xml ${DEST}/usr/share/appdata
+  rm -rf ${DEST}/etc ${DEST}/gid*
+}
+
+. $(dirname $0)/master.sh

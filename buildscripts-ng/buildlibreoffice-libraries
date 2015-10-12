@@ -1,0 +1,228 @@
+#!/bin/bash -e
+
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
+export USER_CFLAGS="-DBOOST_ERROR_CODE_HEADER_ONLY -DBOOST_SYSTEM_NO_DEPRECATED"
+export USER_CXXFLAGS="-DBOOST_ERROR_CODE_HEADER_ONLY -DBOOST_SYSTEM_NO_DEPRECATED"
+export MAKE_JOBS_FLAGS="-j4"
+
+case $(basename $0) in
+  buildcppunit )
+    export PKGNAME=cppunit
+    export PKGVER=1.13.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://dev-www.libreoffice.org/src/${PKGTAR}"
+    unset INSTALL_CMD
+  ;;
+  buildglm )
+    export PKGNAME=glm
+    export PKGVER=0.9.7.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.zip
+    export PKGURL="https://github.com/g-truc/glm/releases/download/${PKGVER}/${PKGTAR}"
+    export PKGDIR=glm
+    export CMAKE_BUILD=1
+    export CMAKE_FLAGS="-DCMAKE_INSTALL_LIBDIR=lib"
+    unset INSTALL_CMD
+  ;;
+  buildlibabw )
+    export PKGNAME=libabw
+    export PKGVER=0.1.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://dev-www.libreoffice.org/src/libabw/${PKGTAR}"
+  ;;
+  buildlibcdr )
+    export PKGNAME=libcdr
+    export PKGVER=0.1.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://dev-www.libreoffice.org/src/libcdr/${PKGTAR}"
+  ;;
+  buildlibcmis )
+    export PKGNAME=libcmis
+    export PKGVER=0.5.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://downloads.sourceforge.net/libcmis/${PKGTAR}"
+    export CONFIGURE_FLAGS="--without-man"
+    export PATCHES_LIST=("libcmis-gcc5.patch")
+    configure_pre() {
+      autoreconf -fi
+    }
+  ;;
+  buildlibe-book )
+    export PKGNAME=libe-book
+    export PKGVER=0.1.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://downloads.sourceforge.net/libebook/${PKGTAR}"
+    export CONFIGURE_FLAGS="--disable-werror"
+  ;;
+  buildlibetonyek )
+    export PKGNAME=libetonyek
+    export PKGVER=0.1.3
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://dev-www.libreoffice.org/src/libetonyek/${PKGTAR}"
+  ;;
+  buildlibexttextcat )
+    export PKGNAME=libexttextcat
+    export PKGVER=3.4.4
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://dev-www.libreoffice.org/src/libexttextcat/${PKGTAR}"
+    unset INSTALL_CMD
+  ;;
+  buildlibfreehand )
+    export PKGNAME=libfreehand
+    export PKGVER=0.1.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://dev-www.libreoffice.org/src/libfreehand/${PKGTAR}"
+  ;;
+  buildlibgltf )
+    export PKGNAME=libgltf
+    export PKGVER=0.0.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://dev-www.libreoffice.org/src/libgltf/${PKGTAR}"
+    unset INSTALL_CMD
+  ;;
+  buildlibixion )
+    export PKGNAME=libixion
+    export PKGVER=0.9.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://kohei.us/files/ixion/src/${PKGTAR}"
+    unset INSTALL_CMD
+  ;;
+  buildliblangtag )
+    export PKGNAME=liblangtag
+    export PKGVER=0.5.7
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="https://bitbucket.org/tagoh/liblangtag/downloads/${PKGTAR}"
+    unset INSTALL_CMD
+  ;;
+  buildlibmspub )
+    export PKGNAME=libmspub
+    export PKGVER=0.1.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://dev-www.libreoffice.org/src/libmspub/${PKGTAR}"
+  ;;
+  buildlibmwaw )
+    export PKGNAME=libmwaw
+    export PKGVER=0.3.6
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://downloads.sourceforge.net/libmwaw/${PKGTAR}"
+  ;;
+  buildlibodfgen )
+    export PKGNAME=libodfgen
+    export PKGVER=0.1.4
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://downloads.sourceforge.net/libwpd/${PKGTAR}"
+  ;;
+  buildliborcus )
+    export PKGNAME=liborcus
+    export PKGVER=0.7.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://kohei.us/files/ixion/src/${PKGTAR}"
+  ;;
+  buildlibpagemaker )
+    export PKGNAME=libpagemaker
+    export PKGVER=0.0.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar
+    export PKGURL="http://dev-www.libreoffice.org/src/libpagemaker/${PKGTAR}"
+  ;;
+  buildlibrevenge )
+    export PKGNAME=librevenge
+    export PKGVER=0.0.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://downloads.sourceforge.net/libwpd/${PKGTAR}"
+    unset INSTALL_CMD
+  ;;
+  buildlibvisio )
+    export PKGNAME=libvisio
+    export PKGVER=0.1.3
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://dev-www.libreoffice.org/src/libvisio/${PKGTAR}"
+  ;;
+  buildlibwpd )
+    export PKGNAME=libwpd
+    export PKGVER=0.10.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://downloads.sourceforge.net/libwpd/${PKGTAR}"
+  ;;
+  buildlibwpg )
+    export PKGNAME=libwpg
+    export PKGVER=0.3.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://downloads.sourceforge.net/libwpg/${PKGTAR}"
+  ;;
+  buildlibwps )
+    export PKGNAME=libwps
+    export PKGVER=0.4.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://downloads.sourceforge.net/libwps/${PKGTAR}"
+  ;;
+  buildmdds )
+    export PKGNAME=mdds
+    export PKGVER=0.12.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://kohei.us/files/mdds/src/${PKGTAR}"
+    unset INSTALL_CMD
+  ;;
+  buildmythes )
+    export PKGNAME=mythes
+    export PKGVER=1.2.4
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://downloads.sourceforge.net/hunspell/${PKGTAR}"
+    unset INSTALL_CMD
+  ;;
+  buildraptor2 )
+    export PKGNAME=raptor2
+    export PKGVER=2.0.15
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://download.librdf.org/source/${PKGTAR}"
+    export CONFIGURE_FLAGS="--with-icu-config=/usr/bin/icu-config"
+    unset INSTALL_CMD
+  ;;
+  buildrasqal )
+    export PKGNAME=rasqal
+    export PKGVER=0.9.33
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://download.librdf.org/source/${PKGTAR}"
+    unset INSTALL_CMD
+  ;;
+  buildredland )
+    export PKGNAME=redland
+    export PKGVER=1.0.17
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://download.librdf.org/source/${PKGTAR}"
+    unset INSTALL_CMD
+  ;;
+  buildlibreoffice-libraries )
+    export PKG_AUTO_INSTALL=1
+
+    $(dirname $0)/buildcppunit
+    $(dirname $0)/buildglm
+    $(dirname $0)/buildmdds
+    $(dirname $0)/buildraptor2
+    $(dirname $0)/buildlibrevenge
+    $(dirname $0)/buildrasqal
+    $(dirname $0)/buildlibixion
+    $(dirname $0)/buildlibwpd
+    $(dirname $0)/buildlibabw
+    $(dirname $0)/buildlibcdr
+    $(dirname $0)/buildlibcmis
+    $(dirname $0)/buildlibe
+    $(dirname $0)/buildlibetonyek
+    $(dirname $0)/buildlibexttextcat
+    $(dirname $0)/buildlibfreehand
+    $(dirname $0)/buildlibgltf
+    $(dirname $0)/buildliblangtag
+    $(dirname $0)/buildlibmspub
+    $(dirname $0)/buildlibmwaw
+    $(dirname $0)/buildlibodfgen
+    $(dirname $0)/buildliborcus
+    $(dirname $0)/buildlibpagemaker
+    $(dirname $0)/buildlibvisio
+    $(dirname $0)/buildlibwpg
+    $(dirname $0)/buildlibwps
+    $(dirname $0)/buildmythes
+    $(dirname $0)/buildredland
+
+    exit 0
+  ;;
+esac
+
+. $(dirname $0)/master.sh

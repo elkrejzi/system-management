@@ -1,0 +1,23 @@
+#!/bin/bash -e
+
+export PKGNAME=boost
+export PKGVER=1.59.0
+export TARVER=1_59_0
+export PKGTAR=${PKGNAME}_${TARVER}.tar.bz2
+export PKGDIR=${PKGNAME}_${TARVER}
+export PKGURL="http://downloads.sourceforge.net/boost/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_override() {
+  ./bootstrap.sh --with-toolset=gcc --with-icu
+}
+
+make_override() {
+  true
+}
+
+make_install_override() {
+  ./b2 install threading=multi variant=release link=shared runtime-link=shared toolset=gcc cflags="${CFLAGS}" --prefix=${DEST}/usr ${MAKE_JOBS_FLAGS}
+}
+
+. $(dirname $0)/master.sh

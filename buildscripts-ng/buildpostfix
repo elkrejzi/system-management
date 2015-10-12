@@ -1,0 +1,112 @@
+#!/bin/bash -e
+
+export PKGNAME=postfix
+export PKGVER=3.0.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="ftp://ftp.porcupine.org/mirrors/postfix-release/official/${PKGTAR}"
+export KEEP_DOC=1
+
+configure_override() {
+  sed -i 's/Linux.3\*/Linux.[34]\*/' makedefs
+
+  CCARGS='
+          -DUSE_SASL_AUTH -DUSE_CYRUS_SASL -I/usr/include/sasl
+          -DUSE_TLS -I/usr/include/openssl
+          -DHAS_MYSQL -I/usr/include/mysql
+          -DHAS_PGSQL -I/usr/include/postgresql
+          -DHAS_SQLITE
+          -DHAS_PCRE
+          -DHAS_LDAP
+          -DDEF_MANPAGE_DIR=\"/usr/share/man\"
+          -DDEF_DAEMON_DIR=\"/usr/lib/postfix\"
+          -DDEF_SAMPLE_DIR=\"/etc/postfix/sample\"
+          -DDEF_README_DIR=\"/usr/share/doc/postfix\"
+  '
+  AUXLIBS='
+           -lsasl2 -lssl -lcrypto
+           -lmysqlclient -lz -lpthread -lm
+           -lpq
+           -lsqlite3
+           -lpcre
+           -llber -lldap
+  '
+
+  make makefiles DEBUG='' \
+       CCARGS="${CCARGS//$'\n'/}" \
+       AUXLIBS="${AUXLIBS//$'\n'/}" \
+       OPT="${CFLAGS}"
+}
+
+make_install_override() {
+  sh postfix-install -non-interactive install_root="${DEST}"
+
+  ln -sf ../sbin/sendmail ${DEST}/usr/bin/mailq
+  ln -sf ../sbin/sendmail ${DEST}/usr/bin/newaliases
+  ln -sf ../sbin/sendmail ${DEST}/usr/lib/sendmail
+  ln -sf postfix/aliases ${DEST}/etc/aliases
+
+  for d in ${DEST}/etc/postfix/postfix-files.d ${DEST}/var/lib/postfix ${DEST}/var/spool/postfix/*
+  do
+    touch ${d}/.keepdir
+  done
+
+  mv ${DEST}/etc/postfix/main.cf ${DEST}/etc/postfix/main.cf.dist
+  mv ${DEST}/etc/postfix/master.cf ${DEST}/etc/postfix/master.cf.dist
+
+  install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/lib/systemd/system
+
+cat > ${DEST}/lib/systemd/system/postfix.service << "EOF"
+[Unit]
+Description=Postfix Mail Transport Agent
+After=network.target
+
+[Service]
+Type=forking
+PIDFile=/var/spool/postfix/pid/master.pid
+ExecStart=/usr/sbin/postfix start
+ExecStop=/usr/sbin/postfix stop
+ExecReload=/usr/sbin/postfix reload
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+  ln -sf /lib/systemd/system/postfix.service ${DEST}/etc/systemd/system/multi-user.target.wants/postfix.service
+}
+
+post_install_config() {
+  find ${DEST} -type f -name .keepdir -delete
+}
+
+generate_install_override() {
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib usr var ; do cp -rf --remove-destination $dir / ; done
+
+getent group postdrop > /dev/null || groupadd -g 33 postdrop
+getent group postfix > /dev/null  || groupadd -g 32 postfix
+getent passwd postfix > /dev/null || useradd -c "Postfix Daemon Owner" -d /var/spool/postfix -g postfix -s /bin/false -u 32 postfix
+
+if [ ! -f /etc/postfix/main.cf ]; then
+   cp -f /etc/postfix/main.cf.dist /etc/postfix/main.cf
+fi
+
+if [ ! -f /etc/postfix/master.cf ]; then
+   cp -f /etc/postfix/master.cf.dist /etc/postfix/master.cf
+fi
+
+/usr/lib/postfix/post-install daemon_directory=/usr/lib/postfix meta_directory=/etc/postfix upgrade-package
+
+chown postfix /var/lib/postfix
+
+/usr/bin/newaliases
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL
+}
+
+. $(dirname $0)/master.sh
