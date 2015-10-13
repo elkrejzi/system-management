@@ -273,6 +273,19 @@ generate_install() {
      local SPACE_ADDED=0
   fi
 
+  if [ -e ${DEST}/usr/share/glib-2.0/schemas ]
+  then
+
+    if [ ${SPACE_ADDED} != 1 ]
+    then
+      printf "\n" >> ${DEST}/INSTALL
+      SPACE_ADDED=1
+    fi
+
+printf '[ -x /usr/bin/glib-compile-schemas ] && echo "Processing triggers for glib-2.0" && /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas\n' >> ${DEST}/INSTALL
+
+  fi
+
   if [ -e ${DEST}/usr/share/mime ]
   then
 
