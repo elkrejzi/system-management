@@ -71,12 +71,12 @@ make_install_post() {
     export PKGURL="http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/${PKGTAR}"
     export DEST=/binary/perl-uri-${PKGVER}
   ;;
-  buildperl-xml-namespace-support )
+  buildperl-xml-namespacesupport )
     export PKGNAME=XML-NamespaceSupport
     export PKGVER=1.11
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="http://search.cpan.org/CPAN/authors/id/P/PE/PERIGRIN/${PKGTAR}"
-    export DEST=/binary/perl-xml-namespace-support-${PKGVER}
+    export DEST=/binary/perl-xml-namespacesupport-${PKGVER}
   ;;
   buildperl-xml-parser )
     export PKGNAME=XML-Parser
@@ -128,7 +128,7 @@ make_install_override() {
     if [ $1 == 1 ]
     then
       $(dirname $0)/buildperl-xml-parser
-      $(dirname $0)/buildperl-xml-namespace-support
+      $(dirname $0)/buildperl-xml-namespacesupport
       $(dirname $0)/buildperl-xml-sax-base
       $(dirname $0)/buildperl-xml-sax
       $(dirname $0)/buildperl-xml-sax-expat
