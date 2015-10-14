@@ -7,7 +7,7 @@ export MULTILIB_BUILD=1
 case $(basename $0) in
   buildglib2 )
     export PKGNAME=glib
-    export PKGVER=2.46.0
+    export PKGVER=2.46.1
     export PATCHES_LIST=("glib-compile-schemas-quiet.patch")
     export CONFIGURE_FLAGS="--with-pcre=system"
     export CONFIGURE_FLAGS_32="--with-pcre=system"

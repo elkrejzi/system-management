@@ -1,0 +1,153 @@
+#!/bin/bash -e
+
+export PKGVER=15.08.2
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export KEEP_DOC=1
+
+build_all() {
+  export PKG_AUTO_INSTALL=1
+
+  $(dirname $0)/buildakonadi $1
+  $(dirname $0)/buildgpgmepp $1
+  $(dirname $0)/buildkcalcore $1
+  $(dirname $0)/buildkcontacts $1
+  $(dirname $0)/buildkholidays $1
+  $(dirname $0)/buildkldap $1
+  $(dirname $0)/buildkmime $1
+  $(dirname $0)/buildkontactinterface $1
+  $(dirname $0)/buildkpimtextedit $1
+  $(dirname $0)/buildsyndication $1
+  $(dirname $0)/buildkblog $1
+  $(dirname $0)/buildkidentitymanagement $1
+  $(dirname $0)/buildkimap $1
+  $(dirname $0)/buildkmbox $1
+  $(dirname $0)/buildkcalutils $1
+  $(dirname $0)/buildktnef $1
+  $(dirname $0)/buildkdepimlibs $1
+  $(dirname $0)/buildakonadi-search $1
+  $(dirname $0)/buildkalarmcal $1
+  $(dirname $0)/buildkmailtransport $1
+  $(dirname $0)/buildakonadi-calendar $1
+
+  exit 0
+}
+
+case $(basename $0) in
+  buildkdepim-frameworks )
+    build_all
+  ;;
+  buildkdepim-frameworks-git )
+    build_all git
+  ;;
+esac
+
+export CMAKE_FLAGS="-DSYSCONF_INSTALL_DIR=/etc              \
+                    -DLIB_INSTALL_DIR=lib                   \
+                    -DBUILD_TESTING=OFF                     \
+                    -DQML_INSTALL_DIR=lib/qt5/qml           \
+                    -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
+                    -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules"
+
+kdepims=(
+  akonadi
+  gpgmepp
+  kcalcore
+  kcontacts
+  kholidays
+  kldap
+  kmime
+  kontactinterface
+  kpimtextedit
+  syndication
+  kblog
+  kidentitymanagement
+  kimap
+  kmbox
+  kcalutils
+  ktnef
+  kdepimlibs
+  akonadi-search
+  kalarmcal
+  kmailtransport
+  akonadi-calendar )
+
+if [ -z $1 ]
+then
+  export BUILD_TYPE="rel"
+elif [ $1 == "git" ]
+then
+  export BUILD_TYPE="git"
+fi
+
+for kdepim in ${kdepims[@]}
+do
+  case $(basename $0) in
+    build${kdepim} )
+      export PKGNAME=${kdepim}
+      export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+      export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
+      if [ ${BUILD_TYPE} == "git" ]
+      then
+        export PKGDIR=${kdepim}
+      fi
+    ;;
+  esac
+done
+
+if [ ${BUILD_TYPE} == "git" ]
+then
+  prepare_src_override() {
+    if [ -d ${PKGNAME} ]
+    then
+      pushd ${PKGNAME}
+        git clean -fdx
+        git fetch origin
+        git reset --hard origin/master
+      popd
+    else
+      git clone git://anongit.kde.org/${PKGNAME}.git
+    fi
+
+    if [ ${PKGNAME} == "akonadi" ]
+    then
+      export PKGVER=$(grep -m 1 AKONADI_VERSION ${PKGNAME}/CMakeLists.txt | cut -d \" -f2)
+    elif [ ${PKGNAME} == "gpgmepp" ]
+    then
+      export PKGVER=$(grep -m 1 KDEPIMLIBS_VERSION ${PKGNAME}/CMakeLists.txt | cut -d \" -f2)
+    elif [ ${PKGNAME} == "kdepimlibs" ]
+    then
+      export PKGVER=$(grep -m 1 KDEPIMLIBS_VERSION ${PKGNAME}/akonadi/CMakeLists.txt | cut -d \" -f2)
+    else
+      export PKGVER=$(grep -m 1 _LIB_VERSION ${PKGNAME}/CMakeLists.txt | cut -d \" -f2)
+    fi
+
+    export DEST=/binary/kdepim/${PKGNAME}-${PKGVER}
+
+    if [ -d ${PKGBUILD} ]
+    then
+      echo "Old build dir exists. Removing"
+      rm -rf ${PKGBUILD}
+    fi
+
+    install -dm755 ${PKGBUILD}
+
+    if [ -e ${DEST} ]
+    then
+      if [ ${PKG_BUILDING} != 1 ]
+      then
+        echo "Warning: Old package installation dir exits. Removing."
+        rm -rf ${DEST}
+      fi
+    fi
+
+    export PKG_BUILDING=1
+  }
+fi
+
+if [ -z ${DEST} ]
+then
+  export DEST=/binary/kdepim/${PKGNAME}-${PKGVER}
+fi
+
+. $(dirname $0)/master.sh

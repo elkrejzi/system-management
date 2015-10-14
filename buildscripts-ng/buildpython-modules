@@ -285,22 +285,10 @@ case $(basename $0) in
   ;;
   buildpython-m2crypto)
     export PKGNAME=M2Crypto
-    export PKGVER=0.22.3
+    export PKGVER=0.22.5
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/M/M2Crypto/${PKGTAR}"
     export DEST=/binary/python-m2crypto-${PKGVER}
-    configure_pre() {
-      export SWIG_VER=3.0.4
-      # swig-3.0.5 and later produce a broken package.
-      wget -c http://downloads.sourceforge.net/swig/swig-${SWIG_VER}.tar.gz
-      bsdtar xf swig-${SWIG_VER}.tar.gz
-      pushd swig-${SWIG_VER}
-        ./configure --prefix=${PWD}/../swig
-        make -j4
-        make install
-      popd
-      export PATH=${PWD}/swig/bin:$PATH
-    }
   ;;
   buildpython-notify)
     export PKGNAME=notify-python

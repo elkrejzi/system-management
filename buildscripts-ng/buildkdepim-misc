@@ -1,0 +1,30 @@
+#!/bin/bash -e
+
+export PKGVER=15.08.2
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export KEEP_DOC=1
+
+export CMAKE_FLAGS="-DSYSCONF_INSTALL_DIR=/etc              \
+                    -DLIB_INSTALL_DIR=lib                   \
+                    -DBUILD_TESTING=OFF                     \
+                    -DQML_INSTALL_DIR=lib/qt5/qml           \
+                    -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
+                    -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules"
+
+case $(basename $0) in
+  buildkdepim )
+    export PKGNAME=kdepim
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
+  ;;
+  buildkdepim-runtime )
+    export PKGNAME=kdepim-runtime
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
+  ;;
+esac
+
+export DEST=/binary/kdepim/${PKGNAME}-${PKGVER}
+
+. $(dirname $0)/master.sh
