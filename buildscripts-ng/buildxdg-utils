@@ -1,0 +1,8 @@
+#!/bin/bash -e
+
+export PKGNAME=xdg-utils
+export PKGVER=1.1.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://portland.freedesktop.org/download/${PKGTAR}"
+
+. $(dirname $0)/master.sh

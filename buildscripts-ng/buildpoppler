@@ -6,8 +6,8 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://poppler.freedesktop.org/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
-export CONFIGURE_FLAGS="--enable-xpdf-headers"
-export CONFIGURE_FLAGS_32="--libdir=/usr/lib --enable-static"
+export CONFIGURE_FLAGS=(--enable-xpdf-headers)
+export CONFIGURE_FLAGS_32=(--libdir=/usr/lib --enable-static)
 export DEFAULT_CC_M32="gcc"
 export DEFAULT_CXX_M32="g++"
 

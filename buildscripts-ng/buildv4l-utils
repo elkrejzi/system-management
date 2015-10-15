@@ -1,0 +1,16 @@
+#!/bin/bash -e
+
+export PKGNAME=v4l-utils
+export PKGVER=1.8.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="http://www.linuxtv.org/downloads/v4l-utils/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS_32=(--disable-qv4l2 --disable-v4l-utils)
+export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done")
+
+make_install_post() {
+  rm -rf ${DEST}/usr/bin/ivtv-ctl ${DEST}/usr/sbin
+}
+
+. $(dirname $0)/master.sh

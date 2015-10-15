@@ -4,9 +4,9 @@ case $(basename $0) in
   buildaisleriot )
     export PKGNAME=aisleriot
     export PKGVER=3.18.1
-    export CONFIGURE_FLAGS="--with-platform=gtk-only \
-                            --with-card-theme-formats=svg,fixed,pysol \
-                            --with-pysol-card-theme-path=/usr/share/PySolFC"
+    export CONFIGURE_FLAGS=(--with-platform=gtk-only
+                            --with-card-theme-formats=svg,fixed,pysol
+                            --with-pysol-card-theme-path=/usr/share/PySolFC)
   ;;
   buildcheese )
     export PKGNAME=cheese
@@ -26,7 +26,7 @@ case $(basename $0) in
   buildevince )
     export PKGNAME=evince
     export PKGVER=3.18.0
-    export CONFIGURE_FLAGS="--enable-introspection"
+    export CONFIGURE_FLAGS=(--enable-introspection)
     make_install_post() {
       install -dm755 ${DEST}/usr/lib/evince/mozilla
       mv ${DEST}/usr/lib/mozilla/plugins/libevbrowserplugin.so ${DEST}/usr/lib/evince/mozilla
@@ -36,7 +36,7 @@ case $(basename $0) in
   buildfile-roller )
     export PKGNAME=file-roller
     export PKGVER=3.16.4
-    export CONFIGURE_FLAGS="--disable-packagekit"
+    export CONFIGURE_FLAGS=(--disable-packagekit)
   ;;
   buildgedit )
     export PKGNAME=gedit
@@ -63,31 +63,31 @@ case $(basename $0) in
   buildgnome-system-monitor )
     export PKGNAME=gnome-system-monitor
     export PKGVER=3.18.0.1
-    export CONFIGURE_FLAGS="--enable-systemd"
+    export CONFIGURE_FLAGS=(--enable-systemd)
   ;;
   buildgnome-terminal )
     export PKGNAME=gnome-terminal
     export PKGVER=3.18.1
-    export CONFIGURE_FLAGS="--disable-migration --disable-search-provider"
+    export CONFIGURE_FLAGS=(--disable-migration --disable-search-provider)
   ;;
   buildgucharmap )
     export PKGNAME=gucharmap
     export PKGVER=3.18.1
-    export CONFIGURE_FLAGS="--enable-vala"
+    export CONFIGURE_FLAGS=(--enable-vala)
   ;;
   buildnautilus )
     export PKGNAME=nautilus
-    export PKGVER=3.18.0
-    export CONFIGURE_FLAGS="--disable-packagekit    \
-                            --disable-update-mimedb \
-                            --disable-tracker"
+    export PKGVER=3.18.1
+    export CONFIGURE_FLAGS=(--disable-packagekit
+                            --disable-update-mimedb
+                            --disable-tracker)
   ;;
   buildnetwork-manager-applet )
     export PKGNAME=network-manager-applet
     export PKGVER=1.0.6
-    export CONFIGURE_FLAGS="--disable-migration"
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://ftp.gnome.org/pub/gnome/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
+    export CONFIGURE_FLAGS=(--disable-migration)
   ;;
   buildseahorse )
     export PKGNAME=seahorse

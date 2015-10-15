@@ -9,8 +9,8 @@ case $(basename $0) in
     export PKGNAME=glib
     export PKGVER=2.46.1
     export PATCHES_LIST=("glib-compile-schemas-quiet.patch")
-    export CONFIGURE_FLAGS="--with-pcre=system"
-    export CONFIGURE_FLAGS_32="--with-pcre=system"
+    export CONFIGURE_FLAGS=(--with-pcre=system)
+    export CONFIGURE_FLAGS_32=(--with-pcre=system)
     make_install_post() {
       rm -rf ${DEST}/usr/share/gdb
       install -dm755 ${DEST}/lib
@@ -38,15 +38,15 @@ case $(basename $0) in
   buildatk )
     export PKGNAME=atk
     export PKGVER=2.18.0
-    export CONFIGURE_FLAGS_32="--disable-introspection"
+    export CONFIGURE_FLAGS_32=(--disable-introspection)
   ;;
   buildcairo )
     export PKGNAME=cairo
     export PKGVER=1.14.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://ftp.gnome.org/pub/gnome/sources/glib/${PKGVER:0:4}/${PKGTAR}"
-    export CONFIGURE_FLAGS="--enable-tee"
-    export CONFIGURE_FLAGS_32="--enable-tee"
+    export CONFIGURE_FLAGS=(--enable-tee)
+    export CONFIGURE_FLAGS_32=(--enable-tee)
     configure_post_32() {
       sed -i "/DIST_SUBDIRS/s:boilerplate test::" Makefile
       sed -i "/am__append_1/s:boilerplate test::" Makefile
@@ -55,8 +55,8 @@ case $(basename $0) in
   buildgdk-pixbuf )
     export PKGNAME=gdk-pixbuf
     export PKGVER=2.32.1
-    export CONFIGURE_FLAGS="--with-x11 --with-libjasper"
-    export CONFIGURE_FLAGS_32="--with-x11 --with-libjasper --disable-introspection"
+    export CONFIGURE_FLAGS=(--with-x11 --with-libjasper)
+    export CONFIGURE_FLAGS_32=(--with-x11 --with-libjasper --disable-introspection)
     make_install_post_32() {
       export SPACE_ADDED=1
       mv dest/usr/bin/gdk-pixbuf-query-loaders ${DEST}/usr/bin/gdk-pixbuf-query-loaders-32
@@ -67,12 +67,12 @@ export POSTINST_TRIGGER=("[ -x /usr/bin/gdk-pixbuf-query-loaders ] && echo \"Pro
   buildpango )
     export PKGNAME=pango
     export PKGVER=1.38.1
-    export CONFIGURE_FLAGS_32="--disable-introspection"
+    export CONFIGURE_FLAGS_32=(--disable-introspection)
   ;;
   buildat-spi2-core )
     export PKGNAME=at-spi2-core
     export PKGVER=2.18.1
-    export CONFIGURE_FLAGS_32="--disable-introspection"
+    export CONFIGURE_FLAGS_32=(--disable-introspection)
   ;;
   buildat-spi2-atk )
     export PKGNAME=at-spi2-atk
@@ -81,8 +81,8 @@ export POSTINST_TRIGGER=("[ -x /usr/bin/gdk-pixbuf-query-loaders ] && echo \"Pro
   buildgtk2 )
     export PKGNAME=gtk+
     export PKGVER=2.24.28
-    export CONFIGURE_FLAGS="--enable-man"
-    export CONFIGURE_FLAGS_32="--disable-introspection"
+    export CONFIGURE_FLAGS=(--enable-man)
+    export CONFIGURE_FLAGS_32=(--disable-introspection)
     export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-query-immodules-2.0 ] && echo \"Processing triggers for gtk-2.0\" && /usr/bin/gtk-query-immodules-2.0 --update-cache"
                              "[ -x /usr/bin/gtk-query-immodules-2.0-32 ] && echo \"Processing triggers for gtk-2.0 (32 bit)\" && /usr/bin/gtk-query-immodules-2.0-32 --update-cache")
     configure_pre() {
@@ -108,8 +108,8 @@ EOF
   buildgtk3 )
     export PKGNAME=gtk+
     export PKGVER=3.18.2
-    export CONFIGURE_FLAGS="--enable-broadway-backend --enable-wayland-backend --enable-x11-backend --enable-man"
-    export CONFIGURE_FLAGS_32="${CONFIGURE_FLAGS} --disable-cloudprint --disable-introspection --disable-libcanberra"
+    export CONFIGURE_FLAGS=(--enable-broadway-backend --enable-wayland-backend --enable-x11-backend --enable-man)
+    export CONFIGURE_FLAGS_32=("${CONFIGURE_FLAGS[@]}" --disable-cloudprint --disable-introspection --disable-libcanberra)
     export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-query-immodules-3.0 ] && echo \"Processing triggers for gtk-3.0\" && /usr/bin/gtk-query-immodules-3.0 --update-cache"
                              "[ -x /usr/bin/gtk-query-immodules-3.0-32 ] && echo \"Processing triggers for gtk-3.0 (32 bit)\" && /usr/bin/gtk-query-immodules-3.0-32 --update-cache")
     configure_post() {
@@ -136,23 +136,23 @@ EOF
   buildcogl )
     export PKGNAME=cogl
     export PKGVER=1.22.0
-    export CONFIGURE_FLAGS="--enable-gles1                \
-                            --enable-gles2                \
-                            --enable-wayland-egl-server   \
-                            --enable-wayland-egl-platform \
-                            --enable-kms-egl-platform     \
-                            --enable-xlib-egl-platform"
+    export CONFIGURE_FLAGS=(--enable-gles1
+                            --enable-gles2
+                            --enable-wayland-egl-server
+                            --enable-wayland-egl-platform
+                            --enable-kms-egl-platform
+                            --enable-xlib-egl-platform)
     unset MULTILIB_BUILD
   ;;
   buildclutter )
     export PKGNAME=clutter
     export PKGVER=1.24.2
-    export CONFIGURE_FLAGS="--enable-egl-backend        \
-                            --enable-gdk-backend        \
-                            --enable-wayland-backend    \
-                            --enable-wayland-compositor \
-                            --enable-x11-backend        \
-                            --enable-evdev-input"
+    export CONFIGURE_FLAGS=(--enable-egl-backend
+                            --enable-gdk-backend
+                            --enable-wayland-backend
+                            --enable-wayland-compositor
+                            --enable-x11-backend
+                            --enable-evdev-input)
     unset MULTILIB_BUILD
   ;;
   buildclutter-gtk )

@@ -80,12 +80,12 @@ EOF
   ;;
 esac
 
-export CMAKE_FLAGS="-DSYSCONF_INSTALL_DIR=/etc              \
-                    -DLIB_INSTALL_DIR=lib                   \
-                    -DBUILD_TESTING=OFF                     \
-                    -DQML_INSTALL_DIR=lib/qt5/qml           \
-                    -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins \
-                    -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules"
+export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
+                    -DLIB_INSTALL_DIR=lib
+                    -DBUILD_TESTING=OFF
+                    -DQML_INSTALL_DIR=lib/qt5/qml
+                    -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins
+                    -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules)
 
 plasmas=(
   kde-cli-tools

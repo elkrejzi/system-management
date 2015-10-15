@@ -20,7 +20,7 @@ case $(basename $0) in
     export PKGURL="https://github.com/g-truc/glm/releases/download/${PKGVER}/${PKGTAR}"
     export PKGDIR=glm
     export CMAKE_BUILD=1
-    export CMAKE_FLAGS="-DCMAKE_INSTALL_LIBDIR=lib"
+    export CMAKE_FLAGS=(-DCMAKE_INSTALL_LIBDIR=lib)
     unset INSTALL_CMD
   ;;
   buildlibabw )
@@ -40,7 +40,7 @@ case $(basename $0) in
     export PKGVER=0.5.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="http://downloads.sourceforge.net/libcmis/${PKGTAR}"
-    export CONFIGURE_FLAGS="--without-man"
+    export CONFIGURE_FLAGS=(--without-man)
     export PATCHES_LIST=("libcmis-gcc5.patch")
     configure_pre() {
       autoreconf -fi
@@ -51,7 +51,7 @@ case $(basename $0) in
     export PKGVER=0.1.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://downloads.sourceforge.net/libebook/${PKGTAR}"
-    export CONFIGURE_FLAGS="--disable-werror"
+    export CONFIGURE_FLAGS=(--disable-werror)
   ;;
   buildlibetonyek )
     export PKGNAME=libetonyek
@@ -173,7 +173,7 @@ case $(basename $0) in
     export PKGVER=2.0.15
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="http://download.librdf.org/source/${PKGTAR}"
-    export CONFIGURE_FLAGS="--with-icu-config=/usr/bin/icu-config"
+    export CONFIGURE_FLAGS=(--with-icu-config=/usr/bin/icu-config)
     unset INSTALL_CMD
   ;;
   buildrasqal )

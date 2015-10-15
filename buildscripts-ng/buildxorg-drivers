@@ -59,8 +59,8 @@ EOF
     export PKGVER=0.31.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://downloads.sourceforge.net/linuxwacom/${PKGTAR}"
-    export CONFIGURE_FLAGS="--with-udev-rules-dir=/lib/udev/rules.d \
-                            --with-systemd-unit-dir=/lib/systemd/system"
+    export CONFIGURE_FLAGS=(--with-udev-rules-dir=/lib/udev/rules.d
+                            --with-systemd-unit-dir=/lib/systemd/system)
   ;;
   buildxf86-video-ati )
     export PKGNAME=xf86-video-ati
@@ -73,8 +73,8 @@ EOF
     export PKGVER=2.99.917
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://xorg.freedesktop.org/releases/individual/driver/${PKGTAR}"
-    export CONFIGURE_FLAGS="--enable-kms-only \
-                            --disable-sna"
+    export CONFIGURE_FLAGS=(--enable-kms-only
+                            --disable-sna)
     export POSTINST_TRIGGER=("chmod 4755 /usr/libexec/xf86-video-intel-backlight-helper")
   ;;
   buildxorg-drivers )

@@ -19,80 +19,80 @@ configure_pre() {
   sed -i "/APACHE_THREADED_MPM=/d" sapi/apache2handler/config.m4 configure
 }
 
-export CONFIGURE_FLAGS="--sysconfdir=/etc/php \
-                        --libdir=/usr/lib/php \
-                        --disable-rpath \
-                        --with-apxs2 \
-                        --enable-cli \
-                        --enable-fpm \
-                        --with-fpm-user=httpd \
-                        --with-fpm-group=httpd \
-                        --with-fpm-systemd \
-                        --enable-phpdbg \
-                        --enable-cgi \
-                        --with-layout=GNU \
-                        --with-config-file-path=/etc/php \
-                        --with-config-file-scan-dir=/etc/php/conf.d \
-                        --with-openssl=shared \
-                        --with-pcre-regex=/usr \
-                        --with-sqlite3=shared,/usr \
-                        --with-zlib \
-                        --enable-bcmath=shared \
-                        --with-bz2=shared \
-                        --enable-calendar=shared \
-                        --with-curl=shared \
-                        --enable-dba=shared \
-                        --with-gdbm \
-                        --with-db4=/usr \
-                        --with-enchant=shared,/usr \
-                        --enable-exif=shared \
-                        --enable-ftp=shared \
-                        --with-gd=shared,/usr \
-                        --with-vpx-dir=/usr \
-                        --with-jpeg-dir=/usr \
-                        --with-png-dir=/usr \
-                        --with-xpm-dir=/usr \
-                        --with-freetype-dir=/usr \
-                        --with-t1lib=shared,/usr \
-                        --enable-gd-native-ttf \
-                        --with-gettext=shared \
-                        --with-gmp=shared \
-                        --with-mhash \
-                        --with-iconv=shared \
-                        --with-imap=shared \
-                        --with-imap-ssl \
-                        --enable-intl=shared \
-                        --with-icu-dir=/usr \
-                        --with-ldap=shared \
-                        --with-ldap-sasl \
-                        --enable-mbstring \
-                        --with-mcrypt=shared \
-                        --with-mysql=shared,mysqlnd \
-                        --with-mysql-sock=/run/mysqld/mysqld.sock \
-                        --with-mysqli=shared,mysqlnd \
-                        --with-unixODBC=shared,/usr \
-                        --enable-pcntl \
-                        --with-pdo-mysql=shared,mysqlnd \
-                        --with-pdo-odbc=shared,unixODBC,/usr \
-                        --with-pdo-pgsql=shared \
-                        --with-pdo-sqlite=shared,/usr \
-                        --with-pgsql=shared \
-                        --enable-phar=shared \
-                        --enable-posix=shared \
-                        --with-pspell=shared \
-                        --with-readline \
-                        --enable-shmop=shared \
-                        --enable-soap=shared \
-                        --enable-sockets=shared \
-                        --enable-sysvmsg=shared \
-                        --enable-sysvsem=shared \
-                        --enable-sysvshm=shared \
-                        --with-tidy=shared \
-                        --with-xmlrpc=shared \
-                        --with-xsl=shared \
-                        --enable-zip=shared \
-                        --with-libzip \
-                        --with-pear"
+export CONFIGURE_FLAGS=(--sysconfdir=/etc/php
+                        --libdir=/usr/lib/php
+                        --disable-rpath
+                        --with-apxs2
+                        --enable-cli
+                        --enable-fpm
+                        --with-fpm-user=httpd
+                        --with-fpm-group=httpd
+                        --with-fpm-systemd
+                        --enable-phpdbg
+                        --enable-cgi
+                        --with-layout=GNU
+                        --with-config-file-path=/etc/php
+                        --with-config-file-scan-dir=/etc/php/conf.d
+                        --with-openssl=shared
+                        --with-pcre-regex=/usr
+                        --with-sqlite3=shared,/usr
+                        --with-zlib
+                        --enable-bcmath=shared
+                        --with-bz2=shared
+                        --enable-calendar=shared
+                        --with-curl=shared
+                        --enable-dba=shared
+                        --with-gdbm
+                        --with-db4=/usr
+                        --with-enchant=shared,/usr
+                        --enable-exif=shared
+                        --enable-ftp=shared
+                        --with-gd=shared,/usr
+                        --with-vpx-dir=/usr
+                        --with-jpeg-dir=/usr
+                        --with-png-dir=/usr
+                        --with-xpm-dir=/usr
+                        --with-freetype-dir=/usr
+                        --with-t1lib=shared,/usr
+                        --enable-gd-native-ttf
+                        --with-gettext=shared
+                        --with-gmp=shared
+                        --with-mhash
+                        --with-iconv=shared
+                        --with-imap=shared
+                        --with-imap-ssl
+                        --enable-intl=shared
+                        --with-icu-dir=/usr
+                        --with-ldap=shared
+                        --with-ldap-sasl
+                        --enable-mbstring
+                        --with-mcrypt=shared
+                        --with-mysql=shared,mysqlnd
+                        --with-mysql-sock=/run/mysqld/mysqld.sock
+                        --with-mysqli=shared,mysqlnd
+                        --with-unixODBC=shared,/usr
+                        --enable-pcntl
+                        --with-pdo-mysql=shared,mysqlnd
+                        --with-pdo-odbc=shared,unixODBC,/usr
+                        --with-pdo-pgsql=shared
+                        --with-pdo-sqlite=shared,/usr
+                        --with-pgsql=shared
+                        --enable-phar=shared
+                        --enable-posix=shared
+                        --with-pspell=shared
+                        --with-readline
+                        --enable-shmop=shared
+                        --enable-soap=shared
+                        --enable-sockets=shared
+                        --enable-sysvmsg=shared
+                        --enable-sysvsem=shared
+                        --enable-sysvshm=shared
+                        --with-tidy=shared
+                        --with-xmlrpc=shared
+                        --with-xsl=shared
+                        --enable-zip=shared
+                        --with-libzip
+                        --with-pear)
 
 make_install_post() {
   rm -rf ${DEST}/etc/httpd ${DEST}/etc/php/php-fpm.conf.default ${DEST}/var

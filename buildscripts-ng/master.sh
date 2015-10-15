@@ -208,7 +208,7 @@ post_install_clean() {
     gzip -9 ${DEST}/usr/share/info/*
   fi
 
-  if [ -z {KEEP_LOCALIZED_MAN} ]
+  if [ -z ${KEEP_LOCALIZED_MAN} ]
   then
     rm -rf ${DEST}/usr/share/man/[^man{1..8,n}]*
   fi
@@ -431,6 +431,13 @@ build_package() {
 
   pushd ${PKGBUILD}
 
+    declare -a ADDITIONAL_CONFIGURE_FLAGS
+
+    if [ -z ${KEEP_STATIC} ]
+    then
+       ADDITIONAL_CONFIGURE_FLAGS=(--disable-static "${ADDITIONAL_CONFIGURE_FLAGS[@]}")
+    fi
+
     if [ ${MULTILIB} == 0 ]
     then
       export CC=${DEFAULT_CC}
@@ -439,11 +446,11 @@ build_package() {
 
       if [ -z ${DEBUG_BUILD} ]
       then
-        local ADDITIONAL_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Release ${CMAKE_FLAGS}"
+        local ADDITIONAL_CMAKE_FLAGS=(-DCMAKE_BUILD_TYPE=Release "${CMAKE_FLAGS[@]}")
       else
-        local ADDITIONAL_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=RelWithDebInfo ${CMAKE_FLAGS}"
+        local ADDITIONAL_CMAKE_FLAGS=(-DCMAKE_BUILD_TYPE=RelWithDebInfo "${CMAKE_FLAGS[@]}")
       fi
-      local ADDITIONAL_CONFIGURE_FLAGS="--libdir=/usr/lib ${CONFIGURE_FLAGS}"
+      ADDITIONAL_CONFIGURE_FLAGS=("${ADDITIONAL_CONFIGURE_FLAGS[@]}" --libdir=/usr/lib "${CONFIGURE_FLAGS[@]}")
       local ADDITIONAL_MAKE_FLAGS="${MAKE_FLAGS} ${MAKE_JOBS_FLAGS}"
       local ADDITIONAL_MAKE_INSTALL_FLAGS="${MAKE_INSTALL_FLAGS} DESTDIR=${DEST}"
     else
@@ -452,20 +459,14 @@ build_package() {
       export PKG_CONFIG_PATH=/usr/lib32/pkgconfig:/usr/share/pkgconfig
       if [ -z ${DEBUG_BUILD} ]
       then
-        local ADDITIONAL_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Release ${CMAKE_FLAGS_32}"
+        local ADDITIONAL_CMAKE_FLAGS=(-DCMAKE_BUILD_TYPE=Release "${CMAKE_FLAGS_32[@]}")
       else
-        local ADDITIONAL_CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=RelWithDebInfo ${CMAKE_FLAGS_32}"
+        local ADDITIONAL_CMAKE_FLAGS=(-DCMAKE_BUILD_TYPE=RelWithDebInfo "${CMAKE_FLAGS_32}")
       fi
-      local ADDITIONAL_CONFIGURE_FLAGS="--libdir=/usr/lib32 ${CONFIGURE_FLAGS_32}"
+      ADDITIONAL_CONFIGURE_FLAGS+=("${ADDITIONAL_CONFIGURE_FLAGS[@]}" --libdir=/usr/lib32 "${CONFIGURE_FLAGS_32[@]}")
       local ADDITIONAL_MAKE_FLAGS="${MAKE_FLAGS_32} ${MAKE_JOBS_FLAGS}"
       local ADDITIONAL_MAKE_INSTALL_FLAGS="${MAKE_INSTALL_FLAGS_32} DESTDIR=${PWD}/dest"
     fi
-
-    if [ -z ${KEEP_STATIC} ]
-    then
-       ADDITIONAL_CONFIGURE_FLAGS="--disable-static ${ADDITIONAL_CONFIGURE_FLAGS}"
-    fi
-
 
     if [ ${MULTILIB} == 0 ]
     then
@@ -487,7 +488,7 @@ build_package() {
       cmake -DCMAKE_INSTALL_PREFIX=/usr     \
             -DCMAKE_C_FLAGS="${CFLAGS}"     \
             -DCMAKE_CXX_FLAGS="${CXXFLAGS}" \
-            ${ADDITIONAL_CMAKE_FLAGS}       \
+            "${ADDITIONAL_CMAKE_FLAGS[@]}"  \
             -Wno-dev ${PATH_TO_SOURCE}
     else
       ${PATH_TO_SOURCE}/configure --prefix=/usr             \
@@ -495,7 +496,7 @@ build_package() {
                                   --localstatedir=/var      \
                                   --mandir=/usr/share/man   \
                                   --infodir=/usr/share/info \
-                                  ${ADDITIONAL_CONFIGURE_FLAGS}
+                                  "${ADDITIONAL_CONFIGURE_FLAGS[@]}"
     fi
 
     }

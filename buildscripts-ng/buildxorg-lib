@@ -70,8 +70,8 @@ case $(basename $0) in
       autoreconf -fi
     }
 
-    export CONFIGURE_FLAGS="--enable-xinput"
-    export CONFIGURE_FLAGS_32="--enable-xinput"
+    export CONFIGURE_FLAGS=(--enable-xinput)
+    export CONFIGURE_FLAGS_32=(--enable-xinput)
   ;;
   buildlibXcomposite )
     export PKGNAME=libXcomposite

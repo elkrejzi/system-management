@@ -1,0 +1,17 @@
+#!/bin/bash -e
+
+export PKGNAME=unrar
+export PKGVER=5.3.6
+export PKGTAR=unrarsrc-${PKGVER}.tar.gz
+export PKGDIR=unrar
+export PKGURL="http://www.rarlab.com/rar/${PKGTAR}"
+
+configure_override() {
+  sed -i "s:-O2:${CFLAGS}:g" makefile
+}
+
+make_install_override() {
+  install -Dm755 unrar ${DEST}/usr/bin/unrar
+}
+
+. $(dirname $0)/master.sh

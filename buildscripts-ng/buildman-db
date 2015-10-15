@@ -1,0 +1,18 @@
+#!/bin/bash -e
+
+export PKGNAME=man-db
+export PKGVER=2.7.4
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://download.savannah.gnu.org/releases/man-db/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+export CONFIGURE_FLAGS=(--disable-setuid
+                        --with-browser=/usr/bin/lynx
+                        --with-vgrind=/usr/bin/vgrind
+                        --with-grap=/usr/bin/grap)
+
+make_install_post() {
+  sed -i "s:man root:root root:g" ${DEST}/usr/lib/tmpfiles.d/man-db.conf
+}
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,107 @@
+#!/bin/bash -e
+
+export PKGNAME=httpd
+export PKGVER=2.4.17
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://archive.apache.org/dist/httpd/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export PATCHES_LIST=("httpd.patch")
+
+configure_override() {
+  sed -e "s@/srv/www@/var/www@" -i config.layout
+  sed -e "s@User apache@User httpd@" -i docs/conf/httpd.conf.in
+  sed -e "s@Group apache@Group httpd@" -i docs/conf/httpd.conf.in
+
+  ./configure --enable-layout=BLFS \
+              --enable-mods-shared="all cgi" \
+              --enable-mpms-shared=all \
+              --with-apr=/usr/bin/apr-1-config \
+              --with-apr-util=/usr/bin/apu-1-config \
+              --enable-suexec=shared \
+              --with-suexec-bin=/usr/lib/httpd/suexec \
+              --with-suexec-docroot=/var/www \
+              --with-suexec-caller=httpd \
+              --with-suexec-userdir=public_html \
+              --with-suexec-logfile=/var/log/httpd/suexec.log \
+              --with-suexec-uidmin=100 \
+              --enable-ldap \
+              --enable-authnz-ldap \
+              --enable-imagemap \
+              --enable-ident \
+              --enable-cern-meta
+}
+
+make_install_post() {
+  rm -rf ${DEST}/etc/httpd/original ${DEST}/usr/share/httpd/manual ${DEST}/var/run
+
+  mv ${DEST}/etc/httpd/httpd.conf ${DEST}/etc/httpd/httpd.conf.dist
+  mv ${DEST}/usr/sbin/suexec ${DEST}/usr/lib/httpd/suexec
+
+  rm -f ${DEST}/usr/lib/httpd/cgi-bin/* ${DEST}/var/www/*
+
+  echo "<html><body><h1>It works!</h1></body></html>" > ${DEST}/var/www/index.html
+
+  install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/lib/systemd/system
+  install -dm755 ${DEST}/usr/lib/tmpfiles.d ${DEST}/var/cache/httpd
+
+  touch ${DEST}/usr/lib/httpd/cgi-bin/.keepdir ${DEST}/var/{cache,log}/httpd/.keepdir
+
+cat > ${DEST}/usr/lib/tmpfiles.d/httpd.conf << EOF
+d /run/httpd 755 root root -
+EOF
+
+cat > ${DEST}/lib/systemd/system/httpd.service << EOF
+[Unit]
+Description=Apache Web Server
+After=network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=forking
+PIDFile=/run/httpd/httpd.pid
+ExecStart=/usr/sbin/apachectl start
+ExecStop=/usr/sbin/apachectl graceful-stop
+ExecReload=/usr/sbin/apachectl graceful
+PrivateTmp=true
+LimitNOFILE=infinity
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+  ln -sf /lib/systemd/system/httpd.service ${DEST}/etc/systemd/system/multi-user.target.wants
+}
+
+post_install_config() {
+  find ${DEST} -type f -name .keepdir -delete
+}
+
+generate_install_override() {
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib usr var ; do cp -rf --remove-destination $dir / ; done
+
+getent group httpd > /dev/null || groupadd -g 25 httpd
+getent passwd httpd > /dev/null || useradd -c "HTTP Daemon Owner" -d /var/www -g httpd -s /bin/false -u 25 httpd
+
+if [ ! -f /etc/httpd/httpd.conf ]; then
+   cp -f /etc/httpd/httpd.conf.dist /etc/httpd/httpd.conf
+fi
+
+chown -R httpd:httpd /var/cache/httpd
+
+chgrp httpd /usr/lib/httpd/suexec
+chmod 4754 /usr/lib/httpd/suexec
+
+chown -R root:adm /var/log/httpd
+chmod o-rx /var/log/httpd
+
+chown -R httpd:httpd /var/www
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL
+}
+
+. $(dirname $0)/master.sh

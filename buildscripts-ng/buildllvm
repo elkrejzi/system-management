@@ -12,37 +12,37 @@ export MULTILIB_BUILD=1
 export PATCHES_LIST=("llvm-link-tools-against-libLLVM.patch" "llvm-export-more-symbols.patch")
 export PATCHES_LIST_32=${PATCHES_LIST}
 
-export SHARED_FLAGS="-DCLANG_INCLUDE_TESTS=OFF   \
-                     -DLLVM_BUILD_LLVM_DYLIB=ON  \
-                     -DLLVM_DYLIB_EXPORT_ALL=ON  \
-                     -DLLVM_ENABLE_DOXYGEN=OFF   \
-                     -DLLVM_ENABLE_FFI=ON        \
-                     -DLLVM_ENABLE_LIBCXXABI=ON  \
-                     -DLLVM_ENABLE_RTTI=ON       \
-                     -DLLVM_INCLUDE_EXAMPLES=OFF \
-                     -DLLVM_INCLUDE_TESTS=OFF    \
-                     -DLLVM_LINK_LLVM_DYLIB=ON   \
-                     -DLIBCXX_ENABLE_ASSERTIONS=OFF     \
-                     -DLIBCXXABI_ENABLE_ASSERTIONS=OFF  \
-                     -DLIBCXXABI_ENABLE_STATIC=OFF      \
-                     -DLIBCXXABI_USE_LLVM_UNWINDER=ON   \
-                     -DLIBUNWIND_ENABLE_ASSERTIONS=OFF  \
-                     -DLIBUNWIND_ENABLE_SHARED=OFF      \
-                     -DLLVM_TARGETS_TO_BUILD=AMDGPU;X86 \
-                     -DLLVM_BINUTILS_INCDIR=/usr/include"
+export SHARED_FLAGS=(-DCLANG_INCLUDE_TESTS=OFF
+                     -DLLVM_BUILD_LLVM_DYLIB=ON
+                     -DLLVM_DYLIB_EXPORT_ALL=ON
+                     -DLLVM_ENABLE_DOXYGEN=OFF
+                     -DLLVM_ENABLE_FFI=ON
+                     -DLLVM_ENABLE_LIBCXXABI=ON
+                     -DLLVM_ENABLE_RTTI=ON
+                     -DLLVM_INCLUDE_EXAMPLES=OFF
+                     -DLLVM_INCLUDE_TESTS=OFF
+                     -DLLVM_LINK_LLVM_DYLIB=ON
+                     -DLIBCXX_ENABLE_ASSERTIONS=OFF
+                     -DLIBCXXABI_ENABLE_ASSERTIONS=OFF
+                     -DLIBCXXABI_ENABLE_STATIC=OFF
+                     -DLIBCXXABI_USE_LLVM_UNWINDER=ON
+                     -DLIBUNWIND_ENABLE_ASSERTIONS=OFF
+                     -DLIBUNWIND_ENABLE_SHARED=OFF
+                     -DLLVM_TARGETS_TO_BUILD=AMDGPU;X86
+                     -DLLVM_BINUTILS_INCDIR=/usr/include)
 
-export CMAKE_FLAGS="${SHARED_FLAGS}          \
-                    -DLLVM_BUILD_DOCS=ON     \
-                    -DLLVM_ENABLE_SPHINX=ON  \
-                    -DSPHINX_OUTPUT_HTML=OFF \
-                    -DSPHINX_WARNINGS_AS_ERRORS=OFF"
+export CMAKE_FLAGS=("${SHARED_FLAGS[@]}"
+                    -DLLVM_BUILD_DOCS=ON
+                    -DLLVM_ENABLE_SPHINX=ON
+                    -DSPHINX_OUTPUT_HTML=OFF
+                    -DSPHINX_WARNINGS_AS_ERRORS=OFF)
 
-export CMAKE_FLAGS_32="${SHARED_FLAGS}           \
-                       -DCLANG_INCLUDE_DOCS=OFF  \
-                       -DLLVM_LIBDIR_SUFFIX=32   \
-                       -DLLVM_TARGET_ARCH=i686   \
-                       -DLIBCXX_INCLUDE_DOCS=OFF \
-                       -DLLVM_DEFAULT_TARGET_TRIPLE=i686-pc-linux-gnu"
+export CMAKE_FLAGS_32=("${SHARED_FLAGS[@]}"
+                       -DCLANG_INCLUDE_DOCS=OFF
+                       -DLLVM_LIBDIR_SUFFIX=32
+                       -DLLVM_TARGET_ARCH=i686
+                       -DLIBCXX_INCLUDE_DOCS=OFF
+                       -DLLVM_DEFAULT_TARGET_TRIPLE=i686-pc-linux-gnu)
 
 configure_pre() {
   unset POST_PREPARE RECURSIVE_CALL

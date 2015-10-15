@@ -22,12 +22,12 @@ case $(basename $0) in
   buildgnome-desktop )
     export PKGNAME=gnome-desktop
     export PKGVER=3.18.1
-    export CONFIGURE_FLAGS="--with-gnome-distributor=Krejzi"
+    export CONFIGURE_FLAGS=(--with-gnome-distributor=Krejzi)
   ;;
   buildgnome-online-accounts )
     export PKGNAME=gnome-online-accounts
     export PKGVER=3.18.1
-    export CONFIGURE_FLAGS="--enable-kerberos"
+    export CONFIGURE_FLAGS=(--enable-kerberos)
   ;;
   buildgnome-themes-standard )
     export PKGNAME=gnome-themes-standard
@@ -57,11 +57,11 @@ case $(basename $0) in
     export PKGVER=0.5.4
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://ftp.gnome.org/pub/gnome/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
-    export CONFIGURE_FLAGS="--with-gtk=3.0 --enable-vala"
+    export CONFIGURE_FLAGS=(--with-gtk=3.0 --enable-vala)
   ;;
   buildgvfs )
     export PKGNAME=gvfs
-    export PKGVER=1.26.1
+    export PKGVER=1.26.1.1
   ;;
   buildjson-glib )
     export PKGNAME=json-glib
@@ -85,7 +85,7 @@ case $(basename $0) in
     export PKGNAME=libgudev
     export PKGVER=230
     export MULTILIB_BUILD=1
-    export CONFIGURE_FLAGS_32="--disable-introspection"
+    export CONFIGURE_FLAGS_32=(--disable-introspection)
   ;;
   buildlibgxps )
     export PKGNAME=libgxps
@@ -103,7 +103,7 @@ case $(basename $0) in
   buildlibrsvg )
     export PKGNAME=librsvg
     export PKGVER=2.40.11
-    export CONFIGURE_FLAGS="--enable-vala"
+    export CONFIGURE_FLAGS=(--enable-vala)
     export POSTINST_TRIGGER=("[ -x /usr/bin/gdk-pixbuf-query-loaders ] && echo \"Processing triggers for gdk-pixbuf-2.0\" && /usr/bin/gdk-pixbuf-query-loaders --update-cache")
     make_install_post() {
       export SPACE_ADDED=1
@@ -130,7 +130,7 @@ case $(basename $0) in
   buildvte )
     export PKGNAME=vte
     export PKGVER=0.42.1
-    export CONFIGURE_FLAGS="--enable-introspection"
+    export CONFIGURE_FLAGS=(--enable-introspection)
     make_install_post() {
       rm -rf ${DEST}/etc
     }

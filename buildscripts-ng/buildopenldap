@@ -11,20 +11,20 @@ export PATCHES_LIST_32=("openldap-blfs-paths.patch" "openldap-symbol-versions.pa
 export MAKE_FLAGS_32="-C libraries"
 export MAKE_INSTALL_FLAGS_32="-C libraries"
 
-export COMMON_CONFIGURE_FLAGS="--libexecdir=/usr/lib \
-                               --disable-debug       \
-                               --enable-dynamic      \
-                               --enable-crypt        \
-                               --enable-modules      \
-                               --enable-rlookups     \
-                               --enable-backends=mod \
-                               --enable-overlays=mod \
-                               --disable-bdb         \
-                               --disable-hdb         \
-                               --disable-ndb"
+export COMMON_CONFIGURE_FLAGS=(--libexecdir=/usr/lib
+                               --disable-debug
+                               --enable-dynamic
+                               --enable-crypt
+                               --enable-modules
+                               --enable-rlookups
+                               --enable-backends=mod
+                               --enable-overlays=mod
+                               --disable-bdb
+                               --disable-hdb
+                               --disable-ndb)
 
-export CONFIGURE_FLAGS="${COMMON_CONFIGURE_FLAGS} --enable-spasswd --enable-sql"
-export CONFIGURE_FLAGS_32="${COMMON_CONFIGURE_FLAGS} --disable-spasswd --disable-sql"
+export CONFIGURE_FLAGS=("${COMMON_CONFIGURE_FLAGS[@]}" --enable-spasswd --enable-sql)
+export CONFIGURE_FLAGS_32=("${COMMON_CONFIGURE_FLAGS[@]}" --disable-spasswd --disable-sql)
 
 configure_pre() {
   autoconf

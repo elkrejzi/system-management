@@ -1,5 +1,11 @@
 #!/bin/bash -e
 
+export PKGVER=5.5.1
+export MAKE_JOBS_FLAGS="-j4"
+export DEBUG_BUILD=1
+export NO_OPTIMIZATION=1
+export MAKE_INSTALL_FLAGS="INSTALL_ROOT=\${DEST}"
+
 case $(basename $0) in
   buildqtmodules )
     export PKG_AUTO_INSTALL=1
@@ -20,7 +26,7 @@ case $(basename $0) in
     $(dirname $0)/buildqtsensors
     $(dirname $0)/buildqtwebchannel
     $(dirname $0)/buildqtwebsockets
-    $(dirname $0)/buildqtwebengine
+    #$(dirname $0)/buildqtwebengine
     $(dirname $0)/buildqtwebkit
     $(dirname $0)/buildqttools
     $(dirname $0)/buildqtquick1
@@ -57,18 +63,13 @@ do
   case $(basename $0) in
     build${qtmodule} )
       export PKGNAME=${qtmodule}
-      export PKGVER=5.5.0
-      export PKGTAR=${PKGNAME}-opensource-src-${PKGVER}.tar.xz
-      export PKGURL="http://download.qt.io/official_releases/qt/5.5/${PKGVER}/submodules/${PKGTAR}"
-      export PKGDIR=${PKGNAME}-opensource-src-${PKGVER}
     ;;
   esac
 done
 
-export MAKE_JOBS_FLAGS="-j4"
-export DEBUG_BUILD=1
-export NO_OPTIMIZATION=1
-export MAKE_INSTALL_FLAGS="INSTALL_ROOT=\${DEST}"
+export PKGTAR=${PKGNAME}-opensource-src-${PKGVER}.tar.xz
+export PKGURL="http://download.qt.io/official_releases/qt/5.5/${PKGVER}/submodules/${PKGTAR}"
+export PKGDIR=${PKGNAME}-opensource-src-${PKGVER}
 
 if [ ${PKGNAME} == "qtwebengine" ] ||
    [ ${PKGNAME} == "qtwebkit" ]
@@ -80,7 +81,6 @@ then
     unset DEBUG_BUILD
   }
 fi
-
 
 configure_override() {
   qmake

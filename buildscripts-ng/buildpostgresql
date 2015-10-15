@@ -1,44 +1,39 @@
 #!/bin/bash -e
 
-export VER=9.4.4
-export DEST=/binary/postgresql-${VER}
+export PKGNAME=postgresql
+export PKGVER=9.4.5
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://ftp.postgresql.org/pub/source/v${PKGTAR}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
 
-pushd postgresql-${VER}
+if [ -z $1 ]
+then
+  export ADDITIONAL_CFG_FLAGS=(--with-gssapi --with-ldap)
+fi
 
-sed -e "s@DEFAULT_PGSOCKET_DIR  \"/tmp\"@DEFAULT_PGSOCKET_DIR  \"/run/postgresql\"@" -i src/include/pg_config_manual.h
+export CONFIGURE_FLAGS=("${ADDITIONAL_CFG_FLAGS[@]}"
+                        --with-libxml
+                        --with-openssl
+                        --with-pam
+                        --with-perl
+                        --with-python
+                        --with-tcl
+                        --with-system-tzdata=/usr/share/zoneinfo
+                        --enable-nls
+                        --enable-thread-safety)
 
-CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr \
-            --sysconfdir=/etc \
-            --with-gssapi \
-            --with-ldap \
-            --with-libxml \
-            --with-openssl \
-            --with-pam \
-            --with-perl \
-            --with-python \
-            --with-tcl \
-            --with-system-tzdata=/usr/share/zoneinfo \
-            --enable-nls \
-            --enable-thread-safety
+configure_pre() {
+  sed -e "s@DEFAULT_PGSOCKET_DIR  \"/tmp\"@DEFAULT_PGSOCKET_DIR  \"/run/postgresql\"@" -i src/include/pg_config_manual.h
 
-make -j4
-make install DESTDIR=${DEST}
-make -C doc/src/sgml install DESTDIR=${DEST}
+}
 
-popd
+make_install_post() {
+  make -C doc/src/sgml install DESTDIR=${DEST}
 
-rm -rf postgresql-${VER}
+  install -dm755 ${DEST}/etc/pam.d ${DEST}/usr/lib/tmpfiles.d
+  install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/lib/systemd/system
 
-rm -rf ${DEST}/usr/share/doc
-
-mkdir -p ${DEST}/etc/pam.d/
-mkdir -p ${DEST}/etc/systemd/system/multi-user.target.wants/
-mkdir -p ${DEST}/lib/systemd/system/
-mkdir -p ${DEST}/usr/lib/tmpfiles.d/
-
-cat > /etc/pam.d/postgresql << "EOF"
+cat > ${DEST}/etc/pam.d/postgresql << "EOF"
 # Begin /etc/pam.d/postgresql
 
 auth    include system-auth
@@ -80,16 +75,10 @@ OOMScoreAdjust=-200
 WantedBy=multi-user.target
 EOF
 
-ln -sf /lib/systemd/system/postgresql.service ${DEST}/etc/systemd/system/multi-user.target.wants/postgresql.service
+  ln -sf /lib/systemd/system/postgresql.service ${DEST}/etc/systemd/system/multi-user.target.wants/postgresql.service
+}
 
-pushd ${DEST}
-find * -type f 2>/dev/null | while read BUILD_BINARY ; do
-  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
-    strip --strip-unneeded ${BUILD_BINARY}
-  esac
-done
-popd
-
+generate_install_override() {
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
@@ -100,7 +89,8 @@ getent passwd postgres >/dev/null || useradd -c "PostgreSQL Server" -g postgres 
 
 install -dm755 -o postgres -g postgres /run/postgresql
 
-if [ ! -e /var/lib/postgresql/data ]; then
+if [ ! -e /var/lib/postgresql/data ]
+then
   install -dm700 -o postgres -g postgres /var/lib/postgresql/data
   su - postgres -c '/usr/bin/initdb -D /var/lib/postgresql/data'
 fi
@@ -110,5 +100,6 @@ fi
 EOF
 
 chmod 755 ${DEST}/INSTALL
+}
 
-unset VER DEST
+. $(dirname $0)/master.sh

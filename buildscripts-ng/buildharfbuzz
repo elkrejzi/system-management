@@ -7,7 +7,7 @@ export PKGURL="http://www.freedesktop.org/software/harfbuzz/release/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export DEBUG_BUILD=1
 export MULTILIB_BUILD=1
-export CONFIGURE_FLAGS="--with-gobject --with-graphite2"
-export CONFIGURE_FLAGS_32="${CONFIGURE_FLAGS} --disable-introspection"
+export CONFIGURE_FLAGS=(--with-gobject --with-graphite2)
+export CONFIGURE_FLAGS_32=("${CONFIGURE_FLAGS[@]}" --disable-introspection)
 
 . $(dirname $0)/master.sh

@@ -1,0 +1,71 @@
+#!/bin/bash -e
+
+export PKGNAME=ffmpeg
+export PKGVER=2.8.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://ffmpeg.org/releases/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export NO_OPTIMIZATION=1
+
+configure_override() {
+  ./configure --prefix=/usr              \
+              --enable-fontconfig        \
+              --enable-gnutls            \
+              --enable-gpl               \
+              --enable-ladspa            \
+              --enable-libaacplus        \
+              --enable-libass            \
+              --enable-libbluray         \
+              --enable-libbs2b           \
+              --enable-libcaca           \
+              --enable-libcelt           \
+              --enable-libcdio           \
+              --enable-libdc1394         \
+              --enable-libfaac           \
+              --enable-libfdk-aac        \
+              --enable-libfreetype       \
+              --enable-libfribidi        \
+              --enable-libgme            \
+              --enable-libgsm            \
+              --enable-libiec61883       \
+              --enable-libmodplug        \
+              --enable-libmp3lame        \
+              --enable-libopencore-amrnb \
+              --enable-libopencore-amrwb \
+              --enable-libopenjpeg       \
+              --enable-libopus           \
+              --enable-libpulse          \
+              --enable-librtmp           \
+              --enable-libschroedinger   \
+              --enable-libspeex          \
+              --enable-libssh            \
+              --enable-libtheora         \
+              --enable-libtwolame        \
+              --enable-libv4l2           \
+              --enable-libvo-aacenc      \
+              --enable-libvo-amrwbenc    \
+              --enable-libvorbis         \
+              --enable-libvpx            \
+              --enable-libwavpack        \
+              --enable-libwebp           \
+              --enable-libx264           \
+              --enable-libx265           \
+              --enable-libxvid           \
+              --enable-libzvbi           \
+              --enable-nonfree           \
+              --enable-openal            \
+              --enable-opengl            \
+              --enable-postproc          \
+              --enable-shared            \
+              --enable-vaapi             \
+              --enable-vdpau             \
+              --enable-version3          \
+              --enable-x11grab           \
+              --disable-debug            \
+              --disable-opencl           \
+              --disable-static           \
+              --extra-cflags="${DEFAULT_CFLAGS}"   \
+              --extra-cxxflags="${DEFAULT_CXXFLAGS}"
+}
+
+. $(dirname $0)/master.sh

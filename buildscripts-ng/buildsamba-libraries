@@ -1,0 +1,41 @@
+#!/bin/bash -e
+
+export KEEP_STATIC=1
+export MAKE_JOBS_FLAGS="-j4"
+
+case $(basename $0) in
+  buildldb )
+    export PKGNAME=ldb
+    export PKGVER=1.1.21
+    export CONFIGURE_FLAGS=(--disable-rpath
+                            --disable-rpath-install
+                            --bundled-libraries=NONE
+                            --builtin-libraries=replace
+                            --with-modulesdir=/usr/lib/ldb/modules
+                            --with-privatelibdir=/usr/lib/ldb)
+    export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done" "\n"
+                        "cp -rf --remove-destination usr/share/man/man3 /usr/share/man")
+  ;;
+  buildtalloc )
+    export PKGNAME=talloc
+    export PKGVER=2.1.4
+  ;;
+  buildtdb )
+    export PKGNAME=tdb
+    export PKGVER=1.3.7
+    export MULTILIB_BUILD=1
+    export CONFIGURE_FLAGS_32=(--disable-python)
+    export PATCHES_LIST=("tdb-fixes.patch")
+    export PATCHES_LIST_32=("tdb-fixes.patch")
+    export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done")
+  ;;
+  buildtevent )
+    export PKGNAME=tevent
+    export PKGVER=0.9.25
+  ;;
+esac
+
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://www.samba.org/ftp/${PKGNAME}/${PKGTAR}"
+
+. $(dirname $0)/master.sh

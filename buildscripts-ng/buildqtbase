@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=qtbase
-export PKGVER=5.5.0
+export PKGVER=5.5.1
 export PKGTAR=${PKGNAME}-opensource-src-${PKGVER}.tar.xz
 export PKGURL="http://download.qt.io/official_releases/qt/5.5/${PKGVER}/submodules/${PKGTAR}"
 export PKGDIR=${PKGNAME}-opensource-src-${PKGVER}

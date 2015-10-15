@@ -6,21 +6,21 @@ export PKGTAR=Firebird-${PKGVER}-0.tar.bz2
 export PKGDIR=Firebird-${PKGVER}-0
 export PKGURL="http://downloads.sourceforge.net/firebird/${PKGTAR}"
 
-export CONFIGURE_FLAGS="--with-system-icu     \
-                        --without-fbudf       \
-                        --without-fbsbin      \
-                        --without-fbconf      \
-                        --without-fbdoc       \
-                        --without-fbsample    \
-                        --without-fbsample-db \
-                        --without-fbintl      \
-                        --without-fbmisc      \
-                        --without-fbhelp      \
-                        --without-fbsecure-db \
-                        --without-fblog       \
-                        --without-fbglock     \
-                        --without-fbplugins   \
-                        --with-fbmsg=/usr/share/firebird"
+export CONFIGURE_FLAGS=(--with-system-icu
+                        --without-fbudf
+                        --without-fbsbin
+                        --without-fbconf
+                        --without-fbdoc
+                        --without-fbsample
+                        --without-fbsample-db
+                        --without-fbintl
+                        --without-fbmisc
+                        --without-fbhe
+                        --without-fbsecure-db
+                        --without-fblog
+                        --without-fbglock
+                        --without-fbplugins
+                        --with-fbmsg=/usr/share/firebird)
 
 make_install_override() {
   install -dm755 ${DEST}/usr/bin ${DEST}/usr/share/firebird

@@ -1,0 +1,24 @@
+#!/bin/bash -e
+
+export PKGNAME=ImageMagick
+export PKGVER=6.9.2-4
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://www.imagemagick.org/download/${PKGNAME}"
+export KEEP_LA=1
+export MAKE_JOBS_FLAGS="-j4"
+
+export CONFIGURE_FLAGS=(--enable-hdri
+                        --with-gslib
+                        --with-gvc
+                        --with-modules
+                        --with-perl
+                        --with-rsvg
+                        --with-dejavu-font-dir=/usr/share/fonts/truetype/dejavu
+                        --with-gs-font-dir=/usr/share/ghostscript/fonts
+                        --with-perl-options=INSTALLDIRS=vendor)
+
+make_install_post() {
+  rm -rf ${DEST}/usr/lib/*.la
+}
+
+. $(dirname $0)/master.sh

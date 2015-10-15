@@ -1,0 +1,40 @@
+#!/bin/bash -e
+
+export PKGNAME=wireshark
+export PKGVER=1.12.8
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://www.wireshark.org/download/src/all-versions/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--with-gtk3 --with-qt)
+
+export POSTINST_TRIGGER=("getent group wireshark > /dev/null || groupadd -g 62 wireshark" "\n"
+                         "chown root:wireshark /usr/bin/tshark"
+                         "chown root:wireshark /usr/bin/dumpcap" "\n"
+                         "chmod 6550 /usr/bin/tshark"
+                         "chmod 6550 /usr/bin/dumpcap")
+
+configure_pre() {
+cat > svnversion.h << "EOF"
+#define SVNVERSION "Krejzi"
+#define SVNPATH "source"
+EOF
+
+cat > make-version.pl << "EOF"
+#!/usr/bin/perl
+EOF
+}
+
+make_install_post() {
+  install -Dm644 wireshark.desktop ${DEST}/usr/share/applications/wireshark.desktop
+
+  install -Dm644 wireshark.desktop ${DEST}/usr/share/applications/wireshark-qt.desktop
+  sed -i "s:Exec.*wireshark:&-qt:g" ${DEST}/usr/share/applications/wireshark-qt.desktop
+  sed -i "s:Name.*Wireshark:& (Qt):g" ${DEST}/usr/share/applications/wireshark-qt.desktop
+
+  for size in 16 24 32 48 64 128 256 ; do
+      install -Dm644 image/wsicon${size}.png ${DEST}/usr/share/icons/hicolor/${size}x${size}/apps/wireshark.png
+      install -Dm644 image/WiresharkDoc-${size}.png ${DEST}/usr/share/icons/hicolor/${size}x${size}/mimetypes/application-vnd.tcpdump.pcap.png
+  done
+}
+
+. $(dirname $0)/master.sh
