@@ -4,7 +4,7 @@ export PKGNAME=firebird
 export PKGVER=2.5.4.26856
 export PKGTAR=Firebird-${PKGVER}-0.tar.bz2
 export PKGDIR=Firebird-${PKGVER}-0
-export PKGURL="http://downloads.sourceforge.net/firebird/${PKGTAR}"
+export PKGURL="https://downloads.sourceforge.net/firebird/${PKGTAR}"
 
 export CONFIGURE_FLAGS=(--with-system-icu
                         --without-fbudf

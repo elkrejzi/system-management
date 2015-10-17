@@ -1,0 +1,66 @@
+#!/bin/bash -e
+
+export PKGNAME=bzip2
+export PKGVER=1.0.6
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://www.bzip.org/${PKGVER}/${PKGURL}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+
+configure_override_shared() {
+  sed -e 's/^CFLAGS=\(.*\)$/CFLAGS=\1 \$(BIGFILES)/' -i ./Makefile-libbz2_so
+
+  sed -i 's@\(ln -s -f \)$(PREFIX)/bin/@\1@' Makefile
+  sed -i "s@(PREFIX)/man@(PREFIX)/share/man@g" Makefile
+
+  sed -i "s|-O2|${CFLAGS}|g" Makefile
+  sed -i "s|-O2|${CFLAGS}|g" Makefile-libbz2_so
+}
+
+configure_override() {
+  configure_override_shared
+}
+
+configure_override_32() {
+  configure_override_shared
+
+  sed -i "s|CC=gcc|CC=gcc -m32|" Makefile
+  sed -i "s|CC=gcc|CC=gcc -m32|" Makefile-libbz2_so
+}
+
+make_override() {
+  make -f Makefile-libbz2_so
+  make clean
+  make
+}
+
+make_install_override() {
+  if [ ${MULTILIB} == 1 ]
+  then
+    install -dm755 ${DEST}/usr/lib32
+    install -m755 libbz2.so.${PKGVER} ${DEST}/usr/lib32
+  else
+    make PREFIX=${DEST}/usr install
+
+    install -dm755 ${DEST}/{bin,lib}
+    install -m755 bzip2-shared ${DEST}/bin/bzip2
+    install -m755 libbz2.so.${PKGVER} ${DEST}/lib
+  fi
+}
+
+post_install_config() {
+    ln -sf bzip2 ${DEST}/bin/bunzip2
+    ln -sf bzip2 ${DEST}/bin/bzcat
+    rm -f ${DEST}/usr/bin/{bunzip2,bzcat,bzip2} ${DEST}/usr/lib/libbz2.a
+
+    for lib in lib usr/lib32
+    do
+      ln -sf libbz2.so.${PKGVER} ${DEST}/${lib}/libbz2.so.1.0
+      ln -sf libbz2.so.${PKGVER} ${DEST}/${lib}/libbz2.so.1
+    done
+
+    ln -sf ../../lib/libbz2.so.${PKGVER} ${DEST}/usr/lib/libbz2.so
+    ln -sf libbz2.so.${PKGVER} ${DEST}/usr/lib32/libbz2.so
+}
+
+. $(dirname $0)/master.sh

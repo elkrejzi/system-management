@@ -3,7 +3,7 @@
 export PKGNAME=a52dec
 export PKGVER=0.7.4
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-export PKGURL="http://liba52.sourceforge.net/files/${PKGNAME}-${PKGVER}.tar.gz"
+export PKGURL="https://liba52.sourceforge.net/files/${PKGNAME}-${PKGVER}.tar.gz"
 export MAKE_JOBS_FLAGS="-j4"
 export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
 export PATCHES_LIST=("a52dec-fixes.patch")

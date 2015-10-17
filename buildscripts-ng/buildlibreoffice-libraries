@@ -39,7 +39,7 @@ case $(basename $0) in
     export PKGNAME=libcmis
     export PKGVER=0.5.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="http://downloads.sourceforge.net/libcmis/${PKGTAR}"
+    export PKGURL="https://downloads.sourceforge.net/libcmis/${PKGTAR}"
     export CONFIGURE_FLAGS=(--without-man)
     export PATCHES_LIST=("libcmis-gcc5.patch")
     configure_pre() {
@@ -50,7 +50,7 @@ case $(basename $0) in
     export PKGNAME=libe-book
     export PKGVER=0.1.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://downloads.sourceforge.net/libebook/${PKGTAR}"
+    export PKGURL="https://downloads.sourceforge.net/libebook/${PKGTAR}"
     export CONFIGURE_FLAGS=(--disable-werror)
   ;;
   buildlibetonyek )
@@ -103,13 +103,13 @@ case $(basename $0) in
     export PKGNAME=libmwaw
     export PKGVER=0.3.6
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://downloads.sourceforge.net/libmwaw/${PKGTAR}"
+    export PKGURL="https://downloads.sourceforge.net/libmwaw/${PKGTAR}"
   ;;
   buildlibodfgen )
     export PKGNAME=libodfgen
     export PKGVER=0.1.4
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://downloads.sourceforge.net/libwpd/${PKGTAR}"
+    export PKGURL="https://downloads.sourceforge.net/libwpd/${PKGTAR}"
   ;;
   buildliborcus )
     export PKGNAME=liborcus
@@ -127,7 +127,7 @@ case $(basename $0) in
     export PKGNAME=librevenge
     export PKGVER=0.0.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://downloads.sourceforge.net/libwpd/${PKGTAR}"
+    export PKGURL="https://downloads.sourceforge.net/libwpd/${PKGTAR}"
     unset INSTALL_CMD
   ;;
   buildlibvisio )
@@ -140,19 +140,19 @@ case $(basename $0) in
     export PKGNAME=libwpd
     export PKGVER=0.10.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://downloads.sourceforge.net/libwpd/${PKGTAR}"
+    export PKGURL="https://downloads.sourceforge.net/libwpd/${PKGTAR}"
   ;;
   buildlibwpg )
     export PKGNAME=libwpg
     export PKGVER=0.3.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://downloads.sourceforge.net/libwpg/${PKGTAR}"
+    export PKGURL="https://downloads.sourceforge.net/libwpg/${PKGTAR}"
   ;;
   buildlibwps )
     export PKGNAME=libwps
     export PKGVER=0.4.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://downloads.sourceforge.net/libwps/${PKGTAR}"
+    export PKGURL="https://downloads.sourceforge.net/libwps/${PKGTAR}"
   ;;
   buildmdds )
     export PKGNAME=mdds
@@ -165,7 +165,7 @@ case $(basename $0) in
     export PKGNAME=mythes
     export PKGVER=1.2.4
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="http://downloads.sourceforge.net/hunspell/${PKGTAR}"
+    export PKGURL="https://downloads.sourceforge.net/hunspell/${PKGTAR}"
     unset INSTALL_CMD
   ;;
   buildraptor2 )

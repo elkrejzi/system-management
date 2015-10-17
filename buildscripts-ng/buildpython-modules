@@ -37,7 +37,7 @@ case $(basename $0) in
     export PKGNAME=docutils
     export PKGVER=0.12
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="http://downloads.sourceforge.net/docutils/${PKGTAR}"
+    export PKGURL="https://downloads.sourceforge.net/docutils/${PKGTAR}"
     export DEST=/binary/python-docutils-${PKGVER}
     make_install_post() {
       for file in ${DEST}/usr/bin/*.py
@@ -263,7 +263,12 @@ then
     true
   }
   make_override() {
-    ${PYTHON} setup.py build ${EXTRA_CFG}
+    if [ ${MULTILIB} == 0 ]
+    then
+      ${PYTHON} setup.py build ${EXTRA_CFG}
+    else
+      python setup.py install --root=${DEST} --optimize=1
+    fi
   }
   make_install_override() {
     if [ ${MULTILIB} == 0 ]
@@ -320,9 +325,6 @@ case $(basename $0) in
     export DEFAULT_CC_M32="gcc"
     configure_override_32() {
       true
-    }
-    make_override_32() {
-      python setup.py build ${EXTRA_CFG}
     }
   ;;
 esac

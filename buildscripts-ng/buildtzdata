@@ -1,0 +1,42 @@
+#!/bin/bash -e
+
+export PKGNAME=tzdata
+export PKGVER=2015g
+export PKGDIR=build
+export NO_STRIP=1
+
+prepare_src_override() {
+  install -dm755 build
+
+  for TARBALL in tzcode${PKGVER}.tar.gz tzdata${PKGVER}.tar.gz
+  do
+    if [ ! -e ${SROOT}/${TARBALL} ]
+    then
+      wget -c https://www.iana.org/time-zones/repository/releases/${TARBALL} -O ${SROOT}/${TARBALL} || exit ${PIPESTATUS}
+    fi
+
+    bsdtar xf ${SROOT}/${TARBALL} -C build
+  done  
+}
+
+configure_override() {
+  timezones=('africa' 'antarctica' 'asia' 'australasia'
+             'europe' 'northamerica' 'southamerica'
+             'pacificnew' 'etcetera' 'backward'
+             'systemv' 'factory')
+}
+
+make_override() {
+  awk -f leapseconds.awk leap-seconds.list > leapseconds
+}
+
+make_install_override() {
+  zic -y ./yearistype -d ${DEST}/usr/share/zoneinfo ${timezones[@]}
+  zic -y ./yearistype -d ${DEST}/usr/share/zoneinfo/posix ${timezones[@]}
+  zic -y ./yearistype -d ${DEST}/usr/share/zoneinfo/right -L leapseconds ${timezones[@]}
+  zic -y ./yearistype -d ${DEST}/usr/share/zoneinfo -p America/New_York
+
+  install -m444 iso3166.tab zone.tab zone1970.tab ${DEST}/usr/share/zoneinfo
+}
+
+. $(dirname $0)/master.sh

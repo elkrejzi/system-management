@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+export PKGNAME=psmisc
+export PKGVER=22.21
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://downloads.sourceforge.net/psmisc/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+make_install_post() {
+  install -dm755 ${DEST}/bin
+  mv ${DEST}/usr/bin/{fuser,killall} ${DEST}/bin
+}
+
+. $(dirname $0)/master.sh

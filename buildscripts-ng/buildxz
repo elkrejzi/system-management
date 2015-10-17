@@ -1,0 +1,19 @@
+#!/bin/bash -e
+
+export PKGNAME=xz
+export PKGVER=5.2.2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://tukaani.org/xz/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+
+post_install_config() {
+  install -dm755 ${DEST}/bin ${DEST}/lib
+
+  mv ${DEST}/usr/lib/liblzma.so.* ${DEST}/lib
+  ln -sf ../../lib/$(readlink ${DEST}/usr/lib/liblzma.so) ${DEST}/usr/lib/liblzma.so
+
+  mv ${DEST}/usr/bin/{lzcat,lzma,unlzma,unxz,xz,xzcat} ${DEST}/bin
+}
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,61 @@
+#!/bin/bash -e
+
+export PKGNAME=git
+export PKGVER=2.6.2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://www.kernel.org/pub/software/scm/git/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MAKE_FLAGS_COMMON=(prefix=/usr USE_LIBPCRE=1 NO_CROSS_DIRECTORY_HARDLINKS=1 INSTALLDIRS=vendor CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}")
+export MAKE_FLAGS="${MAKE_FLAGS_COMMON[@]}"
+export MAKE_INSTALL_FLAGS="${MAKE_FLAGS_COMMON[@]}"
+
+configure_override() {
+  sed -i "/BSD_SOURCE/d" git-compat-util.h
+}
+
+post_install_config() {
+  rm -rf ${DEST}/usr/lib
+
+  wget https://www.kernel.org/pub/software/scm/git/git-manpages-${PKGVER}.tar.xz -O - | tar xfJ - -C ${DEST}/usr/share/man
+
+  install -dm755 ${DEST}/etc/httpd/extra ${DEST}/etc/systemd/system/sockets.target.wants ${DEST}/lib/systemd/system
+
+cat > ${DEST}/etc/httpd/extra/git.conf << "EOF"
+<Directory "/usr/libexec/git-core/">
+        AllowOverride None
+        Options ExecCGI FollowSymlinks
+        Require all granted
+</Directory>
+
+SetEnv GIT_PROJECT_ROOT /var/lib/git/repositories
+ScriptAlias /git/ /usr/libexec/git-core/git-http-backend/
+EOF
+
+cat > ${DEST}/lib/systemd/system/git-daemon@.service << "EOF"
+[Unit]
+Description=Git Daemon Instance
+
+[Service]
+User=git
+ExecStart=-/usr/libexec/git-core/git-daemon --inetd --base-path=/var/lib/git/repositories
+StandardInput=socket
+StandardOutput=inherit
+StandardError=journal
+EOF
+
+cat > ${DEST}/lib/systemd/system/git-daemon.socket << "EOF"
+[Unit]
+Description=Git Daemon Socket
+
+[Socket]
+ListenStream=9418
+Accept=true
+
+[Install]
+WantedBy=sockets.target
+EOF
+
+  ln -sf /lib/systemd/system/git-daemon.socket ${DEST}/etc/systemd/system/sockets.target.wants/git-daemon.socket
+}
+
+. $(dirname $0)/master.sh

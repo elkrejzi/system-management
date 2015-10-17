@@ -54,19 +54,11 @@ configure_override_32() {
   configure_override_shared lib32
 }
 
-make_override_shared() {
+make_override() {
   for d in buildncursesw6 buildncursesw buildncurses
   do
     make -C ${d} ${MAKE_JOBS_FLAGS}
   done
-}
-
-make_override() {
-  make_override_shared
-}
-
-make_override_32() {
-  make_override_shared
 }
 
 make_install_override() {

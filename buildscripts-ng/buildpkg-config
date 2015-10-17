@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+export PKGNAME=pkg-config
+export PKGVER=0.29
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://pkgconfig.freedesktop.org/releases/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--with-internal-glib --disable-host-tool)
+
+. $(dirname $0)/master.sh

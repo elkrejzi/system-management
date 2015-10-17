@@ -5,7 +5,7 @@ export PKGVER=1.59.0
 export TARVER=1_59_0
 export PKGTAR=${PKGNAME}_${TARVER}.tar.bz2
 export PKGDIR=${PKGNAME}_${TARVER}
-export PKGURL="http://downloads.sourceforge.net/boost/${PKGTAR}"
+export PKGURL="https://downloads.sourceforge.net/boost/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
 configure_override() {

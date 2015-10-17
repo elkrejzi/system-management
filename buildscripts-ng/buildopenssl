@@ -1,0 +1,49 @@
+#!/bin/bash -e
+
+export PKGNAME=openssl
+export PKGVER=1.0.2d
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://www.openssl.org/source/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export DEBUG_BUILD=1
+export KEEP_EMPTY_DIRS=1
+export MULTILIB_BUILD=1
+export PATCHES_LIST=("openssl.patch" "openssl-fixes.patch")
+export PATCHES_LIST_32=("openssl.patch" "openssl-fixes.patch")
+export MAKE_INSTALL_FLAGS="INSTALL_PREFIX=\${DEST} MANDIR=/usr/share/man MANSUFFIX=ssl"
+export MAKE_INSTALL_FLAGS_32="INSTALL_PREFIX=\${PWD}/dest"
+
+configure_override() {
+  ./Configure --prefix=/usr \
+              --openssldir=/etc/ssl \
+              --libdir=lib \
+              shared \
+              zlib \
+              enable-ec_nistp_64_gcc_128 \
+              linux-x86_64 \
+              "${CFLAGS}"
+}
+
+configure_override_32() {
+  ./Configure --prefix=/usr \
+              --openssldir=/etc/ssl \
+               --libdir=lib32 \
+              shared \
+              zlib \
+              "linux-elf" \
+              "${CFLAGS}"
+}
+
+post_install_config() {
+  rm -rf ${DEST}/usr/*/*.a
+
+  install -dm755 ${DEST}/lib
+
+  mv ${DEST}/usr/lib/libcrypto.so.* ${DEST}/lib
+  mv ${DEST}/usr/lib/libssl.so.* ${DEST}/lib
+
+  ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libcrypto.so) ${DEST}/usr/lib/libcrypto.so
+  ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libssl.so) ${DEST}/usr/lib/libssl.so
+}
+
+. $(dirname $0)/master.sh

@@ -3,7 +3,7 @@
 export PKGNAME=graphite2
 export PKGVER=1.3.3
 export PKGTAR=${PKGNAME}-${PKGVER}.tgz
-export PKGURL="http://downloads.sourceforge.net/silgraphite/${PKGTAR}"
+export PKGURL="https://downloads.sourceforge.net/silgraphite/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export MULTILIB_BUILD=1

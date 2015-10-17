@@ -3,7 +3,7 @@
 export PKGNAME=GraphicsMagick
 export PKGVER=1.3.22
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-export PKGURL="http://downloads.sourceforge.net/graphicsmagick/${PKGTAR}"
+export PKGURL="https://downloads.sourceforge.net/graphicsmagick/${PKGTAR}"
 export KEEP_LA=1
 export MAKE_JOBS_FLAGS="-j4"
 

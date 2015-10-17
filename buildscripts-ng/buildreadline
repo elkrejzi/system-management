@@ -1,0 +1,68 @@
+#!/bin/bash -e
+
+export PKGNAME=readline
+export PKGVER=6.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://ftp.gnu.org/gnu/readline/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export PATCHES_LIST=("readline-fixes.patch")
+export PATCHES_LIST_32=("readline-fixes.patch")
+export MAKE_FLAGS="SHLIB_LIBS=-lncurses"
+export MAKE_FLAGS_32="SHLIB_LIBS=-lncurses"
+
+post_install_config() {
+  install -dm755 ${DEST}/etc ${DEST}/lib
+
+  mv ${DEST}/usr/lib/libhistory.so.* ${DEST}/lib
+  ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libhistory.so) ${DEST}/usr/lib/libhistory.so
+
+  mv ${DEST}/usr/lib/libreadline.so.* ${DEST}/lib
+  ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libreadline.so) ${DEST}/usr/lib/libreadline.so
+
+cat > ${DEST}/etc/inputrc << "EOF"
+# Begin /etc/inputrc
+
+set bell-style none
+set horizontal-scroll-mode Off
+
+set meta-flag on
+set input-meta on
+set convert-meta off
+set output-meta on
+
+$if mode=emacs
+
+# for linux console and RH/Debian xterm
+"\e[1~": beginning-of-line
+"\e[4~": end-of-line
+"\e[5~": beginning-of-history
+"\e[6~": end-of-history
+"\e[7~": beginning-of-line
+"\e[3~": delete-char
+"\e[2~": quoted-insert
+"\e[5C": forward-word
+"\e[5D": backward-word
+"\e\e[C": forward-word
+"\e\e[D": backward-word
+"\e[1;5C": forward-word
+"\e[1;5D": backward-word
+
+# for rxvt
+"\e[8~": end-of-line
+
+# for non RH/Debian xterm, can't hurt for RH/Debian xterm
+"\eOH": beginning-of-line
+"\eOF": end-of-line
+
+# for freebsd console
+"\e[H": beginning-of-line
+"\e[F": end-of-line
+$endif
+
+# End /etc/inputrc
+EOF
+
+}
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=elfutils
+export PKGVER=0.164
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://fedorahosted.org/releases/e/l/elfutils/${PKGVER}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_STATIC=1
+export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS=(--program-prefix="eu-")
+export CONFIGURE_FLAGS_32=(--program-prefix="eu-")
+
+. $(dirname $0)/master.sh
