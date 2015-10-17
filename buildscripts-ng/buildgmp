@@ -1,0 +1,24 @@
+#!/bin/bash -e
+
+export PKGNAME=gmp
+export PKGVER=6.0.0a
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGDIR=${PKGNAME}-${PKGVER%a}
+export PKGURL="https://ftp.gnu.org/gnu/gmp/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export DEBUG_BUILD=1
+export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS=(--enable-cxx
+                        --build=x86_64-unknown-linux-gnu
+                        --host=x86_64-unknown-linux-gnu
+                        --target=x86_64-unknown-linux-gnu)
+export CONFIGURE_FLAGS_32=(${CONFIGURE_FLAGS[@]} --includedir=/usr/lib32/gmp)
+
+configure_pre_32() {
+  export ABI=32
+}
+configure_post_32() {
+  sed -i 's/$(exec_prefix)\/include/$\(includedir\)/' Makefile
+}
+
+. $(dirname $0)/master.sh

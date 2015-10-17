@@ -8,6 +8,7 @@ case $(basename $0) in
   buildglib2 )
     export PKGNAME=glib
     export PKGVER=2.46.1
+    export KEEP_EMPTY_DIRS=1
     export PATCHES_LIST=("glib-compile-schemas-quiet.patch")
     export CONFIGURE_FLAGS=(--with-pcre=system)
     export CONFIGURE_FLAGS_32=(--with-pcre=system)
@@ -18,11 +19,7 @@ case $(basename $0) in
       ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libglib-2.0.so) ${DEST}/usr/lib/libglib-2.0.so
     }
     make_install_post_32() {
-      touch ${DEST}/usr/lib{,32}/gio/modules/.keepdir
       mv dest/usr/bin/gio-querymodules ${DEST}/usr/bin/gio-querymodules-32
-    }
-    post_install_config() {
-      find ${DEST} -type f -name .keepdir -delete
     }
   ;;
   buildgobject-introspection )

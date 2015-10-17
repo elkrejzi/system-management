@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=hwloc
+export PKGVER=1.11.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://www.open-mpi.org/software/hwloc/v${PKGTAR:0:4}/downloads/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+make_install_post() {
+  rm -rf ${DEST}/usr/share/applications
+}
+
+. $(dirname $0)/master.sh

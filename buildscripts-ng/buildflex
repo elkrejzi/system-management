@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+export PKGNAME=flex
+export PKGVER=2.5.39
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://downloads.sourceforge.net/flex/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_STATIC=1
+
+make_install_post() {
+  ln -sf flex ${DEST}/usr/bin/lex
+}
+
+. $(dirname $0)/master.sh

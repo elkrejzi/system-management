@@ -40,6 +40,9 @@ export MAKE_JOBS_FLAGS="-j4"
 # Set to 1 to keep the documentation installed in /usr/share/doc
 # export KEEP_DOC=1
 
+# Set to 1 to keep the empty directories in the destination directory
+# export KEEP_EMPTY_DIRS=1
+
 # Set to 1 to keep the "*.la" files
 # export KEEP_LA=1
 
@@ -79,8 +82,8 @@ export MAKE_JOBS_FLAGS="-j4"
 # export USER_CXXFLAGS=""
 
 # Additional per-package configure flags for 64/32 bit package version
-# export CONFIGURE_FLAGS=""
-# export CONFIGURE_FLAGS_32=""
+# export CONFIGURE_FLAGS=()
+# export CONFIGURE_FLAGS_32=()
 
 # Additional per-package cmake flags for 64/32 bit package version
 # export CMAKE_FLAGS=""

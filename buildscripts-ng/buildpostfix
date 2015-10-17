@@ -5,6 +5,7 @@ export PKGVER=3.0.3
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="ftp://ftp.porcupine.org/mirrors/postfix-release/official/${PKGTAR}"
 export KEEP_DOC=1
+export KEEP_EMPTY_DIRS=1
 
 configure_override() {
   sed -i 's/Linux.3\*/Linux.[34]\*/' makedefs
@@ -45,11 +46,6 @@ make_install_override() {
   ln -sf ../sbin/sendmail ${DEST}/usr/lib/sendmail
   ln -sf postfix/aliases ${DEST}/etc/aliases
 
-  for d in ${DEST}/etc/postfix/postfix-files.d ${DEST}/var/lib/postfix ${DEST}/var/spool/postfix/*
-  do
-    touch ${d}/.keepdir
-  done
-
   mv ${DEST}/etc/postfix/main.cf ${DEST}/etc/postfix/main.cf.dist
   mv ${DEST}/etc/postfix/master.cf ${DEST}/etc/postfix/master.cf.dist
 
@@ -73,10 +69,6 @@ WantedBy=multi-user.target
 EOF
 
   ln -sf /lib/systemd/system/postfix.service ${DEST}/etc/systemd/system/multi-user.target.wants/postfix.service
-}
-
-post_install_config() {
-  find ${DEST} -type f -name .keepdir -delete
 }
 
 generate_install_override() {

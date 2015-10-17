@@ -5,6 +5,7 @@ export PKGVER=2.4.17
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://archive.apache.org/dist/httpd/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
 export PATCHES_LIST=("httpd.patch")
 
 configure_override() {
@@ -44,8 +45,6 @@ make_install_post() {
   install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/lib/systemd/system
   install -dm755 ${DEST}/usr/lib/tmpfiles.d ${DEST}/var/cache/httpd
 
-  touch ${DEST}/usr/lib/httpd/cgi-bin/.keepdir ${DEST}/var/{cache,log}/httpd/.keepdir
-
 cat > ${DEST}/usr/lib/tmpfiles.d/httpd.conf << EOF
 d /run/httpd 755 root root -
 EOF
@@ -69,10 +68,6 @@ WantedBy=multi-user.target
 EOF
 
   ln -sf /lib/systemd/system/httpd.service ${DEST}/etc/systemd/system/multi-user.target.wants
-}
-
-post_install_config() {
-  find ${DEST} -type f -name .keepdir -delete
 }
 
 generate_install_override() {

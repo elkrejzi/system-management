@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+export PKGNAME=libtasn1
+export PKGVER=4.7
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://ftp.gnu.org/gnu/libtasn1/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+
+make_install_post() {
+  make -C doc/reference install-data-local DESTDIR=${DEST}
+}
+
+. $(dirname $0)/master.sh

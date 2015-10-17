@@ -5,6 +5,7 @@ export PKGVER=2.4.42
 export PKGTAR=${PKGNAME}-${PKGVER}.tgz
 export PKGURL="ftp://ftp.openldap.org/pub/OpenLDAP/openldap-release/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
 export MULTILIB_BUILD=1
 export PATCHES_LIST=("openldap-blfs-paths.patch" "openldap-symbol-versions.patch")
 export PATCHES_LIST_32=("openldap-blfs-paths.patch" "openldap-symbol-versions.patch")
@@ -50,8 +51,6 @@ make_install_post() {
   install -dm755 ${DEST}/etc/default ${DEST}/etc/openldap/slapd.d ${DEST}/etc/systemd/system/multi-user.target.wants
   install -dm755 ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d ${DEST}/var/lib/openldap
 
-  touch ${DEST}/etc/openldap/slapd.d/.keepdir ${DEST}/var/lib/openldap/.keepdir
-
 cat > ${DEST}/etc/default/slapd << "EOF"
 # Begin /etc/default/slapd
 
@@ -86,10 +85,6 @@ WantedBy=multi-user.target
 EOF
 
   ln -sf /lib/systemd/system/slapd.service ${DEST}/etc/systemd/system/multi-user.target.wants/slapd.service
-}
-
-post_install_config() {
-  find ${DEST} -type f -name .keepdir -delete
 }
 
 generate_install_override() {

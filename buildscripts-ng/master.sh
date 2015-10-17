@@ -219,7 +219,10 @@ post_install_clean() {
     rm -rf ${DEST}/usr/doc*
   fi
 
-  find ${DEST} -type d -empty -delete
+  if [ -z ${KEEP_EMPTY_DIRS} ]
+  then
+    find ${DEST} -type d -empty -delete
+  fi
 
   if [ ! -z ${DEBUG_BUILD} ]
   then

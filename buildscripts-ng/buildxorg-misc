@@ -42,6 +42,7 @@ case $(basename $0) in
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://xorg.freedesktop.org/releases/individual/data/xserver/${PKGTAR}"
     export DEBUG_BUILD=1
+    export KEEP_EMPTY_DIRS=1
     export CONFIGURE_FLAGS=(--disable-install-setuid
                             --enable-dri2
                             --enable-dri3
@@ -59,12 +60,8 @@ case $(basename $0) in
     make_install_post() {
       rm -rf ${DEST}/var/log
       install -dm755 ${DEST}/etc/X11/xorg.conf.d
-      touch ${DEST}/etc/X11/xorg.conf.d/.keepdir
       mv ${DEST}/usr/lib/xorg/modules/extensions/libglx.so{,.xorg}
       ln -sf libglx.so.xorg ${DEST}/usr/lib/xorg/modules/extensions/libglx.so
-    }
-    post_install_config() {
-      rm -f ${DEST}/etc/X11/xorg.conf.d/.keepdir
     }
     unset NO_OPTIMIZATION NO_STRIP
   ;;

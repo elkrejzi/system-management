@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+export PKGNAME=bison
+export PKGVER=3.0.4
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://ftp.gnu.org/gnu/bison/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+. $(dirname $0)/master.sh

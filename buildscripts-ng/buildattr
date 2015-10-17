@@ -1,0 +1,24 @@
+#!/bin/bash -e
+
+export PKGNAME=attr
+export PKGVER=2.4.47
+export PKGTAR=${PKGNAME}-${PKGVER}.src.tar.gz
+export PKGURL="http://download.savannah.gnu.org/releases/attr/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export MAKE_FLAGS="OPTIMIZER="
+export MAKE_FLAGS_32="OPTIMIZER="
+export MAKE_INSTALL_FLAGS="install-dev install-lib DIST_ROOT=\${DEST}"
+export MAKE_INSTALL_FLAGS_32="install-dev install-lib DIST_ROOT=\${PWD}/dest"
+
+configure_pre() {
+  sed -i -e "/SUBDIRS/s|man2||" man/Makefile
+}
+
+make_install_post() {
+  install -dm755 ${DEST}/lib
+  mv ${DEST}/usr/lib/libattr.so.* ${DEST}/lib
+  ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libattr.so) ${DEST}/usr/lib/libattr.so
+}
+
+. $(dirname $0)/master.sh

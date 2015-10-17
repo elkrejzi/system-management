@@ -1,0 +1,185 @@
+#!/bin/bash -e
+
+export PKGNAME=systemd
+export PKGVER=227
+export MAKE_JOBS_FLAGS="-j4"
+export DEBUG_BUILD=1
+export KEEP_EMPTY_DIRS=1
+export MULTILIB_BUILD=1
+export PATCHES_LIST=("systemd-compat.patch")
+export PATCHES_LIST_32=("systemd-compat.patch")
+export USER_CFLAGS="-fno-lto"
+
+export CONFIGURE_FLAGS=(--disable-efi
+                        --disable-firstboot
+                        --disable-ldconfig
+                        --disable-machined
+                        --disable-static
+                        --disable-sysusers
+                        --enable-split-usr
+                        --with-pamlibdir=/lib/security
+                        --with-rootprefix=
+                        --with-rootlibdir=/lib
+                        --with-sysvinit-path=/etc/init.d
+                        --with-sysvrcnd-path=/etc
+                        --with-rc-local-script-path-stop=
+                        --with-rc-local-script-path-start=/etc/rc.local
+                        --with-dbuspolicydir=/etc/dbus-1/system.d
+                        --with-dbussessionservicedir=/usr/share/dbus-1/services
+                        --with-dbussystemservicedir=/usr/share/dbus-1/system-services
+                        cc_cv_CFLAGS__flto=no)
+
+export CONFIGURE_FLAGS_32=(--disable-efi
+                           --disable-firstboot
+                           --disable-gnutls
+                           --disable-kmod
+                           --disable-ldconfig
+                           --disable-libcryptsetup
+                           --disable-libcurl
+                           --disable-libidn
+                           --disable-libiptc
+                           --disable-machined
+                           --disable-microhttpd
+                           --disable-networkd
+                           --disable-pam
+                           --disable-qrencode
+                           --disable-sysusers
+                           --disable-xkbcommon
+                           --without-python
+                           cc_cv_CFLAGS__flto=no)
+
+post_install_config() {
+  rm -rf ${DEST}/etc/init.d ${DEST}/etc/rpm ${DEST}/usr/lib/rpm
+  rm -rf ${DEST}/etc/systemd/system/multi-user.target.wants/systemd-{networkd,resolved,timesyncd}.service
+  rm -rf ${DEST}/etc/systemd/system/{network-online,sockets,sysinit}.target.wants
+  rm -rf ${DEST}/lib/systemd/system/local-fs.target.wants/var-lib-machines.mount
+  rm -rf ${DEST}/lib/systemd/system/sysinit.target.wants/systemd-update-done.service
+
+  install -dm755 ${DEST}/etc/profile.d ${DEST}/lib32 ${DEST}/sbin
+
+  mv ${DEST}/usr/lib/libnss_*.so.* ${DEST}/lib
+  mv ${DEST}/usr/lib32/libnss_*.so.* ${DEST}/lib32
+
+cat > ${DEST}/etc/pam.d/systemd-user << "EOF"
+# Begin /etc/pam.d/systemd-user
+
+account  required pam_access.so
+account  include  system-account
+
+session  required pam_env.so
+session  required pam_limits.so
+session  include  system-session
+
+auth     required pam_deny.so
+password required pam_deny.so
+
+# End /etc/pam.d/systemd-user
+EOF
+
+cat > ${DEST}/etc/profile.d/locale.sh << "EOF"
+# Begin /etc/profile.d/locale.sh
+
+unset LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES \
+      LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT LC_IDENTIFICATION
+
+if [ -n "$XDG_CONFIG_HOME" ] && [ -r "$XDG_CONFIG_HOME/locale.conf" ]; then
+  . "$XDG_CONFIG_HOME/locale.conf"
+elif [ -n $HOME ] && [ -r $HOME/.config/locale.conf ]; then
+  . "$HOME/.config/locale.conf"
+elif [ -r /etc/locale.conf ]; then
+  . /etc/locale.conf
+fi
+
+export LANG="${LANG:-C}"
+[ -n "$LC_CTYPE" ]          && export LC_CTYPE
+[ -n "$LC_NUMERIC" ]        && export LC_NUMERIC
+[ -n "$LC_TIME" ]           && export LC_TIME
+[ -n "$LC_COLLATE" ]        && export LC_COLLATE
+[ -n "$LC_MONETARY" ]       && export LC_MONETARY
+[ -n "$LC_MESSAGES" ]       && export LC_MESSAGES
+[ -n "$LC_PAPER" ]          && export LC_PAPER
+[ -n "$LC_NAME" ]           && export LC_NAME
+[ -n "$LC_ADDRESS" ]        && export LC_ADDRESS
+[ -n "$LC_TELEPHONE" ]      && export LC_TELEPHONE
+[ -n "$LC_MEASUREMENT" ]    && export LC_MEASUREMENT
+[ -n "$LC_IDENTIFICATION" ] && export LC_IDENTIFICATION
+
+# End /etc/profile.d/locale.sh
+EOF
+
+cat > ${DEST}/etc/rc.local.default << "EOF"
+#!/bin/sh -e
+#
+# rc.local
+#
+# By default this script does nothing.
+
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+exit 0
+EOF
+
+  chmod 755 ${DEST}/etc/rc.local.default
+
+  sed -i "s@root lock@root root@g" ${DEST}/usr/lib/tmpfiles.d/legacy.conf
+  sed -i "s@lock 0755@lock 1777@g" ${DEST}/usr/lib/tmpfiles.d/legacy.conf
+
+  ln -sf /dev/null ${DEST}/etc/udev/rules.d/80-net-setup-link.rules
+
+  for file in halt poweroff reboot runlevel shutdown telinit
+  do
+    ln -sf ../bin/systemctl ${DEST}/sbin/${file}
+  done
+
+  ln -sf ../lib/systemd/systemd ${DEST}/sbin/init
+
+  for file in ${DEST}/etc/systemd/*.conf
+  do
+    mv ${file} ${file}.dist
+  done
+}
+
+generate_install_override() {
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in bin etc lib lib32 sbin usr var ; do cp -rf --remove-destination $dir / ; done
+
+journalctl --update-catalog
+systemd-hwdb update
+
+setfacl -nm g:adm:rx,d:g:adm:rx /var/log/journal/
+
+if [ -e /sys/fs/cgroup/systemd ]; then
+   systemctl --system daemon-reexec
+fi
+
+if [ ! -e /etc/rc.local ]; then
+   mv -f /etc/rc.local.default /etc/rc.local
+fi
+
+if [ ! -e /etc/machine-id ]; then
+   systemd-machine-id-setup
+fi
+
+for file in etc/systemd/*.conf.dist
+do
+  if [ ! -e /${file%.dist} ]
+  then
+    cp -f /${file} /${file%.dist}
+  fi
+  diff -Naur /${file} /${file%.dist} > /dev/null
+  if [ $? -gt 0 ]
+  then
+    echo "Files /${file} and /${file%.dist} differ."
+  fi
+done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+chmod 755 ${DEST}/INSTALL
+}
+
+. $(dirname $0)/master.sh

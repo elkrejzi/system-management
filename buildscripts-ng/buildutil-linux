@@ -1,0 +1,33 @@
+#!/bin/bash -e
+
+export PKGNAME=util-linux
+export PKGVER=2.27
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://www.kernel.org/pub/linux/utils/util-linux/v${PKGVER%.*}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export POSTINST_TRIGGER=("chmod 4755 /bin/mount /bin/umount"
+                         "chgrp tty /usr/bin/wall"
+                         "chmod 2755 /usr/bin/wall")
+
+export COMMON_CONFIGURE_FLAGS=(--enable-mesg
+                               --disable-nologin
+                               --disable-chfn-chsh
+                               --disable-su
+                               --disable-login
+                               --disable-kill
+                               --disable-static)
+
+configure_override() {
+  ./configure ${COMMON_CONFIGURE_FLAGS[@]} --with-systemdsystemunitdir=/lib/systemd/system
+}
+
+configure_override_32() {
+  ./configure --libdir=/usr/lib32 \
+              ${COMMON_CONFIGURE_FLAGS[@]} \
+              --disable-runuser \
+              --without-ncurses \
+              --without-python
+}
+
+. $(dirname $0)/master.sh

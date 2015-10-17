@@ -1,0 +1,27 @@
+#!/bin/bash -e
+
+export PKGNAME=octave
+export PKGVER=4.0.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://ftp.gnu.org/gnu/octave/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
+export PATCHES_LIST=("octave-qt5.patch")
+export CONFIGURE_FLAGS=(--with-umfpack="-lumfpack -lsuitesparseconfig"
+                        LEXLIB=/usr/lib/libfl.a)
+
+configure_pre() {
+  autoreconf -fi
+}
+
+make_install_post() {
+  sed -i "/^Exec/s:bin/octave:& --force-gui:g" ${DEST}/usr/share/applications/www.octave.org-octave.desktop
+  sed -i "/Terminal/d" ${DEST}/usr/share/applications/www.octave.org-octave.desktop
+
+  mv ${DEST}/usr/share/applications/www.octave.org-octave.desktop ${DEST}/usr/share/applications/octave.desktop
+
+  install -dm755 ${DEST}/etc/ld.so.conf.d
+  echo "/usr/lib/octave/${PKGVER}" > ${DEST}/etc/ld.so.conf.d/octave.conf
+}
+
+. $(dirname $0)/master.sh

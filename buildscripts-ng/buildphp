@@ -5,6 +5,7 @@ export PKGVER=5.6.14
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://www.php.net/distributions/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
 export PATCHES_LIST=("php-configure.patch" "phpdb6.patch")
 export MAKE_INSTALL_FLAGS="INSTALL_ROOT=\${DEST}"
 export POSTINST_TRIGGER=("if [ ! -e /etc/php/php.ini ]" "then" "  cp -r /etc/php/php.ini.dist /etc/php/php.ini" "fi")
@@ -96,7 +97,7 @@ export CONFIGURE_FLAGS=(--sysconfdir=/etc/php
 
 make_install_post() {
   rm -rf ${DEST}/etc/httpd ${DEST}/etc/php/php-fpm.conf.default ${DEST}/var
-  rm -rf ${DEST}/.{channels,depdb,depdblock,filemap,lock,registry}
+  rm -rf ${DEST}/{,usr/share/pear/}.{channels,depdb,depdblock,filemap,lock,registry}
 
   find ${DEST} -name "*.a" -delete
 
@@ -105,8 +106,6 @@ make_install_post() {
 
   install -dm755 ${DEST}/etc/httpd/extra ${DEST}/etc/php/fpm.d ${DEST}/etc/systemd/system/multi-user.target.wants
   install -dm755 ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d
-
-  touch ${DEST}/etc/php/fpm.d/.keepdir ${DEST}/usr/include/php/include/.keepdir
 
 cat > ${DEST}/etc/httpd/extra/php.conf << "EOF"
 LoadModule php5_module /usr/lib/httpd/modules/libphp5.so
@@ -145,10 +144,6 @@ d /run/php-fpm 755 root root
 EOF
 
   ln -sf /lib/systemd/system/php-fpm.service ${DEST}/etc/systemd/system/multi-user.target.wants/php-fpm.service
-}
-
-post_install_config() {
-  find ${DEST} -type f -name .keepdir -delete
 }
 
 . $(dirname $0)/master.sh
