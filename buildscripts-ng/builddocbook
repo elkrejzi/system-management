@@ -73,6 +73,8 @@ do
   install-catalog --add /etc/sgml/sgml-docbook-dtd-${BOOKVER}.cat /usr/share/sgml/docbook/sgml-dtd-${BOOKVER}/catalog
   install-catalog --add /etc/sgml/sgml-docbook-dtd-${BOOKVER}.cat /etc/sgml/sgml-docbook.cat
 done
+
+exit 0
 EOF
 
 chmod 755 ${DEST}/INSTALL

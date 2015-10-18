@@ -97,6 +97,8 @@ fi
 
 [ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+
+exit 0
 EOF
 
 chmod 755 ${DEST}/INSTALL

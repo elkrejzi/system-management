@@ -16,6 +16,8 @@ rm -rf /usr/share/info/dir
 
 [ -x /usr/bin/install-info ] && echo "Processing triggers for texinfo" && for file in /usr/share/info/* ; do /usr/bin/install-info $file /usr/share/info/dir ; done
 [ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+
+exit 0
 EOF
 
 chmod 755 ${DEST}/INSTALL

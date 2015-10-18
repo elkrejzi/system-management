@@ -182,6 +182,8 @@ echo -e "Replace en_US.UTF-8 with your desired locale.\n"
 
 [ -x /usr/bin/install-info ] && echo "Processing triggers for texinfo" && for file in usr/share/info/* ; do /usr/bin/install-info /$file /usr/share/info/dir ; done
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+
+exit 0
 EOF
 
 chmod 755 ${DEST}/INSTALL

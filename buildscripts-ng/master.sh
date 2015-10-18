@@ -1,5 +1,8 @@
 # Warning: Do not execute. Instead, include it from a package specific scriptlet
 
+# Auto install packages after installation. Useful for bootstrap
+# export PKG_AUTO_INSTALL=1
+
 # Default location where package sources are stored
 export SROOT=/media/ntfs/Other/Linux/sources
 
@@ -368,15 +371,17 @@ printf '[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/b
   fi
 
   local solib=0
-  for sofile in ${DEST}/usr/lib/*.so
-  do
-    if [ ${sofile} != "${DEST}/usr/lib/*.so" ]
-    then
-      solib=1
-      break
-    fi
-  done
-  unset sofile
+  local sonum=0
+
+  if [ -d ${DEST}/usr/lib ]
+  then
+    sonum=$(find ${DEST}/usr/lib -maxdepth 1 -name "*.so" | wc -l)
+  fi
+
+  if [ ${sonum} -gt "0" ]
+  then
+    solib=1
+  fi
 
   if  [ ${solib} == "1" ]
   then
@@ -390,6 +395,8 @@ printf '[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/b
 printf '[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig\n' >> ${DEST}/INSTALL
 
   fi
+
+  printf "\nexit 0\n" >> ${DEST}/INSTALL
 
   chmod 755 ${DEST}/INSTALL
 }

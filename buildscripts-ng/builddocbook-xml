@@ -126,6 +126,8 @@ xmlcatalog --noout --add "delegateURI" \
   "http://www.oasis-open.org/docbook/" \
   "file:///etc/xml/docbook-xml" \
   /etc/xml/catalog
+
+exit 0
 EOF
 
 chmod 755 ${DEST}/INSTALL
