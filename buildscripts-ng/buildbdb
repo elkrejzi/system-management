@@ -1,0 +1,18 @@
+#!/bin/bash -e
+
+export PKGNAME=db
+export PKGVER=6.1.26
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://download.oracle.com/berkeley-db/${PKGTAR}"
+export PKGBUILD=${PKGNAME}-${PKGVER}/build_unix
+export MAKE_JOBS_FLAGS="-j4"
+export PATH_TO_SOURCE="../dist"
+export CONFIGURE_FLAGS=(--enable-compat185
+                        --enable-cxx
+                        --enable-dbm
+                        --enable-stl
+                        --enable-sql
+                        --enable-tcl
+                        --with-tcl=/usr/lib)
+
+. $(dirname $0)/master.sh

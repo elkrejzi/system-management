@@ -1,0 +1,42 @@
+#!/bin/bash -e
+
+export TCLMAJOR=8.6
+export PKGNAME=tcl
+export PKGVER=${TCLMAJOR}.4
+export PKGTAR=${PKGNAME}${PKGVER}-src.tar.gz
+export PKGURL="https://downloads.sourceforge.net/tcl/${PKGTAR}"
+export PKGDIR=${PKGNAME}${PKGVER}
+export PKGBUILD=${PKGDIR}/unix
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_STATIC=1
+export CONFIGURE_FLAGS=(--enable-64bit --without-tzdata)
+export MAKE_INSTALL_FLAGS="install-private-headers"
+
+configure_pre() {
+  rm -rf ../pkgs/sqlite*
+}
+
+make_post() {
+  sed -e "s@^\(TCL_SRC_DIR='\).*@\1/usr/include'@" \
+      -e "/TCL_B/s@='\(-L\)\?.*unix@='\1/usr/lib@" \
+      -i tclConfig.sh
+}
+
+make_install_post() {
+  ln -sf tclsh${TCLMAJOR} ${DEST}/usr/bin/tclsh
+
+  chmod 644 ${DEST}/usr/lib/libtclstub${TCLMAJOR}.a
+
+  sed -e "s#${PWD%/unix}/unix/pkgs/tdbc1.0.3#/usr/lib/tdbc1.0.3#" \
+      -e "s#${PWD%/unix}/pkgs/tdbc1.0.3/generic#/usr/include#" \
+      -e "s#${PWD%/unix}/pkgs/tdbc1.0.3/library#/usr/lib/tcl${TCLMAJOR}#" \
+      -e "s#${PWD%/unix}/pkgs/tdbc1.0.3#/usr/include#" \
+      -i "${DEST}/usr/lib/tdbc1.0.3/tdbcConfig.sh"
+
+  sed -e "s#${PWD%/unix}/unix/pkgs/itcl4.0.3#/usr/lib/itcl4.0.3#" \
+      -e "s#${PWD%/unix}/pkgs/itcl4.0.3/generic#/usr/include#" \
+      -e "s#${PWD%/unix}/pkgs/itcl4.0.3#/usr/include#" \
+      -i "${DEST}/usr/lib/itcl4.0.3/itclConfig.sh"
+}
+
+. $(dirname $0)/master.sh

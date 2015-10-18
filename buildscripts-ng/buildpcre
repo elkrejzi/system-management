@@ -1,0 +1,31 @@
+#!/bin/bash -e
+
+export PKGNAME=pcre
+export PKGVER=8.37
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://downloads.sourceforge.net/pcre/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export PATCHES_LIST=("pcre-fixes.patch")
+export PATCHES_LIST_32=("pcre-fixes.patch")
+
+export CONFIGURE_FLAGS_SHARED=(--enable-unicode-properties
+                               --enable-pcre16
+                               --enable-pcre32
+                               --enable-jit)
+
+export CONFIGURE_FLAGS=("${CONFIGURE_FLAGS_SHARED[@]}"
+                        --enable-pcregrep-libz
+                        --enable-pcregrep-libbz2
+                        --enable-pcretest-libreadline)
+
+export CONFIGURE_FLAGS_32=("${CONFIGURE_FLAGS_SHARED[@]}")
+
+make_install_post() {
+  install -dm755 ${DEST}/lib
+
+  mv ${DEST}/usr/lib/libpcre.so.* ${DEST}/lib
+  ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libpcre.so) ${DEST}/usr/lib/libpcre.so
+}
+
+. $(dirname $0)/master.sh
