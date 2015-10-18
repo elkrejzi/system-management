@@ -64,8 +64,6 @@ xmlcatalog --noout --add "rewriteURI" \\
   "http://docbook.sourceforge.net/release/xsl/current" \\
   "/usr/share/xml/docbook/xsl-stylesheets-${PKGVER}" \\
   /etc/xml/catalog
-
-exit 0
 EOF
 
 chmod 755 ${DEST}/INSTALL

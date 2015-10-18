@@ -51,15 +51,15 @@ make_install_override() {
 
     xmlcatalog --noout --add "public" \
       "-//OASIS//DTD DocBook XML V${BOOKVER}//EN" \
-      "http://www.oasis-open.org/docbook/xml-dtd-${BOOKVER}/docbookx.dtd" \
+      "http://www.oasis-open.org/docbook/xml/${BOOKVER}/docbookx.dtd" \
       "${DEST}/etc/xml/docbook-xml"
     xmlcatalog --noout --add "public" \
       "-//OASIS//DTD DocBook XML CALS Table Model V${BOOKVER}//EN" \
-      "http://www.oasis-open.org/docbook/xml-dtd-${BOOKVER}/calstblx.dtd" \
+      "http://www.oasis-open.org/docbook/xml/${BOOKVER}/calstblx.dtd" \
       "${DEST}/etc/xml/docbook-xml"
     xmlcatalog --noout --add "public" \
       "-//OASIS//DTD XML Exchange Table Model 19990315//EN" \
-      "http://www.oasis-open.org/docbook/xml-dtd-${BOOKVER}/soextblx.dtd" \
+      "http://www.oasis-open.org/docbook/xml/${BOOKVER}/soextblx.dtd" \
       "${DEST}/etc/xml/docbook-xml"
     xmlcatalog --noout --add "public" \
       "-//OASIS//ELEMENTS DocBook XML Information Pool V${BOOKVER}//EN" \
@@ -67,15 +67,15 @@ make_install_override() {
       "${DEST}/etc/xml/docbook-xml"
     xmlcatalog --noout --add "public" \
       "-//OASIS//ELEMENTS DocBook XML Document Hierarchy V${BOOKVER}//EN" \
-      "http://www.oasis-open.org/docbook/xml-dtd-${BOOKVER}/dbhierx.mod" \
+      "http://www.oasis-open.org/docbook/xml/${BOOKVER}/dbhierx.mod" \
       "${DEST}/etc/xml/docbook-xml"
     xmlcatalog --noout --add "public" \
       "-//OASIS//ENTITIES DocBook XML Additional General Entities V${BOOKVER}//EN" \
-      "http://www.oasis-open.org/docbook/xml-dtd-${BOOKVER}/dbgenent.mod" \
+      "http://www.oasis-open.org/docbook/xml/${BOOKVER}/dbgenent.mod" \
       "${DEST}/etc/xml/docbook-xml"
     xmlcatalog --noout --add "public" \
       "-//OASIS//ENTITIES DocBook XML Notations V${BOOKVER}//EN" \
-      "http://www.oasis-open.org/docbook/xml-dtd-${BOOKVER}/dbnotnx.mod" \
+      "http://www.oasis-open.org/docbook/xml/${BOOKVER}/dbnotnx.mod" \
       "${DEST}/etc/xml/docbook-xml"
     xmlcatalog --noout --add "public" \
       "-//OASIS//ENTITIES DocBook XML Character Entities V${BOOKVER}//EN" \
@@ -94,7 +94,7 @@ make_install_override() {
     then
       xmlcatalog --noout --add "public" \
         "-//OASIS//ELEMENTS DocBook XML HTML Tables V${BOOKVER}//EN" \
-        "http://www.oasis-open.org/docbook/xml-dtd-${BOOKVER}/htmltblx.mod" \
+        "http://www.oasis-open.org/docbook/xml/${BOOKVER}/htmltblx.mod" \
         "${DEST}/etc/xml/docbook-xml"
     fi
   done
@@ -126,8 +126,6 @@ xmlcatalog --noout --add "delegateURI" \
   "http://www.oasis-open.org/docbook/" \
   "file:///etc/xml/docbook-xml" \
   /etc/xml/catalog
-
-exit 0
 EOF
 
 chmod 755 ${DEST}/INSTALL

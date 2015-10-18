@@ -396,7 +396,10 @@ printf '[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/l
 
   fi
 
-  printf "\nexit 0\n" >> ${DEST}/INSTALL
+  if [ ! -z ${PKG_AUTO_INSTALL} ]
+  then
+    printf "\nexit 0\n" >> ${DEST}/INSTALL
+  fi
 
   chmod 755 ${DEST}/INSTALL
 }

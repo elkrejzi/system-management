@@ -118,11 +118,9 @@ chown root:ldap /etc/openldap/slapd.conf /etc/openldap/slapd.ldif
 
 [ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q /usr/share/man
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
-
-exit 0
 EOF
 
-  chmod 755 ${DEST}/INSTALL
+chmod 755 ${DEST}/INSTALL
 }
 
 . $(dirname $0)/master.sh

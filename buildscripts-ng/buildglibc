@@ -8,6 +8,7 @@ export PKGDIR=src
 export PKGBUILD=build
 export MAKE_JOBS_FLAGS="-j4"
 export DEBUG_BUILD=1
+export KEEP_EMPTY_DIRS=1
 export MULTILIB_BUILD=1
 export NO_OPTIMIZATION=1
 
@@ -182,8 +183,6 @@ echo -e "Replace en_US.UTF-8 with your desired locale.\n"
 
 [ -x /usr/bin/install-info ] && echo "Processing triggers for texinfo" && for file in usr/share/info/* ; do /usr/bin/install-info /$file /usr/share/info/dir ; done
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
-
-exit 0
 EOF
 
 chmod 755 ${DEST}/INSTALL

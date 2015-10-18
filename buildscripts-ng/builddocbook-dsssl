@@ -48,9 +48,15 @@ install-catalog --add /etc/sgml/dsssl-stylesheets.cat /usr/share/sgml/docbook/ds
 install-catalog --add /etc/sgml/sgml-docbook.cat /etc/sgml/dsssl-stylesheets.cat
 
 [ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+if [ ! -z ${PKG_AUTO_INSTALL} ]
+then
+cat >> ${DEST}/INSTALL << EOF
 
 exit 0
 EOF
+fi
 
 chmod 755 ${DEST}/INSTALL
 }
