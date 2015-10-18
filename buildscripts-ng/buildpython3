@@ -1,0 +1,32 @@
+#!/bin/bash -e
+
+export MAJORVER=3.5
+
+export PKGNAME=Python
+export PKGVER=${MAJORVER}.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://www.python.org/ftp/python/${PKGVER}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_STATIC=1
+export PATCHES_LIST=("python3-bdb.patch")
+export CONFIGURE_FLAGS=(--enable-shared
+                        --with-system-expat
+                        --with-system-ffi
+                        --without-ensurepip
+                        --with-dbmliborder=bdb:gdbm:ndbm)
+
+configure_pre() {
+  sed -i -e "s|^#.* /usr/local/bin/python|#!/usr/bin/python3|" Lib/cgi.py
+
+  rm -r Modules/expat Modules/zlib Modules/_ctypes/{darwin,libffi}*
+}
+
+make_install_post() {
+  sed -i "s#$PWD:##" ${DEST}/usr/lib/python${MAJORVER}/config-${MAJORVER}m/Makefile ${DEST}/usr/lib/python${MAJORVER}/_sysconfigdata.py
+  sed -i "s#$PWD##" ${DEST}/usr/lib/python${MAJORVER}/config-${MAJORVER}m/Makefile ${DEST}/usr/lib/python${MAJORVER}/_sysconfigdata.py
+
+  rm -rf ${DEST}/usr/lib/python${MAJORVER}/{distutils/tests,unittest/test,lib2to3/tests,idlelib/idle_test}
+  rm -rf ${DEST}/usr/lib/python${MAJORVER}/{ctypes/test,tkinter/test,test,sqlite3/test}
+}
+
+. $(dirname $0)/master.sh

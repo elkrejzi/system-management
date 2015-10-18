@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=automake
+export PKGVER=1.15
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://ftp.gnu.org/gnu/automake/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_pre() {
+  sed -i 's:/\\\${:/\\\$\\{:' bin/automake.in
+}
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,73 @@
+#!/bin/bash -e
+
+export MAJOR_VER=5.22
+export MINOR_VER=0
+
+export PKGNAME=perl
+export PKGVER=${MAJOR_VER}.${MINOR_VER}
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="http://www.cpan.org/src/5.0/${PKGVER}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
+export MAKE_FLAGS="all"
+
+configure_override() {
+  export BUILD_ZLIB=False
+  export ZLIB_INCLUDE=/usr/include
+  export ZLIB_LIB=/usr/lib
+
+  export BUILD_BZIP2=0
+  export BZIP2_INCLUDE=/usr/include
+  export BZIP2_LIB=/usr/lib
+
+  sh Configure -Dprefix=/usr   \
+               -Dusethreads    \
+               -Duselargefiles \
+               -Dprivlib=/usr/share/perl/${MAJOR_VER} \
+               -Darchlib=/usr/lib/perl/${MAJOR_VER}   \
+               -Dvendorprefix=/usr          \
+               -Dvendorlib=/usr/share/perl5 \
+               -Dvendorarch=/usr/lib/perl5  \
+               -Dsiteprefix=/usr/local      \
+               -Dsitelib=/usr/local/share/perl/${PKGVER} \
+               -Dsitearch=/usr/local/lib/perl/${PKGVER}  \
+               -Dman1dir=/usr/share/man/man1  \
+               -Dman3dir=/usr/share/man/man3  \
+               -Dpager=/usr/bin/pager         \
+               -Duseshrplib                   \
+               -Dlibperl=libperl.so.${PKGVER} \
+               -des -Uafs -Ud_csh -Ud_ualarm  \
+               -Uusesfio -Uusenm -Ui_libutil  \
+               -Dcccdlflags='-fPIC'   \
+               -Doptimize="${CFLAGS}"
+
+  make libperl.so.${PKGVER} SHRPLDFLAGS='$(LDDLFLAGS) -Wl,-soname,libperl.so.${MAJOR_VER}'
+
+  ln -sf libperl.so.${PKGVER} libperl.so.${MAJOR_VER}
+  ln -sf libperl.so.${MAJOR_VER} libperl.so
+}
+
+post_install_config() {
+  rm -f ${DEST}/usr/bin/perl${PKGVER}
+  rm -f ${DEST}/usr/lib/perl/${MAJOR_VER}/.packlist
+  rm -f ${DEST}/usr/lib/perl/${MAJOR_VER}/CORE/libperl.so
+  rm -f ${DEST}/usr/lib/perl/${MAJOR_VER}/CORE/libperl.so.${MAJOR_VER}
+
+  mv ${DEST}/usr/lib/perl/${MAJOR_VER}/CORE/libperl.so.${PKGVER} ${DEST}/usr/lib
+  ln -sf libperl.so.${PKGVER} ${DEST}/usr/lib/libperl.so.${MAJOR_VER}
+  ln -sf libperl.so.${MAJOR_VER} ${DEST}/usr/lib/libperl.so
+
+  ln -sf perl ${DEST}/usr/bin/perl${PKGVER}
+
+  sed -e '/(makepl_arg =>/   s/""/"INSTALLDIRS=vendor"/' \
+      -e '/(mbuildpl_arg =>/ s/""/"installdirs=vendor"/' \
+      -i ${DEST}/usr/share/perl/${MAJOR_VER}/CPAN/FirstTime.pm
+
+  mv ${DEST}/usr/lib/perl/${MAJOR_VER} ${DEST}/usr/lib/perl/${PKGVER}
+  mv ${DEST}/usr/share/perl/${MAJOR_VER} ${DEST}/usr/share/perl/${PKGVER}
+
+  ln -sf ${PKGVER} ${DEST}/usr/lib/perl/${MAJOR_VER}
+  ln -sf ${PKGVER} ${DEST}/usr/share/perl/${MAJOR_VER}
+}
+
+. $(dirname $0)/master.sh

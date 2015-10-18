@@ -1,0 +1,18 @@
+#!/bin/bash -e
+
+export PKGNAME=findutils
+export PKGVER=4.4.2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://ftp.gnu.org/gnu/findutils/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
+export CONFIGURE_FLAGS=(--localstatedir=/var/lib/locate)
+
+make_install_post() {
+  install -dm755 ${DEST}/bin
+
+  mv ${DEST}/usr/bin/find ${DEST}/bin
+  sed -i 's|find:=${BINDIR}|find:=/bin|' ${DEST}/usr/bin/updatedb
+}
+
+. $(dirname $0)/master.sh

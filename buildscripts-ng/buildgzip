@@ -1,0 +1,17 @@
+#!/bin/bash -e
+
+export PKGNAME=gzip
+export PKGVER=1.6
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://ftp.gnu.org/gnu/gzip/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--bindir=/bin)
+
+make_install_post() {
+  install -dm755 ${DEST}/usr/bin
+
+  mv ${DEST}/bin/{gzexe,uncompress,zcmp,zdiff,zegrep} ${DEST}/usr/bin
+  mv ${DEST}/bin/{zfgrep,zforce,zgrep,zless,zmore,znew} ${DEST}/usr/bin
+}
+
+. $(dirname $0)/master.sh

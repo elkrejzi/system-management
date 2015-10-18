@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+export PKGNAME=autoconf
+export PKGVER=2.69
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://ftp.gnu.org/gnu/autoconf/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+. $(dirname $0)/master.sh

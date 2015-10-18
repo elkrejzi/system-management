@@ -1,0 +1,32 @@
+#!/bin/bash -e
+
+export MAJORVER=2.7
+
+export PKGNAME=Python
+export PKGVER=${MAJORVER}.10
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://www.python.org/ftp/python/${PKGVER}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_STATIC=1
+export PATCHES_LIST=("python2-bdb.patch")
+export CONFIGURE_FLAGS=(--enable-shared
+                        --with-system-expat
+                        --with-system-ffi
+                        --enable-unicode=ucs4
+                        --with-dbmliborder=bdb:gdbm:ndbm)
+
+configure_pre() {
+  rm -r Modules/expat Modules/zlib Modules/_ctypes/{darwin,libffi}*
+}
+
+make_install_post() {
+  sed -i "s#$PWD:##" ${DEST}/usr/lib/python${MAJORVER}/config/Makefile ${DEST}/usr/lib/python${MAJORVER}/_sysconfigdata.py
+  sed -i "s#$PWD##" ${DEST}/usr/lib/python${MAJORVER}/config/Makefile ${DEST}/usr/lib/python${MAJORVER}/_sysconfigdata.py
+
+  mv ${DEST}/usr/bin/2to3{,-${MAJORVER}}
+
+  rm -rf ${DEST}/usr/lib/python${MAJORVER}/{distutils/tests,lib-tk/test,sqlite3/test,json/tests,test}
+  rm -rf ${DEST}/usr/lib/python${MAJORVER}/{ctypes/test,lib2to3/tests,email/test,unittest/test,bsddb/test}
+}
+
+. $(dirname $0)/master.sh

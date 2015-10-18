@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+export PKGNAME=libffi
+export PKGVER=3.2.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="ftp://sourceware.org/pub/libffi/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export PATCHES_LIST=("libffi.patch")
+export PATCHES_LIST_32=("libffi.patch")
+export CONFIGURE_FLAGS=(--enable-pax_emutramp)
+export CONFIGURE_FLAGS_32=(--enable-pax_emutramp)
+
+. $(dirname $0)/master.sh

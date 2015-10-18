@@ -1,0 +1,44 @@
+#!/bin/bash -e
+
+export PKGNAME=linux-api-headers
+export PKGVER=4.2
+export PATCHVER=4.3-rc5
+export COMMON_URL="https://cdn.kernel.org/pub/linux/kernel/v4.x"
+export PKGTAR=linux-${PKGVER}.tar.xz
+export PKGURL="${COMMON_URL}/${PKGTAR}"
+export PKGDIR=linux-${PKGVER}
+export KEEP_EMPTY_DIRS=1
+export NO_OPTIMIZATION=1
+export NO_STRIP=1
+
+post_extract_action() {
+  if [ ! -z ${PATCHVER} ]
+  then
+    if [ ! -e ${SROOT}/patch-${PATCHVER}.xz ]
+    then
+      wget -c ${COMMON_URL}/testing/patch-${PATCHVER}.xz -O ${SROOT}/patch-${PATCHVER}.xz || exit ${PIPESTATUS}
+    fi
+    pushd ${PKGDIR}
+      xz -cd ${SROOT}/patch-${PATCHVER}.xz | patch -Np1 -i -
+    popd
+    export DEST=/binary/${PKGNAME}-${PATCHVER}
+  fi
+}
+
+configure_override() {
+  true
+}
+
+make_override() {
+  true
+}
+
+make_install_override() {
+  make headers_install INSTALL_HDR_PATH=${DEST}/usr
+
+  find ${DEST}/usr/include \( -name .install -o -name ..install.cmd \) -delete
+
+  rm -rf ${DEST}/usr/include/drm
+}
+
+. $(dirname $0)/master.sh

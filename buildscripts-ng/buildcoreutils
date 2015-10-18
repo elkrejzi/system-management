@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+export PKGNAME=coreutils
+export PKGVER=8.24
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://ftp.gnu.org/gnu/coreutils/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--with-openssl --enable-no-install-program=kill,uptime)
+
+configure_pre() {
+  export FORCE_UNSAFE_CONFIGURE=1
+}
+
+make_install_post() {
+  install -dm755 ${DEST}/bin ${DEST}/usr/sbin
+
+  mv ${DEST}/usr/bin/{cat,chgrp,chmod,chown,cp,date,dd,df,echo} ${DEST}/bin
+  mv ${DEST}/usr/bin/{false,ln,ls,mkdir,mknod,mv,pwd,rm} ${DEST}/bin
+  mv ${DEST}/usr/bin/{rmdir,stty,sync,true,uname} ${DEST}/bin
+  mv ${DEST}/usr/bin/{head,sleep,nice,test,[} ${DEST}/bin
+
+  mv ${DEST}/usr/bin/chroot ${DEST}/usr/sbin
+}
+
+. $(dirname $0)/master.sh

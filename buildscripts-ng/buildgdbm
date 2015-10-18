@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+export PKGNAME=gdbm
+export PKGVER=1.11
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://ftp.gnu.org/gnu/gdbm/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS=(--enable-libgdbm-compat)
+export CONFIGURE_FLAGS_32=(--enable-libgdbm-compat)
+
+. $(dirname $0)/master.sh
