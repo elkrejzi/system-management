@@ -15,7 +15,7 @@ export CONFIGURE_FLAGS=(--with-system-icu
                         --without-fbsample-db
                         --without-fbintl
                         --without-fbmisc
-                        --without-fbhe
+                        --without-fbhelp
                         --without-fbsecure-db
                         --without-fblog
                         --without-fbglock
