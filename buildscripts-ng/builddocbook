@@ -1,0 +1,81 @@
+#!/bin/bash -e
+
+export PKGNAME=docbook
+export PKGVER=4.5
+export PKGDIR=docbook
+export NO_STRIP=1
+
+prepare_src_override() {
+  for BOOKVER in 3.0 3.1 4.1 4.2 4.3 4.4 4.5
+  do
+    if [ ${BOOKVER} == "3.0" ] ||
+       [ ${BOOKVER} == "3.1" ] ||
+       [ ${BOOKVER} == "4.1" ]
+    then
+      local ZIP=docbk${BOOKVER/./}.zip
+    else
+      local ZIP=docbook-${BOOKVER}.zip
+    fi
+
+    if [ ! -e ${SROOT}/${ZIP} ]
+    then
+      wget -c http://www.docbook.org/sgml/${BOOKVER}/${ZIP} -O ${SROOT}/${ZIP} || exit ${PIPESTATUS}
+    fi
+  done
+
+  install -dm755 docbook
+}
+
+configure_override() {
+  true
+}
+
+make_override() {
+  true
+}
+
+make_install_override() {
+  for BOOKVER in 3 4
+  do
+    for MINOR in 0 1
+    do
+      if [ "${BOOKVER}${MINOR}" != "40" ]
+      then
+        bsdtar xf ${SROOT}/docbk${BOOKVER}${MINOR}.zip
+        install -dm755 ${DEST}/usr/share/sgml/docbook/sgml-dtd-${BOOKVER}.${MINOR}
+        install docbook.cat ${DEST}/usr/share/sgml/docbook/sgml-dtd-${BOOKVER}.${MINOR}/catalog
+        ln -sf catalog ${DEST}/usr/share/sgml/docbook/sgml-dtd-${BOOKVER}.${MINOR}/docbook.cat
+        cp -rf *.dtd *.mod *.dcl ${DEST}/usr/share/sgml/docbook/sgml-dtd-${BOOKVER}.${MINOR}
+        rm -rf *
+      fi
+    done
+  done
+
+  for BOOKVER in 2 3 4 5
+  do
+    bsdtar xf ${SROOT}/docbook-4.${BOOKVER}.zip
+    install -dm755 ${DEST}/usr/share/sgml/docbook/sgml-dtd-4.${BOOKVER}
+    install docbook.cat ${DEST}/usr/share/sgml/docbook/sgml-dtd-4.${BOOKVER}/catalog
+    ln -sf catalog ${DEST}/usr/share/sgml/docbook/sgml-dtd-4.${BOOKVER}/docbook.cat
+    cp -rf *.dtd *.mod *.dcl ${DEST}/usr/share/sgml/docbook/sgml-dtd-4.${BOOKVER}
+    rm -rf *
+  done
+}
+
+generate_install_override() {
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+for BOOKVER in 3.0 3.1 4.0 4.1 4.2 4.3 4.4 4.5
+do
+  install-catalog --add /etc/sgml/sgml-docbook-dtd-${BOOKVER}.cat /usr/share/sgml/docbook/sgml-dtd-${BOOKVER}/catalog
+  install-catalog --add /etc/sgml/sgml-docbook-dtd-${BOOKVER}.cat /etc/sgml/sgml-docbook.cat
+done
+EOF
+
+chmod 755 ${DEST}/INSTALL
+}
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+export PKGNAME=sgml-common
+export PKGVER=0.6.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tgz
+export PKGURL="ftp://sources.redhat.com/pub/docbook-tools/new-trials/SOURCES/${PKGTAR}"
+export PATCHES_LIST=("sgml-common.patch")
+export POSTINST_TRIGGER=("install-catalog --add /etc/sgml/sgml-ent.cat /usr/share/sgml/sgml-iso-entities-8879.1986/catalog"
+                         "install-catalog --add /etc/sgml/sgml-docbook.cat /etc/sgml/sgml-ent.cat")
+
+configure_pre() {
+  autoreconf -fi
+}
+
+. $(dirname $0)/master.sh

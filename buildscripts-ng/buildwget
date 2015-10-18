@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+export PKGNAME=wget
+export PKGVER=1.16.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://ftp.gnu.org/gnu/wget/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--with-ssl=openssl)
+
+. $(dirname $0)/master.sh

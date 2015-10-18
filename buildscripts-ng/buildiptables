@@ -1,0 +1,23 @@
+#!/bin/bash -e
+
+export PKGNAME=iptables
+export PKGVER=1.4.21
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="http://www.netfilter.org/projects/iptables/files/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_STATIC=1
+export CONFIGURE_FLAGS=(--sbindir=/sbin
+                        --with-xtlibdir=/lib/xtables
+                        --enable-libipq)
+
+make_install_post() {
+  ln -sf ../../sbin/xtables-multi ${DEST}/usr/bin/iptables-xml
+
+  for file in ip4tc ip6tc ipq iptc xtables
+  do
+    mv ${DEST}/usr/lib/lib${file}.so.* ${DEST}/lib
+    ln -sf ../../lib/$(readlink ${DEST}/usr/lib/lib${file}.so) ${DEST}/usr/lib/lib${file}.so
+  done
+}
+
+. $(dirname $0)/master.sh

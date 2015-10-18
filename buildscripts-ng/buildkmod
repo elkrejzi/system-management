@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+export PKGNAME=kmod
+export PKGVER=21
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://www.kernel.org/pub/linux/utils/kernel/kmod/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--bindir=/bin
+                        --with-rootlibdir=/lib
+                        --with-xz
+                        --with-zlib)
+
+make_install_post() {
+  install -dm755 ${DEST}/sbin
+
+  for file in depmod insmod lsmod modinfo modprobe rmmod; do
+    ln -sf ../bin/kmod ${DEST}/sbin/${file}
+  done
+
+  ln -sf kmod ${DEST}/bin/lsmod
+
+  sed -i "s:.so modules.dep.5:.so man5/modules.dep.5:" ${DEST}/usr/share/man/man5/modules.dep.bin.5
+}
+
+. $(dirname $0)/master.sh

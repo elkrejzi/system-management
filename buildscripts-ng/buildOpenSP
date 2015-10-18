@@ -1,0 +1,28 @@
+#!/bin/bash -e
+
+export PKGNAME=OpenSP
+export PKGVER=1.5.2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://downloads.sourceforge.net/openjade/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export PATCHES_LIST=("OpenSP.patch")
+
+export CONFIGURE_FLAGS=(--disable-doc-build
+                        --enable-http
+                        --enable-default-catalog=/etc/sgml/catalog
+                        --enable-default-search-path=/usr/share/sgml)
+
+export MAKE_FLAGS="pkgdatadir=/usr/share/sgml/OpenSP"
+export MAKE_INSTALL_FLAGS="pkgdatadir=/usr/share/sgml/OpenSP"
+
+make_install_post() {
+  for file in nsgmls sgmlnorm spam spcat spent sx
+  do
+    ln -sf o${file} ${DEST}/usr/bin/$file
+  done
+
+  ln -sf osx ${DEST}/usr/bin/sgml2xml
+  ln -sf libosp.so ${DEST}/usr/lib/libsp.so
+}
+
+. $(dirname $0)/master.sh

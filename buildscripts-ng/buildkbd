@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+export PKGNAME=kbd
+export PKGVER=2.0.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://www.kernel.org/pub/linux/utils/kbd/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--enable-libkeymap --enable-optional-progs)
+
+configure_pre() {
+  rm -rf docs/reference/libkeymap/Doxyfile
+}
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,134 @@
+#!/bin/bash -e
+
+export PKGNAME=docbook-xml
+export PKGVER=4.5
+export PKGDIR=docbook-xml
+export NO_STRIP=1
+
+prepare_src_override() {
+  for BOOKVER in 4.1.2 4.2 4.3 4.4 4.5
+  do
+    if [ ${BOOKVER} == "4.1.2" ]
+    then
+      local ZIP=docbkx412.zip
+    else
+      local ZIP=docbook-xml-${BOOKVER}.zip
+    fi
+
+    if [ ! -e ${SROOT}/${ZIP} ]
+    then
+      wget -c http://www.docbook.org/xml/${BOOKVER}/${ZIP} -O ${SROOT}/${ZIP} || exit ${PIPESTATUS}
+    fi
+  done
+
+  install -dm755 docbook-xml
+}
+
+configure_override() {
+  install -dm755 "${DEST}/etc/xml"
+}
+
+make_override() {
+  xmlcatalog --noout --create "${DEST}/etc/xml/docbook-xml"
+}
+
+make_install_override() {
+  for BOOKVER in 4.1.2 4.2 4.3 4.4 4.5
+  do
+    if [ ${BOOKVER} == "4.1.2" ]
+    then
+      export ZIP="docbkx412.zip"
+    else
+      export ZIP="docbook-xml-${BOOKVER}.zip"
+    fi
+
+    bsdtar xf ${SROOT}/${ZIP}
+
+    install -dm755 ${DEST}/usr/share/xml/docbook/xml-dtd-${BOOKVER}
+    cp -rf docbook.cat *.dtd ent *.mod ${DEST}/usr/share/xml/docbook/xml-dtd-${BOOKVER}
+
+    rm -rf *
+
+    xmlcatalog --noout --add "public" \
+      "-//OASIS//DTD DocBook XML V${BOOKVER}//EN" \
+      "http://www.oasis-open.org/docbook/xml-dtd-${BOOKVER}/docbookx.dtd" \
+      "${DEST}/etc/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+      "-//OASIS//DTD DocBook XML CALS Table Model V${BOOKVER}//EN" \
+      "http://www.oasis-open.org/docbook/xml-dtd-${BOOKVER}/calstblx.dtd" \
+      "${DEST}/etc/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+      "-//OASIS//DTD XML Exchange Table Model 19990315//EN" \
+      "http://www.oasis-open.org/docbook/xml-dtd-${BOOKVER}/soextblx.dtd" \
+      "${DEST}/etc/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+      "-//OASIS//ELEMENTS DocBook XML Information Pool V${BOOKVER}//EN" \
+      "file:///usr/share/xml/docbook/xml-dtd-${BOOKVER}/dbpoolx.mod" \
+      "${DEST}/etc/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+      "-//OASIS//ELEMENTS DocBook XML Document Hierarchy V${BOOKVER}//EN" \
+      "http://www.oasis-open.org/docbook/xml-dtd-${BOOKVER}/dbhierx.mod" \
+      "${DEST}/etc/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+      "-//OASIS//ENTITIES DocBook XML Additional General Entities V${BOOKVER}//EN" \
+      "http://www.oasis-open.org/docbook/xml-dtd-${BOOKVER}/dbgenent.mod" \
+      "${DEST}/etc/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+      "-//OASIS//ENTITIES DocBook XML Notations V${BOOKVER}//EN" \
+      "http://www.oasis-open.org/docbook/xml-dtd-${BOOKVER}/dbnotnx.mod" \
+      "${DEST}/etc/xml/docbook-xml"
+    xmlcatalog --noout --add "public" \
+      "-//OASIS//ENTITIES DocBook XML Character Entities V${BOOKVER}//EN" \
+      "file:///usr/share/xml/docbook/xml-dtd-${BOOKVER}/dbcentx.mod" \
+      "${DEST}/etc/xml/docbook-xml"
+    xmlcatalog --noout --add "rewriteSystem" \
+      "http://www.oasis-open.org/docbook/xml/${BOOKVER}" \
+      "file:///usr/share/xml/docbook/xml-dtd-${BOOKVER}" \
+      "${DEST}/etc/xml/docbook-xml"
+    xmlcatalog --noout --add "rewriteURI" \
+      "http://www.oasis-open.org/docbook/xml/${BOOKVER}" \
+      "file:///usr/share/xml/docbook/xml-dtd-${BOOKVER}" \
+      "${DEST}/etc/xml/docbook-xml"
+
+    if [ ${BOOKVER} == "4.3" ] || [ ${BOOKVER} == "4.4" ] || [ ${BOOKVER} == "4.5" ]
+    then
+      xmlcatalog --noout --add "public" \
+        "-//OASIS//ELEMENTS DocBook XML HTML Tables V${BOOKVER}//EN" \
+        "http://www.oasis-open.org/docbook/xml-dtd-${BOOKVER}/htmltblx.mod" \
+        "${DEST}/etc/xml/docbook-xml"
+    fi
+  done
+}
+
+generate_install_override() {
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+
+if [ ! -e /etc/xml/catalog ]; then
+  xmlcatalog --noout --create /etc/xml/catalog
+fi
+
+xmlcatalog --noout --add "delegatePublic" \
+  "-//OASIS//ENTITIES DocBook XML" \
+  "file:///etc/xml/docbook-xml" \
+  /etc/xml/catalog
+xmlcatalog --noout --add "delegatePublic" \
+  "-//OASIS//DTD DocBook XML" \
+  "file:///etc/xml/docbook-xml" \
+  /etc/xml/catalog
+xmlcatalog --noout --add "delegateSystem" \
+  "http://www.oasis-open.org/docbook/" \
+  "file:///etc/xml/docbook-xml" \
+  /etc/xml/catalog
+xmlcatalog --noout --add "delegateURI" \
+  "http://www.oasis-open.org/docbook/" \
+  "file:///etc/xml/docbook-xml" \
+  /etc/xml/catalog
+EOF
+
+chmod 755 ${DEST}/INSTALL
+}
+
+. $(dirname $0)/master.sh

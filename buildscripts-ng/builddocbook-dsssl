@@ -1,0 +1,56 @@
+#!/bin/bash -e
+
+export PKGNAME=docbook-dsssl
+export PKGVER=1.79
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://downloads.sourceforge.net/docbook/${PKGTAR}"
+export KEEP_EMPTY_DIRS=1
+export NO_STRIP=1
+
+configure_override() {
+  true
+}
+
+make_override() {
+  true
+}
+
+make_install_override() {
+  install -dm755 ${DEST}/usr/bin ${DEST}/usr/share/man/man1
+  install -dm755 ${DEST}/usr/share/sgml/docbook/dsssl-stylesheets-${PKGVER}
+
+  rm -rf dtds/*/ChangeLog
+  rm -rf frames/README
+  rm -rf images/callouts/ChangeLog
+
+  for dir in common dtds frames html images lib olink print
+  do
+    rm -rf ${dir}/ChangeLog
+    cp -rf ${dir} ${DEST}/usr/share/sgml/docbook/dsssl-stylesheets-${PKGVER}
+  done
+
+  install -m755 bin/collateindex.pl ${DEST}/usr/bin/collateindex.pl
+  install -m644 bin/collateindex.pl.1 ${DEST}/usr/share/man/man1/collateindex.pl.1
+  install -m644 catalog ${DEST}/usr/share/sgml/docbook/dsssl-stylesheets-${PKGVER}/catalog
+  install -m644 VERSION ${DEST}/usr/share/sgml/docbook/dsssl-stylesheets-${PKGVER}/VERSION
+}
+
+generate_install_override() {
+cat > ${DEST}/INSTALL << EOF
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+install-catalog --add /etc/sgml/dsssl-stylesheets.cat /usr/share/sgml/docbook/dsssl-stylesheets-${PKGVER}/catalog
+install-catalog --add /etc/sgml/dsssl-stylesheets.cat /usr/share/sgml/docbook/dsssl-stylesheets-${PKGVER}/common/catalog
+install-catalog --add /etc/sgml/dsssl-stylesheets.cat /usr/share/sgml/docbook/dsssl-stylesheets-${PKGVER}/html/catalog
+install-catalog --add /etc/sgml/dsssl-stylesheets.cat /usr/share/sgml/docbook/dsssl-stylesheets-${PKGVER}/print/catalog
+install-catalog --add /etc/sgml/sgml-docbook.cat /etc/sgml/dsssl-stylesheets.cat
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+chmod 755 ${DEST}/INSTALL
+}
+
+. $(dirname $0)/master.sh

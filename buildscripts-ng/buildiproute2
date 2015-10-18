@@ -1,0 +1,37 @@
+#!/bin/bash -e
+
+export PKGNAME=iproute2
+export PKGVER=4.2.0
+export PKGURL="https://www.kernel.org/pub/linux/utils/net/iproute2/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MAKE_FLAGS="CCOPTS=${CFLAGS}"
+
+configure_override() {
+  true
+}
+
+make_install_override() {
+  install -dm755 ${DEST}/bin ${DEST}/sbin ${DEST}/usr/bin ${DEST}/usr/lib/tc ${DEST}/usr/share
+
+  cp -rf etc ${DEST}/etc
+  cp -rf man ${DEST}/usr/share/man
+
+  find ${DEST}/usr/share/man -name Makefile -delete
+  find ${DEST}/usr/share/man -name *.in -delete
+
+  rm -rf ${DEST}/usr/share/man/*/.gitignore ${DEST}/usr/share/man/man8/arpd.8
+
+  install -m755 misc/ss ip/ip ${DEST}/bin
+  install -m755 ip/rtmon tc/tc misc/rtacct ${DEST}/sbin
+  install -m755 misc/lnstat misc/nstat ${DEST}/usr/bin
+  install -m755 ip/routef ip/routel ${DEST}/usr/bin
+  install -m755 tc/*.so ${DEST}/usr/lib/tc
+  install -m644 netem/*.dist ${DEST}/usr/lib/tc
+
+  ln -sf lnstat ${DEST}/usr/bin/rtstat
+  ln -sf lnstat ${DEST}/usr/bin/ctstat
+  ln -sf ../bin/ip ${DEST}/sbin/ip
+  ln -sf m_xt.so ${DEST}/usr/lib/tc/m_ipt.so
+}
+
+. $(dirname $0)/master.sh

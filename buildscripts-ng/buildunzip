@@ -1,0 +1,17 @@
+#!/bin/bash -e
+
+export PKGNAME=unzip
+export PKGVER=6.0
+export PKGTAR=unzip60.tar.gz
+export PKGDIR=unzip60
+export PKGURL="https://downloads.sourceforge.net/infozip/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export PATCHES_LIST=("unzip-fixes.patch")
+export MAKE_FLAGS="-f unix/Makefile linux_noasm"
+export MAKE_INSTALL_FLAGS="-f unix/Makefile prefix=\${DEST}/usr MANDIR=\${DEST}/usr/share/man/man1"
+
+configure_override() {
+  sed -i -e 's/CFLAGS="-O -Wall/& -DNO_LCHMOD ${CFLAGS}/' unix/Makefile
+}
+
+. $(dirname $0)/master.sh
