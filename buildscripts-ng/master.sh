@@ -215,7 +215,7 @@ post_install_clean() {
 
   if [ -z ${KEEP_DOC} ]
   then
-    rm -rf ${DEST}/usr/share/doc*
+    rm -rf ${DEST}/usr/share/doc
     rm -rf ${DEST}/usr/doc*
   fi
 

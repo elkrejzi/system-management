@@ -1,0 +1,18 @@
+#!/bin/bash -e
+
+export PKGNAME=docbook-utils
+export PKGVER=0.6.14
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="ftp://sources.redhat.com/pub/docbook-tools/new-trials/SOURCES/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export NO_STRIP=1
+export PATCHES_LIST=("docbook-utils.patch")
+
+make_install_post() {
+  for type in dvi html man pdf ps rtf tex texi txt
+  do
+    ln -sf docbook2${type} ${DEST}/usr/bin/db2${type}
+  done
+}
+
+. $(dirname $0)/master.sh

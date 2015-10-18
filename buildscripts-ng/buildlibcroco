@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+export PKGNAME=libcroco
+export PKGVER=0.6.8
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://ftp.gnome.org/pub/gnome/sources//libcroco/${PKGVER:0:3}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+
+. $(dirname $0)/master.sh
