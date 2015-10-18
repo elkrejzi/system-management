@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+export PKGNAME=libmicrohttpd
+export PKGVER=0.9.44
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://ftp.gnu.org/gnu/libmicrohttpd/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--disable-examples)
+
+. $(dirname $0)/master.sh

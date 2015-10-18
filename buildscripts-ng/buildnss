@@ -1,0 +1,60 @@
+#!/bin/bash -e
+
+export PKGNAME=nss
+export PKGVER=3.20
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGBUILD=${PKGNAME}-${PKGVER}/nss
+export PKGURL="https://ftp.mozilla.org/pub/security/nss/releases/NSS_${PKGVER/./_}_RTM/src/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export PATCHES_LIST=("nss-standalone.patch")
+export PATCHES_LIST_32=("nss-standalone.patch")
+
+configure_override() {
+  export XCFLAGS=${CFLAGS}
+}
+
+configure_override_32() {
+  export XCFLAGS=${CFLAGS}
+}
+
+make_override() {
+  if [ ${MULTILIB} == 0 ]
+  then
+    local OPT="USE_64=1"
+  fi
+
+  make nss_build_all BUILD_OPT=1       \
+    NSPR_INCLUDE_DIR=/usr/include/nspr \
+    USE_SYSTEM_ZLIB=1                  \
+    ZLIB_LIBS=-lz                      \
+    NSS_USE_SYSTEM_SQLITE=1 ${OPT}
+}
+
+make_install_override() {
+  if [ ${MULTILIB} == 0 ]
+  then
+    local LIB=lib
+    install -dm755 ${DEST}/usr/bin
+    install -dm755 ${DEST}/usr/include/nss
+
+    install -m755 ../dist/Linux*/bin/certutil ${DEST}/usr/bin
+    install -m755 ../dist/Linux*/bin/nss-config ${DEST}/usr/bin
+    install -m755 ../dist/Linux*/bin/pk12util ${DEST}/usr/bin
+
+    cp -RL ../dist/public/nss/* ${DEST}/usr/include/nss
+    cp -RL ../dist/private/nss/* ${DEST}/usr/include/nss
+  else
+    local LIB=lib32
+  fi
+
+  install -dm755 ${DEST}/usr/${LIB}/pkgconfig
+
+  install -m755 ../dist/Linux*/lib/*.so ${DEST}/usr/${LIB}
+  install -m644 ../dist/Linux*/lib/libcrmf.a ${DEST}/usr/${LIB}
+  install -m644 ../dist/Linux*/lib/*.chk ${DEST}/usr/${LIB}
+
+  sed "s@/lib@/${LIB}@g" ../dist/Linux*/lib/pkgconfig/nss.pc > ${DEST}/usr/${LIB}/pkgconfig/nss.pc
+}
+
+. $(dirname $0)/master.sh

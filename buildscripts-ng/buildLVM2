@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+export PKGNAME=LVM2
+export PKGVER=2.02.132
+export PKGTAR=${PKGNAME}.${PKGVER}.tgz
+export PKGDIR=${PKGNAME}.${PKGVER}
+export PKGURL="ftp://sources.redhat.com/pub/lvm2/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_override() {
+  ./configure --prefix=/usr       \
+              --exec-prefix=      \
+              --with-confdir=/etc \
+              --enable-applib     \
+              --enable-cmdlib     \
+              --enable-pkgconfig  \
+              --enable-udev_sync
+}
+
+. $(dirname $0)/master.sh

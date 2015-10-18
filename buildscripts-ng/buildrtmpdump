@@ -1,0 +1,34 @@
+#!/bin/bash -e
+
+export PKGNAME=rtmpdump
+export PKGVER=2.4+git79459a2
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export MAKE_INSTALL_FLAGS="prefix=/usr mandir=/usr/share/man"
+export MAKE_INSTALL_FLAGS_32="prefix=/usr libdir=/usr/lib32 mandir=/usr/share/man"
+
+export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done" "\n"
+                    "cp -rf --remove-destination usr/share/man/man3 /usr/share/man")
+
+configure_override() {
+  true
+}
+
+configure_override_32() {
+  true
+}
+
+make_override() {
+  if [ ${MULTILIB} == 0 ]
+  then
+    make OPT="${CFLAGS}" ${MAKE_JOBS_FLAGS}
+  else
+    make CC="${CC}" OPT="${CFLAGS}" ${MAKE_JOBS_FLAGS}
+  fi
+}
+
+post_install_config() {
+  find ${DEST} -name "*.a" -delete
+}
+
+. $(dirname $0)/master.sh

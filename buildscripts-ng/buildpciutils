@@ -1,0 +1,32 @@
+#!/bin/bash -e
+
+export PKGNAME=pciutils
+export PKGVER=3.4.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://www.kernel.org/pub/software/utils/pciutils/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_override() {
+  wget http://pci-ids.ucw.cz/v2.2/pci.ids -O pci.ids
+}
+
+make_override() {
+  make PREFIX=/usr              \
+       SHAREDIR=/usr/share/misc \
+       SHARED=yes               \
+       ZLIB=no                  \
+       OPT="${CFLAGS}" ${MAKE_JOBS_FLAGS}
+}
+
+make_install_override() {
+  make PREFIX=/usr              \
+       SHAREDIR=/usr/share/misc \
+       SHARED=yes               \
+       ZLIB=no                  \
+       OPT="${CFLAGS}" install install-lib DESTDIR=${DEST}
+
+  install -dm755 ${DEST}/usr/bin
+  mv ${DEST}/usr/sbin/lspci ${DEST}/usr/bin
+}
+
+. $(dirname $0)/master.sh

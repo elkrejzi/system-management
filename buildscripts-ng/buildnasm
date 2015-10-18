@@ -1,0 +1,11 @@
+#!/bin/bash -e
+
+export PKGNAME=nasm
+export PKGVER=2.11.08
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://www.nasm.us/pub/nasm/releasebuilds/${PKGVER}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_STATIC=1
+export MAKE_INSTALL_FLAGS="prefix=\${DEST}/usr mandir=\${DEST}/usr/share/man"
+
+. $(dirname $0)/master.sh

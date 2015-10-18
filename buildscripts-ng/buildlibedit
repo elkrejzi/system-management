@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+export PKGNAME=libedit
+export PKGVER=20150325-3.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://thrysoee.dk/editline/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+. $(dirname $0)/master.sh

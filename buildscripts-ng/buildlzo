@@ -1,0 +1,17 @@
+#!/bin/bash -e
+
+export PKGNAME=lzo
+export PKGVER=2.09
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://www.oberhumer.com/opensource/lzo/download/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--enable-shared)
+
+make_install_post() {
+  install -dm755 ${DEST}/lib
+
+  mv ${DEST}/usr/lib/liblzo2.so.* ${DEST}/lib
+  ln -sf ../../lib/$(readlink ${DEST}/usr/lib/liblzo2.so) ${DEST}/usr/lib/liblzo2.so
+}
+
+. $(dirname $0)/master.sh

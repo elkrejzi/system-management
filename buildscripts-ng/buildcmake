@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+export PKGNAME=cmake
+export PKGVER=3.3.2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://www.cmake.org/files/v${PKGVER:0:3}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+if [ -z $1 ]
+then
+  export CONFIGURE_FLAGS_EXTRA=(--qt-gui --qt-qmake=/usr/bin/qmake)
+fi
+
+configure_override() {
+  ./bootstrap --prefix=/usr             \
+              --parallel=4              \
+              --sphinx-man              \
+              --system-libs             \
+              --no-system-jsoncpp       \
+              --mandir=/share/man       \
+              --docdir=/share/doc/cmake \
+              "${CONFIGURE_FLAGS_EXTRA[@]}"
+}
+
+. $(dirname $0)/master.sh

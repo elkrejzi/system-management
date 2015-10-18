@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+export PKGNAME=nettle
+export PKGVER=3.1.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://ftp.gnu.org/gnu/nettle/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS_32=(--with-include-path=/usr/lib32/gmp)
+
+post_install_config() {
+  rm -rf ${DEST}/usr/*/*.a
+}
+
+. $(dirname $0)/master.sh

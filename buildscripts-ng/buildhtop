@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+export PKGNAME=htop
+export PKGVER=1.0.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://hisham.hm/htop/releases/${PKGVER}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+export CONFIGURE_FLAGS=(--enable-unicode
+                        --enable-openvz
+                        --enable-vserver
+                        --enable-cgroup
+                        --enable-oom)
+
+. $(dirname $0)/master.sh

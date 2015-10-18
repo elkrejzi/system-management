@@ -1,0 +1,24 @@
+#!/bin/bash -e
+
+export PKGNAME=nspr
+export PKGVER=4.10.9
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGBUILD=${PKGNAME}-${PKGVER}/nspr
+export PKGURL="https://ftp.mozilla.org/pub/nspr/releases/v${PKGVER}/src/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_STATIC=1
+export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS=(--with-mozilla --with-pthreads --enable-64bit)
+export CONFIGURE_FLAGS_32=(--with-mozilla --with-pthreads)
+
+configure_pre() {
+  sed -ri 's#^(RELEASE_BINS =).*#\1#' pr/src/misc/Makefile.in
+  sed -i 's#$(LIBRARY) ##' config/rules.mk
+}
+
+configure_pre_32() {
+  sed -ri 's#^(RELEASE_BINS =).*#\1#' pr/src/misc/Makefile.in
+  sed -i 's#$(LIBRARY) ##' config/rules.mk
+}
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,18 @@
+#!/bin/bash -e
+
+export PKGNAME=curl
+export PKGVER=7.45.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="http://curl.haxx.se/download/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+
+if [ -z $1 ]
+then
+  export ADDITIONAL_CONFIGURE_FLAGS=(--with-gssapi)
+fi
+
+export CONFIGURE_FLAGS=(--enable-threaded-resolver ${ADDITIONAL_CONFIGURE_FLAGS[@]})
+export CONFIGURE_FLAGS_32=(--enable-threaded-resolver ${ADDITIONAL_CONFIGURE_FLAGS[@]})
+
+. $(dirname $0)/master.sh

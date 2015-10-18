@@ -1,0 +1,16 @@
+#!/bin/bash -e
+
+export PKGNAME=man-pages
+export PKGVER=4.02
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://www.kernel.org/pub/linux/docs/man-pages/${PKGTAR}"
+
+configure_override() {
+  true
+}
+
+make_override() {
+  true
+}
+
+. $(dirname $0)/master.sh

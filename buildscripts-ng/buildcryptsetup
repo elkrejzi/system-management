@@ -1,0 +1,19 @@
+#!/bin/bash -e
+
+export PKGNAME=cryptsetup
+export PKGVER=1.6.8
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://www.kernel.org/pub/linux/utils/cryptsetup/v${PKGVER:0:3}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--enable-cryptsetup-reencrypt)
+
+make_install_post() {
+  install -dm755 ${DEST}/lib
+
+  mv ${DEST}/usr/sbin ${DEST}/
+  mv ${DEST}/usr/lib/libcryptsetup.so.* ${DEST}/lib
+
+  ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libcryptsetup.so) ${DEST}/usr/lib/libcryptsetup.so
+}
+
+. $(dirname $0)/master.sh
