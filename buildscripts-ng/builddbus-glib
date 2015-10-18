@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+export PKGNAME=dbus-glib
+export PKGVER=0.104
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://dbus.freedesktop.org/releases/dbus-glib/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--disable-bash-completion)
+
+. $(dirname $0)/master.sh

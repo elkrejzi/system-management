@@ -1,0 +1,19 @@
+#!/bin/bash -e
+
+export PKGNAME=lsb-release
+export PKGVER=1.4
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://downloads.sourceforge.net/lsb/${PKGTAR}"
+export NO_STRIP=1
+
+configure_override() {
+  sed -i "s|n/a|unavailable|" lsb_release
+}
+
+make_install_override() {
+  install -Dm755 lsb_release ${DEST}/usr/bin/lsb_release
+  install -dm755 ${DEST}/usr/share/man/man1
+  gunzip -c lsb_release.1.gz > ${DEST}/usr/share/man/man1/lsb_release.1
+}
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=iana-etc
+export PKGVER=2.30
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="http://sethwklein.net/${PKGTAR}"
+export PATCHES_LIST=("iana-etc-fixes.patch")
+
+configure_override() {
+  make get
+}
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,30 @@
+#!/bin/bash -e
+
+export PKGNAME=fuse
+export PKGVER=2.9.4
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://downloads.sourceforge.net/fuse/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+make_install_post() {
+  rm -rf ${DEST}/dev ${DEST}/etc/init.d
+
+  install -dm755 ${DEST}/lib
+
+  mv ${DEST}/etc/udev ${DEST}/lib
+  mv ${DEST}/usr/lib/libfuse.so.* ${DEST}/lib
+  ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libfuse.so) ${DEST}/usr/lib/libfuse.so
+
+cat > ${DEST}/etc/fuse.conf << "EOF"
+# /etc/fuse.conf - Configuration file for Filesystem in Userspace (FUSE)
+
+# Set the maximum number of FUSE mounts allowed to non-root users.
+# The default is 1000.
+#mount_max = 1000
+
+# Allow non-root users to specify the allow_other or allow_root mount options.
+#user_allow_other
+EOF
+}
+
+. $(dirname $0)/master.sh

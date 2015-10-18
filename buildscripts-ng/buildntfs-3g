@@ -1,0 +1,26 @@
+#!/bin/bash -e
+
+export PKGNAME=ntfs-3g_ntfsprogs
+export PKGVER=2015.3.14
+export PKGTAR=${PKGNAME}-${PKGVER}.tgz
+export PKGURL="https://tuxera.com/opensource/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--with-fuse=external)
+
+make_post() {
+  install -dm755 ${DEST}/lib
+}
+
+make_install_post() {
+  ln -sf ../../lib/$(readlink ${DEST}/lib/libntfs-3g.so) ${DEST}/usr/lib/libntfs-3g.so
+  ln -sf ..$(readlink ${DEST}/sbin/mkfs.ntfs) ${DEST}/sbin/mkfs.ntfs
+  ln -sf ..$(readlink ${DEST}/sbin/mount.lowntfs-3g) ${DEST}/sbin/mount.lowntfs-3g
+  ln -sf ..$(readlink ${DEST}/sbin/mount.ntfs-3g) ${DEST}/sbin/mount.ntfs-3g
+
+  ln -sf ../bin/ntfs-3g ${DEST}/sbin/mount.ntfs
+  ln -sf ntfs-3g.8 ${DEST}/usr/share/man/man8/mount.ntfs.8
+
+  rm -rf ${DEST}/lib/libntfs-3g.so
+}
+
+. $(dirname $0)/master.sh

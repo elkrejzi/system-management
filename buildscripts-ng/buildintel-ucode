@@ -1,17 +1,17 @@
 #!/bin/bash -e
 
-
-export VER=20150121
 export DLID=24661
-export DEST=/binary/intel-ucode-${VER}
+export PKGNAME=intel-ucode
+export PKGVER=20150121
+export PKGTAR=microcode-${PKGVER}.tgz
+export PKGURL="http://downloadmirror.intel.com/${DLID}/eng/${PKGTAR}"
 
-install -dm755 ${DEST}/boot
-install -dm755 kernel/x86/microcode
+post_extract_action() {
+  install -dm755 ${PKGDIR}
+  mv microcode.dat ${PKGDIR}
+}
 
-wget -c http://downloadmirror.intel.com/${DLID}/eng/microcode-${VER}.tgz
-
-tar xf microcode-${VER}.tgz
-
+configure_pre() {
 cat > ${PWD}/intel-microcode2ucode.c << "EOF"
 /*
  * Convert Intel microcode.dat into a single binary microcode.bin file
@@ -168,21 +168,21 @@ out:
 	return rc;
 }
 EOF
+}
 
-gcc -Wall -o intel-microcode2ucode intel-microcode2ucode.c
+configure_override() {
+  gcc -Wall -o intel-microcode2ucode intel-microcode2ucode.c
+  ./intel-microcode2ucode ./microcode.dat
+}
 
-./intel-microcode2ucode ./microcode.dat
+make_override() {
+  install -dm755 kernel/x86/microcode
+  mv microcode.bin kernel/x86/microcode/GenuineIntel.bin
+}
 
-mv microcode.bin kernel/x86/microcode/GenuineIntel.bin
+make_install_override() {
+  install -dm755 ${DEST}/boot
+  echo kernel/x86/microcode/GenuineIntel.bin | bsdcpio -o -H newc -R 0:0 > ${DEST}/boot/intel-ucode.img
+}
 
-echo kernel/x86/microcode/GenuineIntel.bin | bsdcpio -o -H newc -R 0:0 > ${DEST}/boot/intel-ucode.img
-
-rm -rf intel-microcode2ucode.c intel-microcode2ucode kernel microcode-${VER}.tgz microcode.dat
-
-cat > ${DEST}/INSTALL << "EOF"
-#!/bin/bash
-
-cp -rf --remove-destination boot /
-EOF
-
-chmod 755 ${DEST}/INSTALL
+. $(dirname $0)/master.sh

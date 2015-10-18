@@ -1,0 +1,28 @@
+#!/bin/bash -e
+
+export PKGNAME=syslinux
+export PKGVER=6.03
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://www.kernel.org/pub/linux/utils/boot/syslinux/${PKGTAR}"
+export KEEP_INSTALL_DIRS=1
+export NO_OPTIMIZATION=1
+export MAKE_FLAGS="bios"
+export MAKE_INSTALL_FLAGS="INSTALLROOT=\${DEST}/ AUXDIR=/usr/lib/syslinux/ bios install"
+
+configure_override() {
+  sed 's|diag libinstaller dos win32 win64 dosutil txt|libinstaller txt|g' -i Makefile
+  sed 's|win32/syslinux.exe win64/syslinux64.exe||g' -i Makefile
+  sed 's|dosutil/*.com dosutil/*.sys||g' -i Makefile
+  sed 's|dos/syslinux.com||g' -i Makefile
+  sed 's|INSTALLSUBDIRS = com32 utils dosutil|INSTALLSUBDIRS = com32 utils|g' -i Makefile
+  sed 's|install -m 644 -c $(INSTALL_DIAG) $(INSTALLROOT)$(DIAGDIR)|# install -m 644 -c $(INSTALL_DIAG) $(INSTALLROOT)$(DIAGDIR)|g' -i Makefile
+  sed 's|-include $(MAKEDIR)/devel.mk||g' -i mk/syslinux.mk
+
+  sed 's|/usr/man|/usr/share/man|g' -i mk/syslinux.mk
+}
+
+make_post() {
+  make bios installer
+}
+
+. $(dirname $0)/master.sh
