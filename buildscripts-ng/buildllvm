@@ -28,7 +28,7 @@ export SHARED_FLAGS=(-DCLANG_INCLUDE_TESTS=OFF
                      -DLIBCXXABI_USE_LLVM_UNWINDER=ON
                      -DLIBUNWIND_ENABLE_ASSERTIONS=OFF
                      -DLIBUNWIND_ENABLE_SHARED=OFF
-                     -DLLVM_TARGETS_TO_BUILD=AMDGPU;X86
+                     -DLLVM_TARGETS_TO_BUILD="AMDGPU;X86"
                      -DLLVM_BINUTILS_INCDIR=/usr/include)
 
 export CMAKE_FLAGS=("${SHARED_FLAGS[@]}"

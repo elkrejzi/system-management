@@ -2,7 +2,7 @@
 
 export PKGNAME=linux
 export PKGVER=4.2
-export PATCHVER=4.3-rc5
+export PATCHVER=4.3-rc6
 export COMMON_URL="https://cdn.kernel.org/pub/linux/kernel/v4.x"
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="${COMMON_URL}/${PKGTAR}"
@@ -21,7 +21,6 @@ post_extract_action() {
     pushd ${PKGDIR}
       xz -cd ${SROOT}/patch-${PATCHVER}.xz | patch -Np1 -i -
     popd
-    export DEST=/binary/${PKGNAME}-${PATCHVER}
   fi
 }
 
@@ -53,9 +52,11 @@ make_override() {
 make_install_override() {
   export KERNELVERSION=$(make kernelrelease)
 
-  export PKGHEADERS=/binary/linux-headers-${KERNELVERSION}
   export PKGKERNEL=/binary/linux-${KERNELVERSION}
+  export PKGHEADERS=/binary/linux-headers-${KERNELVERSION}
   export PKGTOOLS=/binary/linux-tools-$(echo ${KERNELVERSION} | sed "s/$EXTRA//")
+
+  export DEST=${PKGKERNEL}
 
   # Begin linux
   install -dm755 ${PKGKERNEL}/boot
@@ -154,7 +155,19 @@ for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 
-chmod 755 ${PKGKERNEL}/INSTALL ${PKGHEADERS}/INSTALL ${PKGTOOLS}/INSTALL
+  chmod 755 ${PKGKERNEL}/INSTALL ${PKGHEADERS}/INSTALL ${PKGTOOLS}/INSTALL
+
+  if [ ! -z ${PKG_AUTO_INSTALL} ]
+  then
+    for d in ${PKGKERNEL} ${PKGHEADERS} ${PKGTOOLS}
+    do
+      pushd ${d}
+        ./INSTALL
+      popd
+    done
+  fi
+
+  unset PKG_AUTO_INSTALL
 }
 
 post_install_config() {
