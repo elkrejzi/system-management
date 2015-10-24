@@ -1,0 +1,82 @@
+#!/bin/bash -e
+
+export PKGNAME=wine
+export PKGVER=1.7.53
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://downloads.sourceforge.net/wine/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j2"
+export KEEP_STATIC=1
+export MULTILIB_BUILD=1
+export NO_OPTIMIZATION=1
+export PKGBUILD=wine-build64
+export PATH_TO_SOURCE="../${PKGNAME}-${PKGVER}"
+export CONFIGURE_FLAGS=(--with-x --without-gstreamer --enable-win64)
+export CONFIGURE_FLAGS_32=(--with-x --without-gstreamer --with-wine64=${PWD}/wine-build64)
+
+make_install_override() {
+  if [ ${MULTILIB} == 1 ]
+  then
+    local LIB=lib32
+  else
+    local LIB=lib
+  fi
+
+  make prefix="${DEST}/usr"             \
+       mandir="${DEST}/usr/share/man"   \
+       libdir="${DEST}/usr/${LIB}"      \
+       dlldir="${DEST}/usr/${LIB}/wine" \
+       install
+}
+
+post_extract_action() {
+  pushd ${PKGDIR}
+    wget https://github.com/wine-compholio/wine-staging/archive/v${PKGVER}.tar.gz -O - | tar -xz --strip-components=1 -f -
+    for p in $(grep "patch_apply " patches/patchinstall.sh | sed "s:patch_apply :patches/:g")
+    do
+      git apply $p
+    done
+    autoreconf -fi
+    tools/make_requests
+  popd
+
+  install -dm755 ${PKGBUILD}
+}
+
+make_install_post() {
+  # Prepare for 32 bit
+  export PKGBUILD=wine-build32
+
+  install -dm755 ${DEST}/etc/fonts/conf.avail
+  install -dm755 ${DEST}/etc/fonts/conf.d
+
+cat > ${DEST}/etc/fonts/conf.avail/30-win32-aliases.conf << "EOF"
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+  <alias binding="same">
+    <family>MS Shell Dlg</family>
+    <accept><family>Microsoft Sans Serif</family></accept>
+    <default><family>sans-serif</family></default>
+  </alias>
+  <alias binding="same">
+    <family>MS Shell Dlg 2</family>
+    <accept><family>Tahoma</family></accept>
+    <default><family>sans-serif</family></default>
+  </alias>
+
+  <alias binding="same">
+    <family>MS Sans Serif</family>
+    <prefer><family>Microsoft Sans Serif</family></prefer>
+    <default><family>sans-serif</family></default>
+  </alias>
+</fontconfig>
+EOF
+
+  ln -sf ../conf.avail/30-win32-aliases.conf ${DEST}/etc/fonts/conf.d/30-win32-aliases.conf
+}
+
+post_install_config() {
+  rm -rf wine-build64
+}
+
+. $(dirname $0)/master.sh

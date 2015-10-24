@@ -25,7 +25,7 @@ case $(basename $0) in
   ;;
   buildevince )
     export PKGNAME=evince
-    export PKGVER=3.18.0
+    export PKGVER=3.18.1
     export CONFIGURE_FLAGS=(--enable-introspection)
     make_install_post() {
       install -dm755 ${DEST}/usr/lib/evince/mozilla
@@ -103,7 +103,7 @@ case $(basename $0) in
   ;;
   buildzenity )
     export PKGNAME=zenity
-    export PKGVER=3.18.0
+    export PKGVER=3.18.1.1
   ;;
 esac
 

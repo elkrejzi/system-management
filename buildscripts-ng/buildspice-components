@@ -1,0 +1,28 @@
+#!/bin/bash -e
+
+case $(basename $0) in
+  buildspice-protocol )
+    export PKGNAME=spice-protocol
+    export PKGVER=0.12.10
+  ;;
+  buildspice )
+    export PKGNAME=spice
+    export PKGVER=0.12.6
+  ;;
+  buildspice-gtk )
+    export PKGNAME=spice-gtk
+    export PKGVER=0.30
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://www.spice-space.org/download/gtk/${PKGTAR}"
+  ;;
+esac
+
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export MAKE_JOBS_FLAGS="-j4"
+
+if [ -z ${PKGURL} ]
+then
+  export PKGURL="http://www.spice-space.org/download/releases/${PKGTAR}"
+fi
+
+. $(dirname $0)/master.sh

@@ -94,9 +94,27 @@ case $(basename $0) in
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
   ;;
+  buildlibksane )
+    export PKGNAME=libksane
+    export PKGVER=15.08.2+de6110a
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
+  ;;
   buildokular )
     export PKGNAME=okular
     export PKGVER=15.08.0+709121c
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
+  ;;
+  buildskanlite )
+    export PKGNAME=skanlite
+    export PKGVER=1.1+0999e40
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
+  ;;
+  buildsmb4k )
+    export PKGNAME=smb4k
+    export PKGVER=1.9.65
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
   ;;

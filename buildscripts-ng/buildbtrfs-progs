@@ -1,0 +1,27 @@
+#!/bin/bash -e
+
+export PKGNAME=btrfs-progs
+export PKGVER=4.2.3
+export PKGTAR=${PKGNAME}-v${PKGVER}.tar.xz
+export PKGURL="https://www.kernel.org/pub/linux/kernel/people/kdave/btrfs-progs/${PKGTAR}"
+export PKGDIR=${PKGNAME}-v${PKGVER}
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_STATIC=1
+export CONFIGURE_FLAGS=(--bindir=/sbin)
+
+make_install_post() {
+  rm -rf ${DEST}/usr/lib/libbtrfs.a ${DEST}/usr/share/man/man8/{btrfsck,btrfs-zero-log}.8.gz
+
+  ln -sf btrfs-check.8 ${DEST}/usr/share/man/man8/btrfsck.8
+  ln -sf btrfs-rescue.8 ${DEST}/usr/share/man/man8/btrfs-zero-log.8
+
+  gzip -d ${DEST}/usr/share/man/*/*.gz
+
+  install -dm755 ${DEST}/lib
+
+  mv ${DEST}/usr/lib/libbtrfs.so.* ${DEST}/lib
+  ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libbtrfs.so) ${DEST}/usr/lib/libbtrfs.so
+
+}
+
+. $(dirname $0)/master.sh

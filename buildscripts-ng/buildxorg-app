@@ -122,7 +122,7 @@ case $(basename $0) in
   ;;
   buildxinput )
     export PKGNAME=xinput
-    export PKGVER=1.6.1
+    export PKGVER=1.6.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
   ;;

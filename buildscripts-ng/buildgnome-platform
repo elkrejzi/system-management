@@ -45,7 +45,7 @@ case $(basename $0) in
   ;;
   buildgsettings-desktop-schemas )
     export PKGNAME=gsettings-desktop-schemas
-    export PKGVER=3.18.0
+    export PKGVER=3.18.1
     export NO_STRIP=1
   ;;
   buildgtksourceview )
