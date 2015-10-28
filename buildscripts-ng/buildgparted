@@ -1,0 +1,37 @@
+#!/bin/bash -e
+
+export PKGNAME=gparted
+export PKGVER=0.24.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://downloads.sourceforge.net/gparted/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--disable-doc)
+
+make_install_post() {
+  install -dm755 ${DEST}/usr/share/polkit-1/actions
+
+cat > ${DEST}/usr/share/polkit-1/actions/org.gnome.gparted.policy << "EOF"
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC
+"-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+"http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+
+<policyconfig>
+  <action id="org.freedesktop.policykit.pkexec.run-gparted">
+    <description>Run GParted</description>
+    <message>Authentication is required to run GParted</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/sbin/gparted</annotate>
+    <annotate key="org.freedesktop.policykit.exec.allow_gui">TRUE</annotate>
+  </action>
+</policyconfig>
+EOF
+
+  sed -i "s/Exec=/Exec=pkexec/" ${DEST}/usr/share/applications/gparted.desktop
+}
+
+. $(dirname $0)/master.sh

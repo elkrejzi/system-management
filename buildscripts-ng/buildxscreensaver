@@ -1,0 +1,30 @@
+#!/bin/bash -e
+
+export PKGNAME=xscreensaver
+export PKGVER=5.34
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://www.jwz.org/xscreensaver/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_STATIC=1
+export MAKE_INSTALL_FLAGS="install_prefix=\${DEST}"
+
+make_install_post() {
+  echo "NotShowIn=KDE;GNOME;MATE;" >> ${DEST}/usr/share/applications/xscreensaver-properties.desktop
+
+  install -dm755 ${DEST}/etc/pam.d
+
+cat > ${DEST}/etc/pam.d/xscreensaver << "EOF"
+# Begin /etc/pam.d/xscreensaver
+
+auth     include        system-auth
+-auth    optional       pam_gnome_keyring.so
+
+account  include        system-account
+password include        system-password
+session  include        system-session
+
+# End /etc/pam.d/xscreensaver
+EOF
+}
+
+. $(dirname $0)/master.sh

@@ -63,7 +63,7 @@ case $(basename $0) in
   ;;
   buildpython-mako )
     export PKGNAME=Mako
-    export PKGVER=1.0.2
+    export PKGVER=1.0.3
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/M/Mako/${PKGTAR}"
     export DEST=/binary/python-mako-${PKGVER}

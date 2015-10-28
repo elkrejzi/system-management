@@ -3,13 +3,13 @@
 case $(basename $0) in
   buildxf86-input-evdev )
     export PKGNAME=xf86-input-evdev
-    export PKGVER=2.9.99
+    export PKGVER=2.10.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://xorg.freedesktop.org/releases/individual/driver/${PKGTAR}"
   ;;
   buildxf86-input-libinput )
     export PKGNAME=xf86-input-libinput
-    export PKGVER=0.14.0
+    export PKGVER=0.15.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://xorg.freedesktop.org/releases/individual/driver/${PKGTAR}"
     make_install_post() {

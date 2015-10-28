@@ -1,0 +1,11 @@
+#!/bin/bash -e
+
+export PKGNAME=libinput
+export PKGVER=1.1.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://www.freedesktop.org/software/libinput/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export POSTINST_TRIGGER=("udevadm hwdb --update")
+export CONFIGURE_FLAGS=(--with-udev-dir=/lib/udev)
+
+. $(dirname $0)/master.sh

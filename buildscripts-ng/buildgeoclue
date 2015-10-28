@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+export PKGNAME=geoclue
+export PKGVER=2.4.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://www.freedesktop.org/software/geoclue/releases/${PKGVER:0:3}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+make_install_post() {
+  rm -rf ${DEST}/usr/libexec/geoclue-2.0
+  rm -rf ${DEST}/usr/share/applications
+}
+
+. $(dirname $0)/master.sh

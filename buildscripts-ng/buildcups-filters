@@ -1,0 +1,23 @@
+#!/bin/bash -e
+
+export PKGNAME=cups-filters
+export PKGVER=1.1.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://www.openprinting.org/download/cups-filters/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--without-rcdir
+                        --with-gs-path=/usr/bin/gs
+                        --with-pdftops-path=/usr/bin/gs)
+
+configure_pre() {
+  sed -i "s:cups.service:org.cups.cupsd.service:g" utils/cups-browsed.service
+}
+
+make_install_post() {
+  install -Dm644 utils/cups-browsed.service ${DEST}/lib/systemd/system/cups-browsed.service
+  install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants
+
+  ln -sf /lib/systemd/system/cups-browsed.service ${DEST}/etc/systemd/system/multi-user.target.wants/cups-browsed.service
+}
+
+. $(dirname $0)/master.sh

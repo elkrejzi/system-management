@@ -1,0 +1,84 @@
+#!/bin/bash -e
+
+export JAVA_MAJOR=8
+export JAVA_UPDATE=65
+export ARCH=amd64
+
+export PKGNAME=jdk
+export PKGVER=1.${JAVA_MAJOR}.0u${JAVA_UPDATE}
+export PKGTAR=jdk-${JAVA_MAJOR}u${JAVA_UPDATE}-linux-x64.tar.gz
+export PKGDIR=${PKGNAME}1.${JAVA_MAJOR}.0_${JAVA_UPDATE}
+export KEEP_EMPTY_DIRS=1
+export NO_STRIP=1
+
+configure_override() {
+  rm -rf jre/lib/fontconfig.*
+  rm -rf jre/plugin man/ja man/ja_JP.UTF-8
+  rm -rf jre/Welcome.html README.html
+  rm -rf db javafx-src.zip src.zip
+
+  rm -rf {,jre/}{COPYRIGHT,LICENSE}
+  rm -rf {,jre/}{README,release}
+  rm -rf {,jre/}THIRDPARTYLICENSEREADME{,-JAVAFX}.txt
+}
+
+make_override() {
+  find lib -name "*.so" -exec chmod 755 {} \;
+}
+
+make_install_override() {
+  install -dm755 ${DEST}/etc/profile.d            \
+                 ${DEST}/usr/bin                  \
+                 ${DEST}/usr/lib/java             \
+                 ${DEST}/usr/lib/mozilla/plugins  \
+                 ${DEST}/usr/share/fonts/truetype
+
+  mv jre/lib/desktop/* ${DEST}/usr/share
+  mv jre/lib/fonts ${DEST}/usr/share/fonts/truetype/lucida
+  mv man ${DEST}/usr/share
+
+  rmdir jre/lib/desktop
+
+  mv * ${DEST}/usr/lib/java
+
+  for file in ${DEST}/usr/lib/java/bin/*
+  do
+    ln -sf ../lib/java/bin/$(basename $file) ${DEST}/usr/bin/$(basename $file)
+  done
+
+  for file in ${DEST}/usr/lib/java/jre/bin/*
+  do
+    ln -sf ../lib/java/jre/bin/$(basename $file) ${DEST}/usr/bin/$(basename $file)
+  done
+
+  ln -sf ../../../../share/fonts/truetype/lucida ${DEST}/usr/lib/java/jre/lib/fonts
+  ln -sf ../../java/jre/lib/${ARCH}/libnpjp2.so ${DEST}/usr/lib/mozilla/plugins/libnpjp2.so
+
+  sed s:.png:: -i ${DEST}/usr/share/applications/*.desktop
+
+cat > ${DEST}/etc/profile.d/jdk.sh << "EOF"
+# Begin /etc/profile.d/jdk.sh
+
+export JAVA_HOME=/usr/lib/java
+
+# End /etc/profile.d/jdk.sh
+EOF
+}
+
+generate_install_override() {
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc usr ; do cp -rf --remove-destination $dir / ; done
+
+[ -x /usr/bin/update-mime-database ] && echo "Processing triggers for shared-mime-info" && /usr/bin/update-mime-database /usr/share/mime
+[ -x /usr/bin/gtk-update-icon-cache ] && echo "Processing triggers for hicolor-icon-theme" && /usr/bin/gtk-update-icon-cache -q /usr/share/icons/hicolor
+[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for desktop-file-utils" && /usr/bin/update-desktop-database
+[ -x /usr/bin/fc-cache ] && echo "Processing triggers for fontconfig" && /usr/bin/fc-cache /usr/share/fonts/truetype/lucida
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+EOF
+
+  chmod 755 ${DEST}/INSTALL
+}
+
+. $(dirname $0)/master.sh
