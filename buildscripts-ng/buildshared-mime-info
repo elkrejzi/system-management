@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+export PKGNAME=shared-mime-info
+export PKGVER=1.4
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://freedesktop.org/~hadess/${PKGTAR}"
+export KEEP_STATIC=1
+export CONFIGURE_FLAGS=(--disable-update-mimedb)
+
+configure_pre() {
+  export ac_cv_func_fdatasync=no
+}
+
+. $(dirname $0)/master.sh

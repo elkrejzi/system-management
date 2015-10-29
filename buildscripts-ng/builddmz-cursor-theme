@@ -1,0 +1,32 @@
+#!/bin/bash -e
+
+export PKGNAME=dmz-cursor-theme
+export PKGVER=0.4.4
+export PKGTAR=${PKGNAME}_${PKGVER}.tar.gz
+export PKGURL="http://http.debian.net/debian/pool/main/d/dmz-cursor-theme/${PKGTAR}"
+export NO_STRIP=1
+
+configure_override() {
+  true
+}
+
+make_override() {
+  true
+}
+
+make_install_override() {
+  for d in DMZ-Black DMZ-White
+  do
+    pushd ${d}/pngs
+      ./make.sh
+    popd
+    install -dm755 ${DEST}/usr/share/icons/${d}/cursors
+    install -m644 ${d}/*.theme ${DEST}/usr/share/icons/${d}
+    cp -r ${d}/xcursors/* ${DEST}/usr/share/icons/${d}/cursors
+  done
+
+  install -dm755 ${DEST}/usr/share/icons/default
+  ln -sf ../DMZ-White/cursor.theme ${DEST}/usr/share/icons/default/index.theme
+}
+
+. $(dirname $0)/master.sh

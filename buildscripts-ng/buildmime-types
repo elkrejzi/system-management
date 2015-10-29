@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+export PKGNAME=mime-types
+export PKGVER=9
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="http://mirrors.kernel.org/gentoo/distfiles/${PKGTAR}"
+
+configure_override() {
+  true
+}
+
+make_override() {
+  true
+}
+
+make_install_override() {
+  install -Dm644 mime.types ${DEST}/etc/mime.types
+}
+
+. $(dirname $0)/master.sh

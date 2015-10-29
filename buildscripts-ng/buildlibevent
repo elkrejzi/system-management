@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+export PKGNAME=libevent
+export PKGVER=2.0.22
+export PKGTAR=${PKGNAME}-${PKGVER}-stable.tar.gz
+export PKGDIR=${PKGNAME}-${PKGVER}-stable
+export PKGURL="http://downloads.sourceforge.net/levent/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,24 @@
+#!/bin/bash -e
+
+export PKGNAME=wireless_tools
+export PKGVER=30pre9
+export PKGTAR=${PKGNAME}.${PKGVER/pre9/.pre9}.tar.gz
+export PKGDIR=${PKGNAME}.${PKGVER/pre9/}
+export PKGURL="http://www.labs.hpe.com/personal/Jean_Tourrilhes/Linux/${PKGTAR}"
+
+configure_override() {
+  sed -i "s:BUILD_STATIC:# &:" Makefile
+  sed -i "s:-Os:& ${CFLAGS}:g" Makefile
+}
+
+make_install_override() {
+  make PREFIX=${DEST}/usr INSTALL_MAN=${DEST}/usr/share/man install
+
+  install -dm755 ${DEST}/lib
+
+  mv ${DEST}/usr/sbin ${DEST}
+  mv ${DEST}/usr/lib/libiw.so.* ${DEST}/lib
+  ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libiw.so) ${DEST}/usr/lib/libiw.so
+}
+
+. $(dirname $0)/master.sh

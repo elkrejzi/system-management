@@ -187,3 +187,16 @@ $(dirname $0)/buildkernel
 $(dirname $0)/buildsyslinux
 
 find /binary -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
+
+find /binary -type d -name "*-[0-9]*" ! -path "*/usr/*" | while read dir
+do
+  P=$(basename ${dir})
+  D=$(dirname ${dir})
+
+  pushd ${D}
+    tar cf ${P}.tar ${P}
+    rm -rf ${P}
+  popd
+done
+
+find /binary -name "*.tar" -exec xz -T4 {} \;

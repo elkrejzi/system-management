@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+export PKGNAME=libvorbis
+export PKGVER=1.3.5
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://downloads.xiph.org/releases/vorbis/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+
+. $(dirname $0)/master.sh
