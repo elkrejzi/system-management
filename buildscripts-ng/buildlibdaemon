@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+export PKGNAME=libdaemon
+export PKGVER=0.14
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://0pointer.de/lennart/projects/libdaemon/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,18 @@
+#!/bin/bash -e
+
+export PKGNAME=eigen
+export PKGVER=3.2.6
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://bitbucket.org/eigen/eigen/get/${PKGVER}.tar.bz2"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export NO_STRIP=1
+
+post_extract_action() {
+  rm -rf eigen-*
+  install -dm755 ${PKGDIR}
+
+  bsdtar xf ${SROOT}/${PKGTAR} --strip-components=1 -C ${PKGDIR}
+}
+
+. $(dirname $0)/master.sh

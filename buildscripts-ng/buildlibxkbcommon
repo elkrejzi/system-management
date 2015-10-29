@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+export PKGNAME=libxkbcommon
+export PKGVER=0.5.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://xkbcommon.org/download/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+
+. $(dirname $0)/master.sh

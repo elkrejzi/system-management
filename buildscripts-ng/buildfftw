@@ -1,0 +1,48 @@
+#!/bin/bash -e
+
+export PKGNAME=fftw
+export PKGVER=3.3.4
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://www.fftw.org/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
+
+configure_shared() {
+  ../configure --prefix=/usr    \
+               --disable-static \
+               --enable-shared  \
+               --enable-threads \
+               $1 $2
+}
+
+configure_override() {
+  install -dm755 build1 build2 build3
+
+  pushd build1
+    configure_shared --enable-sse --enable-single
+  popd
+
+  pushd build2
+    configure_shared --enable-sse2
+  popd
+
+  pushd build3
+    configure_shared --enable-long-double
+  popd
+}
+
+make_override() {
+  for d in build{1..3}
+  do
+    make -C ${d} ${ADDITIONAL_MAKE_FLAGS}
+  done
+}
+
+make_install_override() {
+  for d in build{1..3}
+  do
+    make -C ${d} install ${ADDITIONAL_MAKE_INSTALL_FLAGS}
+  done
+}
+
+. $(dirname $0)/master.sh

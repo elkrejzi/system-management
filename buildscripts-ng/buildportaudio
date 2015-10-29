@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+export PKGNAME=portaudio
+export PKGVER=v19_20140130
+export PKGTAR=pa_stable_${PKGVER}.tgz
+export PKGURL="http://www.portaudio.com/archives/${PKGTAR}"
+export PKGDIR=${PKGNAME}
+export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS=(--enable-cxx)
+export CONFIGURE_FLAGS_32=(--enable-cxx)
+
+. $(dirname $0)/master.sh

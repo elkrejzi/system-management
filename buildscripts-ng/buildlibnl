@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+export PKGNAME=libnl
+export PKGVER=3.2.27
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/thom311/libnl/releases/download/libnl$(echo ${PKGVER} | sed 's|\.|_|g')/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+make_install_post() {
+  install -dm755 ${DEST}/lib
+
+  mv ${DEST}/usr/lib/*.so.* ${DEST}/lib
+
+  for file in ${DEST}/usr/lib/*.so
+  do
+    ln -sf ../../lib/$(readlink ${file}) ${file}
+  done
+}
+
+. $(dirname $0)/master.sh

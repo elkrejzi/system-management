@@ -10,7 +10,7 @@ export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export MULTILIB_BUILD=1
 export PATCHES_LIST=("llvm-link-tools-against-libLLVM.patch" "llvm-export-more-symbols.patch")
-export PATCHES_LIST_32=${PATCHES_LIST}
+export PATCHES_LIST_32=("${PATCHES_LIST[@]}")
 
 export SHARED_FLAGS=(-DCLANG_INCLUDE_TESTS=OFF
                      -DLLVM_BUILD_LLVM_DYLIB=ON

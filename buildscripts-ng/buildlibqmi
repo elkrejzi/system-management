@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+export PKGNAME=libqmi
+export PKGVER=1.12.6
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://www.freedesktop.org/software/libqmi/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+. $(dirname $0)/master.sh

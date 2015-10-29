@@ -1,0 +1,84 @@
+#!/bin/bash -e
+
+export PKGNAME=jack
+export PKGVER=1.9.10
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://dl.dropboxusercontent.com/u/28869550/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+
+configure_pre_32() {
+  sed -e '/serverlib/,/clientlib/{/clientlib/!d}' \
+      -e '/clientlib32bit/i\\tclientlib.posted = True' \
+      -e '1,/clientlib32bit/!d' \
+      -i common/wscript
+
+  sed -i 's/, "CELT", "OPUS"//' common/wscript
+}
+
+configure_override() {
+  python waf configure --prefix=/usr \
+                       --alsa        \
+                       --dbus
+}
+
+configure_override_32() {
+  python waf configure --prefix=/usr \
+                       --libdir=/usr/lib32 \
+                       --alsa    \
+                       --dbus
+}
+
+make_override() {
+  if [ ${MULTILIB} == 1 ]
+  then
+    pushd common
+      python ../waf build ${MAKE_JOBS_FLAGS}
+    popd
+  else
+    python waf build ${MAKE_JOBS_FLAGS}
+  fi
+}
+
+make_install_override() {
+  if [ ${MULTILIB} == "1" ]
+  then
+    install -Dm755 build/common/libjack.so ${DEST}/usr/lib32/libjack.so.0.1.0
+
+    ln -sf libjack.so.0.1.0 ${DEST}/usr/lib32/libjack.so.0
+    ln -sf libjack.so.0.1.0 ${DEST}/usr/lib32/libjack.so
+
+    install -dm755 ${DEST}/usr/lib32/pkgconfig
+
+cat > ${DEST}/usr/lib32/pkgconfig/jack.pc << "EOF"
+prefix=/usr
+exec_prefix=/usr
+libdir=/usr/lib32
+includedir=/usr/include
+
+Name: jack
+Description: the Jack Audio Connection Kit: a low-latency synchronous callback-based media server
+Version: 1.9.9.5
+Libs: -L/usr/lib32 -ljack
+Cflags: -I/usr/include
+EOF
+  else
+    python waf install --destdir=${DEST}
+  fi
+}
+
+post_install_config() {
+  install -dm755 ${DEST}/etc/security/limits.d ${DEST}/lib/udev/rules.d
+
+cat > ${DEST}/etc/security/limits.d/99-audio.conf << "EOF"
+@audio 	- rtprio 	99
+@audio 	- memlock 	unlimited
+EOF
+
+cat > ${DEST}/lib/udev/rules.d/40-hpet-permissions.rules << "EOF"
+KERNEL=="rtc0", GROUP="audio"
+KERNEL=="hpet", GROUP="audio"
+EOF
+}
+
+. $(dirname $0)/master.sh

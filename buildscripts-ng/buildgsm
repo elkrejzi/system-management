@@ -1,0 +1,51 @@
+#!/bin/bash -e
+
+export PKGNAME=gsm
+export PKGVER=1.0.13
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGDIR=${PKGNAME}-1.0-pl13
+export MAKE_JOBS_FLAGS="-j4"
+export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done")
+export MULTILIB_BUILD=1
+export PATCHES_LIST=("gsm.patch")
+export PATCHES_LIST_32=("gsm.patch")
+
+configure_override() {
+  true
+}
+
+configure_override_32() {
+  true
+}
+
+make_override() {
+  if [ ${MULTILIB} == 1 ]
+  then
+    sed -i "/-shared/s:-shared:\$(LDFLAGS) &:" Makefile
+
+    make CCFLAGS="-m32 -c -fPIC ${CFLAGS}" LDFLAGS="-m32" ${MAKE_JOBS_FLAGS}
+  else
+    make CCFLAGS="-c -fPIC ${CFLAGS}" ${MAKE_JOBS_FLAGS}
+  fi
+}
+
+make_install_override() {
+  if [ ${MULTILIB} == 1 ]
+  then
+    install -dm755 ${DEST}/usr/lib32
+    install -m755 lib/libgsm.so.${PKGVER} ${DEST}/usr/lib32
+
+    ln -sf libgsm.so.${PKGVER} ${DEST}/usr/lib32/libgsm.so.1
+    ln -sf libgsm.so.${PKGVER} ${DEST}/usr/lib32/libgsm.so
+  else
+    install -dm755 ${DEST}/usr/bin ${DEST}/usr/include/gsm ${DEST}/usr/lib ${DEST}/usr/share/man/man1 ${DEST}/usr/share/man/man3
+
+    make INSTALL_ROOT=${DEST}/usr \
+         GSM_INSTALL_INC=${DEST}/usr/include/gsm \
+         GSM_INSTALL_MAN=${DEST}/usr/share/man/man3 \
+         TOAST_INSTALL_MAN=${DEST}/usr/share/man/man1 \
+         install
+  fi
+}
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,18 @@
+#!/bin/bash -e
+
+export PKGNAME=slang
+export PKGVER=2.3.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="http://www.jedsoft.org/releases/slang/${PKGTAR}"
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
+export KEEP_EMPTY_DIRS=1
+export KEEP_STATIC=1
+export CONFIGURE_FLAGS=(--with-readline=gnu)
+
+make_install_override() {
+  make install-all DESTDIR=${DEST}
+
+  find ${DEST} -name "*.a" -delete
+}
+
+. $(dirname $0)/master.sh

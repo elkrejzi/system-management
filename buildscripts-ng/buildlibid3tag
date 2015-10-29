@@ -1,0 +1,16 @@
+#!/bin/bash -e
+
+export PKGNAME=libid3tag
+export PKGVER=0.15.1b
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://downloads.sourceforge.net/mad/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export PATCHES_LIST=("libid3tag.patch")
+
+configure_pre() {
+  touch NEWS AUTHORS ChangeLog
+
+  autoreconf -fi
+}
+
+. $(dirname $0)/master.sh

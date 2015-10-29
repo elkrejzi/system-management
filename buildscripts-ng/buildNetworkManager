@@ -1,0 +1,35 @@
+#!/bin/bash -e
+
+export PKGNAME=NetworkManager
+export PKGVER=1.0.6
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://ftp.gnome.org/pub/gnome/sources/NetworkManager/${PKGVER:0:3}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
+export CONFIGURE_FLAGS=(--enable-doc \
+                        --with-session-tracking=systemd
+                        --with-suspend-resume=systemd
+                        --with-pppd-plugin-dir=/usr/lib/pppd/2.4.7
+                        --with-systemdsystemunitdir=/lib/systemd/system)
+
+make_install_post() {
+  rm -rf ${DEST}/lib/systemd/system/network-online.target.wants ${DEST}/var/run
+
+  install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/usr/lib/tmpfiles.d
+
+cat > ${DEST}/etc/NetworkManager/NetworkManager.conf << "EOF"
+[main]
+plugins=keyfile
+EOF
+
+cat > ${DEST}/usr/lib/tmpfiles.d/NetworkManager.conf << "EOF"
+d /run/NetworkManager 755 root root -
+EOF
+
+  ln -sf /lib/systemd/system/NetworkManager.service ${DEST}/etc/systemd/system/multi-user.target.wants/NetworkManager.service
+  ln -sf /lib/systemd/system/NetworkManager-wait-online.service ${DEST}/etc/systemd/system/multi-user.target.wants/NetworkManager-wait-online.service
+  ln -sf /lib/systemd/system/NetworkManager.service ${DEST}/etc/systemd/system/dbus-org.freedesktop.NetworkManager.service
+  ln -sf /lib/systemd/system/NetworkManager-dispatcher.service ${DEST}/etc/systemd/system/dbus-org.freedesktop.nm-dispatcher.service
+}
+
+. $(dirname $0)/master.sh

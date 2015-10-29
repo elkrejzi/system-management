@@ -1,7 +1,7 @@
 # Warning: Do not execute. Instead, include it from a package specific scriptlet
 
 # Auto install packages after installation. Useful for bootstrap
-# export PKG_AUTO_INSTALL=1
+#export PKG_AUTO_INSTALL=1
 
 # Default location where package sources are stored
 export SROOT=/media/ntfs/Other/Linux/sources

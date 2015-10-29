@@ -1,0 +1,50 @@
+#!/bin/bash -e
+
+export PKGNAME=ppp
+export PKGVER=2.4.7
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://www.samba.org/ftp/ppp/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
+export KEEP_STATIC=1
+export PATCHES_LIST=("ppp.patch")
+export USER_CFLAGS="-D_GNU_SOURCE"
+
+configure_override() {
+  sed -i "s:^#FILTER=y:FILTER=y:" pppd/Makefile.linux
+  sed -i "s:^#HAVE_INET6=y:HAVE_INET6=y:" pppd/Makefile.linux
+  sed -i "s:^#CBCP=y:CBCP=y:" pppd/Makefile.linux
+  ./configure --prefix=/usr
+}
+
+make_install_override() {
+  make install INSTROOT=${DEST}
+
+  install -dm755 ${DEST}/etc/ppp/ip-up.d ${DEST}/etc/ppp/ip-down.d ${DEST}/etc/ppp/ipv6-up.d ${DEST}/etc/ppp/ipv6-down.d ${DEST}/etc/ppp/peers
+  install -dm755 ${DEST}/lib/systemd/system
+  install -dm755 ${DEST}/usr/bin ${DEST}/usr/share/man/man1
+
+  install -m755 scripts/pon   ${DEST}/usr/bin/pon
+  install -m755 scripts/poff  ${DEST}/usr/bin/poff
+  install -m755 scripts/plog  ${DEST}/usr/sbin/plog
+  install -m644 scripts/pon.1 ${DEST}/usr/share/man/man1/pon.1
+
+  install -m600 etc.ppp/pap-secrets  ${DEST}/etc/ppp/pap-secrets
+  install -m600 etc.ppp/chap-secrets ${DEST}/etc/ppp/chap-secrets
+
+  chmod 644 ${DEST}/usr/share/man/man8/*.8
+
+  install -m755 distro/ip-up   ${DEST}/etc/ppp/ip-up
+  install -m755 distro/ip-down ${DEST}/etc/ppp/ip-down
+  install -m755 distro/ip-up.d.dns.sh   ${DEST}/etc/ppp/ip-up.d/00-dns.sh
+  install -m755 distro/ip-down.d.dns.sh ${DEST}/etc/ppp/ip-down.d/00-dns.sh
+  install -m755 distro/ipv6-up   ${DEST}/etc/ppp/ipv6-up
+  install -m755 distro/ipv6-down ${DEST}/etc/ppp/ipv6-down
+
+  install -m755 distro/ipv6-up.d.iface-config.sh ${DEST}/etc/ppp/ipv6-up.d/00-iface-config.sh
+
+  install -m644 distro/options     ${DEST}/etc/ppp/options
+  install -m644 distro/ppp.systemd ${DEST}/lib/systemd/system/ppp@.service
+}
+
+. $(dirname $0)/master.sh

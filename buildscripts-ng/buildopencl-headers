@@ -1,0 +1,29 @@
+#!/bin/bash -e
+
+export PKGNAME=opencl-headers
+export PKGVER=1.2.20140412
+export NO_STRIP=1
+
+prepare_src_override() {
+  install -dm755 ${PKGBUILD}
+}
+
+configure_override() {
+  true
+}
+
+make_override() {
+  true
+}
+
+make_install_override() {
+  install -dm755 ${DEST}/usr/include/CL
+
+  for file in cl.h cl.hpp cl_egl.h cl_ext.h cl_gl.h \
+              cl_gl_ext.h cl_platform.h opencl.h
+  do
+    wget http://www.khronos.org/registry/cl/api/1.2/${file} -O ${DEST}/usr/include/CL/${file}
+  done
+}
+
+. $(dirname $0)/master.sh

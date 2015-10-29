@@ -1,0 +1,16 @@
+#!/bin/bash -e
+
+export PKGNAME=libpcap
+export PKGVER=1.7.4
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://www.tcpdump.org/release/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_STATIC=1
+export PATCHES_LIST=("libpcap-fixes.patch")
+export CONFIGURE_FLAGS=(--disable-dbus)
+
+make_post() {
+  sed -i '/INSTALL_DATA.*libpcap.a\|RANLIB.*libpcap.a/ s/^/#/' Makefile
+}
+
+. $(dirname $0)/master.sh

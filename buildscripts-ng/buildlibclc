@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+export PKGNAME=libclc
+export PKGVER=0.2.0.svn248480
+export MAKE_JOBS_FLAGS="-j4"
+export NO_STRIP=1
+
+configure_override() {
+  ./configure.py --prefix=/usr
+}
+
+. $(dirname $0)/master.sh

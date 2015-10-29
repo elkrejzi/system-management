@@ -1,0 +1,24 @@
+#!/bin/bash -e
+
+export PKGNAME=SDL2
+export PKGVER=2.0.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://www.libsdl.org/release/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_STATIC=1
+export MULTILIB_BUILD=1
+
+export COMMON_CONFIGURE_FLAGS=(--enable-video-wayland
+                               --disable-alsa-shared
+                               --disable-x11-shared
+                               --disable-wayland-shared
+                               --disable-pulseaudio-shared)
+
+export CONFIGURE_FLAGS=("${COMMON_CONFIGURE_FLAGS[@]}")
+export CONFIGURE_FLAGS_32=("${COMMON_CONFIGURE_FLAGS[@]}")
+
+post_install_config() {
+  rm -rf ${DEST}/usr/lib*/libSDL2.a
+}
+
+. $(dirname $0)/master.sh

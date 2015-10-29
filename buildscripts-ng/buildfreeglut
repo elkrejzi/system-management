@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=freeglut
+export PKGVER=3.0.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://downloads.sourceforge.net/freeglut/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export MULTILIB_BUILD=1
+export CMAKE_FLAGS=(-DCMAKE_INSTALL_LIBDIR=lib -DFREEGLUT_BUILD_STATIC_LIBS=OFF)
+export CMAKE_FLAGS_32=(-DCMAKE_INSTALL_LIBDIR=lib32 -DFREEGLUT_BUILD_STATIC_LIBS=OFF)
+
+. $(dirname $0)/master.sh

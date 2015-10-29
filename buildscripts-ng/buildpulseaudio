@@ -1,0 +1,89 @@
+#!/bin/bash -e
+
+export PKGNAME=pulseaudio
+export PKGVER=7.0
+export SHLIBVER=${PKGVER}
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://freedesktop.org/software/pulseaudio/releases/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS=(--disable-bluez4 --disable-rpath --with-module-dir=/usr/lib/pulse/modules)
+export CONFIGURE_FLAGS_32=(--disable-bluez4 --disable-rpath --with-module-dir=/usr/lib/pulse/modules)
+
+_libs="libpulse.la libpulse-simple.la libpulse-mainloop-glib.la"
+_pkglibs="libpulsecommon-${SHLIBVER}.la libpulsedsp.la"
+
+configure_pre() {
+  sed -i "s#; flat-volumes = yes#flat-volumes = no#" src/daemon/daemon.conf.in
+
+  find . -name "Makefile.in" | xargs sed -i "s|(libdir)/@PACKAGE@|(libdir)/pulse|"
+}
+
+configure_pre_32() {
+  find . -name "Makefile.in" | xargs sed -i "s|(libdir)/@PACKAGE@|(libdir)/pulse|"
+}
+
+make_override() {
+  if [ ${MULTILIB} == 1 ]
+  then
+    make -C src ${_libs} ${_pkglibs} ${ADDITIONAL_MAKE_FLAGS}
+  else
+    make ${ADDITIONAL_MAKE_FLAGS}
+  fi
+}
+
+make_install_override() {
+  if [ ${MULTILIB} == 1 ]
+  then
+    make -C src lib_LTLIBRARIES="${_libs}" install-libLTLIBRARIES ${ADDITIONAL_MAKE_INSTALL_FLAGS}
+    make -C src pkglib_LTLIBRARIES="${_pkglibs}" install-pkglibLTLIBRARIES ${ADDITIONAL_MAKE_INSTALL_FLAGS}
+    make install-pkgconfigDATA ${ADDITIONAL_MAKE_INSTALL_FLAGS}
+  else
+    make install ${ADDITIONAL_MAKE_INSTALL_FLAGS} bashcompletiondir=/usr/share/bash-completion/completions
+  fi
+}
+
+post_install_config() {
+  rm -rf ${DEST}/etc/dbus-1
+
+  # Speed up pulseaudio shutdown so that it exits immediately with
+  # the last user session (module-systemd-login keeps it alive)
+  sed -e '/exit-idle-time/iexit-idle-time=0'  -i ${DEST}/etc/pulse/daemon.conf
+
+  # Disable cork-request module, can result in e.g. media players unpausing
+  # when there's a Skype call incoming
+  sed -e 's|/usr/bin/pactl load-module module-x11-cork-request|#&|' -i ${DEST}/usr/bin/start-pulseaudio-x11
+
+  for file in client.conf daemon.conf default.pa system.pa
+  do
+    mv ${DEST}/etc/pulse/${file} ${DEST}/etc/pulse/${file}.dist
+  done
+}
+
+generate_install_override() {
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+for dir in etc lib usr ; do cp -rf --remove-destination $dir / ; done
+
+for file in client.conf daemon.conf default.pa system.pa
+do
+  if [ ! -e /etc/pulse/${file} ]
+  then
+    cp -f /etc/pulse/${file}.dist /etc/pulse/${file}
+  fi
+  diff -Naur /etc/pulse/${file}.dist /etc/pulse/${file} > /dev/null
+  if [ $? -gt 0 ]
+  then
+    echo "Files /etc/pulse/${file}.dist and /etc/pulse/${file} differ."
+  fi
+done
+
+[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
+[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
+EOF
+
+  chmod 755 ${DEST}/INSTALL
+}
+
+. $(dirname $0)/master.sh

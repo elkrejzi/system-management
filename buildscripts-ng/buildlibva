@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+export PKGNAME=libva
+export PKGVER=1.6.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="http://www.freedesktop.org/software/vaapi/releases/libva/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+
+post_install_config() {
+  rm -rf ${DEST}/usr/lib/dri ${DEST}/usr/lib32/dri
+}
+
+. $(dirname $0)/master.sh

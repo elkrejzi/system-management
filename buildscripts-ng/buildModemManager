@@ -7,10 +7,6 @@ export PKGURL="http://www.freedesktop.org/software/ModemManager/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--enable-gtk-doc --with-polkit=permissive)
 
-configure_post() {
-  find . -name "Makefile" | xargs sed -i "s:-Werror ::g"
-}
-
 make_install_post() {
   install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants
 
