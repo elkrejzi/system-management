@@ -1,45 +1,39 @@
 #!/bin/bash -e
 
-export VER=2.1.26
-export DEST=/binary/cyrus-sasl-${VER}
+export PKGNAME=cyrus-sasl
+export PKGVER=2.1.26
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="ftp://ftp.cyrusimap.org/cyrus-sasl/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export PATCHES_LIST=("cyrus-sasl-fixes.patch")
 
-pushd cyrus-sasl-${VER}
+if [ -z $1 ]
+then
+  export ADDITIONAL_CONFIGURE_FLAGS=(--with-ldap --enable-ldapdb)
+fi
 
-patch -Np1 -i /media/ntfs/Other/Linux/patches/cyrus-sasl-fixes.patch
+export CONFIGURE_FLAGS=("${ADDITIONAL_CONFIGURE_FLAGS[@]}"
+                        --with-dbpath=/var/lib/sasl/sasldb2
+                        --with-saslauthd=/var/run/saslauthd
+                        --with-sqlite3=/usr
+                        --enable-login
+                        --enable-ntlm
+                        --enable-sql
+                        --enable-auth-sasldb)
 
-autoreconf -fi
+configure_pre() {
+  autoreconf -fi
 
-pushd saslauthd
-autoreconf -fi
-popd
+  pushd saslauthd
+    autoreconf -fi
+  popd
+}
 
-CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr \
-            --sysconfdir=/etc \
-            --with-dbpath=/var/lib/sasl/sasldb2 \
-            --with-saslauthd=/var/run/saslauthd \
-            --with-sqlite3=/usr \
-            --enable-login \
-            --enable-ntlm \
-            --enable-sql \
-            --enable-auth-sasldb \
-            --with-ldap \
-            --enable-ldapdb
+make_install_post() {
+  sed -i "s:libdir =:exec_prefix=/usr\n&:" ${DEST}/usr/lib/pkgconfig/libsasl2.pc
 
-make
-make install DESTDIR=${DEST}
-
-popd
-
-rm -rf cyrus-sasl-${VER}
-
-find ${DEST} -name "*.la" -delete
-
-sed -i "s:libdir =:exec_prefix=/usr\n&:" ${DEST}/usr/lib/pkgconfig/libsasl2.pc
-
-mkdir -p ${DEST}/etc/default ${DEST}/etc/systemd/system/multi-user.target.wants
-mkdir -p ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d
+  install -dm755 ${DEST}/etc/default ${DEST}/etc/systemd/system/multi-user.target.wants
+  install -dm755 ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d
 
 cat > ${DEST}/etc/default/saslauthd << "EOF"
 # Begin /etc/default/saslauthd
@@ -98,18 +92,10 @@ PIDFile=/run/saslauthd/saslauthd.pid
 WantedBy=multi-user.target
 EOF
 
-ln -sf /lib/systemd/system/saslauthd.service ${DEST}/etc/systemd/system/multi-user.target.wants/saslauthd.service
+  ln -sf /lib/systemd/system/saslauthd.service ${DEST}/etc/systemd/system/multi-user.target.wants/saslauthd.service
+}
 
-pushd ${DEST}
-
-find * -type f 2>/dev/null | while read BUILD_BINARY ; do
-  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
-    strip --strip-unneeded ${BUILD_BINARY}
-  esac
-done
-
-popd
-
+generate_install_override() {
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
@@ -117,7 +103,8 @@ for dir in etc lib usr ; do cp -rf --remove-destination $dir / ; done
 
 install -dm700 /var/lib/sasl
 
-if [ ! -e /var/lib/sasl/sasldb2 ]; then
+if [ ! -e /var/lib/sasl/sasldb2 ]
+then
    echo '!' | saslpasswd2 -c 'no:such:user'
    saslpasswd2 -d 'no:such:user'
 fi
@@ -125,7 +112,8 @@ fi
 chmod 700 /var/lib/sasl/sasldb2
 chown root:root /var/lib/sasl/sasldb2
 
-if [ ! -d /run/saslauthd ]; then
+if [ ! -d /run/saslauthd ]
+then
    install -d -o root -g root -m 755 /run/saslauthd
 fi
 
@@ -133,4 +121,7 @@ fi
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 
-chmod 755 ${DEST}/INSTALL
+  chmod 755 ${DEST}/INSTALL
+}
+
+. $(dirname $0)/master.sh

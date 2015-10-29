@@ -1,0 +1,78 @@
+#!/bin/bash -e
+
+export PKGNAME=cups
+export PKGVER=2.1.0
+export PKGTAR=${PKGNAME}-${PKGVER}-source.tar.bz2
+export PKGURL="https://cups.org/software/${PKGVER}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
+export KEEP_STATIC=1
+export MULTILIB_BUILD=1
+export POSTINST_TRIGGER=("getent group lpadmin > /dev/null || groupadd -g 19 lpadmin")
+
+export CONFIGURE_FLAGS=(--with-rcdir=/tmp/cupsinit
+                        --with-docdir=/usr/share/cups/doc
+                        --with-system-groups=lpadmin
+                        --with-icondir=/usr/share/icons
+                        --with-menudir=/usr/share/applications)
+
+export CONFIGURE_FLAGS_32=(--disable-libusb
+                           --disable-avahi
+                           --disable-dbus
+                           --disable-pam)
+
+configure_pre() {
+  sed -i "/MAN.*.EXT/s:.gz::g" configure config-scripts/cups-manpages.m4
+  sed -i "s:555:755:g;s:444:644:g" Makedefs.in
+
+cat > conf/pam.std.in << "EOF"
+# Begin /etc/pam.d/cups
+
+auth    include system-auth
+account include system-account
+session include system-session
+
+# End /etc/pam.d/cups
+EOF
+}
+
+configure_pre_32() {
+  sed -i "/MAN.*.EXT/s:.gz::g" configure config-scripts/cups-manpages.m4
+}
+
+make_install_override() {
+  if [ ${MULTILIB} == 1 ]
+  then
+    make install-libs BUILDROOT=${PWD}/dest
+  else
+    make install BUILDROOT=${DEST}
+  fi
+}
+
+post_install_config() {
+  rm -rf ${DEST}/etc/cups/*.default ${DEST}/usr/share/cups/banners/* ${DEST}/usr/share/cups/data/testprint ${DEST}/tmp ${DEST}/var/run
+
+  perl -p -i -e 's:^(.*\s+bannertops\s*)$:#\1:' ${DEST}/usr/share/cups/mime/mime.convs
+
+  touch ${DEST}/etc/cups/classes.conf ${DEST}/etc/cups/printers.conf ${DEST}/etc/cups/subscriptions.conf
+
+  chmod 600 ${DEST}/etc/cups/classes.conf ${DEST}/etc/cups/printers.conf
+  chmod 640 ${DEST}/etc/cups/subscriptions.conf
+
+  install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants \
+                 ${DEST}/etc/systemd/system/printer.target.wants    \
+                 ${DEST}/etc/systemd/system/sockets.target.wants
+
+  ln -sf /lib/systemd/system/org.cups.cupsd.path ${DEST}/etc/systemd/system/multi-user.target.wants/org.cups.cupsd.path
+  ln -sf /lib/systemd/system/org.cups.cupsd.service ${DEST}/etc/systemd/system/printer.target.wants/org.cups.cupsd.service
+  ln -sf /lib/systemd/system/org.cups.cupsd.socket ${DEST}/etc/systemd/system/sockets.target.wants/org.cups.cupsd.socket
+
+cat > ${DEST}/etc/cups/client.conf << "EOF"
+# see 'man client.conf'
+ServerName /var/run/cups/cups.sock
+EOF
+
+  chgrp -R lp ${DEST}/etc/cups
+}
+
+. $(dirname $0)/master.sh

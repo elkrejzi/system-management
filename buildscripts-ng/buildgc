@@ -1,0 +1,17 @@
+#!/bin/bash -e
+
+export PKGNAME=gc
+export PKGVER=7.4.2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://www.hboehm.info/gc/gc_source/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--enable-cplusplus)
+
+make_install_post() {
+  rm -rf ${DEST}/usr/share
+
+  install -Dm644 doc/gc.man ${DEST}/usr/share/man/man3/gc_malloc.3
+  ln -sf gc_malloc.3 ${DEST}/usr/share/man/man3/gc.3
+}
+
+. $(dirname $0)/master.sh

@@ -1,5 +1,10 @@
 #!/bin/bash -e
 
+pkg_remove() {
+  find * -type f -o -type l | while read file ; do rm -fv "/$file" ; done
+  find * -type d | sort -r | while read file ; do rmdir --ignore-fail-on-non-empty -v "/$file" ; done
+}
+
 $(dirname $0)/buildlinux-api-headers
 $(dirname $0)/buildglibc
 $(dirname $0)/buildtzdata
@@ -135,6 +140,19 @@ $(dirname $0)/buildsystemd
 $(dirname $0)/buildlibgudev
 $(dirname $0)/buildLVM2
 $(dirname $0)/buildcryptsetup
+
+pushd /binary/systemd-[0-9]*
+  pkg_remove
+popd
+
+$(dirname $0)/buildsystemd
+
+pushd /binary/util-linux-[0-9]*
+  pkg_remove
+popd
+
+$(dirname $0)/buildutil-linux
+
 $(dirname $0)/buildchrpath
 $(dirname $0)/buildcmake 1
 $(dirname $0)/buildhtop

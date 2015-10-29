@@ -1,0 +1,19 @@
+#!/bin/bash -e
+
+export PKGNAME=bluez
+export PKGVER=5.35
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://www.kernel.org/pub/linux/bluetooth/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--enable-experimental --enable-library)
+
+make_install_post() {
+  install -dm755 ${DEST}/etc/bluetooth ${DEST}/etc/systemd/system/bluetooth.target.wants ${DEST}/usr/lib/systemd/user
+  install -m644 src/main.conf ${DEST}/etc/bluetooth
+
+  ln -sf /lib/systemd/system/bluetooth.service ${DEST}/etc/systemd/system/dbus-org.bluez.service
+  ln -sf /lib/systemd/system/bluetooth.service ${DEST}/etc/systemd/system/bluetooth.target.wants/bluetooth.service
+  ln -sf /usr/lib/systemd/user/obex.service ${DEST}/usr/lib/systemd/user/dbus-org.bluez.obex.service
+}
+
+. $(dirname $0)/master.sh

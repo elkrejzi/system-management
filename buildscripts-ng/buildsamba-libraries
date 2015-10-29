@@ -13,7 +13,7 @@ case $(basename $0) in
                             --builtin-libraries=replace
                             --with-modulesdir=/usr/lib/ldb/modules
                             --with-privatelibdir=/usr/lib/ldb)
-    export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done" "\n"
+    export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done\n"
                         "cp -rf --remove-destination usr/share/man/man3 /usr/share/man")
   ;;
   buildtalloc )

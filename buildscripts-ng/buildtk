@@ -1,0 +1,28 @@
+#!/bin/bash -e
+
+export TKMAJOR=8.6
+export PKGNAME=tk
+export PKGVER=${TKMAJOR}.4
+export PKGTAR=${PKGNAME}${PKGVER}-src.tar.gz
+export PKGURL="https://downloads.sourceforge.net/tcl/${PKGTAR}"
+export PKGDIR=${PKGNAME}${PKGVER}
+export PKGBUILD=${PKGDIR}/unix
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_STATIC=1
+export CONFIGURE_FLAGS=(--enable-64bit)
+export MAKE_INSTALL_FLAGS="install-private-headers"
+
+make_post() {
+  sed -e "s@^\(TK_SRC_DIR='\).*@\1/usr/include'@" \
+      -e "/TK_B/s@='\(-L\)\?.*unix@='\1/usr/lib@" \
+      -i tkConfig.sh
+}
+
+make_install_post() {
+  ln -sf wish${TKMAJOR} ${DEST}/usr/bin/wish
+  rm -rf ${DEST}/usr/lib/tk${TKMAJOR}/demos
+
+  chmod 644 ${DEST}/usr/lib/libtkstub${TKMAJOR}.a
+}
+
+. $(dirname $0)/master.sh

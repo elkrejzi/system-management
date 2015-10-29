@@ -1,0 +1,51 @@
+#!/bin/bash -e
+
+export PKGNAME=avahi
+export PKGVER=0.6.31
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://avahi.org/download/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
+
+if [ ! -z $1 ]
+then
+  export ADDITIONAL_CONFIGURE_FLAGS=(--disable-gtk
+                                     --disable-gtk3
+                                     --disable-python)
+fi
+
+export CONFIGURE_FLAGS=("${ADDITIONAL_CONFIGURE_FLAGS[@]}"
+                        --disable-qt3             \
+                        --disable-qt4             \
+                        --disable-mono            \
+                        --disable-monodoc         \
+                        --enable-compat-libdns_sd \
+                        --enable-compat-howl      \
+                        --with-distro=none        \
+                        --with-systemdsystemunitdir=/lib/systemd/system)
+
+export POSTINST_TRIGGER=("getent group avahi > /dev/null || groupadd -g 84 avahi"
+                         "getent passwd avahi > /dev/null || useradd -c \"Avahi Daemon Owner\" -d /var/run/avahi-daemon -u 84 -g avahi -s /bin/false avahi\n"
+                         "getent group avahi-autoipd > /dev/null || groupadd -g 85 avahi-autoipd"
+                         "getent passwd avahi-autoipd > /dev/null || useradd -c \"Avahi AutoIPD Owner\" -d /var/lib/avahi-autoipd -u 85 -g avahi-autoipd -s /bin/false avahi-autoipd\n"
+                         "getent group netdev > /dev/null || groupadd -g 86 netdev")
+
+configure_pre() {
+  sed -i 's/\(CFLAGS=.*\)-Werror \(.*\)/\1\2/' configure
+
+  sed -i -e 's/-DG_DISABLE_DEPRECATED=1//' \
+         -e '/-DGDK_DISABLE_DEPRECATED/d' avahi-ui/Makefile.in
+}
+
+make_install_post() {
+  rm -rf ${DEST}/etc/avahi/services/* ${DEST}/var
+
+  install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/etc/systemd/system/sockets.target.wants
+
+  ln -sf /lib/systemd/system/avahi-daemon.service ${DEST}/etc/systemd/system/dbus-org.freedesktop.Avahi.service
+  ln -sf /lib/systemd/system/avahi-daemon.service ${DEST}/etc/systemd/system/multi-user.target.wants/avahi-daemon.service
+  ln -sf /lib/systemd/system/avahi-daemon.socket ${DEST}/etc/systemd/system/sockets.target.wants/avahi-daemon.socket
+  ln -sf /lib/systemd/system/avahi-dnsconfd.service ${DEST}/etc/systemd/system/multi-user.target.wants/avahi-dnsconfd.service
+}
+
+. $(dirname $0)/master.sh

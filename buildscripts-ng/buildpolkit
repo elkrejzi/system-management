@@ -1,0 +1,33 @@
+#!/bin/bash -e
+
+export PKGNAME=polkit
+export PKGVER=0.113
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://www.freedesktop.org/software/polkit/releases/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
+
+export POSTINST_TRIGGER=("getent group polkitd > /dev/null || groupadd -g 27 polkitd"
+                         "getent passwd polkitd > /dev/null || useradd -c \"PolicyKit Daemon Owner\" -d /etc/polkit-1 -u 27 -g polkitd -s /bin/false polkitd\n"
+                         "chmod 4755 /usr/bin/pkexec /usr/lib/polkit-1/polkit-agent-helper-1\n"
+                         "chmod 700 /etc/polkit-1/rules.d /usr/share/polkit-1/rules.d"
+                         "chown polkitd:polkitd /etc/polkit-1/rules.d /usr/share/polkit-1/rules.d")
+
+configure_pre() {
+  sed "s:/sys/fs/cgroup/systemd/:/bin:g" -i configure
+}
+
+make_install_post() {
+cat > ${DEST}/etc/pam.d/polkit-1 << "EOF"
+# Begin /etc/pam.d/polkit-1
+
+auth     include        system-auth
+account  include        system-account
+password include        system-password
+session  include        system-session
+
+# End /etc/pam.d/polkit-1
+EOF
+}
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,35 @@
+#!/bin/bash -e
+
+export PKGNAME=colord
+export PKGVER=1.2.12
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://www.freedesktop.org/software/colord/releases/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
+export MULTILIB_BUILD=1
+
+export POSTINST_TRIGGER=("getent group colord > /dev/null || groupadd -g 71 colord"
+                         "getent passwd colord > /dev/null || useradd -c \"Color Daemon Owner\" -d /var/lib/colord -u 71 -g colord -s /bin/false colord\n"
+                         "chown -R colord:colord /var/lib/colord")
+
+export COMMON_CONFIGURE_FLAGS=(--with-daemon-user=colord
+                               --disable-bash-completion 
+                               --disable-argyllcms-sensor)
+
+if [ ! -z $1 ]
+then
+  export ADDITIONAL_CONFIGURE_FLAGS=(--enable-sane)
+fi
+
+export CONFIGURE_FLAGS=("${COMMON_CONFIGURE_FLAGS[@]}"
+                        "${ADDITIONAL_CONFIGURE_FLAGS[@]}"
+                        --enable-vala)
+
+export CONFIGURE_FLAGS_32=("${COMMON_CONFIGURE_FLAGS[@]}"
+                           --disable-gusb
+                           --disable-introspection
+                           --disable-polkit
+                           --disable-sane
+                           --disable-vala)
+
+. $(dirname $0)/master.sh

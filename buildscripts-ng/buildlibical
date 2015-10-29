@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+export PKGNAME=libical
+export PKGVER=1.0.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/libical/libical/releases/download/v${PKGVER}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+
+make_install_post() {
+  find ${DEST} -name "*.a" -delete
+}
+
+. $(dirname $0)/master.sh

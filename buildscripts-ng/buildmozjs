@@ -1,0 +1,41 @@
+#!/bin/bash -e
+
+export PKGNAME=mozjs
+
+case $(basename $0) in
+  buildmozjs17 )
+    export PKGVER=17.0.0
+    export PKGTAR=${PKGNAME}${PKGVER}.tar.gz
+    export PKGDIR=${PKGNAME}${PKGVER}
+    export USER_CFLAGS="-w"
+    export USER_CXXFLAGS="-w"
+  ;;
+  buildmozjs24 )
+    export PKGVER=24.2.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGDIR=${PKGNAME}-${PKGVER}
+  ;;
+esac
+
+export PKGBUILD=${PKGDIR}/js/src
+export PKGURL="https://ftp.mozilla.org/pub/mozilla.org/js/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_STATIC=1
+
+export CONFIGURE_FLAGS=(--enable-readline
+                        --enable-threadsafe
+                        --with-system-ffi
+                        --with-system-nspr)
+
+configure_pre() {
+  sed -i "s:defined(@TEMPLATE_FILE):@TEMPLATE_FILE:g" config/milestone.pl
+}
+
+make_install_post() {
+  find ${DEST} -name "*.a" -delete
+  find ${DEST} -type f -exec chmod 644 {} \;
+
+  chmod 755 ${DEST}/usr/bin/* ${DEST}/usr/lib/*.so
+}
+
+. $(dirname $0)/master.sh

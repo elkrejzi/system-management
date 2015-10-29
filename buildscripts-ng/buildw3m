@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+export PKGNAME=w3m
+export PKGVER=0.5.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://downloads.sourceforge.net/w3m/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_STATIC=1
+export PATCHES_LIST=("w3m.patch")
+
+export CONFIGURE_FLAGS=(--enable-image=x11,fb
+                        --with-imagelib=imlib2
+                        --with-termlib=ncurses
+                        --disable-w3mmailer
+                        --disable-mouse)
+
+configure_post() {
+  sed -i "s:lImlib2:& -lX11:" Makefile
+}
+
+. $(dirname $0)/master.sh

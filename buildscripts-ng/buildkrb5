@@ -1,0 +1,95 @@
+#!/bin/bash -e
+
+export PKGNAME=krb5
+export PKGVER=1.13.2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGDIR=${PKGNAME}-${PKGVER}
+export PKGBUILD=${PKGDIR}/src
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
+export MULTILIB_BUILD=1
+
+export COMMON_CONFIGURE_FLAGS=(--localstatedir=/var/lib
+                               --enable-dns-for-realm
+                               --with-system-et
+                               --with-system-ss
+                               --with-ldap
+                               --without-system-verto)
+
+export CONFIGURE_FLAGS=("${COMMON_CONFIGURE_FLAGS[@]}")
+export CONFIGURE_FLAGS_32=("${COMMON_CONFIGURE_FLAGS[@]}" --without-tcl --disable-aesni)
+
+configure_pre_common() {
+  sed -e "s@python2.5/Python.h@& python2.7/Python.h@g" \
+      -e "s@-lpython2.5]@&,\n  AC_CHECK_LIB(python2.7,main,[PYTHON_LIB=-lpython2.7])@g" \
+      -i configure.in
+
+  sed -e "/KRB5ROOT=/s@/local@@" \
+      -i util/ac_check_krb5.m4
+
+  autoconf
+}
+
+configure_pre() {
+  configure_pre_common
+}
+
+configure_pre_32() {
+  configure_pre_common
+}
+
+make_install_post() {
+  install -dm755 ${DEST}/usr/share/krb5/examples
+
+  install -Dm644 config-files/kdc.conf ${DEST}/var/lib/krb5kdc/kdc.conf
+  install -Dm644 config-files/krb5.conf ${DEST}/etc/krb5.conf
+
+  install -Dm644 util/ac_check_krb5.m4 ${DEST}/usr/share/aclocal/ac_check_krb5.m4
+
+  install -m644 config-files/kdc.conf config-files/krb5.conf ${DEST}/usr/share/krb5/examples
+  install -m644 plugins/kdb/ldap/libkdb_ldap/kerberos.ldif plugins/kdb/ldap/libkdb_ldap/kerberos.schema ${DEST}/usr/share/krb5/examples
+
+  rm -rf ${DEST}/usr/share/examples ${DEST}/usr/share/gnats
+
+  install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/lib/systemd/system
+
+cat > ${DEST}/lib/systemd/system/krb5-kdc.service << "EOF"
+[Unit]
+Description=Kerberos 5 KDC
+
+[Service]
+ExecStart=/usr/sbin/krb5kdc -n
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > ${DEST}/lib/systemd/system/krb5-kadmind.service << "EOF"
+[Unit]
+Description=Kerberos 5 Administration Server
+
+[Service]
+ExecStart=/usr/sbin/kadmind -nofork
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > ${DEST}/lib/systemd/system/krb5-kpropd.service << "EOF"
+[Unit]
+Description=Kerberos 5 Propagation Server
+
+[Service]
+ExecStart=/usr/sbin/kpropd -S
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+  ln -sf /lib/systemd/system/krb5-kdc.service ${DEST}/etc/systemd/system/multi-user.target.wants/krb5-kdc.service
+  ln -sf /lib/systemd/system/krb5-kpropd.service ${DEST}/etc/systemd/system/multi-user.target.wants/krb5-kpropd.service
+  ln -sf /lib/systemd/system/krb5-kadmind.service ${DEST}/etc/systemd/system/multi-user.target.wants/krb5-kadmind.service
+}
+
+. $(dirname $0)/master.sh

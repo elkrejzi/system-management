@@ -7,7 +7,7 @@ export MULTILIB_BUILD=1
 export MAKE_INSTALL_FLAGS="prefix=/usr mandir=/usr/share/man"
 export MAKE_INSTALL_FLAGS_32="prefix=/usr libdir=/usr/lib32 mandir=/usr/share/man"
 
-export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done" "\n"
+export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done\n"
                     "cp -rf --remove-destination usr/share/man/man3 /usr/share/man")
 
 configure_override() {

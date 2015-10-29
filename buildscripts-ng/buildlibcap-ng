@@ -7,7 +7,7 @@ export PKGURL="https://people.redhat.com/sgrubb/libcap-ng/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--without-python)
 
-export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done" "\n"
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done\n"
                     "cp -rf --remove-destination usr/share/aclocal /usr/share"
                     "cp -rf --remove-destination usr/share/man/man3 /usr/share/man")
 
