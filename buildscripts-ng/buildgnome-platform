@@ -116,6 +116,7 @@ case $(basename $0) in
   buildlibsoup )
     export PKGNAME=libsoup
     export PKGVER=2.52.1
+    export CONFIGURE_FLAGS=(--disable-tls-check)
   ;;
   buildlibwnck )
     export PKGNAME=libwnck

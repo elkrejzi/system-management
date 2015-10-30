@@ -1,0 +1,284 @@
+#!/bin/bash -e
+
+pkg_remove() {
+  find * -type f -o -type l | while read file ; do rm -fv "/$file" ; done
+  find * -type d | sort -r | while read file ; do rmdir --ignore-fail-on-non-empty -v "/$file" ; done
+}
+
+$(dirname $0)/buildlibatomic_ops
+$(dirname $0)/buildgc
+$(dirname $0)/buildguile
+$(dirname $0)/buildmozjs17
+$(dirname $0)/buildtk
+$(dirname $0)/buildyaml
+$(dirname $0)/buildruby
+$(dirname $0)/buildlibical
+$(dirname $0)/buildbluez
+
+pushd /binary
+  tar xf Python-2.[0-9]*.tar.xz
+  rm -f Python-2.[0-9]*.tar.xz
+popd
+
+pushd /binary/Python-2.[0-9]*
+  pkg_remove
+popd
+
+$(dirname $0)/buildpython2
+
+pushd /binary
+  tar xf Python-3.[0-9]*.tar.xz
+  rm -f Python-3.[0-9]*.tar.xz
+popd
+
+pushd /binary/Python-3.[0-9]*
+  pkg_remove
+popd
+
+$(dirname $0)/buildpython3
+
+$(dirname $0)/buildfirebird
+$(dirname $0)/buildmariadb
+$(dirname $0)/buildpostgresql 1
+$(dirname $0)/buildunixODBC
+$(dirname $0)/buildcyrus-sasl 1
+$(dirname $0)/buildopenldap
+$(dirname $0)/buildkrb5
+
+pushd /binary
+  tar xf curl-[0-9]*.tar.xz
+  rm -f curl-[0-9]*.tar.xz
+popd
+
+pushd /binary/curl-[0-9]*
+  pkg_remove
+popd
+
+$(dirname $0)/buildcurl
+
+pushd /binary/cyrus-sasl-[0-9]*
+  pkg_remove
+popd
+
+cp -rfv /binary/cyrus-sasl-[0-9]*/usr/lib/*.so.* /usr/lib
+
+$(dirname $0)/buildcyrus-sasl
+
+pushd /binary/postgresql-[0-9]*
+  pkg_remove
+popd
+
+$(dirname $0)/buildpostgresql
+
+$(dirname $0)/buildlibclc
+$(dirname $0)/buildlibdrm
+$(dirname $0)/buildlibomxil-bellagio
+$(dirname $0)/buildlibva
+$(dirname $0)/buildlibvdpau
+$(dirname $0)/buildopencl-headers
+$(dirname $0)/buildocl-icd
+$(dirname $0)/buildmesa
+$(dirname $0)/buildglu
+$(dirname $0)/buildfreeglut
+$(dirname $0)/buildlibjpeg-turbo
+$(dirname $0)/buildtiff
+$(dirname $0)/buildgiflib
+$(dirname $0)/buildjasper
+$(dirname $0)/buildlcms
+$(dirname $0)/buildlcms2
+$(dirname $0)/buildlibmng
+$(dirname $0)/buildlibmad
+$(dirname $0)/buildlibid3tag
+$(dirname $0)/buildimlib2
+$(dirname $0)/buildw3m
+$(dirname $0)/buildxdg-utils
+$(dirname $0)/buildlibdaemon
+$(dirname $0)/buildlibgusb
+$(dirname $0)/buildpolkit
+$(dirname $0)/buildcolord 1
+$(dirname $0)/buildavahi 1
+$(dirname $0)/buildcups
+$(dirname $0)/buildcairo
+$(dirname $0)/buildgraphite2
+$(dirname $0)/buildharfbuzz
+
+pushd /binary
+  tar xf freetype-[0-9]*.tar.xz
+  rm -f freetype-[0-9]*.tar.xz
+popd
+
+pushd /binary/freetype-[0-9]*
+  pkg_remove
+popd
+
+$(dirname $0)/buildfreetype
+
+pushd /binary/libva-[0-9]*
+  pkg_remove
+popd
+
+$(dirname $0)/buildlibva
+
+$(dirname $0)/buildpango
+$(dirname $0)/buildgdk-pixbuf
+$(dirname $0)/buildatk
+$(dirname $0)/buildat-spi2-core
+$(dirname $0)/buildat-spi2-atk
+$(dirname $0)/buildjson-glib
+$(dirname $0)/buildlibxkbcommon
+$(dirname $0)/buildlibevdev
+$(dirname $0)/buildmtdev
+$(dirname $0)/buildlibepoxy
+$(dirname $0)/buildlibinput
+$(dirname $0)/buildlibunwind
+$(dirname $0)/buildgtk2
+$(dirname $0)/buildgtk3
+$(dirname $0)/buildxbitmaps
+$(dirname $0)/buildxorg-app
+$(dirname $0)/buildfont-util
+$(dirname $0)/buildxcursor-themes
+$(dirname $0)/buildxkeyboard-config
+$(dirname $0)/buildxorg-server
+$(dirname $0)/buildxf86-input-evdev
+$(dirname $0)/buildxf86-input-libinput
+$(dirname $0)/buildxf86-input-synaptics
+$(dirname $0)/buildxf86-video-ati
+$(dirname $0)/buildxf86-video-intel
+$(dirname $0)/buildfftw
+$(dirname $0)/buildtalloc
+$(dirname $0)/buildtdb
+$(dirname $0)/buildtevent
+$(dirname $0)/buildldb
+$(dirname $0)/buildjansson
+$(dirname $0)/buildlibmbim
+$(dirname $0)/buildlibndp
+$(dirname $0)/buildlibnl
+$(dirname $0)/buildlibpcap
+$(dirname $0)/buildlibqmi
+$(dirname $0)/buildlibsoup
+$(dirname $0)/buildslang
+$(dirname $0)/buildlibteam
+$(dirname $0)/buildnewt
+$(dirname $0)/builddhcp
+$(dirname $0)/buildModemManager
+$(dirname $0)/buildppp
+$(dirname $0)/buildwpa_supplicant 1
+$(dirname $0)/buildNetworkManager
+$(dirname $0)/buildjson-c
+$(dirname $0)/buildlibasyncns
+$(dirname $0)/buildorc
+$(dirname $0)/buildalsa-lib
+$(dirname $0)/buildlibogg
+$(dirname $0)/buildlibvorbis
+$(dirname $0)/buildlibtheora
+$(dirname $0)/buildcdparanoia
+$(dirname $0)/buildflac
+$(dirname $0)/buildlibvisual
+$(dirname $0)/buildspeexdsp
+$(dirname $0)/buildspeex
+$(dirname $0)/buildlibsndfile
+$(dirname $0)/buildlibsamplerate
+$(dirname $0)/buildcelt
+$(dirname $0)/buildeigen2
+$(dirname $0)/buildeigen
+$(dirname $0)/buildgsm
+$(dirname $0)/buildopus
+$(dirname $0)/buildsbc
+$(dirname $0)/buildsoxr
+$(dirname $0)/buildwebrtc-audio-processing
+$(dirname $0)/buildjack
+$(dirname $0)/buildpulseaudio
+$(dirname $0)/buildportaudio
+$(dirname $0)/buildopenal-soft
+$(dirname $0)/buildSDL
+$(dirname $0)/buildSDL2
+$(dirname $0)/buildmpg123
+$(dirname $0)/buildiso-codes
+$(dirname $0)/buildlibproxy
+$(dirname $0)/buildgstreamer
+$(dirname $0)/buildgst-plugins-base
+$(dirname $0)/buildlibglade
+$(dirname $0)/buildlibrsvg
+$(dirname $0)/buildpy2cairo
+$(dirname $0)/buildpycairo
+$(dirname $0)/buildpygobject2
+$(dirname $0)/buildpygobject3
+$(dirname $0)/buildpygtk
+$(dirname $0)/buildaspell
+$(dirname $0)/buildhunspell
+$(dirname $0)/buildhyphen
+$(dirname $0)/buildenchant
+$(dirname $0)/buildgeoclue
+$(dirname $0)/buildlibevent
+$(dirname $0)/buildlibnotify
+$(dirname $0)/buildlibsecret
+$(dirname $0)/buildlibvpx
+$(dirname $0)/buildlibwebp
+$(dirname $0)/buildstartup-notification
+$(dirname $0)/buildwireless_tools
+$(dirname $0)/builddmz-cursor-theme
+$(dirname $0)/buildhicolor-icon-theme
+$(dirname $0)/buildicon-naming-utils
+$(dirname $0)/buildmime-types
+$(dirname $0)/buildadwaita-icon-theme
+$(dirname $0)/builddconf
+$(dirname $0)/buildgsettings-desktop-schemas
+$(dirname $0)/buildglib-networking
+$(dirname $0)/buildgnome-themes-standard
+$(dirname $0)/builddesktop-file-utils
+$(dirname $0)/buildshared-mime-info
+$(dirname $0)/buildqtbase
+$(dirname $0)/buildqtmodules
+$(dirname $0)/buildfirefox
+$(dirname $0)/buildthunderbird
+$(dirname $0)/buildsamba
+$(dirname $0)/buildwebkitgtk
+
+pushd /binary/avahi-[0-9]*
+  pkg_remove
+popd
+
+$(dirname $0)/buildavahi
+
+pushd /binary
+  tar xf cmake-[0-9]*.tar.xz
+  rm -f cmake-[0-9]*.tar.xz
+popd
+
+pushd /binary/cmake-[0-9]*
+  pkg_remove
+popd
+
+$(dirname $0)/buildcmake
+
+pushd /binary
+  tar xf highlight-[0-9]*.tar.xz
+  rm -f highlight-[0-9]*.tar.xz
+popd
+
+pushd /binary/highlight-[0-9]*
+  pkg_remove
+popd
+
+$(dirname $0)/buildhighlight
+
+pushd /binary/wpa_supplicant-[0-9]*
+  pkg_remove
+popd
+
+$(dirname $0)/buildwpa_supplicant
+
+find /binary -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
+
+find /binary -type d -name "*-[0-9]*" ! -path "*/etc/*" ! -path "*/usr/*" | while read dir
+do
+  P=$(basename ${dir})
+  D=$(dirname ${dir})
+
+  pushd ${D}
+    tar cf ${P}.tar ${P}
+    rm -rf ${P}
+  popd
+done
+
+find /binary -name "*.tar" -exec xz -T4 {} \;

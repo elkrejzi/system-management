@@ -26,7 +26,7 @@ case $(basename $0) in
     $(dirname $0)/buildqtsensors
     $(dirname $0)/buildqtwebchannel
     $(dirname $0)/buildqtwebsockets
-    #$(dirname $0)/buildqtwebengine
+    $(dirname $0)/buildqtwebengine
     $(dirname $0)/buildqtwebkit
     $(dirname $0)/buildqttools
     $(dirname $0)/buildqtquick1

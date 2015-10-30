@@ -16,7 +16,7 @@ export COMMON_CONFIGURE_FLAGS=(--with-daemon-user=colord
                                --disable-bash-completion 
                                --disable-argyllcms-sensor)
 
-if [ ! -z $1 ]
+if [ -z $1 ]
 then
   export ADDITIONAL_CONFIGURE_FLAGS=(--enable-sane)
 fi

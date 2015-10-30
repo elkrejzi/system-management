@@ -174,7 +174,7 @@ $(dirname $0)/buildwayland
 $(dirname $0)/buildxorg-proto
 $(dirname $0)/buildutil-macros
 $(dirname $0)/buildxorg-lib
-$(dirname $0)/buildxcb-util
+$(dirname $0)/buildxorg-xcb-util
 $(dirname $0)/buildllvm
 $(dirname $0)/builddbus
 $(dirname $0)/builddbus-glib
@@ -188,7 +188,7 @@ $(dirname $0)/buildsyslinux
 
 find /binary -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
 
-find /binary -type d -name "*-[0-9]*" ! -path "*/usr/*" | while read dir
+find /binary -type d -name "*-[0-9]*" ! -path "*/etc/*" ! -path "*/usr/*" | while read dir
 do
   P=$(basename ${dir})
   D=$(dirname ${dir})

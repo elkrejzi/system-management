@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
 export PKGNAME=portaudio
-export PKGVER=v19_20140130
-export PKGTAR=pa_stable_${PKGVER}.tgz
+export PKGVER=19_20140130
+export PKGTAR=pa_stable_v${PKGVER}.tgz
 export PKGURL="http://www.portaudio.com/archives/${PKGTAR}"
 export PKGDIR=${PKGNAME}
 export MULTILIB_BUILD=1

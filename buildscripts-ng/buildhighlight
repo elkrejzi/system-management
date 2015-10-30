@@ -21,4 +21,8 @@ then
   }
 fi
 
+post_install_config() {
+  gzip -d ${DEST}/usr/share/man/man1/*.gz
+}
+
 . $(dirname $0)/master.sh

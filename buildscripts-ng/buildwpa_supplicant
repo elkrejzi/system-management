@@ -47,16 +47,34 @@ EOF
   sed -e "s@wpa_supplicant -u@& -s -O /var/run/wpa_supplicant@g" -i systemd/wpa_supplicant.service.in
 }
 
-make_override() {
-  make BINDIR=/sbin LIBDIR=/lib V=1 ${ADDITIONAL_MAKE_FLAGS}
-
-  if [ -z $1 ]
-  then
+if [ -z $1 ]
+then
+  additional_build() {
     pushd wpa_gui-qt4
       qmake "QMAKE_CFLAGS+=${CFLAGS}" "QMAKE_CXXFLAGS+=${CFLAGS}" wpa_gui.pro
       make V=1 ${ADDITIONAL_MAKE_FLAGS}
     popd
-  fi
+  }
+  additional_install() {
+    install -m755 wpa_gui-qt4/wpa_gui ${DEST}/usr/bin
+    install -m644 doc/docbook/wpa_gui.8 ${DEST}/usr/share/man/man8
+
+    install -m644 wpa_gui-qt4/wpa_gui.desktop ${DEST}/usr/share/applications
+    install -m644 wpa_gui-qt4/icons/wpa_gui.svg ${DEST}/usr/share/pixmaps
+  }
+else
+  additional_build() {
+    true
+  }
+  additional_install() {
+    true
+  }
+fi
+
+make_override() {
+  make BINDIR=/sbin LIBDIR=/lib V=1 ${ADDITIONAL_MAKE_FLAGS}
+
+  additional_build
 }
 
 make_install_override() {
@@ -76,14 +94,7 @@ make_install_override() {
 
   install -m644 dbus/dbus-wpa_supplicant.conf ${DEST}/etc/dbus-1/system.d/wpa_supplicant.conf
 
-  if [ -z $1 ]
-  then
-    install -m755 wpa_gui-qt4/wpa_gui ${DEST}/usr/bin
-    install -m644 doc/docbook/wpa_gui.8 ${DEST}/usr/share/man/man8
-
-    install -m644 wpa_gui-qt4/wpa_gui.desktop ${DEST}/usr/share/applications
-    install -m644 wpa_gui-qt4/icons/wpa_gui.svg ${DEST}/usr/share/pixmaps
-  fi
+  additional_install
 
   install -m644 examples/*.conf ${DEST}/usr/share/doc/wpa_supplicant
   install -m644 systemd/*.service ${DEST}/lib/systemd/system
