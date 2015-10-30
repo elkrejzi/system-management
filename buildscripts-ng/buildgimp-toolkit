@@ -39,9 +39,9 @@ case $(basename $0) in
   ;;
   buildcairo )
     export PKGNAME=cairo
-    export PKGVER=1.14.2
+    export PKGVER=1.14.4
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://ftp.gnome.org/pub/gnome/sources/glib/${PKGVER:0:4}/${PKGTAR}"
+    export PKGURL="http://cairographics.org/releases/${PKGTAR}"
     export CONFIGURE_FLAGS=(--enable-tee)
     export CONFIGURE_FLAGS_32=(--enable-tee)
     configure_post_32() {
