@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+export PKGNAME=fluidsynth
+export PKGVER=1.1.6
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://downloads.sourceforge.net/fluidsynth/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
+export CMAKE_FLAGS=(-Denable-ladspa=ON -DLIB_SUFFIX="")
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=libquicktime
+export PKGVER=1.2.4
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://downloads.sourceforge.net/libquicktime/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done\n"
+                    "cp -rf --remove-destination usr/bin/libquicktime_config /usr/bin")
+export PATCHES_LIST=("libquicktime-fixes.patch")
+export CONFIGURE_FLAGS=(--enable-gpl --with-libdv --without-doxygen)
+
+. $(dirname $0)/master.sh

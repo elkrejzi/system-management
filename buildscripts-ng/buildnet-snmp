@@ -1,0 +1,30 @@
+#!/bin/bash -e
+
+export PKGNAME=net-snmp
+export PKGVER=5.7.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://downloads.sourceforge.net/net-snmp/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done\n"
+                    "cp -rf --remove-destination usr/bin/net-snmp-config /usr/bin"
+                    "cp -rf --remove-destination usr/share/snmp /usr/share"
+                    "cp -rf --remove-destination usr/share/man/man1/net-snmp-config.1 /usr/share/man/man1"
+                    "cp -rf --remove-destination usr/share/man/man3 /usr/share/man")
+
+export CONFIGURE_FLAGS=(--enable-ipv6
+                        --enable-ucd-snmp-compatibility
+                        --with-default-snmp-version="3"
+                        --with-sys-contact="root@localhost"
+                        --with-sys-location="Unknown"
+                        --with-logfile="/var/log/snmpd.log"
+                        --with-persistent-directory="/var/lib/net-snmp"
+                        --with-perl-modules="INSTALLDIRS=vendor"
+                        --with-python-modules
+                        --with-mib-modules="host misc/ipfwacc ucd-snmp/diskio tunnel ucd-snmp/dlmod")
+
+make_post() {
+  sed -i "s:install --basedir=\$\$dir:install --basedir=\$\$dir --root=${DEST}:" Makefile
+}
+
+. $(dirname $0)/master.sh

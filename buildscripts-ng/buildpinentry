@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=pinentry
+export PKGVER=0.9.6
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="ftp://ftp.gnupg.org/gcrypt/pinentry/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_pre() {
+  sed -i "s:ncursesw/::g" pinentry/pinentry-curses.c
+}
+
+. $(dirname $0)/master.sh

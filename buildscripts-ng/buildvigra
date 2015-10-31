@@ -1,0 +1,11 @@
+#!/bin/bash -e
+
+export PKGNAME=vigra
+export PKGVER=1.10.0
+export PKGTAR=${PKGNAME}-${PKGVER}-src-with-docu.tar.gz
+export PKGURL="https://github.com/ukoethe/vigra/releases/download/Version-$(echo ${PKGVER} | sed 's|\.|_|g')/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export CMAKE_FLAGS=(-DWITH_OPENEXR=true)
+
+. $(dirname $0)/master.sh

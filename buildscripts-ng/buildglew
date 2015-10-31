@@ -1,0 +1,38 @@
+#!/bin/bash -e
+
+export PKGNAME=glew
+export PKGVER=1.13.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tgz
+export PKGURL="https://downloads.sourceforge.net/glew/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+
+configure_override() {
+  sed -i 's|lib64|lib|' config/Makefile.linux
+  sed -i '/^.PHONY: .*\.pc$/d' Makefile
+}
+
+configure_override_32() {
+  sed -i 's|CC = cc|CC = gcc -m32|' config/Makefile.linux
+  sed -i 's|LD = cc|LD = gcc -m32|' config/Makefile.linux
+  sed -i 's|lib64|lib32|' config/Makefile.linux
+}
+
+make_override() {
+  make CFLAGS.EXTRA="${CFLAGS} -fPIC" ${MAKE_JOBS_FLAGS}
+}
+
+make_install_override() {
+  if [ ${MULTILIB} == 1 ]
+  then
+    make GLEW_DEST=${PWD}/dest/usr install.all
+  else
+    make GLEW_DEST=${DEST}/usr install.all
+  fi
+}
+
+post_install_config() {
+  rm -rf ${DEST}/usr/lib*/*.a
+}
+
+. $(dirname $0)/master.sh

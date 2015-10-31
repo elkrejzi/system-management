@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+export PKGNAME=mjpegtools
+export PKGVER=2.1.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://downloads.sourceforge.net/mjpeg/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
+export CONFIGURE_FLAGS=(--enable-largefile)
+
+make_install_post() {
+  install -m644 mpeg2enc/mpeg2syntaxcodes.h ${DEST}/usr/include/mjpegtools/mpeg2enc/
+}
+
+. $(dirname $0)/master.sh

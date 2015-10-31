@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+export PKGNAME=ninja
+export PKGVER=1.6.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/martine/ninja/archive/v${PKGVER}.tar.gz"
+
+configure_override() {
+  true
+}
+
+make_override() {
+  python ./configure.py --bootstrap
+}
+
+make_install_override() {
+  install -Dm755 ninja ${DEST}/usr/bin/ninja
+}
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+export PKGNAME=libvncserver
+export PKGVER=0.9.10
+export PKGTAR=LibVNCServer-${PKGVER}.tar.gz
+export PKGDIR=${PKGNAME}-LibVNCServer-${PKGVER}
+export PKGURL="https://github.com/LibVNC/libvncserver/archive/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--without-libva)
+
+configure_pre() {
+  autoreconf -fi
+}
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,24 @@
+#!/bin/bash -e
+
+export PKGNAME=scons
+export PKGVER=2.4.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://downloads.sourceforge.net/scons/${PKGTAR}"
+
+configure_override() {
+  true
+}
+
+make_override() {
+  true
+}
+
+make_install_override() {
+  python setup.py install --prefix=/usr  \
+                          --standard-lib \
+                          --optimize=1   \
+                          --install-data=/usr/share \
+                          --root=${DEST}
+}
+
+. $(dirname $0)/master.sh

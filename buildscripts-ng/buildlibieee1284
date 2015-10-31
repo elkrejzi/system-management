@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=libieee1284
+export PKGVER=0.2.11
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://downloads.sourceforge.net/libieee1284/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+make_install_post() {
+  rm -rf ${DEST}/usr/bin
+}
+
+. $(dirname $0)/master.sh

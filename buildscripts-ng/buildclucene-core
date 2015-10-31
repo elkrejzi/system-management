@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+export PKGNAME=clucene-core
+export PKGVER=2.3.3.4
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://downloads.sourceforge.net/clucene/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export PATCHES_LIST=("clucene-fixes.patch")
+export CMAKE_FLAGS=(-DBUILD_CONTRIBS_LIB=ON)
+
+. $(dirname $0)/master.sh

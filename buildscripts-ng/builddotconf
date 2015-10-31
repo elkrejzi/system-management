@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=dotconf
+export PKGVER=1.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/williamh/dotconf/archive/v${PKGVER}.tar.gz"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_pre() {
+  autoreconf -fi
+}
+
+. $(dirname $0)/master.sh

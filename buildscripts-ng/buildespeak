@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+export PKGNAME=espeak
+export PKGVER=1.48.04
+export PKGTAR=${PKGNAME}-${PKGVER}-source.zip
+export PKGDIR=${PKGNAME}-${PKGVER}-source
+export PKGBUILD=${PKGDIR}/src
+export PKGURL="https://downloads.sourceforge.net/espeak/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MAKE_FLAGS="AUDIO=runtime"
+
+configure_override() {
+  cp portaudio19.h portaudio.h
+}
+
+make_install_post() {
+  find ${DEST} -name "*.a" -delete
+}
+
+. $(dirname $0)/master.sh

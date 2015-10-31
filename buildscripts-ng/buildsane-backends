@@ -1,0 +1,47 @@
+#!/bin/bash -e
+
+export PKGNAME=sane-backends
+export PKGVER=1.0.25
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://alioth.debian.org/frs/download.php/file/4146/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
+export PATCHES_LIST=("sane-backends-fixes.patch")
+export POSTINST_TRIGGER=("getent group scanner > /dev/null || groupadd -g 70 scanner")
+export CONFIGURE_FLAGS=(--disable-locking
+                        --disable-rpath
+                        --enable-avahi
+                        --enable-libusb_1_0)
+
+make_install_post() {
+  echo "#hpaio" >> ${DEST}/etc/sane.d/dll.conf
+
+  install -dm755 ${DEST}/etc/systemd/system/sockets.target.wants ${DEST}/lib/systemd/system
+
+cat > ${DEST}/lib/systemd/system/saned.socket << "EOF"
+[Unit]
+Description=saned incoming socket
+
+[Socket]
+ListenStream=6566
+Accept=yes
+
+[Install]
+WantedBy=sockets.target
+EOF
+
+cat > ${DEST}/lib/systemd/system/saned@.service << "EOF"
+[Unit]
+Description=Scanner Service
+
+[Service]
+Group=scanner
+ExecStart=/usr/sbin/saned
+StandardInput=socket
+StandardError=syslog
+EOF
+
+  ln -sf /lib/systemd/system/saned.socket ${DEST}/etc/systemd/system/sockets.target.wants/saned.socket
+}
+
+. $(dirname $0)/master.sh

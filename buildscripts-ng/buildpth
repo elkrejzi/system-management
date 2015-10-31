@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=pth
+export PKGVER=2.0.7
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://ftp.gnu.org/gnu/pth/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_pre() {
+  sed -i 's#$(LOBJS): Makefile#$(LOBJS): pth_p.h Makefile#' Makefile.in
+}
+
+. $(dirname $0)/master.sh

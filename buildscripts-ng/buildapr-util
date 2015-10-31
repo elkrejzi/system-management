@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+export PKGNAME=apr-util
+export PKGVER=1.5.4
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://archive.apache.org/dist/apr/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--with-berkeley-db
+                        --with-crypto
+                        --with-dbm=db
+                        --with-ldap
+                        --with-mysql=/usr
+                        --with-odbc=/usr
+                        --with-openssl=/usr
+                        --with-pgsql=/usr
+                        --with-sqlite3
+                        --without-gdbm
+                        --without-sqlite2
+                        --with-apr=/usr/bin/apr-1-config)
+
+. $(dirname $0)/master.sh

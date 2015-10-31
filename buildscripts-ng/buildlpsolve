@@ -1,0 +1,31 @@
+#!/bin/bash -e
+
+export PKGNAME=lpsolve
+export PKGVER=5.5.2.0
+export PKGTAR=lp_solve_${PKGVER}_source.tar.gz
+export PKGDIR=lp_solve_5.5
+export PKGURL="https://downloads.sourceforge.net/lpsolve/${PKGTAR}"
+
+configure_override() {
+  sed -e "s|-O3|${CFLAGS}|g" -i lp_solve/ccc lpsolve55/ccc
+}
+
+make_override() {
+  pushd lpsolve55
+    sh -x ccc
+    rm bin/ux*/liblpsolve55.a
+  popd
+  pushd lp_solve
+    sh -x ccc
+  popd
+}
+
+make_install_override() {
+  install -dm755 ${DEST}/usr/bin ${DEST}/usr/lib ${DEST}/usr/include/lpsolve
+
+  install -m755 lp_solve/bin/ux*/lp_solve ${DEST}/usr/bin
+  install -m755 lpsolve55/bin/ux*/liblpsolve55.so ${DEST}/usr/lib
+  install -m644 lp*.h ${DEST}/usr/include/lpsolve
+}
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+export PKGNAME=pkcs11-helper
+export PKGVER=1.11
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGDIR=${PKGNAME}-${PKGNAME}-${PKGVER}
+export PKGURL="https://github.com/OpenSC/pkcs11-helper/archive/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_pre() {
+  autoreconf -fi
+}
+
+. $(dirname $0)/master.sh

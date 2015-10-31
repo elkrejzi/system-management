@@ -1,0 +1,73 @@
+#!/bin/bash -e
+
+export PKGNAME=subversion
+export PKGVER=1.9.2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://archive.apache.org/dist/subversion/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export POSTINST_TRIGGER=("install -dm700 /run/svnserve")
+
+configure_override() {
+  export RUBYDIR=$(ruby -e "require 'rbconfig'" -e "CONFIG = RbConfig::MAKEFILE_CONFIG" -e "puts RbConfig::expand(CONFIG[\"vendorarchdir\"])")
+
+  ./configure --prefix=/usr --with-apr=/usr --with-apr-util=/usr \
+              --with-zlib=/usr --with-serf=/usr --with-apxs=/usr/bin/apxs \
+              --with-apache-libexecdir=$(/usr/bin/apxs -q libexecdir) \
+              --with-sqlite=/usr --with-berkeley-db=:::db --enable-bdb6 \
+              --with-gnome-keyring --without-kwallet --disable-static \
+              --with-ruby-sitedir=${RUBYDIR}
+}
+
+make_override() {
+  make LT_LDFLAGS="-L${DEST}/usr/lib" ${MAKE_JOBS_FLAGS}
+
+  make swig_pydir=/usr/lib/python2.7/site-packages/libsvn \
+       swig_pydir_extra=/usr/lib/python2.7/site-packages/svn swig-py swig-pl swig-rb
+}
+
+make_install_override() {
+  export LD_LIBRARY_PATH=${DEST}/usr/lib:${LD_LIBRARY_PATH}
+
+  make DESTDIR=${DEST} INSTALLDIRS=vendor \
+       swig_pydir=/usr/lib/python2.7/site-packages/libsvn \
+       swig_pydir_extra=/usr/lib/python2.7/site-packages/svn \
+       install install-swig-py install-swig-pl install-swig-rb
+
+  unset LD_LIBRARY_PATH
+
+  install -dm755 ${DEST}/etc/default ${DEST}/etc/systemd/system/multi-user.target.wants
+  install -dm755 ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d
+
+cat > ${DEST}/etc/default/svnserve << "EOF"
+# Begin /etc/default/svnserve
+
+# Additional options to pass to svnserve command line
+#
+# Example: -r /srv/svn/repositories
+SVNSERVE_OPTS=""
+
+# End /etc/default/svnserve
+EOF
+
+cat > ${DEST}/usr/lib/tmpfiles.d/svnserve.conf << "EOF"
+d /run/svnserve 0700 root root -
+EOF
+
+cat > ${DEST}/lib/systemd/system/svnserve.service << "EOF"
+[Unit]
+Description=Subversion protocol daemon
+After=network.target
+
+[Service]
+Type=forking
+EnvironmentFile=/etc/default/svnserve
+ExecStart=/usr/bin/svnserve --daemon --pid-file=/run/svnserve/svnserve.pid $SVNSERVE_OPTS
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+  ln -sf /lib/systemd/system/svnserve.service ${DEST}/etc/systemd/system/multi-user.target.wants/svnserve.service
+}
+
+. $(dirname $0)/master.sh

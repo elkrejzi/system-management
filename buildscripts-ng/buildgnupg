@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+export PKGNAME=gnupg
+export PKGVER=2.0.29
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="ftp://ftp.gnupg.org/gcrypt/gnupg/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--enable-gpgtar --enable-symcryptrun --enable-standard-socket)
+
+make_install_post() {
+  rm -rf ${DEST}/usr/share/gnupg/com-certs.pem
+
+  for f in gpg gpgv
+  do
+    ln -sf ${f}2   ${DEST}/usr/bin/${f}
+    ln -sf ${f}2.1 ${DEST}/usr/share/man/man1/${f}.1
+  done
+}
+
+. $(dirname $0)/master.sh

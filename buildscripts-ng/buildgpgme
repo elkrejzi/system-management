@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+export PKGNAME=gpgme
+export PKGVER=1.6.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="ftp://ftp.gnupg.org/gcrypt/gpgme/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--disable-fd-passing --disable-gpgsm-test)
+
+. $(dirname $0)/master.sh

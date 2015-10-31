@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+export PKGNAME=chromaprint
+export PKGVER=1.2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/lalinsky/chromaprint/archive/v${PKGVER}.tar.gz"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+
+. $(dirname $0)/master.sh
