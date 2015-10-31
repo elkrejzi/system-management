@@ -1,0 +1,29 @@
+#!/bin/bash -e
+
+export PKGNAME=mpv
+export PKGVER=0.12.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/mpv-player/mpv/archive/v${PKGVER}.tar.gz"
+export MAKE_JOBS_FLAGS="-j4"
+export USER_CFLAGS="-I/usr/include/samba-4.0"
+
+configure_override() {
+  ./bootstrap.py
+  ./waf configure --prefix=/usr      \
+                  --confdir=/etc/mpv \
+                  --lua=52           \
+                  --enable-cdda      \
+                  --enable-openal    \
+                  --enable-sdl2      \
+                  --enable-libmpv-shared
+}
+
+make_override() {
+  ./waf build ${MAKE_JOBS_FLAGS}
+}
+
+make_install_override() {
+  ./waf install --destdir=${DEST}
+}
+
+. $(dirname $0)/master.sh

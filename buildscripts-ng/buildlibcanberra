@@ -1,0 +1,18 @@
+#!/bin/bash -e
+
+export PKGNAME=libcanberra
+export PKGVER=0.30
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://0pointer.de/lennart/projects/libcanberra/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export PATCHES_LIST=("libcanberra.patch")
+export PATCHES_LIST_32=("libcanberra.patch")
+export CONFIGURE_FLAGS=(--disable-oss --disable-null)
+export CONFIGURE_FLAGS_32=(--disable-gstreamer
+                           --disable-gtk3
+                           --disable-gtk
+                           --disable-oss
+                           --disable-null)
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,28 @@
+#!/bin/bash -e
+
+export PKGNAME=live-media
+export PKGVER=2015.10.29
+export PKGTAR=live.${PKGVER}.tar.gz
+export PKGDIR=live
+export PKGURL="http://live555.com/liveMedia/public/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_override() {
+  sed -e 's/$(INCLUDES) -I. -O2 -DSOCKLEN_T/$(INCLUDES) -I. ${CFLAGS} -I. -fPIC -DSOCKLEN_T/g' \
+      -i config.linux
+
+  ./genMakefiles linux
+}
+
+make_install_override() {
+  install -dm755 ${DEST}/usr/lib
+
+  for dir in BasicUsageEnvironment groupsock liveMedia UsageEnvironment
+  do
+    install -dm755 ${DEST}/usr/include/${dir}
+    install -m644 ${dir}/*.a ${DEST}/usr/lib
+    install -m644 ${dir}/include/*.h* ${DEST}/usr/include/${dir}
+  done
+}
+
+. $(dirname $0)/master.sh

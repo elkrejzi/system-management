@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+export PKGNAME=ilmbase
+export PKGVER=2.2.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://download.savannah.nongnu.org/releases/openexr/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+. $(dirname $0)/master.sh

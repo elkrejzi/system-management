@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+export PKGNAME=fribidi
+export PKGVER=0.19.7
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="http://fribidi.org/download/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+. $(dirname $0)/master.sh

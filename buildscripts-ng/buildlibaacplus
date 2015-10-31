@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=libaacplus
+export PKGVER=2.0.2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://tipok.org.ua/downloads/media/aac+/libaacplus/${PKGTAR}"
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
+
+configure_pre() {
+  autoreconf -fi
+}
+
+. $(dirname $0)/master.sh

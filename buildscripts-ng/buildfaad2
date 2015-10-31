@@ -1,0 +1,17 @@
+#!/bin/bash -e
+
+export PKGNAME=faad2
+export PKGVER=2.7
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://downloads.sourceforge.net/faac/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
+export PATCHES_LIST=("faad2-fixes.patch")
+
+configure_pre() {
+  sed -i "s:AM_CONFIG_HEADER:AC_CONFIG_HEADERS:g" configure.in
+  sed -i "s:man_MANS:man1_MANS:g" frontend/Makefile.am
+  autoreconf -fi
+}
+
+. $(dirname $0)/master.sh

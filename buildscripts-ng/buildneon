@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+export PKGNAME=neon
+export PKGVER=0.30.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://www.webdav.org/neon/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--enable-shared --with-ssl)
+
+. $(dirname $0)/master.sh

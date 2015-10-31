@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=SDL_image
+export PKGVER=1.2.12
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://www.libsdl.org/projects/SDL_image/release/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--disable-jpg-shared
+                        --disable-png-shared
+                        --disable-tif-shared
+                        --disable-webp-shared)
+
+. $(dirname $0)/master.sh

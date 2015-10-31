@@ -353,7 +353,7 @@ printf '[ -x /usr/bin/update-desktop-database ] && echo "Processing triggers for
       SPACE_ADDED=1
     fi
 
-printf '[ -x /usr/bin/install-info ] && echo "Processing triggers for texinfo" && for file in usr/share/info/* ; do /usr/bin/install-info /$file /usr/share/info/dir ; done\n' >> ${DEST}/INSTALL
+printf '[ -x /usr/bin/install-info ] && echo "Processing triggers for texinfo" && for file in usr/share/info/* ; do test -e /$file && /usr/bin/install-info /$file /usr/share/info/dir ; done\n' >> ${DEST}/INSTALL
 
   fi
 

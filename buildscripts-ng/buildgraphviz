@@ -1,0 +1,96 @@
+#!/bin/bash -e
+
+export PKGNAME=graphviz
+export PKGVER=2.38.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://graphviz.org/pub/graphviz/stable/SOURCES/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export PATCHES_LIST=("graphviz-qt5.patch")
+export POSTINST_TRIGGER=("/usr/bin/dot -c")
+
+configure_pre() {
+  if [ -e /usr/bin/luac ]
+  then
+    export LUADEST=$(pkg-config --variable=INSTALL_CMOD lua)
+  fi
+
+  if [ -e /usr/bin/perl ]
+  then
+    export PERLDEST=$(perl ${PWD}/config/config_perl.pl PERL_INSTALL_DIR)
+  fi
+
+  if [ -e /usr/bin/php-config ]
+  then
+    export PHPDEST=$(php-config --extension-dir)
+  fi
+
+  if [ -e /usr/bin/python ]
+  then
+    export PYTHONDEST=$(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
+  fi
+
+  if [ -e /usr/bin/ruby ]
+  then
+    export RUBYDEST=$(ruby ${PWD}/config/config_ruby.rb vendorarchdir)
+  fi
+
+  if [ -e /usr/bin/tclsh ]
+  then
+    export TCLVER=$(pkg-config --modversion tcl)
+    export TCLDEST=/usr/lib/tcl${TCLVER}
+  fi
+
+  autoreconf -fi
+
+  sed -i "s:ruby-1.9:ruby-2.2:g" configure
+  sed -i "s/ e_/ gs_error_/"  plugin/gs/gvloadimage_gs.c
+
+  export C_INCLUDE_PATH=/usr/lib/java/include:/usr/lib/java/include/linux
+  export CPLUS_INCLUDE_PATH=$C_INCLUDE_PATH
+}
+
+make_install_post() {
+  rm -rf ${DEST}/usr/lib64 ${DEST}/usr/lib/lua* ${DEST}/usr/lib/perl*
+  rm -rf ${DEST}/usr/lib/php* ${DEST}/usr/lib/python* ${DEST}/usr/lib/ruby*
+  rm -rf ${DEST}/usr/lib/tcl*
+
+  if [ -e ${DEST}/usr/lib/graphviz/lua ]
+  then
+    install -dm755 ${DEST}${LUADEST}
+    ln -sfr ${DEST}/usr/lib/graphviz/lua/gv.so ${DEST}${LUADEST}/
+  fi
+
+  if [ -e ${DEST}/usr/lib/graphviz/perl ]
+  then
+    install -dm755 ${DEST}${PERLDEST}
+    ln -sfr ${DEST}/usr/lib/graphviz/perl/gv.pm ${DEST}${PERLDEST}/
+    ln -sfr ${DEST}/usr/lib/graphviz/perl/gv.so ${DEST}${PERLDEST}/
+  fi
+
+  if [ -e ${DEST}/usr/lib/graphviz/php ]
+  then
+    install -dm755 ${DEST}${PHPDEST}
+    ln -sfr ${DEST}/usr/lib/graphviz/php/gv.so ${DEST}${PHPDEST}/
+  fi
+
+  if [ -e ${DEST}/usr/lib/graphviz/python ]
+  then
+    install -dm755 ${DEST}${PYTHONDEST}
+    ln -sfr ${DEST}/usr/lib/graphviz/python/gv.py ${DEST}${PYTHONDEST}/
+    ln -sfr ${DEST}/usr/lib/graphviz/python/_gv.so ${DEST}${PYTHONDEST}/
+  fi
+
+  if [ -e ${DEST}/usr/lib/graphviz/ruby ]
+  then
+    install -dm755 ${DEST}${RUBYDEST}
+    ln -sfr ${DEST}/usr/lib/graphviz/ruby/gv.so ${DEST}${RUBYDEST}/
+  fi
+
+  if [ -e ${DEST}/usr/lib/graphviz/tcl ]
+  then
+    install -dm755 ${DEST}${TCLDEST}
+    ln -sfr ${DEST}/usr/lib/graphviz/tcl ${DEST}${TCLDEST}/graphviz
+  fi
+}
+
+. $(dirname $0)/master.sh

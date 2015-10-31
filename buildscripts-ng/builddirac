@@ -1,0 +1,11 @@
+#!/bin/bash -e
+
+export PKGNAME=dirac
+export PKGVER=1.0.2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://diracvideo.org/download/dirac-research/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
+export PATCHES_LIST=("dirac-fixes.patch")
+
+. $(dirname $0)/master.sh

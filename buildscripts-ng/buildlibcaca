@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+export PKGNAME=libcaca
+export PKGVER=0.99.beta19
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://caca.zoy.org/files/libcaca/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done\n"
+                    "cp -rf --remove-destination usr/bin/caca-config /usr/bin"
+                    "cp -rf --remove-destination usr/share/man/man1/caca-config.1 /usr/share/man/man1")
+
+export CONFIGURE_FLAGS=(--disable-doc
+                        --disable-gl
+                        --disable-csharp
+                        --disable-cxx
+                        --disable-java
+                        --disable-python
+                        --disable-ruby)
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,23 @@
+#!/bin/bash -e
+
+export PKGNAME=ladspa
+export PKGVER=1.13
+export PKGTAR=${PKGNAME}_sdk_${PKGVER}.tgz
+export PKGDIR=${PKGNAME}_sdk/src
+export PATCHES_LIST=("ladspa-fixes.patch")
+export MAKE_FLAGS="targets"
+export MAKE_INSTALL_FLAGS="INSTALL_PLUGINS_DIR=\${DEST}/usr/lib/ladspa/ \
+                           INSTALL_INCLUDE_DIR=\${DEST}/usr/include/ \
+                           INSTALL_BINARY_DIR=\${DEST}/usr/bin/"
+
+configure_override() {
+  sed -e 's/mkdirhier/mkdir -p/' \
+      -e "s#-O3#${CFLAGS}#" \
+      -i makefile
+}
+
+post_install_config() {
+  rm -rf ladspa_sdk
+}
+
+. $(dirname $0)/master.sh

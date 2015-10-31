@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+export PKGNAME=enca
+export PKGVER=1.16
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://dl.cihar.com/enca/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--with-librecode=/usr --enable-external)
+
+. $(dirname $0)/master.sh

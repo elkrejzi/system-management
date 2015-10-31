@@ -1,0 +1,11 @@
+#!/bin/bash -e
+
+export PKGNAME=exiv2
+export PKGVER=0.25
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://exiv2.org/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
+export CONFIGURE_FLAGS=(--enable-video)
+
+. $(dirname $0)/master.sh

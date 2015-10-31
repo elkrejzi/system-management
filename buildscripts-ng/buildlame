@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+export PKGNAME=lame
+export PKGVER=3.99.5
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://downloads.sourceforge.net/lame/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--enable-mp3rtp)
+
+. $(dirname $0)/master.sh

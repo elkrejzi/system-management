@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+export PKGNAME=taglib
+export PKGVER=1.9.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/taglib/taglib/releases/download/v${PKGVER}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+
+. $(dirname $0)/master.sh

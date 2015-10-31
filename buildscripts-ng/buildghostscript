@@ -1,0 +1,31 @@
+#!/bin/bash -e
+
+export PKGNAME=ghostscript
+export PKGVER=9.18
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="http://downloads.ghostscript.com/public/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+export CONFIGURE_FLAGS=(--enable-dynamic
+                        --disable-compile-inits
+                        --disable-gtk
+                        --with-drivers=ALL
+                        --with-system-libtiff
+                        --with-fontpath=/usr/share/fonts/ghostscript:/usr/share/fonts/truetype:/usr/share/fonts/opentype)
+
+export MAKE_FLAGS="all so SHARE_JPEG=1 SHARE_LIBPNG=1 SHARE_LIBTIFF=1 SHARE_ZLIB=1 SHARE_IJS=1 SHARE_EXPAT=1 WHICH_CMS=lcms2 SHARE_LCMS=1 LCMS2DIR=/usr SHARE_FT=1"
+export MAKE_INSTALL_FLAGS="soinstall"
+
+configure_pre() {
+  rm -rf cups/libs expat freetype ijs jpeg jpegxr lcms lcms2 libpng tiff zlib
+
+  sed -i 's/ZLIBDIR=src/ZLIBDIR=$includedir/' configure.ac configure
+}
+
+make_install_post() {
+  rm -rf ${DEST}/usr/bin/*.sh ${DEST}/usr/bin/gsx
+
+  install -m644 base/gserrors.h /usr/include/ghostscript
+}
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+export PKGNAME=libmpeg2
+export PKGVER=0.5.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://downloads.sourceforge.net/libmpeg2/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
+
+configure_pre() {
+  sed -i 's/static const/static/' libmpeg2/idct_mmx.c
+}
+
+. $(dirname $0)/master.sh

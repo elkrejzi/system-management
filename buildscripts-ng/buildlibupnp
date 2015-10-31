@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+export PKGNAME=libupnp
+export PKGVER=1.6.19
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://downloads.sourceforge.net/pupnp/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,17 @@
+#!/bin/bash -e
+
+export PKGNAME=djvulibre
+export PKGVER=3.5.27
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://downloads.sourceforge.net/djvu/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--disable-desktopfiles)
+
+make_install_post() {
+  for sz in 22 32 48 64
+  do
+    install -Dm644 desktopfiles/prebuilt-hi${sz}-djvu.png ${DEST}/usr/share/icons/hicolor/${sz}x${sz}/mimetypes/image-vnd.djvu.mime.png
+  done
+}
+
+. $(dirname $0)/master.sh

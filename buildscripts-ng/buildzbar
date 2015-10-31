@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+export PKGNAME=zbar
+export PKGVER=0.10
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://downloads.sourceforge.net/zbar/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
+export PATCHES_LIST=("zbar-fixes.patch")
+export CONFIGURE_FLAGS=(--without-qt)
+
+. $(dirname $0)/master.sh

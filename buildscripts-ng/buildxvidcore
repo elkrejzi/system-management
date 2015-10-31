@@ -1,0 +1,19 @@
+#!/bin/bash -e
+
+export PKGNAME=xvidcore
+export PKGVER=1.3.4
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGDIR=${PKGNAME}
+export PKGBUILD=${PKGNAME}/build/generic
+export PKGURL="http://downloads.xvid.org/downloads/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_pre() {
+  sed -i 's/^LN_S=@LN_S@/& -f/' platform.inc.in
+}
+
+configure_post() {
+  sed -i '/libdir.*STATIC_LIB/ s/^/#/' Makefile
+}
+
+. $(dirname $0)/master.sh

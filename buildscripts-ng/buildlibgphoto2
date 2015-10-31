@@ -1,0 +1,29 @@
+#!/bin/bash -e
+
+export PKGNAME=libgphoto2
+export PKGVER=2.5.8
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://downloads.sourceforge.net/gphoto/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_LA=1
+export POSTINST_TRIGGER=("udevadm hwdb --update")
+export CONFIGURE_FLAGS=(--disable-rpath)
+
+make_install_post() {
+  rm -rf ${DEST}/usr/include/gphoto2/gphoto2 ${DEST}/usr/lib/*.la ${DEST}/usr/lib/udev
+
+  install -dm755 ${DEST}/lib/udev/hwdb.d ${DEST}/lib/udev/rules.d
+
+  LD_LIBRARY_PATH=${DEST}/usr/lib${LD_LIBRARY_PATH:+:}$LD_LIBRARY_PATH \
+  CAMLIBS=${DEST}/usr/lib/libgphoto2/${VER} \
+      ${DEST}/usr/lib/libgphoto2/print-camera-list hwdb > \
+      ${DEST}/lib/udev/hwdb.d/20-gphoto2.hwdb
+
+  LD_LIBRARY_PATH=${DEST}/usr/lib${LD_LIBRARY_PATH:+:}$LD_LIBRARY_PATH \
+  CAMLIBS=${DEST}/usr/lib/libgphoto2/${VER} \
+      ${DEST}/usr/lib/libgphoto2/print-camera-list udev-rules version 201 > \
+      ${DEST}/lib/udev/rules.d/40-gphoto.rules
+
+}
+
+. $(dirname $0)/master.sh

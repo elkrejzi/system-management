@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+export PKGNAME=libraw1394
+export PKGVER=2.1.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://www.kernel.org/pub/linux/libs/ieee1394/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
+
+. $(dirname $0)/master.sh

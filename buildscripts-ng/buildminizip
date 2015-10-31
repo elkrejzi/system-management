@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+export PKGNAME=minizip
+export PKGVER=1.2.8
+export PKGTAR=zlib-${PKGVER}.tar.xz
+export PKGDIR=zlib-${PKGVER}
+export PKGBUILD=${PKGDIR}/contrib/minizip
+export PKGURL="http://zlib.net/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_pre() {
+  autoreconf -fi
+}
+
+. $(dirname $0)/master.sh

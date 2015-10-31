@@ -1,0 +1,18 @@
+#!/bin/bash -e
+
+export PKGNAME=aalib
+export PKGVER=1.4rc5
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGDIR=${PKGNAME}-${PKGVER/rc5/.0}
+export PKGURL="https://downloads.sourceforge.net/aa-project/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done\n"
+                    "cp -rf --remove-destination usr/bin/aalib-config /usr/bin\n"
+                    "cp -rf --remove-destination usr/share/aclocal /usr/share"
+                    "cp -rf --remove-destination usr/share/man/man3 /usr/share/man")
+
+configure_pre() {
+  sed -i -e '/AM_PATH_AALIB,/s/AM_PATH_AALIB/[&]/' aalib.m4
+}
+
+. $(dirname $0)/master.sh
