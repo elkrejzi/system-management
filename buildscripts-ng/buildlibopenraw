@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+export PKGNAME=libopenraw
+export PKGVER=0.0.9
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="http://libopenraw.freedesktop.org/download/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export POSTINST_TRIGGER=("[ -x /usr/bin/gdk-pixbuf-query-loaders ] && echo \"Processing triggers for gdk-pixbuf-2.0\" && /usr/bin/gdk-pixbuf-query-loaders --update-cache")
+
+make_install_post() {
+  export SPACE_ADDED=1
+}
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,54 @@
+#!/bin/bash -e
+
+export PKGNAME=libc-client
+export PKGVER=2007f
+export PKGTAR=imap-${PKGVER}.tar.gz
+export PKGDIR=imap-${PKGVER}
+export PKGURL="ftp://ftp.cac.washington.edu/imap/${PKGTAR}"
+
+configure_override() {
+  sed -i "s#BSD_SOURCE#DEFAULT_SOURCE#g" src/osdep/unix/os_{ln,sl}x.h
+
+  sed -i "s#BASELDFLAGS=\"\$(PAMLDFLAGS)\"#BASELDFLAGS=\"../c-client/c-client.a \$(PAMLDFLAGS)\"#g" src/osdep/unix/Makefile
+  sed -i "s#\$(BINARIES);\$(RANLIB)#\$(BINARIES) \$(LIBRARIES);\$(RANLIB)#g" src/osdep/unix/Makefile
+  sed -i "s#\$(CCLIENTLIB) ##g" $(grep -rl "(CCLIENTLIB)")
+
+/bin/echo -e '
+ldbs:  an
+\t$(BUILD) BUILDTYPE=lnps IP=$(IP6) \
+\tSPECIALS="SSLDIR=/usr SSLINCLUDE=/usr/include SSLCERTS=/etc/ssl/certs SSLKEYS=/etc/ssl/private"
+' >> Makefile
+
+/bin/echo -e '
+lnps:  # Linux Pluggable Authentication modules (c-client as shared lib)
+\t$(BUILD) `$(CAT) SPECIALS` OS=lnx \
+\tSIGTYPE=psx CHECKPW=pam CRXTYPE=nfs \
+\tSPOOLDIR=/var/spool \
+\tACTIVEFILE=/var/lib/news/active \
+\tRSHPATH=/usr/bin/rsh \
+\tBASECFLAGS="-fPIC $(GCCCFLAGS)" \
+\tARCHIVE="libc-client.so" \
+\tBASELDFLAGS="-L../c-client -lc-client $(PAMLDFLAGS)" \
+\tARRC="gcc --shared -Wl,-soname,libc-client.so.$(VERSION) -o" \
+\tLIBRARIES="$(PAMLDFLAGS) $(EXTRALDFLAGS) $(SSLLDFLAGS)" \
+\tRANLIB=true
+' >> src/osdep/unix/Makefile
+}
+
+make_override() {
+  yes "y" | make ldbs VERSION=${VER}
+}
+
+make_install_override() {
+  for file in c-client mail imap4r1 rfc822 linkage misc smtp nntp \
+              osdep env_unix env fs ftl nl tcp sslio utf8 utf8aux
+  do
+    install -Dm644 c-client/${file}.h ${DEST}/usr/include/c-client/${file}.h
+  done
+
+  install -Dm755 c-client/libc-client.so ${DEST}/usr/lib/libc-client.so.${PKGVER}
+
+  ln -sf libc-client.so.${PKGVER} ${DEST}/usr/lib/libc-client.so
+}
+
+. $(dirname $0)/master.sh

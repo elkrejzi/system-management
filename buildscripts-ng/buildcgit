@@ -1,28 +1,27 @@
 #!/bin/bash -e
 
-export VER=0.11.2
-export DEST=/binary/cgit-${VER}
+export PKGNAME=cgit
+export PKGVER=0.11.2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://git.zx2c4.com/cgit/snapshot/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
+export POSTINST_TRIGGER=("getent group httpd > /dev/null && getent passwd httpd > /dev/null && chown -R httpd:httpd /var/cache/cgit"
+                         "if [ ! -e /etc/cgitrc ]" "then" "  cp -r /etc/cgitrc.dist /etc/cgitrc" "fi")
 
-pushd cgit-${VER}
+export MAKE_INSTALL_FLAGS="CGIT_SCRIPT_PATH=/usr/share/cgit prefix=/usr"
 
-export LUA_PKGCONFIG=lua
+configure_override() {
+  make get-git
+}
 
-make get-git
+make_install_post() {
+  sed -i "s:-X -S:-O xhtml -S:g" ${DEST}/usr/lib/cgit/filters/syntax-highlighting.sh
 
-sed -i "/BSD_SOURCE/d" git/git-compat-util.h
+  mv ${DEST}/usr/share/cgit/cgit.cgi ${DEST}/usr/lib/cgit/cgit.cgi
+  ln -sf ../../lib/cgit/cgit.cgi ${DEST}/usr/share/cgit/cgit.cgi
 
-make CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" -j4
-
-make CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" CGIT_SCRIPT_PATH=/usr/share/cgit DESTDIR=${DEST} prefix=/usr install
-
-mv ${DEST}/usr/share/cgit/cgit.cgi ${DEST}/usr/lib/cgit/cgit.cgi
-ln -sf ../../lib/cgit/cgit.cgi ${DEST}/usr/share/cgit/cgit.cgi
-
-popd
-
-rm -rf cgit-${VER}
-
-install -dm755 ${DEST}/etc/httpd/extra ${DEST}/var/cache/cgit
+  install -dm755 ${DEST}/etc/httpd/extra ${DEST}/var/cache/cgit
 
 cat > ${DEST}/etc/cgitrc.dist << "EOF"
 # Specify the css url
@@ -164,27 +163,6 @@ Alias /cgit-css "/usr/share/cgit/"
 	Require all granted
 </Directory>
 EOF
+}
 
-sed -i "s:-X -S:-O xhtml -S:g" ${DEST}/usr/lib/cgit/filters/syntax-highlighting.sh
-
-pushd ${DEST}
-
-find * -type f 2>/dev/null | while read BUILD_BINARY ; do
-  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
-    strip --strip-unneeded ${BUILD_BINARY}
-  esac
-done
-
-popd
-
-cat > ${DEST}/INSTALL << "EOF"
-#!/bin/bash
-
-for dir in etc usr var ; do cp -rf --remove-destination $dir / ; done
-
-getent group httpd > /dev/null && getent passwd httpd > /dev/null && chown -R httpd:httpd /var/cache/cgit
-
-if [ ! -e /etc/cgitrc ]; then cp -r /etc/cgitrc.dist /etc/cgitrc ; fi
-EOF
-
-chmod 755 ${DEST}/INSTALL
+. $(dirname $0)/master.sh

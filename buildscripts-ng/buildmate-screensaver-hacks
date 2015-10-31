@@ -1,8 +1,14 @@
 #!/bin/bash -e
 
-export VER=5.33
-export DEST=/binary/mate-screensaver-hacks-${VER}
+export PKGNAME=mate-screensaver-hacks
+export PKGVER=5.34
+export NO_STRIP=1
 
+prepare_src_override() {
+  install -dm755 ${PKGDIR}
+}
+
+configure_override() {
 cat > ${PWD}/migrate-xscreensaver-config.sh << "EOF"
 #!/bin/sh
 
@@ -69,22 +75,19 @@ OnlyShowIn=MATE;
 
 </xsl:stylesheet>
 EOF
+}
 
-chmod +x ${PWD}/migrate-xscreensaver-config.sh
+make_override() {
+  chmod +x ${PWD}/migrate-xscreensaver-config.sh
+}
 
-install -dm755 ${DEST}/usr/share/applications/screensavers
+make_install_override() {
+  install -dm755 ${DEST}/usr/share/applications/screensavers
 
-pushd ${DEST}/usr/share/applications/screensavers
-  ${OLDPWD}/migrate-xscreensaver-config.sh /usr/share/xscreensaver/config/*.xml
-  rm -rf popsquares.desktop
-popd
+  pushd ${DEST}/usr/share/applications/screensavers
+    ${OLDPWD}/migrate-xscreensaver-config.sh /usr/share/xscreensaver/config/*.xml
+    rm -rf popsquares.desktop
+  popd
+}
 
-rm -rf migrate-xscreensaver-config.sh xscreensaver-config.xsl
-
-cat > ${DEST}/INSTALL << "EOF"
-#!/bin/bash
-
-cp -rf --remove-destination usr /
-EOF
-
-chmod 755 ${DEST}/INSTALL
+. $(dirname $0)/master.sh

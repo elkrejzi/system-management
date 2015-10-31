@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=nss-mdns
+export PKGVER=0.10
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://0pointer.de/lennart/projects/nss-mdns/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_override() {
+  ./configure --prefix=
+}
+
+. $(dirname $0)/master.sh

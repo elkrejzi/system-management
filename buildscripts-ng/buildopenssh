@@ -1,43 +1,37 @@
 #!/bin/bash -e
 
-export VER=7.1p1
-export DEST=/binary/openssh-${VER}
+export PKGNAME=openssh
+export PKGVER=7.1p1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
 
-pushd openssh-${VER}
+export POSTINST_TRIGGER=("getent group sshd > /dev/null || groupadd -g 50 sshd"
+                         "getent passwd sshd > /dev/null || useradd -c \"OpenSSH PrivSep\" -d /var/run/sshd -g sshd -s /sbin/nologin -u 50 sshd\n"
+                         "chmod 4711 /usr/libexec/ssh-keysign\n"
+                         "/usr/bin/ssh-keygen -A")
 
-CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr \
-            --sysconfdir=/etc/ssh \
-            --localstatedir=/var \
-            --with-mantype=doc \
-            --with-4in6 \
-            --with-privsep-path=/var/run/sshd \
-            --with-kerberos5=/usr \
-            --with-pam \
-            --with-ssl-engine \
-            --with-xauth=/usr/bin/xauth \
-            --with-default-path=/usr/local/bin:/usr/bin:/bin \
-            --with-superuser-path=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export CONFIGURE_FLAGS=(--sysconfdir=/etc/ssh
+                        --with-mantype=doc
+                        --with-4in6
+                        --with-privsep-path=/var/run/sshd
+                        --with-kerberos5=/usr
+                        --with-pam
+                        --with-ssl-engine
+                        --with-xauth=/usr/bin/xauth
+                        --with-default-path=/usr/local/bin:/usr/bin:/bin
+                        --with-superuser-path=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin)
 
-make -j4
-make install DESTDIR=${DEST}
+make_install_post() {
+  rm -rf ${DEST}/var
 
-install -m755 contrib/ssh-copy-id ${DEST}/usr/bin
-install -m644 contrib/ssh-copy-id.1 ${DEST}/usr/share/man/man1
+  install -m755 contrib/ssh-copy-id ${DEST}/usr/bin
+  install -m644 contrib/ssh-copy-id.1 ${DEST}/usr/share/man/man1
 
-popd
+  sed -i "/OpenBSD/d" ${DEST}/etc/ssh/moduli
 
-rm -rf openssh-${VER}
-
-sed -i "/OpenBSD/d" ${DEST}/etc/ssh/moduli
-
-rm -rf ${DEST}/var
-
-install -dm755 ${DEST}/etc/systemd/system/sockets.target.wants \
-               ${DEST}/lib/systemd/system \
-               ${DEST}/usr/lib/tmpfiles.d \
-               ${DEST}/etc/pam.d
+  install -dm755 ${DEST}/etc/pam.d ${DEST}/etc/systemd/system/sockets.target.wants
+  install -dm755 ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d 
 
 cat > ${DEST}/etc/pam.d/sshd << "EOF"
 # Begin /etc/pam.d/sshd
@@ -276,31 +270,7 @@ Accept=yes
 WantedBy=sockets.target
 EOF
 
-ln -sf /lib/systemd/system/sshd.socket ${DEST}/etc/systemd/system/sockets.target.wants/sshd.socket
+  ln -sf /lib/systemd/system/sshd.socket ${DEST}/etc/systemd/system/sockets.target.wants/sshd.socket
+}
 
-pushd ${DEST}
-
-find * -type f 2>/dev/null | while read BUILD_BINARY ; do
-  case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
-    strip --strip-unneeded ${BUILD_BINARY}
-  esac
-done
-
-popd
-
-cat > ${DEST}/INSTALL << "EOF"
-#!/bin/bash
-
-for dir in etc lib usr ; do cp -rf --remove-destination $dir / ; done
-
-getent group sshd > /dev/null || groupadd -g 50 sshd
-getent passwd sshd > /dev/null || useradd -c "OpenSSH PrivSep" -d /var/run/sshd -g sshd -s /sbin/nologin -u 50 sshd
-
-chmod 4711 /usr/libexec/ssh-keysign
-
-/usr/bin/ssh-keygen -A
-
-[ -x /usr/bin/mandb ] && echo "Processing triggers for man-db" && /usr/bin/mandb -q
-EOF
-
-chmod 755 ${DEST}/INSTALL
+. $(dirname $0)/master.sh

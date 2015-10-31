@@ -1,47 +1,30 @@
 #!/bin/bash -e
 
-export VER=9.10.3
-export DEST=/binary/bind-${VER}
+export PKGNAME=bind
+export PKGVER=9.10.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="ftp://ftp.isc.org/isc/bind/${PKGVER}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export DEBUG_BUILD=1
 
-pushd bind-${VER}
+export CONFIGURE_FLAGS=(--sysconfdir=/etc/bind
+                        --with-openssl=/usr
+                        --with-gssapi=/usr
+                        --with-libtool
+                        --with-dlz-postgres
+                        --with-dlz-mysql
+                        --with-dlz-bdb
+                        --with-dlz-ldap
+                        --with-dlz-odbc=/usr)
 
-if [ -f /media/ntfs/Other/Linux/patches/bind-fixes.patch ]; then
-  patch -Np1 -i /media/ntfs/Other/Linux/patches/bind-fixes.patch
-fi
+configure_post() {
+  sed  -i "/DLZDRIVER_LIBS/s:ldb:& -lodbc:" bin/named/Makefile
+}
 
-CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"   \
-CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong" \
-./configure --prefix=/usr \
-            --sysconfdir=/etc/bind \
-            --localstatedir=/var \
-            --mandir=/usr/share/man \
-            --disable-static \
-            --with-openssl=/usr \
-            --with-gssapi=/usr \
-            --with-libtool \
-            --with-dlz-postgres \
-            --with-dlz-mysql \
-            --with-dlz-bdb \
-            --with-dlz-ldap \
-            --with-dlz-odbc=/usr
+make_install_post() {
+  rm -rf ${DEST}/var
 
-sed  -i "/DLZDRIVER_LIBS/s:ldb:& -lodbc:" bin/named/Makefile
-
-make
-make install DESTDIR=${DEST}
-
-popd
-
-rm -rf bind-${VER}
-
-rm -rf ${DEST}/usr/lib/*.la
-rm -rf ${DEST}/var
-
-chmod 755 ${DEST}/usr/lib/*.so
-
-mkdir -p ${DEST}/etc/systemd/system/multi-user.target.wants
-mkdir -p ${DEST}/lib/systemd/system
-mkdir -p ${DEST}/usr/lib/tmpfiles.d
+  install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d
 
 cat > ${DEST}/etc/bind/named.conf << "EOF"
 // This is the primary configuration file for the BIND DNS server named.
@@ -212,21 +195,10 @@ ExecStop=/usr/sbin/rndc stop
 WantedBy=multi-user.target
 EOF
 
-pushd ${DEST}
+  ln -sf /lib/systemd/system/named.service ${DEST}/etc/systemd/system/multi-user.target.wants/named.service
+}
 
-find * -type f 2>/dev/null | while read BUILD_BINARY ; do
-case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
-mkdir -p usr/lib/debug/`dirname ${BUILD_BINARY}`
-objcopy --only-keep-debug ${BUILD_BINARY} usr/lib/debug/${BUILD_BINARY}
-strip --strip-unneeded ${BUILD_BINARY}
-objcopy --add-gnu-debuglink=usr/lib/debug/${BUILD_BINARY} ${BUILD_BINARY}
-esac
-done
-
-popd
-
-ln -sf /lib/systemd/system/named.service ${DEST}/etc/systemd/system/multi-user.target.wants/named.service
-
+generate_install_override() {
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
 
@@ -251,4 +223,7 @@ chmod g+rwx /var/cache/bind
 [ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/ldconfig
 EOF
 
-chmod 755 ${DEST}/INSTALL
+  chmod 755 ${DEST}/INSTALL
+}
+
+. $(dirname $0)/master.sh

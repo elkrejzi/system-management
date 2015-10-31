@@ -1,0 +1,11 @@
+#!/bin/bash -e
+
+export PKGNAME=asciidoc
+export PKGVER=8.6.9
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://downloads.sourceforge.net/asciidoc/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_STATIC=1
+export NO_STRIP=1
+
+. $(dirname $0)/master.sh

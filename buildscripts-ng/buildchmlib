@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=chmlib
+export PKGVER=0.40
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="http://www.jedrea.com/chmlib/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+make_install_post() {
+  rm -rf ${DEST}/usr/bin
+}
+
+. $(dirname $0)/master.sh

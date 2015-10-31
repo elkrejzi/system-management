@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=expect
+export PKGVER=5.45
+export PKGTAR=${PKGNAME}${PKGVER}.tar.gz
+export PKGDIR=${PKGNAME}${PKGVER}
+export PKGURL="https://downloads.sourceforge.net/expect/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--enable-shared
+                        --with-tcl=/usr/lib
+                        --with-tclinclude=/usr/include)
+
+. $(dirname $0)/master.sh

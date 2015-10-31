@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+export PKGNAME=enscript
+export PKGVER=1.6.6
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://ftp.gnu.org/gnu/enscript/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--sysconfdir=/etc/enscript)
+
+. $(dirname $0)/master.sh
