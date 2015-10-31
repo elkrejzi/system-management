@@ -120,7 +120,7 @@ case $(basename $0) in
   buildlibpagemaker )
     export PKGNAME=libpagemaker
     export PKGVER=0.0.2
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://dev-www.libreoffice.org/src/libpagemaker/${PKGTAR}"
   ;;
   buildlibrevenge )
@@ -157,7 +157,8 @@ case $(basename $0) in
   buildmdds )
     export PKGNAME=mdds
     export PKGVER=0.12.1
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGTAR=${PKGNAME}_${PKGVER}.tar.bz2
+    export PKGDIR=${PKGNAME}_${PKGVER}
     export PKGURL="http://kohei.us/files/mdds/src/${PKGTAR}"
     unset INSTALL_CMD
   ;;

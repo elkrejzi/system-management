@@ -1,0 +1,77 @@
+#!/bin/bash -e
+
+case $(basename $0) in
+  buildgrantlee )
+    export PKGNAME=grantlee
+    export PKGVER=5.0.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://downloads.grantlee.org/${PKGTAR}"
+    export CMAKE_FLAGS=(-DBUILD_TESTS=OFF)
+  ;;
+  buildlibdbusmenu-qt )
+    export PKGNAME=libdbusmenu-qt
+    export PKGVER=0.9.3+15.10.20150604
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://anduin.linuxfromscratch.org/BLFS/other/${PKGTAR}"
+    export CMAKE_FLAGS=(-DCMAKE_INSTALL_LIBDIR=lib -DWITH_DOC=OFF)
+  ;;
+  buildphonon )
+    export PKGNAME=phonon
+    export PKGVER=4.8.3
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://download.kde.org/stable/phonon/${PKGVER}/src/${PKGTAR}"
+    export PATCHES_LIST=("phonon-fixes.patch")
+    export CMAKE_FLAGS=(-DCMAKE_INSTALL_LIBDIR=lib
+                        -DCMAKE_SKIP_RPATH=ON
+                        -DPHONON_BUILD_PHONON4QT5=ON
+                        -D__KDE_HAVE_GCC_VISIBILITY=NO
+                        -DPHONON_INSTALL_QT_EXTENSIONS_INTO_SYSTEM_QT=ON)
+    configure_pre() {
+      sed -i "s:BSD_SOURCE:DEFAULT_SOURCE:g" ../${PKGDIR}/cmake/FindPhononInternal.cmake
+    }
+  ;;
+  buildphonon-backend-gstreamer )
+    export PKGNAME=phonon-backend-gstreamer
+    export PKGVER=4.8.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://download.kde.org/stable/phonon/phonon-backend-gstreamer/${PKGVER}/src/${PKGTAR}"
+    export USER_CFLAGS="$(pkg-config --cflags gstreamer-1.0)"
+    export USER_CXXFLAGS="$(pkg-config --cflags gstreamer-1.0)"
+    export CMAKE_FLAGS=(-DCMAKE_INSTALL_LIBDIR=lib
+                        -DCMAKE_SKIP_RPATH=ON
+                        -DPHONON_BUILD_PHONON4QT5=ON
+                        -D__KDE_HAVE_GCC_VISIBILITY=NO)
+  ;;
+  buildphonon-backend-vlc )
+    export PKGNAME=phonon-backend-vlc
+    export PKGVER=0.8.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://download.kde.org/stable/phonon/phonon-backend-vlc/${PKGVER}/src/${PKGTAR}"
+    export CMAKE_FLAGS=(-DCMAKE_INSTALL_LIBDIR=lib
+                        -DCMAKE_SKIP_RPATH=ON
+                        -DPHONON_BUILD_PHONON4QT5=ON
+                        -D__KDE_HAVE_GCC_VISIBILITY=NO)
+  ;;
+  buildpolkit-qt-1 )
+    export PKGNAME=polkit-qt-1
+    export PKGVER=0.112.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://download.kde.org/stable/apps/KDE4.x/admin/${PKGTAR}"
+    export CMAKE_FLAGS=(-DCMAKE_INSTALL_LIBDIR=lib)
+  ;;
+  buildqca )
+    export PKGNAME=qca
+    export PKGVER=2.1.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://download.kde.org/stable/qca/${PKGVER}/src/${PKGTAR}"
+    export CMAKE_FLAGS=(-DBUILD_TESTS=OFF -DQCA_INSTALL_IN_QT_PREFIX=ON)
+    configure_pre() {
+      sed -i "/BSD_SOURCE/d" ../${PKGDIR}/CMakeLists.txt
+    }
+  ;;
+esac
+
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+
+. $(dirname $0)/master.sh

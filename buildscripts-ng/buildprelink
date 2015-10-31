@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+export PKGNAME=prelink
+export PKGVER=20130503
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGDIR=${PKGNAME}
+export PKGURL="https://people.redhat.com/jakub/prelink/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+. $(dirname $0)/master.sh

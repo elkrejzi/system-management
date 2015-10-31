@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=libspectre
+export PKGVER=0.2.7
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://libspectre.freedesktop.org/releases/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_pre() {
+  sed -i "s/ e_/ gs_error_/" libspectre/spectre-gs.c
+}
+
+. $(dirname $0)/master.sh

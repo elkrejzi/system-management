@@ -1,0 +1,19 @@
+#!/bin/bash -e
+
+export PKGNAME=alsa-plugins
+export PKGVER=1.0.29
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="ftp://ftp.alsa-project.org/pub/plugins/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS_32=(--disable-avcodec)
+
+configure_pre() {
+  sed -i "/speex_preprocess/i#include <stdint.h>" speex/pcm_speex.c
+}
+
+configure_pre_32() {
+  sed -i "/speex_preprocess/i#include <stdint.h>" speex/pcm_speex.c
+}
+
+. $(dirname $0)/master.sh

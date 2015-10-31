@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+export PKGNAME=t1lib
+export PKGVER=5.1.2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://fossies.org/linux/misc/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export INSTALL_CMD=("for dir in usr/include usr/lib usr/share ; do cp -rf --remove-destination \$dir /usr ; done")
+export PATCHES_LIST=("t1lib.patch")
+export MAKE_FLAGS="without_doc"
+
+. $(dirname $0)/master.sh

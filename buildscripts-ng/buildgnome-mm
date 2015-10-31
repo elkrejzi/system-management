@@ -1,0 +1,40 @@
+#!/bin/bash -e
+
+case $(basename $0) in
+  buildatkmm )
+    export PKGNAME=atkmm
+    export PKGVER=2.24.1
+  ;;
+  buildcairomm )
+    export PKGNAME=cairomm
+    export PKGVER=1.12.0
+  ;;
+  buildglibmm )
+    export PKGNAME=glibmm
+    export PKGVER=2.46.1
+  ;;
+  buildgtkmm2 )
+    export PKGNAME=gtkmm
+    export PKGVER=2.24.4
+    export USER_CXXFLAGS="-std=c++11"
+  ;;
+  buildgtkmm3 )
+    export PKGNAME=gtkmm
+    export PKGVER=3.18.0
+  ;;
+  buildlibsigc++ )
+    export PKGNAME=libsigc++
+    export PKGVER=2.6.1
+  ;;
+  buildpangomm )
+    export PKGNAME=pangomm
+    export PKGVER=2.38.1
+  ;;
+esac
+
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://ftp.gnome.org/pub/gnome/sources/${PKGNAME}/${PKGVER:0:4}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_DOC=1
+
+. $(dirname $0)/master.sh

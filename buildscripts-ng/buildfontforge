@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+export PKGNAME=fontforge
+export PKGVER=20150824
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/fontforge/fontforge/releases/download/${PKGVER}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_pre() {
+  rm -rf libltdl m4/argz.m4
+
+  ./bootstrap --force
+}
+
+. $(dirname $0)/master.sh

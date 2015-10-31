@@ -1,0 +1,17 @@
+#!/bin/bash -e
+
+export PKGNAME=doxygen
+export PKGVER=1.8.10
+export PKGTAR=${PKGNAME}-${PKGVER}.src.tar.gz
+export PKGURL="http://ftp.stack.nl/pub/users/dimitri/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export PATCHES_LIST=("doxygen-qt5.patch")
+export CMAKE_FLAGS=(-Dbuild_search=ON -Dbuild_wizard=ON -Duse_libclang=ON)
+
+make_install_post() {
+  install -dm755 ${DEST}/usr/share/man/man1
+  install -m644  ../${PKGDIR}/doc/*.1 ${DEST}/usr/share/man/man1
+}
+
+. $(dirname $0)/master.sh

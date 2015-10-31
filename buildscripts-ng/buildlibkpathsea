@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+export PKGNAME=libkpathsea
+export PKGVER=20150521
+export PKGTAR=texlive-${PKGVER}-source.tar.xz
+export PKGDIR=texlive-${PKGVER}-source
+export PKGBUILD=texlive-${PKGVER}-source/texk/kpathsea
+export PKGURL="ftp://tug.org/texlive/historic/2015/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
+
+. $(dirname $0)/master.sh

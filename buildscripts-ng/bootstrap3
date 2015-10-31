@@ -1,0 +1,194 @@
+#!/bin/bash -e
+
+pkg_remove() {
+  find * -type f -o -type l | while read file ; do rm -fv "/$file" ; done
+  find * -type d | sort -r | while read file ; do rmdir --ignore-fail-on-non-empty -v "/$file" ; done
+}
+
+$(dirname $0)/builddjvulibre
+$(dirname $0)/buildexiv2
+$(dirname $0)/buildfribidi
+$(dirname $0)/buildijs
+$(dirname $0)/buildilmbase
+$(dirname $0)/buildlibexif
+$(dirname $0)/buildlibgd
+$(dirname $0)/buildliblqr
+$(dirname $0)/buildlibraw
+$(dirname $0)/buildminizip
+$(dirname $0)/buildopenjpeg
+$(dirname $0)/buildopenjpeg2
+$(dirname $0)/buildrecode
+$(dirname $0)/buildenca
+$(dirname $0)/buildghostscript
+$(dirname $0)/buildlibgphoto2
+$(dirname $0)/buildopenexr
+$(dirname $0)/buildpoppler
+$(dirname $0)/buildgraphviz
+$(dirname $0)/buildImageMagick
+$(dirname $0)/buildlibcddb
+$(dirname $0)/buildlibdvdread
+$(dirname $0)/buildlibebml
+$(dirname $0)/buildlibraw1394
+$(dirname $0)/buildv4l-utils
+$(dirname $0)/builda52dec
+$(dirname $0)/buildaalib
+$(dirname $0)/builddirac
+$(dirname $0)/buildfaac
+$(dirname $0)/buildfaad2
+$(dirname $0)/buildfdk-aac
+$(dirname $0)/buildgame-music-emu
+$(dirname $0)/buildid3lib
+$(dirname $0)/buildladspa
+$(dirname $0)/buildlame
+$(dirname $0)/buildlibaacplus
+$(dirname $0)/buildlibaacs
+$(dirname $0)/buildlibao
+$(dirname $0)/buildlibass
+$(dirname $0)/buildlibavc1394
+$(dirname $0)/buildlibbluray
+$(dirname $0)/buildlibbs2b
+$(dirname $0)/buildlibcaca
+$(dirname $0)/buildlibcanberra
+$(dirname $0)/buildlibcdio
+$(dirname $0)/buildlibdc1394
+$(dirname $0)/buildlibdca
+$(dirname $0)/buildlibdiscid
+$(dirname $0)/buildlibdv
+$(dirname $0)/buildlibdvbpsi
+$(dirname $0)/buildlibdvdcss
+$(dirname $0)/buildlibdvdnav
+$(dirname $0)/buildlibguess
+$(dirname $0)/buildlibiec61883
+$(dirname $0)/buildlibkate
+$(dirname $0)/buildlibmatroska
+$(dirname $0)/buildlibmms
+$(dirname $0)/buildlibmodplug
+$(dirname $0)/buildlibmpcdec
+$(dirname $0)/buildlibmpeg2
+$(dirname $0)/buildlibmtp
+$(dirname $0)/buildlibshout
+$(dirname $0)/buildlibssh
+$(dirname $0)/buildlibtar
+$(dirname $0)/buildlibupnp
+$(dirname $0)/buildlive-media
+$(dirname $0)/buildneon
+$(dirname $0)/buildopencore-amr
+$(dirname $0)/buildschroedinger
+$(dirname $0)/buildSDL_image
+$(dirname $0)/buildsoundtouch
+$(dirname $0)/buildtaglib
+$(dirname $0)/buildtwolame
+$(dirname $0)/buildvo-aacenc
+$(dirname $0)/buildvo-amrwbenc
+$(dirname $0)/buildwavpack
+$(dirname $0)/buildwildmidi
+$(dirname $0)/buildx264
+$(dirname $0)/buildx265
+$(dirname $0)/buildxvidcore
+$(dirname $0)/buildzbar
+$(dirname $0)/buildzvbi
+$(dirname $0)/buildlibcdio-paranoia
+$(dirname $0)/buildffmpeg
+
+$(dirname $0)/buildx264
+
+$(dirname $0)/buildchromaprint
+$(dirname $0)/buildfluidsynth
+$(dirname $0)/buildFreeRDP
+$(dirname $0)/buildlibmusicbrainz
+$(dirname $0)/buildlibquicktime
+$(dirname $0)/buildlibvncserver
+$(dirname $0)/buildvcdimager
+$(dirname $0)/buildmjpegtools
+$(dirname $0)/buildmpv
+$(dirname $0)/buildvlc
+$(dirname $0)/buildgst-plugins-good
+$(dirname $0)/buildgst-plugins-bad
+$(dirname $0)/buildgst-plugins-ugly
+$(dirname $0)/buildgst-libav
+$(dirname $0)/buildcppunit
+$(dirname $0)/buildglm
+$(dirname $0)/buildmdds
+$(dirname $0)/buildnpapi-sdk
+$(dirname $0)/buildraptor2
+$(dirname $0)/buildclucene-core
+$(dirname $0)/buildglew
+$(dirname $0)/buildhdf5
+$(dirname $0)/buildlibieee1284
+$(dirname $0)/buildlibrevenge
+$(dirname $0)/buildnet-snmp
+$(dirname $0)/buildrasqal
+$(dirname $0)/buildlibixion
+$(dirname $0)/buildlibwpd
+$(dirname $0)/buildlibabw
+$(dirname $0)/buildlibcdr
+$(dirname $0)/buildlibcmis
+$(dirname $0)/buildlibe-book
+$(dirname $0)/buildlibetonyek
+$(dirname $0)/buildlibexttextcat
+$(dirname $0)/buildlibfreehand
+$(dirname $0)/buildlibgltf
+$(dirname $0)/buildliblangtag
+$(dirname $0)/buildlibmspub
+$(dirname $0)/buildlibmwaw
+$(dirname $0)/buildlibodfgen
+$(dirname $0)/buildliborcus
+$(dirname $0)/buildlibpagemaker
+$(dirname $0)/buildlibvisio
+$(dirname $0)/buildlibwpg
+$(dirname $0)/buildlibwps
+$(dirname $0)/buildlpsolve
+$(dirname $0)/buildmythes
+$(dirname $0)/buildredland
+$(dirname $0)/buildsane-backends
+$(dirname $0)/buildvigra
+
+pushd /binary
+  tar xf colord-[0-9]*.tar.xz
+  rm -f colord-[0-9]*.tar.xz
+popd
+
+pushd /binary/colord-[0-9]*
+  pkg_remove
+popd
+
+$(dirname $0)/buildcolord
+
+$(dirname $0)/builddotconf
+$(dirname $0)/buildespeak
+$(dirname $0)/buildre2c
+$(dirname $0)/buildninja
+$(dirname $0)/buildspeech-dispatcher
+$(dirname $0)/buildlibgnome-keyring
+$(dirname $0)/buildscons
+$(dirname $0)/buildapr
+$(dirname $0)/buildapr-util
+$(dirname $0)/buildhttpd
+$(dirname $0)/buildserf
+$(dirname $0)/buildgit
+$(dirname $0)/buildsubversion
+$(dirname $0)/buildlibassuan
+$(dirname $0)/buildlibksba
+$(dirname $0)/buildpkcs11-helper
+$(dirname $0)/buildpth
+$(dirname $0)/buildgnupg
+$(dirname $0)/builddirmngr
+$(dirname $0)/buildgcr
+$(dirname $0)/buildgpgme
+$(dirname $0)/buildpinentry
+$(dirname $0)/buildchromium
+
+find /binary -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
+
+find /binary -type d -name "*-[0-9]*" ! -path "*/etc/*" ! -path "*/usr/*" | while read dir
+do
+  P=$(basename ${dir})
+  D=$(dirname ${dir})
+
+  pushd ${D}
+    tar cf ${P}.tar ${P}
+    rm -rf ${P}
+  popd
+done
+
+find /binary -name "*.tar" -exec xz -T4 {} \;

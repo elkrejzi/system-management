@@ -1,0 +1,28 @@
+#!/bin/bash -e
+
+export PKGNAME=lm_sensors
+export PKGVER=3.4.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="http://ftp.osuosl.org/pub/blfs/conglomeration/lmsensors/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
+
+configure_override() {
+  true
+}
+
+make_override() {
+  make PREFIX=/usr           \
+       BUILD_STATIC_LIB=0    \
+       MANDIR=/usr/share/man \
+       CFLAGS="${CFLAGS}" ${MAKE_JOBS_FLAGS}
+}
+
+make_install_override() {
+  make PREFIX=/usr           \
+       BUILD_STATIC_LIB=0    \
+       MANDIR=/usr/share/man \
+       CFLAGS="${CFLAGS}" install DESTDIR=${DEST}
+}
+
+. $(dirname $0)/master.sh

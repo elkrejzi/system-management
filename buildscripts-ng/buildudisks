@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+export PKGNAME=udisks
+export PKGVER=2.1.6
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="http://udisks.freedesktop.org/releases/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
+
+make_install_post() {
+  mv ${DEST}/usr/sbin ${DEST}
+}
+
+. $(dirname $0)/master.sh

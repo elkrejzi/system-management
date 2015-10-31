@@ -1,0 +1,28 @@
+#!/bin/bash -e
+
+export PKGNAME=lmdb
+export PKGVER=0.9.16
+export PKGTAR=LMDB_${PKGVER}.tar.gz
+export PKGDIR=${PKGNAME}-LMDB_${PKGVER}
+export PKGBUILD=${PKGDIR}/libraries/liblmdb
+export PKGURL="https://github.com/LMDB/lmdb/archive/${PKGTAR}"
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
+
+configure_override() {
+  sed -i "s:man/:share/&:g" Makefile
+}
+
+make_override() {
+  make prefix=/usr OPT="${CFLAGS}"
+}
+
+make_install_override() {
+  install -dm755 ${DEST}/usr/bin ${DEST}/usr/share/man/man1
+  install -dm755 ${DEST}/usr/include ${DEST}/usr/lib
+
+  make prefix=/usr OPT="${CFLAGS}" install DESTDIR=${DEST}
+
+  rm -rf ${DEST}/usr/lib/liblmdb.a
+}
+
+. $(dirname $0)/master.sh

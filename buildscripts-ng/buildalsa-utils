@@ -1,0 +1,11 @@
+#!/bin/bash -e
+
+export PKGNAME=alsa-utils
+export PKGVER=1.0.29
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="ftp://ftp.alsa-project.org/pub/utils/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
+export CONFIGURE_FLAGS=(--disable-alsaconf)
+
+. $(dirname $0)/master.sh
