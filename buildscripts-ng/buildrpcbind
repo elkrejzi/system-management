@@ -5,7 +5,7 @@ export PKGVER=0.2.3
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://downloads.sourceforge.net/rpcbind/"
 export MAKE_JOBS_FLAGS="-j4"
-
+export PATCHES_LIST=("rpcbind.patch")
 export POSTINST_TRIGGER=("getent group rpc > /dev/null || groupadd -g 28 rpc"
                          "getent passwd rpc > /dev/null || useradd -c \"RPC Bind Daemon Owner\" -d /dev/null -g rpc -s /bin/false -u 28 rpc\n"
                          "install -o rpc -g rpc -dm755 /var/lib/rpcbind")

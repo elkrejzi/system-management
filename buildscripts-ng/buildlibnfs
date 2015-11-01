@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+export PKGNAME=libnfs
+export PKGVER=1.9.8
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGDIR=${PKGNAME}-${PKGNAME}-${PKGVER}
+export PKGURL="https://github.com/sahlberg/libnfs/archive/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_pre() {
+  autoreconf -fi
+}
+
+. $(dirname $0)/master.sh

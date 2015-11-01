@@ -1,0 +1,16 @@
+--- a/src/rpcb_svc_com.c	2015-04-27 16:07:43.000000000 +0200
++++ b/src/rpcb_svc_com.c	2015-11-01 18:16:34.915621225 +0100
+@@ -1274,10 +1274,10 @@
+ 	a.rmt_localvers = fi->versnum;
+ 
+ 	xprt_set_caller(xprt, fi);
+-	xprt->xp_auth = &svc_auth_none;
++	SVC_XP_AUTH(xprt) = svc_auth_none;
+ 	svc_sendreply(xprt, (xdrproc_t) xdr_rmtcall_result, (char *) &a);
+-	SVCAUTH_DESTROY(xprt->xp_auth);
+-	xprt->xp_auth = NULL;
++
++	SVCAUTH_DESTROY(&SVC_XP_AUTH(xprt));
+ done:
+ 	if (buffer)
+ 		free(buffer);

@@ -20,6 +20,7 @@ $(dirname $0)/buildcln
 $(dirname $0)/buildfontforge
 $(dirname $0)/buildlibatasmart
 $(dirname $0)/buildlibdmtx
+$(dirname $0)/buildlibnfs
 $(dirname $0)/buildlibzip
 $(dirname $0)/buildlm_sensors
 $(dirname $0)/buildlmdb
@@ -83,16 +84,16 @@ $(dirname $0)/buildatkmm
 $(dirname $0)/buildcaja
 $(dirname $0)/buildclutter-gst
 $(dirname $0)/buildclutter-gtk
-$(dirname $0)/buildlibgdata
+$(dirname $0)/buildgnome-online-accounts
 $(dirname $0)/buildnautilus
 $(dirname $0)/buildpangomm
 $(dirname $0)/buildcheese
 $(dirname $0)/buildevince
 $(dirname $0)/buildgnome-keyring
-$(dirname $0)/buildgnome-online-accounts
 $(dirname $0)/buildgtkmm2
 $(dirname $0)/buildgtkmm3
 $(dirname $0)/buildgucharmap
+$(dirname $0)/buildlibgdata
 $(dirname $0)/buildyelp
 $(dirname $0)/buildaisleriot
 $(dirname $0)/buildeog
