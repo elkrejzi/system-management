@@ -1,0 +1,16 @@
+#!/bin/bash -e
+
+export PKGNAME=oxygen-icons
+export PKGVER=15.04.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export NO_STRIP=1
+export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-update-icon-cache ] && echo \"Processing triggers for oxygen-icon-theme\" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/oxygen")
+
+make_install_post() {
+  export SPACE_ADDED=1
+}
+
+. $(dirname $0)/master.sh

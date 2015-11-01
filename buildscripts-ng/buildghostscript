@@ -25,7 +25,7 @@ configure_pre() {
 make_install_post() {
   rm -rf ${DEST}/usr/bin/*.sh ${DEST}/usr/bin/gsx
 
-  install -m644 base/gserrors.h /usr/include/ghostscript
+  install -m644 base/gserrors.h ${DEST}/usr/include/ghostscript
 }
 
 . $(dirname $0)/master.sh

@@ -1,0 +1,29 @@
+#!/bin/bash -e
+
+export PKGNAME=radvd
+export PKGVER=2.11
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://www.litech.org/radvd/dist/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+make_install_post() {
+  install -Dm644 radvd.conf.example ${DEST}/etc/radvd.conf
+
+  install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/lib/systemd/system
+
+cat > ${DEST}/lib/systemd/system/radvd.service << "EOF"
+[Unit]
+Description=IPv6 Router Advertisement Daemon
+After=network.target
+
+[Service]
+ExecStart=/usr/sbin/radvd --nodaemon --logmethod=stderr
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+  ln -sf /lib/systemd/system/radvd.service ${DEST}/etc/systemd/system/multi-user.target.wants/radvd.service
+}
+
+. $(dirname $0)/master.sh

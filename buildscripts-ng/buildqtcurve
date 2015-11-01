@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+export PKGNAME=qtcurve
+export PKGVER=1.8.18+a3fff13
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export MULTILIB_BUILD=1
+export CMAKE_FLAGS=(-DENABLE_TEST=OFF -DENABLE_QT4=OFF)
+export CMAKE_FLAGS_32=(-DLIB_INSTALL_DIR=/usr/lib32
+                       -DENABLE_TEST=OFF
+                       -DENABLE_QT4=OFF
+                       -DENABLE_QT5=OFF )
+
+. $(dirname $0)/master.sh

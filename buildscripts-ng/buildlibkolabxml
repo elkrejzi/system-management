@@ -1,0 +1,11 @@
+#!/bin/bash -e
+
+export PKGNAME=libkolabxml
+export PKGVER=1.1.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://mirror.kolabsys.com/pub/releases/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export CMAKE_FLAGS=(-DBUILD_TESTS=OFF -DQT5_BUILD=ON)
+
+. $(dirname $0)/master.sh

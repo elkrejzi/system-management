@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+export PKGNAME=cpio
+export PKGVER=2.12
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://ftp.gnu.org/gnu/cpio/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--bindir=/bin --enable-mt --with-rmt=/usr/libexec/rmt)
+
+. $(dirname $0)/master.sh

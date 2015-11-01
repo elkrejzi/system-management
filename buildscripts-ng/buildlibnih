@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+export PKGNAME=libnih
+export PKGVER=1.0.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://launchpad.net/libnih/${PKGVER:0:3}/${PKGVER}/+download/${PKGVER}"
+export MAKE_JOBS_FLAGS="-j4"
+
+. $(dirname $0)/master.sh

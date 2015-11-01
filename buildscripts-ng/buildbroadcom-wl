@@ -1,0 +1,43 @@
+#!/bin/bash -e
+
+export PKGNAME=broadcom-wl
+export PKGVER=6.30.223.271
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://www.broadcom.com/docs/linux_sta/hybrid-v35_64-nodebug-pcoem-$(echo ${PKGVER} | sed 's|\.|_|g').tar.gz"
+export NO_STRIP=1
+export PATCHES_LIST=("broadcom-wl.patch")
+
+prepare_src_override() {
+  if [ ! -e ${SROOT}/${PKGTAR} ]
+  then
+    wget -c ${PKGURL} -O ${SROOT}/${PKGTAR} || exit ${PIPESTATUS}
+  fi
+
+  install -dm755 ${PKGNAME}-${PKGVER}
+
+  bsdtar xf ${SROOT}/${PKGTAR} -C ${PKGNAME}-${PKGVER}
+}
+
+configure_override() {
+  true
+}
+
+make_override() {
+  true
+}
+
+make_install_override() {
+  install -dm755 ${DEST}/lib/modprobe.d ${DEST}/usr/share/broadcom-wl
+
+  mv * ${DEST}/usr/share/broadcom-wl
+
+cat > ${DEST}/lib/modprobe.d/broadcom-wl.conf << "EOF"
+blacklist b43
+blacklist ssb
+blacklist bcma
+blacklist brcmsmac
+blacklist brcmfmac
+EOF
+}
+
+. $(dirname $0)/master.sh

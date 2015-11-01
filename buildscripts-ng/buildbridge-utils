@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+export PKGNAME=bridge-utils
+export PKGVER=1.5
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://downloads.sourceforge.net/bridge/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_pre() {
+  sed -i "/#include <linux\/if.h>/a #include <netinet/ip6.h>" libbridge/libbridge.h
+
+  autoreconf -fi
+}
+
+. $(dirname $0)/master.sh

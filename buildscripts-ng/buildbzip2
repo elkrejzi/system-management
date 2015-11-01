@@ -15,6 +15,8 @@ configure_override_shared() {
 
   sed -i "s|-O2|${CFLAGS}|g" Makefile
   sed -i "s|-O2|${CFLAGS}|g" Makefile-libbz2_so
+
+  unset CFLAGS
 }
 
 configure_override() {

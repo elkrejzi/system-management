@@ -1,0 +1,22 @@
+#!/bin/bash -e
+
+export PKGNAME=steam
+export PKGVER=1.0.0.50
+export PKGTAR=${PKGNAME}_${PKGVER}.tar.gz
+export PKGDIR=${PKGNAME}
+export PKGURL="http://repo.steampowered.com/steam/pool/steam/s/steam/${PKGTAR}"
+export NO_STRIP=1
+
+configure_override() {
+  true
+}
+
+make_override() {
+  true
+}
+
+make_install_post() {
+  ln -sf /bin/true ${DEST}/usr/bin/steamdeps
+}
+
+. $(dirname $0)/master.sh

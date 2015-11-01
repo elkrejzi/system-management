@@ -1,0 +1,24 @@
+#!/bin/bash -e
+
+export PKGNAME=qscintilla
+export PKGVER=2.9.1
+export PKGTAR=QScintilla-gpl-${PKGVER}.tar.gz
+export PKGDIR=QScintilla-gpl-${PKGVER}
+export PKGBUILD=${PKGDIR}/Qt4Qt5
+export PKGURL="https://downloads.sourceforge.net/pyqt/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MAKE_INSTALL_FLAGS="INSTALL_ROOT=\${DEST}"
+
+configure_override() {
+  qmake qscintilla.pro "QMAKE_CFLAGS+=${CFLAGS}" "QMAKE_CXXFLAGS+=${CXXFLAGS}"
+}
+
+make_install_post() {
+  pushd ../designer-Qt4Qt5
+    qmake designer.pro INCLUDEPATH+=../Qt4Qt5 QMAKE_LIBDIR+=../Qt4Qt5 "QMAKE_CFLAGS+=${CFLAGS}" "QMAKE_CXXFLAGS+=${CXXFLAGS}"
+    make ${MAKE_JOBS_FLAGS}
+    make install INSTALL_ROOT=${DEST}
+  popd
+}
+
+. $(dirname $0)/master.sh

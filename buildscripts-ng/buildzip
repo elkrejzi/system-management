@@ -11,6 +11,8 @@ export MAKE_INSTALL_FLAGS="-f unix/Makefile prefix=\${DEST}/usr MANDIR=\${DEST}/
 
 configure_override() {
   sed -i "s:-O3:${CFLAGS}:g" unix/configure
+
+  unset CFLAGS
 }
 
 . $(dirname $0)/master.sh

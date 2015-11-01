@@ -1,0 +1,50 @@
+#!/bin/bash -e
+
+export PKGNAME=dnsmasq
+export PKGVER=2.75
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://www.thekelleys.org.uk/dnsmasq/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export POSTINST_TRIGGER=("getent group dnsmasq > /dev/null || groupadd -g 44 dnsmasq"
+                         "getent passwd dnsmasq > /dev/null || useradd -c \"dnsmasq daemon\" -u 44 -g dnsmasq -d / -s /sbin/nologin dnsmasq")
+
+configure_override() {
+  true
+}
+
+make_override() {
+  make CFLAGS="${CFLAGS}" COPTS="-DHAVE_DNSSEC -DHAVE_DBUS" ${MAKE_JOBS_FLAGS}
+}
+
+make_install_override() {
+  make CFLAGS="${CFLAGS}" COPTS="-DHAVE_DNSSEC -DHAVE_DBUS" PREFIX=/usr DESTDIR=${DEST} install
+
+  install -Dm644 dnsmasq.conf.example ${DEST}/etc/dnsmasq.conf
+  install -Dm644 dbus/dnsmasq.conf ${DEST}/etc/dbus-1/system.d/dnsmasq.conf
+  install -Dm644 trust-anchors.conf ${DEST}/usr/share/dnsmasq/trust-anchors.conf
+
+  sed -i 's,%%PREFIX%%,/usr,' ${DEST}/etc/dnsmasq.conf
+
+  install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/lib/systemd/system
+
+cat >> ${DEST}/lib/systemd/system/dnsmasq.service << "EOF"
+[Unit]
+Description=A lightweight DHCP and caching DNS server
+After=network.target
+Documentation=man:dnsmasq(8)
+
+[Service]
+Type=dbus
+BusName=uk.org.thekelleys.dnsmasq
+ExecStartPre=/usr/sbin/dnsmasq --test
+ExecStart=/usr/sbin/dnsmasq -k --enable-dbus --user=dnsmasq --pid-file
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+  ln -sf /lib/systemd/system/dnsmasq.service ${DEST}/etc/systemd/system/multi-user.target.wants/dnsmasq.service
+}
+
+. $(dirname $0)/master.sh

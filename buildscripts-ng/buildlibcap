@@ -13,11 +13,15 @@ export MAKE_INSTALL_FLAGS_32="-C libcap prefix=/usr lib=lib32"
 configure_override() {
   sed -i "s|-D_FILE_OFFSET_BITS=64|& ${CFLAGS}|" Make.Rules
   sed -i "s:LIBDIR:PAM_&:g" pam_cap/Makefile
+
+  unset CFLAGS
 }
 
 configure_override_32() {
   sed -i "s|-D_FILE_OFFSET_BITS=64|& ${CFLAGS}|" Make.Rules
   sed -i "s| gcc|& -m32|" Make.Rules
+
+  unset CFLAGS
 }
 
 make_install_post() {

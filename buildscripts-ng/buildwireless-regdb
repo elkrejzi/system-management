@@ -1,0 +1,39 @@
+#!/bin/bash -e
+
+export PKGNAME=wireless-regdb
+export PKGVER=2015.10.22
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://www.kernel.org/pub/software/network/wireless-regdb/${PKGTAR}"
+export NO_STRIP=1
+
+configure_override() {
+  true
+}
+
+make_override() {
+  true
+}
+
+make_install_override() {
+  install -Dm644 regulatory.bin ${DEST}/lib/crda/regulatory.bin
+  install -Dm644 sforshee.key.pub.pem ${DEST}/lib/crda/pubkeys/sforshee.key.pub.pem
+  install -Dm644 regulatory.bin.5 ${DEST}/usr/share/man/man5/regulatory.bin.5
+
+  install -dm755 ${DEST}/etc/default
+
+cat > ${DEST}/etc/default/wireless-regdom << "EOF"
+#
+# Wireless regulatory domain configuration
+#
+EOF
+
+  for dom in $(grep ^country db.txt | cut -d' ' -f2 | sed "s#:##g")
+  do
+    echo "#WIRELESS_REGDOM=\"${dom}\"" >> ${DEST}/etc/default/wireless-regdom.tmp
+  done
+
+  sort -u ${DEST}/etc/default/wireless-regdom.tmp >> ${DEST}/etc/default/wireless-regdom
+  rm ${DEST}/etc/default/wireless-regdom.tmp
+}
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+export PKGNAME=pcsxr
+export PKGVER=1.9.93
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGDIR=${PKGNAME}
+export PKGURL="https://sources.archlinux.org/other/community/pcsxr/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--enable-libcdio --enable-opengl)
+
+configure_pre() {
+  autoreconf -fi
+}
+
+. $(dirname $0)/master.sh

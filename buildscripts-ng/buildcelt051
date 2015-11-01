@@ -1,0 +1,11 @@
+#!/bin/bash -e
+
+export PKGNAME=celt
+export PKGVER=0.5.1.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://downloads.xiph.org/releases/celt/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
+export CONFIGURE_FLAGS=(--enable-custom-modes)
+
+. $(dirname $0)/master.sh

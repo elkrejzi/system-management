@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+export PKGNAME=gnuplot
+export PKGVER=5.0.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://downloads.sourceforge.net/gnuplot/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--with-qt=qt5 --libexecdir=/usr/bin WX_CONFIG=/usr/bin/wx-config)
+export MAKE_FLAGS="pkglibexecdir=/usr/bin"
+export MAKE_INSTALL_FLAGS="pkglibexecdir=/usr/bin"
+
+. $(dirname $0)/master.sh

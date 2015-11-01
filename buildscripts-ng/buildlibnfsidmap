@@ -1,0 +1,16 @@
+#!/bin/bash -e
+
+export PKGNAME=libnfsidmap
+export PKGVER=0.26
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://fedorapeople.org/~steved/libnfsidmap/${PKGVER}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+make_install_post() {
+  install -dm755 ${DEST}/lib
+
+  mv ${DEST}/usr/lib/libnfsidmap.so.* ${DEST}/lib
+  ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libnfsidmap.so) ${DEST}/usr/lib/libnfsidmap.so
+}
+
+. $(dirname $0)/master.sh

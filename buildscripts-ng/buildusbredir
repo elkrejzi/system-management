@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+export PKGNAME=usbredir
+export PKGVER=0.7
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="http://spice-space.org/download/usbredir/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+. $(dirname $0)/master.sh

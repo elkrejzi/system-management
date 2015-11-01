@@ -1,0 +1,23 @@
+#!/bin/bash -e
+
+export PKGNAME=cdrtools
+export PKGVER=3.01
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://downloads.sourceforge.net/cdrtools/${PKGTAR}"
+export MAKE_FLAGS="INS_BASE=/usr INS_RBASE=/"
+export MAKE_INSTALL_FLAGS="INS_BASE=/usr INS_RBASE=/"
+
+configure_override() {
+  sed -i "s:-D_GNU_SOURCE:& ${CFLAGS/-fomit-frame-pointer/}:g" DEFAULTS/Defaults.linux
+  sed -i 's|/opt/schily|/usr|g' DEFAULTS/Defaults.linux
+  sed -i 's|DEFINSGRP=.*|DEFINSGRP=root|' DEFAULTS/Defaults.linux
+
+  unset CFLAGS
+  export GMAKE_NOWARN=true
+}
+
+make_install_post() {
+  rm -rf ${DEST}/usr/include ${DEST}/usr/lib/*.a ${DEST}/usr/lib/profiled ${DEST}/usr/share/man/man3
+}
+
+. $(dirname $0)/master.sh

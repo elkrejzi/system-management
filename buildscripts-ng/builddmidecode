@@ -1,0 +1,17 @@
+#!/bin/bash -e
+
+export PKGNAME=dmidecode
+export PKGVER=3.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://download.savannah.gnu.org/releases/dmidecode/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MAKE_FLAGS="prefix=/usr"
+export MAKE_INSTALL_FLAGS="prefix=/usr"
+
+configure_override() {
+  sed -i "s:-O2:${CFLAGS}:g" Makefile
+
+  unset CFLAGS
+}
+
+. $(dirname $0)/master.sh

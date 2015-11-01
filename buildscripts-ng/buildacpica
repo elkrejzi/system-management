@@ -1,0 +1,17 @@
+#!/bin/bash -e
+
+export PKGNAME=acpica
+export PKGVER=20150717
+export PKGTAR=${PKGNAME}-unix-${PKGVER}.tar.gz
+export PKGDIR=${PKGNAME}-unix-${PKGVER}
+export PKGBUILD=${PKGDIR}/generate/unix
+export PKGURL="https://acpica.org/sites/acpica/files/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_override() {
+  sed -i "/OPT_CFLAGS/s:-O2:${CFLAGS}:" Makefile.config
+
+  unset CFLAGS
+}
+
+. $(dirname $0)/master.sh

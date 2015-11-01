@@ -1,0 +1,22 @@
+#!/bin/bash -e
+
+export PKGNAME=thermal_daemon
+export PKGVER=1.4.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/01org/thermal_daemon/archive/v${PKGVER}.tar.gz"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_pre() {
+  autoreconf -fi
+}
+
+make_install_post() {
+  rm -rf ${DEST}/etc/init
+
+  install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants
+
+  ln -sf /lib/systemd/system/thermald.service ${DEST}/etc/systemd/system/dbus-org.freedesktop.thermald.service
+  ln -sf /lib/systemd/system/thermald.service ${DEST}/etc/systemd/system/multi-user.target.wants/thermald.service
+}
+
+. $(dirname $0)/master.sh

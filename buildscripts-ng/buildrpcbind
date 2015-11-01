@@ -1,0 +1,53 @@
+#!/bin/bash -e
+
+export PKGNAME=rpcbind
+export PKGVER=0.2.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://downloads.sourceforge.net/rpcbind/"
+export MAKE_JOBS_FLAGS="-j4"
+
+export POSTINST_TRIGGER=("getent group rpc > /dev/null || groupadd -g 28 rpc"
+                         "getent passwd rpc > /dev/null || useradd -c \"RPC Bind Daemon Owner\" -d /dev/null -g rpc -s /bin/false -u 28 rpc\n"
+                         "install -o rpc -g rpc -dm755 /var/lib/rpcbind")
+
+export CONFIGURE_FLAGS=(--bindir=/sbin
+                        --with-rpcuser=rpc
+                        --enable-warmstarts
+                        --with-statedir=/var/lib/rpcbind)
+
+configure_pre() {
+  sed -i "/servname/s:rpcbind:sunrpc:" src/rpcbind.c
+  sed -i "/error = getaddrinfo/s:rpcbind:sunrpc:" src/rpcinfo.c
+}
+
+make_install_post() {
+  install -dm755 ${DEST}/etc/systemd/system/sockets.target.wants ${DEST}/lib/systemd/system
+
+cat > ${DEST}/lib/systemd/system/rpcbind.service << "EOF"
+[Unit]
+Description=RPC Bind Service
+Requires=rpcbind.socket
+
+[Service]
+Type=forking
+ExecStart=/sbin/rpcbind -w
+
+[Install]
+Also=rpcbind.socket
+EOF
+
+cat > ${DEST}/lib/systemd/system/rpcbind.socket << "EOF"
+[Unit]
+Description=RPC Bind Server Activation Socket
+
+[Socket]
+ListenStream=/var/run/rpcbind.sock
+
+[Install]
+WantedBy=sockets.target
+EOF
+
+  ln -sf /lib/systemd/system/rpcbind.socket ${DEST}/etc/systemd/system/sockets.target.wants/rpcbind.socket
+}
+
+. $(dirname $0)/master.sh

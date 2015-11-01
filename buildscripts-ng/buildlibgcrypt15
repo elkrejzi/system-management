@@ -1,0 +1,23 @@
+#!/bin/bash -e
+
+export PKGNAME=libgcrypt
+export PKGVER=1.5.4
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="ftp://ftp.gnupg.org/gcrypt/libgcrypt/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS=(--disable-padlock-support)
+export CONFIGURE_FLAGS_32=(--disable-padlock-support)
+
+configure_pre_32() {
+  sed 's:path="amd64":path="i586 i386":' -i mpi/config.links
+}
+
+post_install_config() {
+  find ${DEST} -name "*.la" -delete
+  find ${DEST} -name "*.so" -delete
+
+  rm -rf ${DEST}/usr/bin ${DEST}/usr/include ${DEST}/usr/share
+}
+
+. $(dirname $0)/master.sh

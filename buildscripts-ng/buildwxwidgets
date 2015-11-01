@@ -1,0 +1,40 @@
+#!/bin/bash -e
+
+export PKGNAME=wxWidgets
+export PKGVER=3.0.2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://downloads.sourceforge.net/wxwindows/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export PATCHES_LIST=("wxwidgets-abicheck.patch")
+export PATCHES_LIST_32=("wxwidgets-abicheck.patch" "wxwidgets-multilib.patch")
+
+export CONFIGURE_FLAGS_SHARED=(--disable-mediactrl
+                               --disable-webview
+                               --disable-precomp-headers
+                               --enable-graphics_ctx
+                               --enable-unicode
+                               --with-gtk=2
+                               --with-libjpeg=sys
+                               --with-libpng=sys
+                               --with-libtiff=sys
+                               --with-libxpm=sys
+                               --with-opengl
+                               --with-regex=builtin)
+
+export CONFIGURE_FLAGS=("${CONFIGURE_FLAGS_SHARED[@]}")
+export CONFIGURE_FLAGS_32=("${CONFIGURE_FLAGS_SHARED[@]}" --without-libnotify)
+
+make_post() {
+  make -C locale allmo
+}
+
+make_post_32() {
+  make -C locale allmo
+}
+
+make_install_post_32() {
+  mv dest/usr/bin/* ${DEST}/usr/bin
+}
+
+. $(dirname $0)/master.sh

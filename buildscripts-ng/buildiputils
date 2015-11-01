@@ -1,0 +1,35 @@
+#!/bin/bash -e
+
+export PKGNAME=iputils
+export PKGVER=20150815
+export PKGTAR=${PKGNAME}-s${PKGVER}.tar.gz
+export PKGDIR=${PKGNAME}-s${PKGVER}
+export PKGURL="https://github.com/iputils/iputils/archive/s${PKGVER}.tar.gz"
+export MAKE_JOBS_FLAGS="-j4"
+export POSTINST_TRIGGER=("setcap cap_net_raw=ep /bin/ping")
+
+configure_override() {
+  sed -i "s#-O3#${CFLAGS}#g" Makefile
+
+  unset CFLAGS
+}
+
+make_install_override() {
+  make -C doc man
+
+  install -dm755 ${DEST}/bin ${DEST}/sbin ${DEST}/usr/bin ${DEST}/usr/share/man/man8
+
+  install -m755 ping ${DEST}/bin
+  install -m755 arping ${DEST}/sbin
+  install -m755 tracepath tracepath6 ${DEST}/usr/bin
+
+  install -m644 doc/arping.8 doc/tracepath.8 doc/ping.8 ${DEST}/usr/share/man/man8
+
+  ln -sf tracepath.8 ${DEST}/usr/share/man/man8/tracepath6.8
+
+  # compat symlinks
+  ln -sf ping ${DEST}/bin/ping6
+  ln -sf ping.8 ${DEST}/usr/share/man/man8/ping6.8
+}
+
+. $(dirname $0)/master.sh

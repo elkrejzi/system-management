@@ -1,0 +1,26 @@
+#!/bin/bash -e
+
+export PKGNAME=ebtables
+export PKGVER=2.0.10-4
+export PKGTAR=${PKGNAME}-v${PKGVER}.tar.gz
+export PKGDIR=${PKGNAME}-v${PKGVER}
+export PKGURL="https://downloads.sourceforge.net/ebtables/${PKGTAR}"
+
+configure_override() {
+  sed -i "/CFLAGS/s:-Werror:${CFLAGS}:" Makefile
+  sed -i "/CFLAGS_SH_LIB/s:-O3:${CFLAGS}:" Makefile
+
+  unset CFLAGS
+}
+
+make_override() {
+  make LDFLAGS="-Wl,-rpath,/lib/ebtables"
+}
+
+make_install_override() {
+  make install BINDIR=/sbin INITDIR=/etc/rc.d LIBDIR=/lib/ebtables MANDIR=/usr/share/man SYSCONFIGDIR=/etc DESTDIR=${DEST}
+
+  rm -rf ${DEST}/etc/ebtables-config ${DEST}/etc/rc.d
+}
+
+. $(dirname $0)/master.sh

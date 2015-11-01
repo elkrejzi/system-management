@@ -267,7 +267,7 @@ then
     then
       ${PYTHON} setup.py build ${EXTRA_CFG}
     else
-      python setup.py install --root=${DEST} --optimize=1
+      python setup.py build ${EXTRA_CFG}
     fi
   }
   make_install_override() {

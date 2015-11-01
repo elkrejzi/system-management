@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+export PKGNAME=fltk
+export PKGVER=1.3.3
+export PKGTAR=${PKGNAME}-${PKGVER}-source.tar.gz
+export PKGURL="http://fltk.org/pub/fltk/${PKGVER}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_STATIC=1
+export PATCHES_LIST=("fltk-fixes.patch")
+export CONFIGURE_FLAGS=(--enable-shared)
+
+configure_pre() {
+  sed -i "s:class Fl_XFont_On_Demand:class FL_EXPORT Fl_XFont_On_Demand:g" FL/x.H
+  sed -i "/cat./d" documentation/Makefile
+}
+
+make_install_post() {
+  find ${DEST} -name "*.a" -delete
+}
+
+. $(dirname $0)/master.sh

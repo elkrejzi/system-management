@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+export PKGNAME=traceroute
+export PKGVER=2.0.21
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://downloads.sourceforge.net/traceroute/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MAKE_INSTALL_FLAGS="prefix=/usr"
+
+configure_override() {
+  sed -i "s:-O2:${CFLAGS}:g" Make.rules
+
+  unset CFLAGS
+}
+
+make_install_post() {
+  ln -sf traceroute ${DEST}/usr/bin/traceroute6
+  ln -sf traceroute.8 ${DEST}/usr/share/man/man8/traceroute6.8
+}
+
+. $(dirname $0)/master.sh

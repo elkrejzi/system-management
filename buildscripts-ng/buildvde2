@@ -1,0 +1,8 @@
+#!/bin/bash -e
+
+export PKGNAME=vde2
+export PKGVER=2.3.2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://downloads.sourceforge.net/vde/${PKGTAR}"
+
+. $(dirname $0)/master.sh

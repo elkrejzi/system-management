@@ -11,6 +11,8 @@ configure_override() {
   sed -e 's/$(INCLUDES) -I. -O2 -DSOCKLEN_T/$(INCLUDES) -I. ${CFLAGS} -I. -fPIC -DSOCKLEN_T/g' \
       -i config.linux
 
+  unset CFLAGS
+
   ./genMakefiles linux
 }
 

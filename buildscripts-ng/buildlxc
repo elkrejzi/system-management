@@ -1,0 +1,51 @@
+#!/bin/bash -e
+
+export PKGNAME=lxc
+export PKGVER=1.1.4
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://linuxcontainers.org/downloads/lxc/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
+export CONFIGURE_FLAGS=(--with-init-script=systemd --with-systemdsystemunitdir=/lib/systemd/system)
+
+make_install_post() {
+  rm -rf ${DEST}/etc/bash_completion.d
+
+  install -dm755 ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d
+
+cat > ${DEST}/lib/systemd/system/lxc-auto.service << "EOF"
+[Unit]
+Description=Autostart LXC Container
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/lxc-autostart
+ExecStop=/usr/bin/lxc-autostart -s
+Delegate=true
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > ${DEST}/lib/systemd/system/lxc@.service << "EOF"
+[Unit]
+Description=%i LXC
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/lxc-start -d -n %i
+ExecStop=/usr/bin/lxc-stop -n %i
+Delegate=true
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > ${DEST}/usr/lib/tmpfiles.d/lxc.conf << "EOF"
+w /sys/fs/cgroup/memory/memory.use_hierarchy - - - - 1
+EOF
+}
+
+. $(dirname $0)/master.sh

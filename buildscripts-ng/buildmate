@@ -142,6 +142,7 @@ EOF
   buildmate-system-monitor )
     export PKGNAME=mate-system-monitor
     export PKGVER=1.10.1
+    export USER_CXXFLAGS="-std=c++11"
   ;;
   buildmate-terminal )
     export PKGNAME=mate-terminal

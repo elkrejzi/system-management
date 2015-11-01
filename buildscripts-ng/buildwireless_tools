@@ -9,6 +9,8 @@ export PKGURL="http://www.labs.hpe.com/personal/Jean_Tourrilhes/Linux/${PKGTAR}"
 configure_override() {
   sed -i "s:BUILD_STATIC:# &:" Makefile
   sed -i "s:-Os:& ${CFLAGS}:g" Makefile
+
+  unset CFLAGS
 }
 
 make_install_override() {

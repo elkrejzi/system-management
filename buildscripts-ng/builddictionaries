@@ -1,0 +1,136 @@
+#!/bin/bash -e
+
+if [ -d "/binary/dictionaries" ]
+then
+  echo "Old packages directory exists. Removing!"
+  rm -rf /binary/dictionaries
+fi
+
+export ASPELL_EN_VER=2015.08.24
+export ASPELL_HR_VER=0.51
+export HUNSPELL_EN_VER=2015.08.24
+export HUNSPELL_HR_VER=20060617
+
+# Begin aspell-en
+
+wget -c http://downloads.sourceforge.net/wordlist/aspell6-en-${ASPELL_EN_VER}-0.tar.bz2 -O - | tar xfj -
+
+pushd aspell6-en-${ASPELL_EN_VER}-0
+
+export DEST=/binary/dictionaries/aspell-en-${ASPELL_EN_VER}
+
+./configure
+
+make
+make install DESTDIR=${DEST}
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL
+
+popd
+
+rm -rf aspell6-en-${ASPELL_EN_VER}-0
+
+# End aspell-en
+
+# Begin aspell-hr
+
+wget -c https://ftp.gnu.org/gnu/aspell/dict/hr/aspell-hr-${ASPELL_HR_VER}-0.tar.bz2 -O - | tar xfj -
+
+pushd aspell-hr-${ASPELL_HR_VER}-0
+
+export DEST=/binary/dictionaries/aspell-hr-${ASPELL_HR_VER}
+
+./configure
+
+make
+make install DESTDIR=${DEST}
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL
+
+popd
+
+rm -rf aspell-hr-${ASPELL_HR_VER}-0
+
+# End aspell-hr
+
+# Begin hunspell-en
+
+export DEST=/binary/dictionaries/hunspell-en-${HUNSPELL_EN_VER}
+
+install -dm755 ${DEST}/usr/share/hunspell
+
+wget -c http://downloads.sourceforge.net/wordlist/hunspell-en_CA-${HUNSPELL_EN_VER}.zip -O - | bsdtar xf - -C ${DEST}/usr/share/hunspell
+wget -c http://downloads.sourceforge.net/wordlist/hunspell-en_GB-large-${HUNSPELL_EN_VER}.zip -O - | bsdtar xf - -C ${DEST}/usr/share/hunspell
+wget -c http://downloads.sourceforge.net/wordlist/hunspell-en_US-${HUNSPELL_EN_VER}.zip -O - | bsdtar xf - -C ${DEST}/usr/share/hunspell
+
+rm -f ${DEST}/usr/share/hunspell/*.txt
+
+sed -i "s:SET UTF8:SET UTF-8:g" ${DEST}/usr/share/hunspell/*.aff
+
+pushd ${DEST}/usr/share/hunspell
+
+  en_GB_aliases="en_AG en_AU en_BS en_BW en_BZ en_DK en_GB en_GH en_HK en_IE en_IN en_JM en_NA en_NG en_NZ en_SG en_TT en_ZA en_ZW"
+  for lang in $en_GB_aliases; do
+    ln -s en_GB-large.aff $lang.aff
+    ln -s en_GB-large.dic $lang.dic
+  done
+
+  en_US_aliases="en_PH"
+  for lang in $en_US_aliases; do
+    ln -s en_US.aff $lang.aff
+    ln -s en_US.dic $lang.dic
+  done
+
+popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL
+
+# End hunspell-en
+
+# Begin hunspell-hr
+
+export DEST=/binary/dictionaries/hunspell-hr-${HUNSPELL_HR_VER}
+
+install -dm755 ${DEST}/usr/share/hunspell
+
+wget -c http://http.debian.net/debian/pool/main/m/myspell-hr/myspell-hr_${HUNSPELL_HR_VER}.orig.tar.gz -O - | tar xfz - --strip-components=1 -C ${DEST}/usr/share/hunspell
+
+rm -f ${DEST}/usr/share/hunspell/hyph_hr.dic
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+EOF
+
+chmod 755 ${DEST}/INSTALL
+
+# End hunspell-hr
+
+if [ ! -z $1 ]
+then
+  for dir in /binary/dictionaries/*
+  do
+    pushd ${dir}
+      ./INSTALL
+    popd
+  done
+fi

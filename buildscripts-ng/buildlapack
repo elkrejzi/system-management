@@ -1,0 +1,22 @@
+#!/bin/bash -e
+
+export PKGNAME=lapack
+export PKGVER=3.5.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tgz
+export PKGURL="http://www.netlib.org/lapack/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export CMAKE_FLAGS=(-DCMAKE_SKIP_RPATH=ON
+                    -DLAPACKE=ON
+                    -DBUILD_SHARED_LIBS=ON
+                    -DCMAKE_Fortran_COMPILER=gfortran)
+
+make_install_post() {
+  for file in ${DEST}/usr/lib/*.so
+  do
+    ln -sf $(basename ${file}) ${DEST}/usr/lib/$(basename ${file}).so.3
+    ln -sf $(basename ${file}) ${DEST}/usr/lib/$(basename ${file}).so.${PKGVER}
+  done
+}
+
+. $(dirname $0)/master.sh

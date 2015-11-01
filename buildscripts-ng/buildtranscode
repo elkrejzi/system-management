@@ -1,0 +1,37 @@
+#!/bin/bash -e
+
+export PKGNAME=transcode
+export PKGVER=1.1.7
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://bitbucket.org/france/transcode-tcforge/downloads/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export PATCHES_LIST=("transcode-fixes.patch")
+export CONFIGURE_FLAGS=(--enable-libv4l2
+                        --enable-libv4lconvert
+                        --enable-libmpeg2
+                        --enable-v4l
+                        --enable-alsa
+                        --enable-libpostproc
+                        --enable-freetype2
+                        --enable-xvid
+                        --enable-x264
+                        --enable-ogg
+                        --enable-libquicktime
+                        --enable-a52
+                        --enable-faac
+                        --enable-libxml2
+                        --enable-sdl
+                        --enable-libmpeg2convert
+                        --enable-vorbis
+                        --enable-theora
+                        --enable-libdv
+                        --enable-lzo
+                        --enable-mjpegtools
+                        --enable-imagemagick)
+
+configure_pre() {
+  sed -i "s:#include <freetype/ftglyph.h>:#include FT_GLYPH_H:" filter/subtitler/load_font.c
+  sed -i "s:av_close_input_file:avformat_close_input:g" import/probe_ffmpeg.c
+}
+
+. $(dirname $0)/master.sh

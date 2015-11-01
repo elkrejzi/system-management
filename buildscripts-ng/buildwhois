@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+export PKGNAME=whois
+export PKGVER=5.2.10
+export PKGTAR=${PKGNAME}_${PKGVER}.tar.xz
+export PKGURL="http://ftp.debian.org/debian/pool/main/w/whois/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MAKE_FLAGS="CONFIG_FILE=/etc/whois.conf HAVE_LIBIDN=1 HAVE_ICONV=1"
+
+configure_override() {
+  true
+}
+
+make_install_override() {
+  make prefix=/usr BASEDIR=${DEST} install-whois
+
+  install -Dm644 whois.conf ${DEST}/etc/whois.conf
+}
+
+. $(dirname $0)/master.sh

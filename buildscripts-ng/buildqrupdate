@@ -1,0 +1,19 @@
+#!/bin/bash -e
+
+export PKGNAME=qrupdate
+export PKGVER=1.1.2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://downloads.sourceforge.net/qrupdate/${PKGVER}"
+export MAKE_JOBS_FLAGS="-j4"
+export MAKE_FLAGS="solib PREFIX=/usr"
+export MAKE_INSTALL_FLAGS="PREFIX=/usr"
+
+configure_override() {
+  true
+}
+
+make_install_post() {
+  find ${DEST} -name "*.a" -delete
+}
+
+. $(dirname $0)/master.sh

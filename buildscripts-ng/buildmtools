@@ -1,0 +1,17 @@
+#!/bin/bash -e
+
+export PKGNAME=mtools
+export PKGVER=4.0.18
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://ftp.gnu.org/gnu/mtools/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_pre() {
+  sed -i '/^SAMPLE FILE$/s:^:# :' mtools.conf
+}
+
+make_install_post() {
+  install -Dm644 mtools.conf ${DEST}/etc/mtools.conf
+}
+
+. $(dirname $0)/master.sh

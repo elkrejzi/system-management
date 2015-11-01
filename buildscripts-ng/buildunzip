@@ -12,6 +12,8 @@ export MAKE_INSTALL_FLAGS="-f unix/Makefile prefix=\${DEST}/usr MANDIR=\${DEST}/
 
 configure_override() {
   sed -i -e 's/CFLAGS="-O -Wall/& -DNO_LCHMOD ${CFLAGS}/' unix/Makefile
+
+  unset CFLAGS
 }
 
 . $(dirname $0)/master.sh

@@ -1,0 +1,36 @@
+#!/bin/bash -e
+
+export PKGNAME=crda
+export PKGVER=3.18
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://kernel.org/pub/software/network/crda/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export PATCHES_LIST=("crda-fixes.patch")
+export MAKE_FLAGS="LIBDIR=/lib/crda REG_BIN=/lib/crda/regulatory.bin RUNTIME_PUBKEY_DIR=/lib/crda/pubkeys RUNTIME_PUBKEY_ONLY=1 V=1"
+export MAKE_INSTALL_FLAGS="LIBDIR=/lib/crda"
+
+configure_override() {
+  sed -i "s:-O2 -fpic:${CFLAGS} -fpic:g" Makefile
+
+  unset CFLAGS
+}
+
+make_install_post() {
+  gzip -d ${DEST}/usr/share/man/man8/*
+
+cat > ${DEST}/lib/crda/set-wireless-regdom << "EOF"
+#!/bin/bash
+
+unset WIRELESS_REGDOM
+
+. /etc/default/wireless-regdom
+
+[ -n "${WIRELESS_REGDOM}" ] && iw reg set ${WIRELESS_REGDOM}
+EOF
+
+  chmod 755 ${DEST}/lib/crda/set-wireless-regdom
+
+  echo 'ACTION=="add" SUBSYSTEM=="module", DEVPATH=="/module/cfg80211", RUN+="/lib/crda/set-wireless-regdom"' >> ${DEST}/lib/udev/rules.d/85-regulatory.rules
+}
+
+. $(dirname $0)/master.sh

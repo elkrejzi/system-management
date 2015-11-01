@@ -8,6 +8,8 @@ export PKGURL="https://downloads.sourceforge.net/lpsolve/${PKGTAR}"
 
 configure_override() {
   sed -e "s|-O3|${CFLAGS}|g" -i lp_solve/ccc lpsolve55/ccc
+
+  unset CFLAGS
 }
 
 make_override() {

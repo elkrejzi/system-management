@@ -8,6 +8,8 @@ export PKGURL="http://www.rarlab.com/rar/${PKGTAR}"
 
 configure_override() {
   sed -i "s:-O2:${CFLAGS}:g" makefile
+
+  unset CFLAGS
 }
 
 make_install_override() {

@@ -1,0 +1,31 @@
+#!/bin/bash -e
+
+export PKGNAME=fceux
+export PKGVER=2.2.2
+export PKGTAR=${PKGNAME}-${PKGVER}.src.tar.gz
+export PKGURL="https://downloads.sourceforge.net/fceultra/${PKGTAR}"
+
+configure_override() {
+  true
+}
+
+make_override() {
+  true
+}
+
+make_install_override() {
+  scons CFLAGS="${CFLAGS}" \
+        GTK=0  \
+        GTK3=1 \
+        LUA=0  \
+        SYSTEM_MINIZIP=1        \
+        -i --prefix=${DEST}/usr \
+        install
+
+  rm -rf ${DEST}/usr/share/pixmaps
+
+  install -Dm644 fceux.desktop ${DEST}/usr/share/applications/fceux.desktop
+  install -Dm644 fceux.png ${DEST}/usr/share/pixmaps/fceux.png
+}
+
+. $(dirname $0)/master.sh

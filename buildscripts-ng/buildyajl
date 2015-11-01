@@ -1,0 +1,18 @@
+#!/bin/bash -e
+
+export PKGNAME=yajl
+export PKGVER=2.1.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/lloyd/yajl/archive/${PKGVER}.tar.gz"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+
+make_install_post() {
+  find ${DEST} -name "*.a" -delete
+
+  mv ${DEST}/usr/share/pkgconfig ${DEST}/usr/lib
+
+  rm -rf ${DEST}/usr/share
+}
+
+. $(dirname $0)/master.sh

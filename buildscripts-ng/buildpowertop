@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+export PKGNAME=powertop
+export PKGVER=2.7
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://01.org/sites/default/files/downloads/powertop/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+. $(dirname $0)/master.sh

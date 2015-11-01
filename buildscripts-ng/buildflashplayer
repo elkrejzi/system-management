@@ -1,0 +1,39 @@
+#!/bin/bash -e
+
+export PKGNAME=flashplayer
+export PKGVER=11.2.202.540
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://fpdownload.macromedia.com/get/flashplayer/pdc/${PKGVER}/install_flash_player_11_linux.x86_64.tar.gz"
+export NO_STRIP=1
+
+prepare_src_override() {
+  if [ ! -e ${SROOT}/${PKGTAR} ]
+  then
+    wget -c ${PKGURL} -O ${SROOT}/${PKGTAR} || exit ${PIPESTATUS}
+  fi
+
+  install -dm755 ${PKGNAME}-${PKGVER}
+
+  bsdtar xf ${SROOT}/${PKGTAR} -C ${PKGNAME}-${PKGVER} usr
+  bsdtar xf ${SROOT}/${PKGTAR} -C ${PKGNAME}-${PKGVER} libflashplayer.so
+}
+
+configure_override() {
+  rm -rf usr/lib usr/lib64 usr/share/kde4
+}
+
+make_override() {
+  install -dm755 usr/lib/flashplayer usr/lib/mozilla/plugins
+
+  chmod 755 libflashplayer.so
+
+  ln -sf ../../flashplayer/libflashplayer.so usr/lib/mozilla/plugins/libflashplayer.so
+}
+
+make_install_override() {
+  install -dm755 ${DEST}
+  mv libflashplayer.so usr/lib/flashplayer
+  mv usr ${DEST}
+}
+
+. $(dirname $0)/master.sh
