@@ -83,12 +83,13 @@ $(dirname $0)/buildatkmm
 $(dirname $0)/buildcaja
 $(dirname $0)/buildclutter-gst
 $(dirname $0)/buildclutter-gtk
-$(dirname $0)/buildgnome-online-accounts
+$(dirname $0)/buildlibgdata
 $(dirname $0)/buildnautilus
 $(dirname $0)/buildpangomm
 $(dirname $0)/buildcheese
 $(dirname $0)/buildevince
 $(dirname $0)/buildgnome-keyring
+$(dirname $0)/buildgnome-online-accounts
 $(dirname $0)/buildgtkmm2
 $(dirname $0)/buildgtkmm3
 $(dirname $0)/buildgucharmap
