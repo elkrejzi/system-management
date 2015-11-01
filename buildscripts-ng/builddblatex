@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+export PKGNAME=dblatex
+export PKGVER=0.3.7
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://downloads.sourceforge.net/dblatex/${PKGTAR}"
+export NO_STRIP=1
+
+configure_override() {
+  true
+}
+
+make_override() {
+  true
+}
+
+make_install_override() {
+  python setup.py install --root=${DEST} --optimize=1
+}
+
+. $(dirname $0)/master.sh

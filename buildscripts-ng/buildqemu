@@ -1,0 +1,32 @@
+#!/bin/bash -e
+
+export PKGNAME=qemu
+export PKGVER=2.4.0.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="http://wiki.qemu-project.org/download/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_STATIC=1
+export NO_STRIP=1
+export POSTINST_TRIGGER=("getent group kvm > /dev/null || groupadd -g 61 kvm\n"
+                         "chmod 4755 /usr/libexec/qemu-bridge-helper")
+
+export CONFIGURE_FLAGS=(--disable-gtk
+                        --enable-linux-aio
+                        --enable-spice
+                        --enable-tpm
+                        --audio-drv-list='pa alsa sdl')
+
+make_install_post() {
+  rm -rf ${DEST}/usr/share/qemu/*.aml ${DEST}/usr/share/qemu/bios.bin ${DEST}/var
+
+  install -dm755 ${DEST}/lib/udev/rules.d
+
+cat > ${DEST}/lib/udev/rules.d/65-kvm.rules << "EOF"
+KERNEL=="kvm", GROUP="kvm", MODE="0660"
+KERNEL=="vhost-net", GROUP="kvm", MODE="0660", TAG+="uaccess", OPTIONS+="static_node=vhost-net"
+EOF
+
+  strip --strip-unneeded ${DEST}/usr/bin/* ${DEST}/usr/lib/*.so ${DEST}/usr/libexec/*
+}
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,159 @@
+#!/bin/bash -e
+
+export PKGNAME=seabios
+export PKGVER=1.8.2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://code.coreboot.org/p/seabios/downloads/get/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export NO_OPTIMIZATION=1
+export NO_STRIP=1
+
+configure_override() {
+  rm -rf binaries
+  install -dm755 binaries
+
+  make clean distclean
+}
+
+make_override() {
+# Coreboot
+cat > .config << "EOF"
+CONFIG_QEMU_HARDWARE=y
+CONFIG_COREBOOT=y
+EOF
+
+  make oldnoconfig
+  make ${MAKE_JOBS_FLAGS}
+
+  mv out/bios.bin.elf binaries/bios-coreboot.bin
+
+  make clean distclean
+
+# CSM
+cat > .config << "EOF"
+CONFIG_QEMU_HARDWARE=y
+CONFIG_CSM=y
+EOF
+
+  make oldnoconfig
+  make ${MAKE_JOBS_FLAGS}
+
+  mv out/Csm16.bin binaries/bios-csm.bin
+
+  make clean distclean
+
+# SeaBios-128k
+cat > .config << "EOF"
+CONFIG_QEMU=y
+CONFIG_ROM_SIZE=128
+CONFIG_XEN=n
+CONFIG_USB_XHCI=n
+CONFIG_USB_UAS=n
+EOF
+
+  make oldnoconfig
+  make ${MAKE_JOBS_FLAGS}
+
+  mv out/bios.bin binaries/bios.bin
+
+  make clean distclean
+
+# SeaBios-256k
+cat > .config << "EOF"
+CONFIG_QEMU=y
+CONFIG_ROM_SIZE=256
+EOF
+
+  make oldnoconfig
+  make ${MAKE_JOBS_FLAGS}
+
+  mv out/bios.bin binaries/bios-256k.bin
+
+  cp out/src/fw/*dsdt*.aml binaries
+
+  make clean distclean
+
+# VGA Cirrus
+cat > .config << "EOF"
+CONFIG_BUILD_VGABIOS=y
+CONFIG_VGA_CIRRUS=y
+CONFIG_VGA_PCI=y
+EOF
+
+  make oldnoconfig
+  make ${MAKE_JOBS_FLAGS} out/vgabios.bin
+
+  mv out/vgabios.bin binaries/vgabios-cirrus.bin
+
+  make clean distclean
+
+# VGA ISAVGA
+cat > .config << "EOF"
+CONFIG_BUILD_VGABIOS=y
+CONFIG_VGA_BOCHS=y
+CONFIG_VGA_PCI=n
+EOF
+
+  make oldnoconfig
+  make ${MAKE_JOBS_FLAGS} out/vgabios.bin
+
+  mv out/vgabios.bin binaries/vgabios-isavga.bin
+
+  make clean distclean
+
+# VGA QXL
+cat > .config << "EOF"
+CONFIG_BUILD_VGABIOS=y
+CONFIG_VGA_BOCHS=y
+CONFIG_VGA_PCI=y
+CONFIG_OVERRIDE_PCI_ID=y
+CONFIG_VGA_VID=0x1b36
+CONFIG_VGA_DID=0x0100
+EOF
+
+  make oldnoconfig
+  make ${MAKE_JOBS_FLAGS} out/vgabios.bin
+
+  mv out/vgabios.bin binaries/vgabios-qxl.bin
+
+  make clean distclean
+
+# VGA STDVGA
+cat > .config << "EOF"
+CONFIG_BUILD_VGABIOS=y
+CONFIG_VGA_BOCHS=y
+CONFIG_VGA_PCI=y
+EOF
+
+  make oldnoconfig
+  make ${MAKE_JOBS_FLAGS} out/vgabios.bin
+
+  mv out/vgabios.bin binaries/vgabios-stdvga.bin
+
+  make clean distclean
+
+# VGA VMware
+cat > .config << "EOF"
+CONFIG_BUILD_VGABIOS=y
+CONFIG_VGA_BOCHS=y
+CONFIG_VGA_PCI=y
+CONFIG_OVERRIDE_PCI_ID=y
+CONFIG_VGA_VID=0x15ad
+CONFIG_VGA_DID=0x0405
+EOF
+
+  make oldnoconfig
+  make ${MAKE_JOBS_FLAGS} out/vgabios.bin
+
+  mv out/vgabios.bin binaries/vgabios-vmware.bin
+}
+
+make_install_override() {
+  chmod 644 binaries/*
+
+  install -dm755 ${DEST}/usr/share
+
+  mv binaries ${DEST}/usr/share/qemu
+}
+
+. $(dirname $0)/master.sh

@@ -11,6 +11,8 @@ export CONFIGURE_FLAGS=(--enable-wayland --enable-python-library --with-python=p
 
 make_install_post() {
   export SPACE_ADDED=1
+
+  gzip -d ${DEST}/usr/share/man/man1/*
 }
 
 . $(dirname $0)/master.sh

@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+export PKGNAME=libvirt-python
+export PKGVER=1.2.20
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://libvirt.org/sources/python/${PKGTAR}"
+
+configure_override() {
+  true
+}
+
+make_override() {
+  python setup.py build
+}
+
+make_install_override() {
+  python setup.py install --root=${DEST} --optimize=1
+}
+
+. $(dirname $0)/master.sh

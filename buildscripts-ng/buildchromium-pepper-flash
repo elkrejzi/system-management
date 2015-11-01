@@ -1,0 +1,47 @@
+#!/bin/bash -e
+
+export PKGNAME=chromium-pepper-flash
+export PKGVER=undecided
+export PKGDIR=${PKGNAME}
+export NO_STRIP=1
+
+prepare_src_override() {
+  install -dm755 ${PKGDIR}
+
+  pushd ${PKGDIR}
+
+  # Fetch
+  wget -c https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+
+  # Unpack
+  ar x google-chrome-stable_current_amd64.deb data.tar.xz
+  tar -xJf data.tar.xz ./opt/google/chrome/PepperFlash --strip-components=4
+
+  export PKGVER=$(grep version PepperFlash/manifest.json | awk '{print $2}' | cut -d \" -f2)
+  export DEST=$(echo ${DEST} | sed "s|undecided|${PKGVER}|")
+
+  popd
+}
+
+configure_override() {
+  true
+}
+
+make_override() {
+  chmod 755 PepperFlash/*.so
+}
+
+make_install_override() {
+  install -dm755 ${DEST}/etc/chromium ${DEST}/usr/lib
+
+  mv PepperFlash ${DEST}/usr/lib
+
+cat > ${DEST}/etc/chromium/default.flash << EOF
+# Default settings for chromium. This file is sourced by /usr/bin/chromium
+
+# Options to pass to chromium
+CHROMIUM_FLAGS="--ppapi-flash-path=/usr/lib/PepperFlash/libpepflashplayer.so --ppapi-flash-version='${PKGVER}' --allow-outdated-plugins --ignore-gpu-blacklist"
+EOF
+}
+
+. $(dirname $0)/master.sh

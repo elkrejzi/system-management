@@ -10,6 +10,10 @@ export KEEP_DOC=1
 export CMAKE_FLAGS=(-DWITH_QT5=ON -DWITH_APPS="CLI;KDE")
 
 make_install_post() {
+  rm -f ${DEST}/usr/share/man/man1/kid3-cli.1.gz
+
+  ln -sf kid3.1 ${DEST}/usr/share/man/man1/kid3-cli.1
+
   gzip -d ${DEST}/usr/share/man/man1/*.gz
 }
 

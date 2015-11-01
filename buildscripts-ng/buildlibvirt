@@ -1,0 +1,60 @@
+#!/bin/bash -e
+
+export PKGNAME=libvirt
+export PKGVER=1.2.20
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://libvirt.org/sources/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
+export CONFIGURE_FLAGS=(--with-init-script=systemd
+                        --with-qemu-user=nobody
+                        --with-qemu-group=nogroup)
+
+make_post() {
+  sed -i 's|/etc/sysconfig/|/etc/default/|' daemon/libvirtd.service src/virtlockd.service tools/libvirt-guests.service tools/libvirt-guests.sh tools/virt-pki-validate
+  sed -i 's|#group =.*|group="kvm"|' src/qemu/qemu.conf
+}
+
+make_install_post() {
+  rm -rf ${DEST}/etc/logrotate.d ${DEST}/etc/sysconfig ${DEST}/var/run
+
+  install -dm755 ${DEST}/etc/default ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/lib ${DEST}/usr/lib/tmpfiles.d
+
+  mv ${DEST}/usr/lib/systemd ${DEST}/lib
+
+  ln -sf /lib/systemd/system/libvirtd.service ${DEST}/etc/systemd/system/multi-user.target.wants/libvirtd.service
+  ln -sf /lib/systemd/system/libvirt-guests.service ${DEST}/etc/systemd/system/multi-user.target.wants/libvirt-guests.service
+
+cat > ${DEST}/etc/default/libvirtd << "EOF"
+# Begin /etc/default/libvirtd
+
+LIBVIRTD_ARGS=""
+
+# End /etc/default/libvirtd
+EOF
+
+cat > ${DEST}/etc/default/libvirt-guests << "EOF"
+# Begin /etc/default/libvirt-guests
+
+BYPASS_CACHE=0
+CONNECT_RETRIES=10
+ON_BOOT=start
+ON_SHUTDOWN=suspend
+PARALLEL_SHUTDOWN=0
+RETRIES_SLEEP=1
+SHUTDOWN_TIMEOUT=300
+START_DELAY=0
+URIS=default
+
+# End /etc/default/libvirt-guests
+EOF
+
+cat > ${DEST}/usr/lib/tmpfiles.d/libvirt.conf << "EOF"
+d /run/libvirt/qemu 0755 root root -
+d /run/libvirt/lxc 0755 root root -
+d /run/libvirt/uml 0755 root root -
+d /run/libvirt/network 0755 root root -
+EOF
+}
+
+. $(dirname $0)/master.sh

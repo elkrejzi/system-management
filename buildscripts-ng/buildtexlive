@@ -1,0 +1,67 @@
+#!/bin/bash -e
+
+export PKGNAME=texlive
+export PKGVER=20150521
+export TEXMFVER=20150523
+export PKGTAR=texlive-${PKGVER}-source.tar.xz
+export TEXMFTAR=texlive-${TEXMFVER}-texmf.tar.xz
+export PKGDIR=texlive-${PKGVER}-source
+export PKGBUILD=texlive-${PKGVER}-source/build
+export PKGURL="ftp://tug.org/texlive/historic/2015/${PKGTAR}"
+export TEXMFURL="ftp://tug.org/texlive/historic/2015/${TEXMFTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export PATH_TO_SOURCE=".."
+
+export POSTINST_TRIGGER=("/usr/bin/mktexlsr"
+                         "/usr/bin/fmtutil-sys --all 1>/dev/null")
+
+export CONFIGURE_FLAGS=(--datarootdir=/usr/share
+                        --datadir=/usr/share
+                        --disable-native-texlive-build
+                        --disable-dialog
+                        --disable-multiplatform
+                        --disable-psutils
+                        --disable-t1utils
+                        --enable-shared
+                        --with-system-cairo
+                        --with-system-freetype2
+                        --with-system-gd
+                        --with-system-gmp
+                        --with-system-graphite2
+                        --with-system-harfbuzz
+                        --with-system-icu
+                        --with-system-libgs
+                        --with-system-libpaper
+                        --with-system-libpng
+                        --with-system-mpfr
+                        --with-system-pixman
+                        --with-system-poppler
+                        --with-system-xpdf
+                        --with-system-zlib
+                        --with-system-zziplib
+                        --with-banner-add=" - BLFS")
+
+post_extract_action() {
+  if [ ! -e ${SROOT}/${TEXMFTAR} ]
+  then
+    wget -c ${TEXMFURL} -O ${SROOT}/${TEXMFTAR} || exit ${PIPESTATUS}
+  fi
+
+  install -dm755 ${PKGBUILD}
+}
+
+make_install_post() {
+  make texlinks DESTDIR=${DEST}
+
+  # TODO: Remove
+  cp -rf ../texk/tests/TeXLive ${DEST}/usr/share/texmf-dist/scripts/texlive
+
+  tar --exclude=*/texmf-dist/doc --exclude=*/texmf-dist/source --strip-components=1 -xf ${SROOT}/${TEXMFTAR} -C ${DEST}/usr/share
+
+  sed -i "s@TEXMFROOT = \$SELFAUTOPARENT@TEXMFROOT = /usr/share@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
+  sed -i "s@TEXMFSYSVAR = \$TEXMFROOT/texmf-var@TEXMFSYSVAR = /var/lib/texmf@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
+  sed -i "s@TEXMFSYSCONFIG = \$TEXMFROOT/texmf-config@TEXMFSYSCONFIG = /etc/texmf@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
+  sed -i "s@TEXMFHOME = ~/texmf@TEXMFHOME = ~/.texmf@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
+}
+
+. $(dirname $0)/master.sh
