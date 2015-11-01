@@ -138,12 +138,6 @@ $(dirname $0)/buildxorg-app
 $(dirname $0)/buildfont-util
 $(dirname $0)/buildxcursor-themes
 $(dirname $0)/buildxkeyboard-config
-$(dirname $0)/buildxorg-server
-$(dirname $0)/buildxf86-input-evdev
-$(dirname $0)/buildxf86-input-libinput
-$(dirname $0)/buildxf86-input-synaptics
-$(dirname $0)/buildxf86-video-ati
-$(dirname $0)/buildxf86-video-intel
 $(dirname $0)/buildfftw
 $(dirname $0)/buildtalloc
 $(dirname $0)/buildtdb
