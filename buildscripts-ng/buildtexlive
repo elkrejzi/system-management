@@ -62,6 +62,8 @@ make_install_post() {
   sed -i "s@TEXMFSYSVAR = \$TEXMFROOT/texmf-var@TEXMFSYSVAR = /var/lib/texmf@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
   sed -i "s@TEXMFSYSCONFIG = \$TEXMFROOT/texmf-config@TEXMFSYSCONFIG = /etc/texmf@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
   sed -i "s@TEXMFHOME = ~/texmf@TEXMFHOME = ~/.texmf@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
+
+  unset PKG_AUTO_INSTALL
 }
 
 . $(dirname $0)/master.sh

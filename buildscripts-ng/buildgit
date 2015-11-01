@@ -5,6 +5,11 @@ export PKGVER=2.6.2
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://www.kernel.org/pub/software/scm/git/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
+export POSTINST_TRIGGER=("getent group git > /dev/null || groupadd -g 55 git"
+                         "getent passwd git > /dev/null || useradd -c \"Git Repositories Owner\" -d /var/lib/git -g git -u 55 -s /bin/bash git\n"
+                         "if [ ! -d /var/lib/git ]" "then"
+                         "  install -dm755 -o git -g git /var/lib/git"
+                         "  install -dm700 -o git -g git /var/lib/git/.ssh" "fi")
 export MAKE_FLAGS_COMMON=(prefix=/usr USE_LIBPCRE=1 NO_CROSS_DIRECTORY_HARDLINKS=1 INSTALLDIRS=vendor CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}")
 export MAKE_FLAGS="${MAKE_FLAGS_COMMON[@]}"
 export MAKE_INSTALL_FLAGS="${MAKE_FLAGS_COMMON[@]}"

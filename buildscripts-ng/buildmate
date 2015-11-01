@@ -138,6 +138,7 @@ EOF
   buildmate-settings-daemon )
     export PKGNAME=mate-settings-daemon
     export PKGVER=1.10.2
+    export KEEP_EMPTY_DIRS=1
   ;;
   buildmate-system-monitor )
     export PKGNAME=mate-system-monitor
