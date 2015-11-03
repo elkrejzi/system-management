@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+export PKGNAME=gnome-control-center
+export PKGVER=3.18.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://ftp.gnome.org/pub/gnome/sources/gnome-control-center/${PKGVER:0:4}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+. $(dirname $0)/master.sh

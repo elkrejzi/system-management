@@ -1,15 +1,14 @@
 #!/bin/bash -e
 
 export PKGNAME=firefox
-export PKGVER=41.0.2
+export PKGVER=42.0
 export PKGTAR=${PKGNAME}-${PKGVER}.source.tar.xz
-export PKGDIR=mozilla-release
 export PKGURL="https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/${PKGVER}/source/${PKGTAR}"
 export NO_OPTIMIZATION=1
 
 configure_override() {
   sed -i "s:-\$(MOZ_APP_VERSION)::g" config/baseconfig.mk
-  sed -i '/^ftglyph.h/ i ftfntfmt.h' config/system-headers
+  sed -i '/^freetype\/ftcache.h/a freetype\/ftfntfmt.h' config/system-headers
 
 cat > mozconfig << "EOF"
 ac_add_options --enable-application=browser

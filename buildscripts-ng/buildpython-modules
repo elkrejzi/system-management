@@ -103,7 +103,7 @@ case $(basename $0) in
   ;;
   buildpython-pycurl )
     export PKGNAME=pycurl
-    export PKGVER=7.19.5.2
+    export PKGVER=7.19.5.3
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/p/pycurl/${PKGTAR}"
     export DEST=/binary/python-pycurl-${PKGVER}

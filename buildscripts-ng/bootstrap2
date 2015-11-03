@@ -9,6 +9,7 @@ $(dirname $0)/buildlibatomic_ops
 $(dirname $0)/buildgc
 $(dirname $0)/buildguile
 $(dirname $0)/buildmozjs17
+$(dirname $0)/buildmozjs24
 $(dirname $0)/buildtk
 $(dirname $0)/buildyaml
 $(dirname $0)/buildruby

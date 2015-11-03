@@ -15,9 +15,27 @@ case $(basename $0) in
     export PKGNAME=gcr
     export PKGVER=3.18.0
   ;;
+  buildgeocode-glib )
+    export PKGNAME=geocode-glib
+    export PKGVER=3.18.0
+  ;;
+  buildgjs )
+    export PKGNAME=gjs
+    export PKGVER=1.44.0
+    make_install_post() {
+      rm -rf ${DEST}/usr/libexec
+    }
+  ;;
   buildglib-networking )
     export PKGNAME=glib-networking
     export PKGVER=2.46.1
+  ;;
+  buildgmime )
+    export PKGNAME=gmime
+    export PKGVER=2.6.20
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://ftp.gnome.org/pub/gnome/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
+    export CONFIGURE_FLAGS=(--enable-smime)
   ;;
   buildgnome-desktop )
     export PKGNAME=gnome-desktop
@@ -42,6 +60,12 @@ case $(basename $0) in
         make -C themes/Adwaita/gtk-2.0 install-engineLTLIBRARIES ${ADDITIONAL_MAKE_INSTALL_FLAGS}
       fi
     }
+  ;;
+  buildgrilo )
+    export PKGNAME=grilo
+    export PKGVER=0.2.14
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://ftp.gnome.org/pub/gnome/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
   ;;
   buildgsettings-desktop-schemas )
     export PKGNAME=gsettings-desktop-schemas
@@ -87,6 +111,10 @@ case $(basename $0) in
     export MULTILIB_BUILD=1
     export CONFIGURE_FLAGS_32=(--disable-introspection)
   ;;
+  buildlibgweather )
+    export PKGNAME=libgweather
+    export PKGVER=3.18.1
+  ;;
   buildlibgxps )
     export PKGNAME=libgxps
     export PKGVER=0.2.3.2
@@ -127,6 +155,10 @@ case $(basename $0) in
     export PKGVER=0.7.93
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://ftp.gnome.org/pub/gnome/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
+  ;;
+  buildtotem-pl-parser )
+    export PKGNAME=totem-pl-parser
+    export PKGVER=3.10.5
   ;;
   buildvte )
     export PKGNAME=vte

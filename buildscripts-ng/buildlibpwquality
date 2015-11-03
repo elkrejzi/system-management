@@ -1,0 +1,11 @@
+#!/bin/bash -e
+
+export PKGNAME=libpwquality
+export PKGVER=1.3.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://fedorahosted.org/releases/l/i/libpwquality/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
+export CONFIGURE_FLAGS=(--disable-python-bindings --with-securedir=/lib/security)
+
+. $(dirname $0)/master.sh
