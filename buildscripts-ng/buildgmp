@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
 export PKGNAME=gmp
-export PKGVER=6.0.0a
+export PKGVER=6.1.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-export PKGDIR=${PKGNAME}-${PKGVER%a}
+export PKGDIR=${PKGNAME}-${PKGVER}
 export PKGURL="https://ftp.gnu.org/gnu/gmp/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export DEBUG_BUILD=1

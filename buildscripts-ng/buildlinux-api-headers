@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
 export PKGNAME=linux-api-headers
-export PKGVER=4.2
-export PATCHVER=4.3-rc6
+export PKGVER=4.3
+export PATCHVER=
 export COMMON_URL="https://cdn.kernel.org/pub/linux/kernel/v4.x"
 export PKGTAR=linux-${PKGVER}.tar.xz
 export PKGURL="${COMMON_URL}/${PKGTAR}"
