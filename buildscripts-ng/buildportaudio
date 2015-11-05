@@ -4,6 +4,7 @@ export PKGNAME=portaudio
 export PKGVER=19_20140130
 export PKGTAR=pa_stable_v${PKGVER}.tgz
 export PKGURL="http://www.portaudio.com/archives/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export PKGDIR=${PKGNAME}
 export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--enable-cxx)

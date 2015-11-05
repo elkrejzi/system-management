@@ -4,6 +4,7 @@ export PKGNAME=colord-gtk
 export PKGVER=0.1.26
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://www.freedesktop.org/software/colord/releases/${PKGTAR}"
+export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--enable-vala)
 

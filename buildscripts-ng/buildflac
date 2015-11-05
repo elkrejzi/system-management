@@ -4,6 +4,7 @@ export PKGNAME=flac
 export PKGVER=1.3.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://downloads.xiph.org/releases/flac/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 

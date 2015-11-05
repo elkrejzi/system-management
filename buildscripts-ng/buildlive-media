@@ -5,6 +5,7 @@ export PKGVER=2015.10.29
 export PKGTAR=live.${PKGVER}.tar.gz
 export PKGDIR=live
 export PKGURL="http://live555.com/liveMedia/public/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 
 configure_override() {

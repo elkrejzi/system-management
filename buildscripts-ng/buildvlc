@@ -4,6 +4,7 @@ export PKGNAME=vlc
 export PKGVER=2.2.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://download.videolan.org/pub/videolan/vlc/${PKGVER}/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export POSTINST_TRIGGER=("/usr/lib/vlc/vlc-cache-gen /usr/lib/vlc/plugins")
 

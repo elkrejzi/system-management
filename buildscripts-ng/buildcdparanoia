@@ -5,6 +5,7 @@ export PKGVER=III-10.2
 export PKGTAR=${PKGNAME}-${PKGVER}.src.tgz
 export PKGDIR=${PKGNAME}-${PKGVER}
 export PKGURL="http://downloads.xiph.org/releases/cdparanoia/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done")
 export MULTILIB_BUILD=1
 export PATCHES_LIST=("cdparanoia.patch")

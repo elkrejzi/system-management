@@ -5,6 +5,7 @@ export PKGVER=7.1
 export SHLIBVER=${PKGVER}
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://freedesktop.org/software/pulseaudio/releases/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--disable-bluez4 --disable-rpath --with-module-dir=/usr/lib/pulse/modules)

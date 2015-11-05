@@ -1,9 +1,10 @@
 #!/bin/bash -e
 
 export PKGNAME=libbluray
-export PKGVER=0.9.0
+export PKGVER=0.9.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://download.videolan.org/pub/videolan/libbluray/${PKGVER}/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--disable-bdjava)
 

@@ -3,8 +3,9 @@
 export PKGNAME=soxr
 export PKGVER=0.1.2
 export PKGTAR=${PKGNAME}-${PKGVER}-Source.tar.xz
-export PKGURL="https://downloads.sourceforge.net/soxr/${PKGTAR}"
 export PKGDIR=${PKGNAME}-${PKGVER}-Source
+export PKGURL="https://downloads.sourceforge.net/soxr/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export CMAKE_FLAGS=(-DBUILD_TESTS=ON -DWITH_AVFFT=ON)

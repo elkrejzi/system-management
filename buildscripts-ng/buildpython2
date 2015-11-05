@@ -6,6 +6,7 @@ export PKGNAME=Python
 export PKGVER=${MAJORVER}.10
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://www.python.org/ftp/python/${PKGVER}/${PKGTAR}"
+export DEST=/binary/python/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export KEEP_STATIC=1
 export PATCHES_LIST=("python2-bdb.patch")

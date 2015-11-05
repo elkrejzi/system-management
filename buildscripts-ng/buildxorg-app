@@ -128,7 +128,7 @@ case $(basename $0) in
   ;;
   buildxkbcomp )
     export PKGNAME=xkbcomp
-    export PKGVER=1.3.0
+    export PKGVER=1.3.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
   ;;

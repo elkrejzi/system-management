@@ -4,6 +4,7 @@ export PKGNAME=libmusicbrainz
 export PKGVER=5.1.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/metabrainz/libmusicbrainz/releases/download/release-${PKGVER}/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 

@@ -184,6 +184,7 @@ then
 fi
 
 export PKGURL="http://pub.mate-desktop.org/releases/${MATE_MAJOR_VER}/${PKGTAR}"
+export DEST=/binary/mate/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=("${CONFIGURE_FLAGS[@]}" --with-gtk=3.0)
 

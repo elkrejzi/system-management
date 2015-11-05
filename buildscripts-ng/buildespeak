@@ -6,6 +6,7 @@ export PKGTAR=${PKGNAME}-${PKGVER}-source.zip
 export PKGDIR=${PKGNAME}-${PKGVER}-source
 export PKGBUILD=${PKGDIR}/src
 export PKGURL="https://downloads.sourceforge.net/espeak/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export MAKE_FLAGS="AUDIO=runtime"
 

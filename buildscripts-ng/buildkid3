@@ -4,6 +4,7 @@ export PKGNAME=kid3
 export PKGVER=3.3.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://downloads.sourceforge.net/kid3/${PKGTAR}"
+export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export KEEP_DOC=1

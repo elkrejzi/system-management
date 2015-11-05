@@ -71,6 +71,7 @@ case $(basename $0) in
   ;;
 esac
 
+export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 

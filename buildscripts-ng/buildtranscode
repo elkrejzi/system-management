@@ -4,6 +4,7 @@ export PKGNAME=transcode
 export PKGVER=1.1.7
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://bitbucket.org/france/transcode-tcforge/downloads/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export PATCHES_LIST=("transcode-fixes.patch")
 export CONFIGURE_FLAGS=(--enable-libv4l2

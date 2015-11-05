@@ -3,6 +3,7 @@
 export PKGNAME=qtcurve
 export PKGVER=1.8.18+a3fff13
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export MULTILIB_BUILD=1

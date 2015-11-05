@@ -8,6 +8,7 @@ case $(basename $0) in
   buildglib2 )
     export PKGNAME=glib
     export PKGVER=2.46.1
+    export DEST=/binary/${PKGNAME}-${PKGVER}
     export KEEP_EMPTY_DIRS=1
     export PATCHES_LIST=("glib-compile-schemas-quiet.patch")
     export CONFIGURE_FLAGS=(--with-pcre=system)
@@ -35,11 +36,13 @@ case $(basename $0) in
   buildatk )
     export PKGNAME=atk
     export PKGVER=2.18.0
+    export DEST=/binary/${PKGNAME}-${PKGVER}
     export CONFIGURE_FLAGS_32=(--disable-introspection)
   ;;
   buildcairo )
     export PKGNAME=cairo
     export PKGVER=1.14.4
+    export DEST=/binary/${PKGNAME}-${PKGVER}
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://cairographics.org/releases/${PKGTAR}"
     export CONFIGURE_FLAGS=(--enable-tee)
@@ -52,6 +55,7 @@ case $(basename $0) in
   buildgdk-pixbuf )
     export PKGNAME=gdk-pixbuf
     export PKGVER=2.32.1
+    export DEST=/binary/${PKGNAME}-${PKGVER}
     export CONFIGURE_FLAGS=(--with-x11 --with-libjasper)
     export CONFIGURE_FLAGS_32=(--with-x11 --with-libjasper --disable-introspection)
     make_install_post_32() {
@@ -64,6 +68,7 @@ export POSTINST_TRIGGER=("[ -x /usr/bin/gdk-pixbuf-query-loaders ] && echo \"Pro
   buildpango )
     export PKGNAME=pango
     export PKGVER=1.38.1
+    export DEST=/binary/${PKGNAME}-${PKGVER}
     export CONFIGURE_FLAGS_32=(--disable-introspection)
   ;;
   buildat-spi2-core )
@@ -78,6 +83,7 @@ export POSTINST_TRIGGER=("[ -x /usr/bin/gdk-pixbuf-query-loaders ] && echo \"Pro
   buildgtk2 )
     export PKGNAME=gtk+
     export PKGVER=2.24.28
+    export DEST=/binary/${PKGNAME}-${PKGVER}
     export CONFIGURE_FLAGS=(--enable-man)
     export CONFIGURE_FLAGS_32=(--disable-introspection)
     export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-query-immodules-2.0 ] && echo \"Processing triggers for gtk-2.0\" && /usr/bin/gtk-query-immodules-2.0 --update-cache"
@@ -169,6 +175,12 @@ EOF
 esac
 
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+
+if [ -z ${DEST} ]
+then
+  export DEST=/binary/${PKGNAME}-${PKGVER}
+fi
+
 if [ -z ${PKGURL} ]
 then
   export PKGURL="http://ftp.gnome.org/pub/gnome/sources/${PKGNAME}/${PKGVER:0:4}/${PKGTAR}"

@@ -4,6 +4,7 @@ export PKGNAME=gnome-video-effects
 export PKGVER=0.4.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://ftp.gnome.org/pub/gnome/sources/gnome-video-effects/${PKGVER:0:3}/${PKGTAR}"
+export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export KEEP_STATIC=1
 export NO_STRIP=1

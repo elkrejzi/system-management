@@ -4,6 +4,7 @@ export PKGNAME=Orion
 export PKGVER=1.5
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/shimmerproject/Orion/archive/v${PKGVER}.tar.gz"
+export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
 export NO_STRIP=1
 
 configure_override() {

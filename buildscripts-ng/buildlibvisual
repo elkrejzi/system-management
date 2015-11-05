@@ -4,6 +4,7 @@ export PKGNAME=libvisual
 export PKGVER=0.4.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://downloads.sourceforge.net/libvisual/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 

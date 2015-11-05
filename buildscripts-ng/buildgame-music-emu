@@ -4,6 +4,7 @@ export PKGNAME=game-music-emu
 export PKGVER=0.6.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://game-music-emu.googlecode.com/files/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 

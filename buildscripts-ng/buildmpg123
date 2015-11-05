@@ -3,7 +3,8 @@
 export PKGNAME=mpg123
 export PKGVER=1.22.4
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
-export PKGURL="https://downloads.sourceforge.net/mpg123/"
+export PKGURL="https://downloads.sourceforge.net/mpg123/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--with-module-suffix=.so)

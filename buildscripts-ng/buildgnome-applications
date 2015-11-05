@@ -108,6 +108,7 @@ case $(basename $0) in
 esac
 
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
 if [ -z ${PKGURL} ]
 then
   export PKGURL="http://ftp.gnome.org/pub/gnome/sources/${PKGNAME}/${PKGVER:0:4}/${PKGTAR}"

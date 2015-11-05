@@ -4,6 +4,7 @@ export PKGNAME=openal-soft
 export PKGVER=1.16.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://kcat.strangesoft.net/openal-releases/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export MULTILIB_BUILD=1

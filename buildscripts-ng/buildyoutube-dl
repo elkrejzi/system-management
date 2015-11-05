@@ -4,6 +4,7 @@ export PKGNAME=youtube-dl
 export PKGVER=2015.10.24
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/rg3/youtube-dl/archive/${PKGVER}.tar.gz"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export NO_STRIP=1
 
 configure_override() {

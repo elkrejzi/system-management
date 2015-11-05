@@ -4,6 +4,7 @@ export PKGNAME=libbs2b
 export PKGVER=3.1.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://downloads.sourceforge.net/bs2b/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
 

@@ -4,6 +4,7 @@ export PKGNAME=dvd+rw-tools
 export PKGVER=7.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://fy.chalmers.se/~appro/linux/DVD+RW/tools/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export PATCHES_LIST=("dvd+rw-tools-fixes.patch")
 export MAKE_FLAGS="all rpl8"

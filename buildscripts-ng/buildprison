@@ -2,6 +2,7 @@
 
 export PKGNAME=prison
 export PKGVER=1.2.1
+export DEST=/binary/kdepim/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export CMAKE_FLAGS=(-DLIB_INSTALL_DIR=lib

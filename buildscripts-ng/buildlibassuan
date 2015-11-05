@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libassuan
-export PKGVER=2.3.0
+export PKGVER=2.4.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="ftp://ftp.gnupg.org/gcrypt/libassuan/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

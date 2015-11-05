@@ -4,6 +4,7 @@ export PKGNAME=oxygen-icons
 export PKGVER=15.04.3
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
+export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export NO_STRIP=1

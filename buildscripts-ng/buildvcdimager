@@ -4,6 +4,7 @@ export PKGNAME=vcdimager
 export PKGVER=0.7.24
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://ftp.gnu.org/gnu/vcdimager/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 
 . $(dirname $0)/master.sh

@@ -4,6 +4,7 @@ export PKGNAME=cdrtools
 export PKGVER=3.01
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://downloads.sourceforge.net/cdrtools/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_FLAGS="INS_BASE=/usr INS_RBASE=/"
 export MAKE_INSTALL_FLAGS="INS_BASE=/usr INS_RBASE=/"
 

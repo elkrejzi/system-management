@@ -120,4 +120,6 @@ case $(basename $0) in
   ;;
 esac
 
+export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
+
 . $(dirname $0)/master.sh

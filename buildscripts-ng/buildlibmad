@@ -4,6 +4,7 @@ export PKGNAME=libmad
 export PKGVER=0.15.1b
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://downloads.sourceforge.net/mad/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export PATCHES_LIST=("libmad.patch")
 

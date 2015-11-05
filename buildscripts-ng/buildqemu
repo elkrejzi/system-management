@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=qemu
-export PKGVER=2.4.0.1
+export PKGVER=2.4.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://wiki.qemu-project.org/download/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

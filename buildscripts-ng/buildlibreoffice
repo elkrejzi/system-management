@@ -1,12 +1,11 @@
 #!/bin/bash -e
 
-export PKGVER=5.0.2.2
+export PKGVER=5.0.3.2
 export SHARED_URL="https://download.documentfoundation.org/libreoffice/src/${PKGVER:0:4}/"
 
 export PKGNAME=libreoffice
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="${SHARED_URL}/${PKGTAR}"
-export PATCHES_LIST=("libreoffice-fixes.patch")
 
 post_extract_action() {
   for c in dictionaries help translations

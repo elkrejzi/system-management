@@ -4,6 +4,7 @@ export PKGNAME=libcanberra
 export PKGVER=0.30
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://0pointer.de/lennart/projects/libcanberra/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 export PATCHES_LIST=("libcanberra.patch")

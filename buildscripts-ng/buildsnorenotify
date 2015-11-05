@@ -4,6 +4,7 @@ export PKGNAME=snorenotify
 export PKGVER=0.5.3
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/KDE/snorenotify/archive/v${PKGVER}.tar.gz"
+export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export CMAKE_FLAGS=(-DCMAKE_INSTALL_LIBDIR=lib -DWITH_QT4=OFF)

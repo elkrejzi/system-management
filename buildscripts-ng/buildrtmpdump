@@ -2,6 +2,7 @@
 
 export PKGNAME=rtmpdump
 export PKGVER=2.4+git79459a2
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 export MAKE_INSTALL_FLAGS="prefix=/usr mandir=/usr/share/man"

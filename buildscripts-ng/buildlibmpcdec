@@ -4,6 +4,7 @@ export PKGNAME=libmpcdec
 export PKGVER=1.2.6
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://files.musepack.net/source/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 
 . $(dirname $0)/master.sh

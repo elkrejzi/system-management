@@ -42,5 +42,6 @@ export CONFIGURE_FLAGS_32=(--libexecdir=/usr/lib32
 
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://gstreamer.freedesktop.org/src/${PKGNAME}/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 
 . $(dirname $0)/master.sh

@@ -4,6 +4,7 @@ export PKGNAME=jack
 export PKGVER=1.9.10
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://dl.dropboxusercontent.com/u/28869550/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 

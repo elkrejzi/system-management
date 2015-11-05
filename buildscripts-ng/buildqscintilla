@@ -6,6 +6,7 @@ export PKGTAR=QScintilla-gpl-${PKGVER}.tar.gz
 export PKGDIR=QScintilla-gpl-${PKGVER}
 export PKGBUILD=${PKGDIR}/Qt4Qt5
 export PKGURL="https://downloads.sourceforge.net/pyqt/${PKGTAR}"
+export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export MAKE_INSTALL_FLAGS="INSTALL_ROOT=\${DEST}"
 

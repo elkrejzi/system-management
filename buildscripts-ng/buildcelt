@@ -4,6 +4,7 @@ export PKGNAME=celt
 export PKGVER=0.11.3
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://downloads.xiph.org/releases/celt/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
 export CONFIGURE_FLAGS=(--enable-custom-modes)

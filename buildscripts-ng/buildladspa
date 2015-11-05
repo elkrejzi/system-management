@@ -4,6 +4,7 @@ export PKGNAME=ladspa
 export PKGVER=1.13
 export PKGTAR=${PKGNAME}_sdk_${PKGVER}.tgz
 export PKGDIR=${PKGNAME}_sdk/src
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export PATCHES_LIST=("ladspa-fixes.patch")
 export MAKE_FLAGS="targets"
 export MAKE_INSTALL_FLAGS="INSTALL_PLUGINS_DIR=\${DEST}/usr/lib/ladspa/ \

@@ -4,6 +4,7 @@ export PKGNAME=wavpack
 export PKGVER=4.75.2
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://www.wavpack.com/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
 

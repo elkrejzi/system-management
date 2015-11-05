@@ -4,6 +4,7 @@ export PKGNAME=sound-theme-freedesktop
 export PKGVER=0.8
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://people.freedesktop.org/~mccann/dist/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export KEEP_STATIC=1
 export NO_STRIP=1
 

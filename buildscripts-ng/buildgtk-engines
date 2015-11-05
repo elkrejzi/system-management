@@ -3,6 +3,7 @@
 export PKGNAME=gtk-engines
 export PKGVER=2.21.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export DEST=/binary/mate/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--enable-animation)
 
