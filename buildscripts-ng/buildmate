@@ -1,17 +1,17 @@
 #!/bin/bash -e
 
 export GTK_MAJOR_VER=3.18
-export MATE_MAJOR_VER=1.10
+export MATE_MAJOR_VER=1.12
 
 case $(basename $0) in
   buildatril )
     export PKGNAME=atril
-    export PKGVER=1.10.2
+    export PKGVER=1.12.0
     export CONFIGURE_FLAGS=(--enable-pixbuf)
   ;;
   buildcaja )
     export PKGNAME=caja
-    export PKGVER=1.10.4
+    export PKGVER=1.12.0
     export CONFIGURE_FLAGS=(--disable-packagekit
                             --disable-update-mimedb
                             --disable-icon-update
@@ -19,53 +19,53 @@ case $(basename $0) in
   ;;
   buildcaja-extensions )
     export PKGNAME=caja-extensions
-    export PKGVER=1.10.1
+    export PKGVER=1.12.0
   ;;
   buildengrampa )
     export PKGNAME=engrampa
-    export PKGVER=1.10.2
+    export PKGVER=1.12.0
     export CONFIGURE_FLAGS=(--disable-packagekit)
   ;;
   buildlibmatekbd )
     export PKGNAME=libmatekbd
-    export PKGVER=1.10.0
+    export PKGVER=1.12.0
   ;;
   buildlibmatemixer )
     export PKGNAME=libmatemixer
-    export PKGVER=1.10.0
+    export PKGVER=1.12.0
   ;;
   buildlibmateweather )
     export PKGNAME=libmateweather
-    export PKGVER=1.10.0
+    export PKGVER=1.12.0
     export CONFIGURE_FLAGS=(--enable-python --enable-locations-compression)
   ;;
   buildmarco )
     export PKGNAME=marco
-    export PKGVER=1.10.3
+    export PKGVER=1.12.0
   ;;
   buildmate-applets )
     export PKGNAME=mate-applets
-    export PKGVER=1.10.3
+    export PKGVER=1.12.0
     export CONFIGURE_FLAGS=(--with-cpufreq-lib=cpupower)
   ;;
   buildmate-backgrounds )
     export PKGNAME=mate-backgrounds
-    export PKGVER=1.10.0
+    export PKGVER=1.12.0
     export KEEP_STATIC=1
     export NO_STRIP=1
   ;;
   buildmate-control-center )
     export PKGNAME=mate-control-center
-    export PKGVER=1.10.2
+    export PKGVER=1.12.0
   ;;
   buildmate-desktop )
     export PKGNAME=mate-desktop
-    export PKGVER=1.10.2
+    export PKGVER=1.12.0
     export CONFIGURE_FLAGS=(--disable-desktop-docs)
   ;;
   buildmate-icon-theme )
     export PKGNAME=mate-icon-theme
-    export PKGVER=1.10.1
+    export PKGVER=1.12.0
 
     generate_install_override() {
 cat > ${DEST}/INSTALL << "EOF"
@@ -82,31 +82,31 @@ EOF
   ;;
   buildmate-media )
     export PKGNAME=mate-media
-    export PKGVER=1.10.0
+    export PKGVER=1.12.0
   ;;
   buildmate-menus )
     export PKGNAME=mate-menus
-    export PKGVER=1.10.0
+    export PKGVER=1.12.0
   ;;
   buildmate-notification-daemon )
     export PKGNAME=mate-notification-daemon
-    export PKGVER=1.10.2
+    export PKGVER=1.12.0
   ;;
   buildmate-panel )
     export PKGNAME=mate-panel
-    export PKGVER=1.10.1
+    export PKGVER=1.12.0
   ;;
   buildmate-polkit )
     export PKGNAME=mate-polkit
-    export PKGVER=1.10.2
+    export PKGVER=1.12.0
   ;;
   buildmate-power-manager )
     export PKGNAME=mate-power-manager
-    export PKGVER=1.10.2
+    export PKGVER=1.12.0
   ;;
   buildmate-screensaver )
     export PKGNAME=mate-screensaver
-    export PKGVER=1.10.2
+    export PKGVER=1.12.0
     export CONFIGURE_FLAGS=(--with-libgl
                             --with-systemd
                             --with-xscreensaverhackdir=/usr/libexec/xscreensaver
@@ -128,30 +128,30 @@ EOF
   ;;
   buildmate-sensors-applet )
     export PKGNAME=mate-sensors-applet
-    export PKGVER=1.10.4
+    export PKGVER=1.12.0
   ;;
   buildmate-session-manager )
     export PKGNAME=mate-session-manager
-    export PKGVER=1.10.2
+    export PKGVER=1.12.0
     export CONFIGURE_FLAGS=(--with-systemd --disable-upower)
   ;;
   buildmate-settings-daemon )
     export PKGNAME=mate-settings-daemon
-    export PKGVER=1.10.2
+    export PKGVER=1.12.0
     export KEEP_EMPTY_DIRS=1
   ;;
   buildmate-system-monitor )
     export PKGNAME=mate-system-monitor
-    export PKGVER=1.10.1
+    export PKGVER=1.12.0
     export USER_CXXFLAGS="-std=c++11"
   ;;
   buildmate-terminal )
     export PKGNAME=mate-terminal
-    export PKGVER=1.10.1
+    export PKGVER=1.12.0
   ;;
   buildmate-themes )
     export PKGNAME=mate-themes
-    export PKGVER=1.10.5
+    export PKGVER=1.12.0
     export PKGTAR=${PKGNAME}-gtk${GTK_MAJOR_VER}-${PKGVER}.tar.xz
     export PKGDIR=${PKGNAME}-gtk${GTK_MAJOR_VER}-${PKGVER}
     export KEEP_STATIC=1
@@ -170,11 +170,11 @@ EOF
   ;;
   buildmate-utils )
     export PKGNAME=mate-utils
-    export PKGVER=1.10.3
+    export PKGVER=1.12.0
   ;;
   buildpluma )
     export PKGNAME=pluma
-    export PKGVER=1.10.2
+    export PKGVER=1.12.0
   ;;
 esac
 
