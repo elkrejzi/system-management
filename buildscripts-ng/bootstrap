@@ -19,6 +19,13 @@ $(dirname $0)/buildtzdata
       -e '/\*startfile_prefix_spec:/{n;s@.*@/usr/lib/ @}' \
       -e '/\*cpp:/{n;s@$@ -isystem /usr/include@}' >      \
       `dirname $(gcc --print-libgcc-file-name)`/specs
+
+  for L in bs_BA en_US hr_HR
+  do
+    sed -i "s:^#${L}:${L}:g" /etc/locale.gen
+  done
+
+  locale-gen
 }
 
 $(dirname $0)/buildzlib

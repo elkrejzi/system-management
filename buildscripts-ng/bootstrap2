@@ -16,23 +16,23 @@ $(dirname $0)/buildruby
 $(dirname $0)/buildlibical
 $(dirname $0)/buildbluez
 
-pushd /binary
+pushd /binary/python
   tar xf Python-2.[0-9]*.tar.xz
   rm -f Python-2.[0-9]*.tar.xz
 popd
 
-pushd /binary/Python-2.[0-9]*
+pushd /binary/python/Python-2.[0-9]*
   pkg_remove
 popd
 
 $(dirname $0)/buildpython2
 
-pushd /binary
+pushd /binary/python
   tar xf Python-3.[0-9]*.tar.xz
   rm -f Python-3.[0-9]*.tar.xz
 popd
 
-pushd /binary/Python-3.[0-9]*
+pushd /binary/python/Python-3.[0-9]*
   pkg_remove
 popd
 
@@ -114,7 +114,7 @@ popd
 
 $(dirname $0)/buildfreetype
 
-pushd /binary/libva-[0-9]*
+pushd /binary/multimedia/libva-[0-9]*
   pkg_remove
 popd
 
