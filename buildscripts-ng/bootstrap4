@@ -21,7 +21,6 @@ $(dirname $0)/buildcln
 $(dirname $0)/buildfontforge
 $(dirname $0)/buildlibatasmart
 $(dirname $0)/buildlibdmtx
-$(dirname $0)/buildlibnfs
 $(dirname $0)/buildlibzip
 $(dirname $0)/buildlm_sensors
 $(dirname $0)/buildlmdb
@@ -67,9 +66,11 @@ $(dirname $0)/buildlibgtop
 $(dirname $0)/buildlibgweather
 $(dirname $0)/buildlibgxps
 $(dirname $0)/buildlibkpathsea
+$(dirname $0)/buildlibnfs
 $(dirname $0)/buildliboauth
 $(dirname $0)/buildlibpaper
 $(dirname $0)/buildlibpeas
+$(dirname $0)/buildlibpwquality
 $(dirname $0)/buildlibspectre
 $(dirname $0)/buildlibunique
 $(dirname $0)/buildlibwnck
@@ -93,7 +94,6 @@ $(dirname $0)/buildatkmm
 $(dirname $0)/buildcaja
 $(dirname $0)/buildclutter-gst
 $(dirname $0)/buildclutter-gtk
-$(dirname $0)/buildevolution-data-server
 $(dirname $0)/buildgnome-bluetooth
 $(dirname $0)/buildgnome-settings-daemon
 $(dirname $0)/buildgrilo
@@ -103,6 +103,7 @@ $(dirname $0)/buildnautilus
 $(dirname $0)/buildpangomm
 $(dirname $0)/buildcheese
 $(dirname $0)/buildevince
+$(dirname $0)/buildevolution-data-server
 $(dirname $0)/buildgnome-keyring
 $(dirname $0)/buildgtkmm2
 $(dirname $0)/buildgtkmm3

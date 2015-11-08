@@ -54,6 +54,7 @@ case $(basename $0) in
     export PKGNAME=kdebugsettings
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
+    export PATCHES_LIST=("kdebugsettings-kscreen.patch")
   ;;
   buildkile )
     export PKGNAME=kile

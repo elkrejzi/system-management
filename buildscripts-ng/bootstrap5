@@ -138,7 +138,7 @@ done
 
 find /binary -name "*.tar" -exec xz -T4 {} \;
 
-systemctl disable avahi-{daemon,dnsconfd} cups-browsed dnsmasq httpd krb5-{kadmind,kdc,kpropd} libvirt{d,-guests} ModemManager mysqld NetworkManager{,-wait-online} nmbd org.cups.cupsd php-fpm postfix postgresql radvd saslauthd slapd smbd svnserve winbindd wpa_supplicant git-daemon.socket saned.socket
+systemctl disable avahi-{daemon,dnsconfd} cups-browsed dnsmasq httpd krb5-{kadmind,kdc,kpropd} libvirt{d,-guests} ModemManager mysqld NetworkManager{,-wait-online} nmbd org.cups.cupsd php-fpm postfix postgresql radvd saslauthd slapd smbd svnserve thermald winbindd wpa_supplicant git-daemon.socket saned.socket
 
 systemctl mask wpa_supplicant
 systemctl enable systemd-{networkd,timesyncd}
@@ -383,4 +383,4 @@ passwd
 echo "Entering password for user armin:"
 passwd armin
 
-rm -f /etc/gshadow- /etc/shadow-
+rm -f /etc/group- /etc/gshadow- /etc/passwd- /etc/shadow-
