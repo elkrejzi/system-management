@@ -376,6 +376,13 @@ sed -i 's#;date.timezone =#date.timezone = "Europe/Sarajevo"#' /etc/php/php.ini
 sed -i "s:#ProcessSizeMax=2G:ProcessSizeMax=4G:;s:#ExternalSizeMax=2G:ExternalSizeMax=4G:;s:#JournalSizeMax=767M:JournalSizeMax=1G:" /etc/systemd/coredump.conf
 sed -i "s:#HandleLidSwitch=suspend:HandleLidSwitch=ignore:g" /etc/systemd/logind.conf
 
+install -dm755 /lib/firmware
+
+cp -a /media/ntfs/Other/Linux/kernel_firmware/* /lib/firmware
+
+find /lib/firmware -type d -exec chmod 755 {} \;
+find /lib/firmware -type f -exec chmod 644 {} \;
+
 systemctl enable lightdm
 
 echo "Entering password for user root:"
