@@ -201,6 +201,8 @@ case $(basename $0) in
     $(dirname $0)/buildxcb-proto
     $(dirname $0)/buildxtrans
 
+    find /binary/xorg/proto -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
+
     exit 0
   ;;
 esac

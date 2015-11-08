@@ -222,6 +222,8 @@ case $(basename $0) in
     $(dirname $0)/buildmythes
     $(dirname $0)/buildredland
 
+    find /binary -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
+
     exit 0
   ;;
 esac

@@ -51,6 +51,7 @@ case $(basename $0) in
     export PKGNAME=gnome-themes-standard
     export PKGVER=3.18.0
     export MULTILIB_BUILD=1
+    export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-update-icon-cache ] && echo \"Processing triggers for hicolor-icon-theme\" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/HighContrast"
     export MAKE_FLAGS_32="-C themes/Adwaita/gtk-2.0 libadwaita.la"
     make_install_override() {
       if [ ${MULTILIB} == 0 ]

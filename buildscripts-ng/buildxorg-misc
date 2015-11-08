@@ -73,6 +73,8 @@ case $(basename $0) in
     $(dirname $0)/buildxkeyboard-config
     $(dirname $0)/buildxorg-server
 
+    find /binary/xorg -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
+
     exit 0
   ;;
 esac

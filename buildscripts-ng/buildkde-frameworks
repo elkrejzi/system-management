@@ -77,6 +77,8 @@ build_all() {
   $(dirname $0)/buildkross $1
   $(dirname $0)/buildkrunner $1
 
+  find /binary/frameworks -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
+
   exit 0
 }
 

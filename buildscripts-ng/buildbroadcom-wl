@@ -27,9 +27,9 @@ make_override() {
 }
 
 make_install_override() {
-  install -dm755 ${DEST}/lib/modprobe.d ${DEST}/usr/share/broadcom-wl
+  install -dm755 ${DEST}/lib/modprobe.d ${DEST}/usr/src/broadcom-wl
 
-  mv * ${DEST}/usr/share/broadcom-wl
+  mv * ${DEST}/usr/src/broadcom-wl
 
 cat > ${DEST}/lib/modprobe.d/broadcom-wl.conf << "EOF"
 blacklist b43
