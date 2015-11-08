@@ -37,7 +37,7 @@ includedir=\${prefix}/include
 
 Name: Lua
 Description: An Extensible Extension Language
-Version: ${VER}
+Version: ${PKGVER}
 Requires:
 Libs: -L\${libdir} -llua -lm
 Cflags: -I\${includedir}
