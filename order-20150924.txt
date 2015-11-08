@@ -198,13 +198,7 @@ xcb-util-cursor-0.1.2
 
 # End Xorg Chapter (for now)
 
-llvm-3.7.0 32 and 64 bit, with clang, clang-tools-extra, compiler-rt, lldb, polly
-libcxx-3.7.0 32 and 64 bit (no default ABI library)
-libunwind-3.7.0 32 and 64 bit
-libcxxabi-3.7.0 32 and 64 bit
-
-Rebuild libcxx-3.7.0 with libcxxabi-3.7.0 as the default ABI library
-
+llvm-3.7.0 32 and 64 bit, with clang, clang-tools-extra, compiler-rt, lld, lldb, libcxx, libcxxabi, libunwind, openmp, polly
 dbus-1.10.0 32 and 64 bit
 dbus-glib-0.104
 dbus-python-1.2.0 Python 2 and Python 3 Modules
@@ -377,14 +371,14 @@ startup-notification-0.12
 wireless_tools-30pre9
 aspell-en-2015.05.18
 aspell-hr-0.51.0
-hunspell-en-us-20150518
+hunspell-en-2015.05.18
 hunspell-hr-20060617
 dmz-cursor-theme-0.4.3
 hicolor-icon-theme-0.15
 icon-naming-utils-0.8.90
 mime-types-9
-cantarell-fonts-0.0.16
 fonts-baekmuk-2.2
+fonts-cantarell-0.0.16
 fonts-cm-unicode-0.7.0
 fonts-dejavu-2.35
 fonts-freefont-20120503
@@ -1027,3 +1021,572 @@ texlive-20150521
 dblatex-0.3.7
 
 # End Sat Sep 26 01:50:18 UTC 2015
+
+# Begin Fri Oct  2 16:35:32 UTC 2015
+
+Updated to bluez-5.35
+Updated to clutter-gst-3.0.12
+Updated to eigen-3.2.6
+Updated to eog-3.18.0
+Updated to firefox-41.0.1
+Updated to gcr-3.18.0
+Updated to gdk-pixbuf-2.32.1
+Updated to git-2.6.0
+Updated to graphite2-1.3.3
+Updated to gstreamer-1.6.0
+Updated to gst-plugins-base-1.6.0
+Updated to gst-plugins-good-1.6.0
+Updated to gst-plugins-bad-1.6.0
+Updated to gst-plugins-ugly-1.6.0
+Updated to gst-libav-1.6.0
+Updated to harfbuzz-1.0.4
+Updated to iso-codes-3.62
+Updated to libsigc++-2.6.1
+Updated to libvirt-1.2.20
+Updated to libvirt-python-1.2.20
+Updated to lightdm-1.16.3
+Updated to mesa-11.0.2
+Updated to nfs-utils-1.3.3
+Updated to php-5.6.14
+Updated to pkg-config-0.29
+Updated to python-babel-2.1.1
+Updated to seahorse-3.18.0
+Updated to thunderbird-38.3.0
+Updated to wpa_supplicant-2.5
+Updated to xz-5.2.2
+
+# End Fri Oct  2 19:16:54 UTC 2015
+
+# Begin Sat Oct 10 12:28:53 UTC 2015
+
+Updated to aspell-en-2015.08.24
+Updated to btrfs-progs-4.2.2
+Updated to curl-7.45.0
+Updated to dmz-cursor-theme-0.4.4
+Updated to engrampa-1.10.2
+Updated to fonts-cantarell-0.0.17
+Updated to fonts-gentiumbasic-110
+Updated to fonts-gentiumplus-5.000
+Updated to freetype-2.6.1
+Updated to ghostscript-9.18
+Updated to git-2.6.1
+Updated to glm-0.9.7.1
+Updated to gtk+-3.18.1
+Updated to hunspell-en-2015.08.24
+Updated to kid3-3.3.0
+Updated to libass-0.13.0
+Updated to libbluray-0.9.0
+Updated to libmtp-1.1.10
+Updated to linux-4.3.0-rc4-krejzi
+Updated to lxc-1.1.4
+Updated to mate-control-center-1.10.2
+Updated to mate-notification-daemon-1.10.2
+Updated to python-pillow-3.0.0
+Updated to qca-2.1.1 (replaces qca-qt5-2.1.0.3)
+Updated to sane-backends-1.0.25
+Updated to systemd-227
+Updated to tzdata-2015g
+Updated to unrar-5.3.5
+Updated to wine-1.7.52
+
+fonts-hannom-2005
+fonts-mgopen-1.1
+fonts-paratype-20140730
+fonts-scheherazade-2.100
+fonts-vlgothic-20141206
+
+Updated to attica-5.15.0
+Updated to bluez-qt-5.15.0
+Updated to kapidox-5.15.0
+Updated to karchive-5.15.0
+Updated to kcodecs-5.15.0
+Updated to kconfig-5.15.0
+Updated to kcoreaddons-5.15.0
+Updated to kdbusaddons-5.15.0
+Updated to kdnssd-5.15.0
+Updated to kguiaddons-5.15.0
+Updated to ki18n-5.15.0
+Updated to kidletime-5.15.0
+Updated to kimageformats-5.15.0
+Updated to kitemmodels-5.15.0
+Updated to kitemviews-5.15.0
+Updated to kplotting-5.15.0
+Updated to kwidgetsaddons-5.15.0
+Updated to kwindowsystem-5.15.0
+Updated to modemmanager-qt-5.15.0
+Updated to networkmanager-qt-5.15.0
+Updated to solid-5.15.0
+Updated to sonnet-5.15.0
+Updated to threadweaver-5.15.0
+Updated to kauth-5.15.0
+Updated to kcompletion-5.15.0
+Updated to kcrash-5.15.0
+Updated to kdoctools-5.15.0
+Updated to kfilemetadata-5.15.0
+Updated to knotifications-5.15.0
+Updated to kpty-5.15.0
+Updated to kunitconversion-5.15.0
+Updated to kconfigwidgets-5.15.0
+Updated to kglobalaccel-5.15.0
+Updated to kpackage-5.15.0
+Updated to kservice-5.15.0
+Updated to kdesu-5.15.0
+Updated to kemoticons-5.15.0
+Updated to kiconthemes-5.15.0
+Updated to kjobwidgets-5.15.0
+Updated to kpeople-5.15.0
+Updated to ktextwidgets-5.15.0
+Updated to kwallet-5.15.0
+Updated to kxmlgui-5.15.0
+Updated to kbookmarks-5.15.0
+Updated to kio-5.15.0
+Updated to baloo-5.15.0
+Updated to frameworkintegration-5.15.0
+Updated to kdeclarative-5.15.0
+Updated to kinit-5.15.0
+Updated to knewstuff-5.15.0
+Updated to knotifyconfig-5.15.0
+Updated to kparts-5.15.0
+Updated to kxmlrpcclient-5.15.0
+Updated to kcmutils-5.15.0
+Updated to kded-5.15.0
+Updated to kdewebkit-5.15.0
+Updated to ktexteditor-5.15.0
+Updated to kactivities-5.15.0
+Updated to kdesignerplugin-5.15.0
+Updated to plasma-framework-5.15.0
+Updated to kjs-5.15.0
+Updated to kdelibs4support-5.15.0
+Updated to khtml-5.15.0
+Updated to kjsembed-5.15.0
+Updated to kmediaplayer-5.15.0
+Updated to kross-5.15.0
+Updated to krunner-5.15.0
+
+Updated to kde-cli-tools-5.4.90 (git snapshot)
+Updated to kdecoration-5.4.90 (git snapshot)
+Updated to kwayland-5.4.90 (git snapshot)
+Updated to libkscreen-5.4.90 (git snapshot)
+Updated to libksysguard-5.4.90 (git snapshot)
+Updated to breeze-5.4.90 (git snapshot)
+Updated to kwin-5.4.90 (git snapshot)
+Updated to oxygen-5.4.90 (git snapshot)
+Updated to oxygen-fonts-5.4.90 (git snapshot)
+Updated to khelpcenter-5.4.90 (git snapshot)
+Updated to kinfocenter-5.4.90 (git snapshot)
+Updated to ksysguard-5.4.90 (git snapshot)
+Updated to systemsettings-5.4.90 (git snapshot)
+Updated to plasma-workspace-5.4.90 (git snapshot)
+Updated to bluedevil-5.4.90 (git snapshot)
+Updated to kde-gtk-config-5.4.90 (git snapshot)
+Updated to khotkeys-5.4.90 (git snapshot)
+Updated to kmenuedit-5.4.90 (git snapshot)
+Updated to kscreen-5.4.90 (git snapshot)
+Updated to kwayland-integration-5.4.90 (git snapshot)
+Updated to kwrited-5.4.90 (git snapshot)
+Updated to milou-5.4.90 (git snapshot)
+Updated to plasma-nm-5.4.90 (git snapshot)
+Updated to plasma-pa-5.4.90 (git snapshot)
+Updated to plasma-workspace-wallpapers-5.4.90 (git snapshot)
+Updated to polkit-kde-agent-1-5.4.90 (git snapshot)
+Updated to powerdevil-5.4.90 (git snapshot)
+Updated to plasma-desktop-5.4.90 (git snapshot)
+Updated to kdeplasma-addons-5.4.90 (git snapshot)
+
+# End Sat Oct 10 16:05:25 UTC 2015
+
+# Begin Thu Oct 15 22:43:22 UTC 2015
+
+Updated to GraphicsMagick-1.3.22
+Updated to icu-56.1
+Updated to x265-1.8
+
+Rebuild octave-4.0.0 against GraphicsMagick-1.3.22
+Rebuild boost-1.59.0 against icu-56.1
+Rebuild firebird-2.5.4.26856 against icu-56.1
+Rebuild libcdr-0.1.1 against icu-56.1
+Rebuild libe-book-0.1.2 against icu-56.1
+Rebuild libmspub-0.1.2 against icu-56.1
+Rebuild libreoffice-5.0.2.2 against icu-56.1
+Rebuild libvisio-0.1.3 against icu-56.1
+Rebuild openldap-2.4.42 against icu-56.1
+Rebuild php-5.6.14 against icu-56.1
+Rebuild raptor2-2.0.15 against icu-56.1
+Rebuild thunderbird-38.3.0 against icu-56.1
+Rebuild xerces-c-3.1.2 against icu-56.1
+Rebuild gst-plugins-bad-1.6.0 against x265-1.8
+Rebuild vlc-2.2.1 against x265-1.8
+
+Updated to aisleriot-3.18.1
+Updated to at-spi2-atk-2.18.1
+Updated to at-spi2-core-2.18.1
+Updated to cheese-3.18.1
+Updated to chromium-46.0.2490.71
+Updated to clutter-1.24.2
+Updated to clutter-gst-3.0.14
+Updated to clutter-gtk-1.6.6
+Updated to ffmpeg-2.8.1
+Updated to firefox-41.0.2
+Updated to flashplayer-11.2.202.540
+Updated to gedit-3.18.1
+Updated to glib-2.46.1
+Updated to glib-networking-2.46.1
+Updated to gnome-calculator-3.18.1
+Updated to gnome-desktop-3.18.1
+Updated to gnome-logs-3.18.1
+Updated to gnome-online-accounts-3.18.1
+Updated to gnome-terminal-3.18.1
+Updated to gtk+-3.18.2
+Updated to gtksourceview-3.18.1
+Updated to gucharmap-3.18.1
+Updated to gvfs-1.26.1.1
+Updated to harfbuzz-1.0.6
+Updated to httpd-2.4.17
+Updated to hwloc-1.11.1
+Updated to ImageMagick-6.9.2-4
+Updated to librsvg-2.40.11
+Updated to libsoup-2.52.1
+Updated to libwps-0.4.2
+Updated to man-db-2.7.4
+Updated to mesa-11.0.3
+Updated to ModemManager-1.4.12
+Updated to nautilus-3.18.1
+Updated to pango-1.38.1
+Updated to poppler-0.37.0
+Updated to postfix-3.0.3
+Updated to postgresql-9.4.5
+Updated to python-m2crypto-0.22.5
+Updated to python-six-1.10.0
+Updated to sqlite-3.9.1
+Updated to talloc-2.1.4
+Updated to unrar-5.3.6
+Updated to v4l-utils-1.8.1
+Updated to vinagre-3.18.1
+Updated to vte-0.36.5
+Updated to vte-0.42.1
+Updated to webkitgtk-2.10.2
+Updated to wireshark-1.12.8
+Updated to xdg-utils-1.1.1
+Updated to xkeyboard-config-2.16
+Updated to yelp-xsl-3.18.1
+Updated to yelp-3.18.1
+
+Updated to qtbase-5.5.1
+Updated to qtimageformats-5.5.1
+Updated to qtscript-5.5.1
+Updated to qtserialport-5.5.1
+Updated to qtsvg-5.5.1
+Updated to qtwayland-5.5.1
+Updated to qtx11extras-5.5.1
+Updated to qtxmlpatterns-5.5.1
+Updated to qtdeclarative-5.5.1
+Updated to qtconnectivity-5.5.1
+Updated to qtgraphicaleffects-5.5.1
+Updated to qtlocation-5.5.1
+Updated to qtmultimedia-5.5.1
+Updated to qtquickcontrols-5.5.1
+Updated to qtsensors-5.5.1
+Updated to qtwebchannel-5.5.1
+Updated to qtwebsockets-5.5.1
+Updated to qtwebengine-5.5.1
+Updated to qtwebkit-5.5.1
+Updated to qttools-5.5.1
+Updated to qtquick1-5.5.1
+
+Updated to ark-15.08.2
+Updated to baloo-widgets-15.08.2
+Updated to dolphin-15.08.2
+Updated to gwenview-15.08.2
+Updated to kate-15.08.2
+Updated to kcalc-15.08.2
+Updated to kdebugsettings-15.08.2
+Updated to kio-extras-15.08.2
+Updated to konsole-15.08.2
+Updated to kwalletmanager-15.08.2
+Updated to akonadi-15.08.2
+Updated to gpgmepp-15.08.2
+Updated to kcalcore-15.08.2
+Updated to kcontacts-15.08.2
+Updated to kholidays-15.08.2
+Updated to kldap-15.08.2
+Updated to kmime-15.08.2
+Updated to kontactinterface-15.08.2
+Updated to kpimtextedit-15.08.2
+Updated to syndication-15.08.2
+Updated to kblog-15.08.2
+Updated to kidentitymanagement-15.08.2
+Updated to kimap-15.08.2
+Updated to kmbox-15.08.2
+Updated to kcalutils-15.08.2
+Updated to ktnef-15.08.2
+Updated to kdepimlibs-15.08.2
+Updated to akonadi-search-15.08.2
+Updated to kalarmcal-15.08.2
+Updated to kmailtransport-15.08.2
+Updated to akonadi-calendar-15.08.2
+Updated to kdepim-runtime-15.08.2
+Updated to kdepim-15.08.2
+
+# End Fri Oct 16 16:15:11 UTC 2015
+
+# Begin Sun Oct 25 10:27:47 UTC 2015
+
+Updated to btrfs-progs-4.2.3
+Updated to chromium-46.0.2490.80
+Updated to chromium-pepper-flash-19.0.0.226
+Updated to elfutils-0.164
+Updated to evince-3.18.1
+Updated to git-2.6.2
+Updated to gl2ps-1.3.9
+Updated to gnutls-3.4.6
+Updated to gsettings-desktop-schemas-3.18.1
+Updated to libmicrohttpd-0.9.44
+Updated to linux-4.3.0-rc7-krejzi
+Updated to mesa-11.0.4
+Updated to nspr-4.10.10
+Updated to nss-3.20.1
+Updated to spice-protocol-0.12.10
+Updated to spice-0.12.6
+Updated to spice-gtk-0.30
+Updated to wavpack-4.75.2
+Updated to wine-1.7.53
+Updated to xinput-1.6.2
+Updated to zenity-3.18.1.1
+
+libksane-15.08.2+de6110a
+skanlite-1.1+0999e40
+smb4k-1.9.65
+
+# End Sun Oct 25 16:25:40 UTC 2015
+
+# Begin Wed Oct 28 15:23:11 UTC 2015
+
+Updated to cups-filters-1.1.0
+Updated to dbus-1.10.2
+Updated to geoclue-2.4.0
+Updated to gparted-0.24.0
+Updated to jdk-1.8.0u65
+Updated to libinput-1.1.0
+Updated to lightdm-1.16.4
+Updated to marco-1.10.3
+Updated to mariadb-10.1.8
+Updated to pygobject-3.18.2
+Updated to python-mako-1.0.3
+Updated to samba-4.3.1
+Updated to unrar-5.3.7
+Updated to webkitgtk-2.10.3
+Updated to xorg-server-1.17.99.902
+Updated to xf86-input-evdev-2.10.0
+Updated to xf86-input-libinput-0.15.0
+Updated to xscreensaver-5.34
+
+Rebuild xf86-input-synaptics-1.8.99 against xorg-server-1.17.99.902
+Rebuild xf86-video-ati-7.5.99 against xorg-server-1.17.99.902
+Rebuild xf86-video-intel-2.99.917 against xorg-server-1.17.99.902
+
+# End Wed Oct 28 18:51:51 UTC 2015
+
+# Begin Sun Nov  1 20:03:03 UTC 2015
+
+Updated to arpack-ng-3.3.0
+Updated to bluez-5.36
+Updated to cairo-1.14.4
+Updated to ethtool-4.2
+Updated to glpk-4.56
+Updated to gsl-2.0
+Updated to gstreamer-1.6.1
+Updated to gst-plugins-base-1.6.1
+Updated to gst-plugins-good-1.6.1
+Updated to gst-plugins-bad-1.6.1
+Updated to gst-plugins-ugly-1.6.1
+Updated to gst-libav-1.6.1
+Updated to ImageMagick-6.9.2-5
+Updated to iso-codes-3.63
+Updated to libcroco-0.6.9
+Updated to libebml-1.3.3
+Updated to libmatroska-1.4.4
+Updated to libnl-3.2.27
+Updated to libteam-1.21
+Updated to libtirpc-1.0.1
+Updated to libwebp-0.4.4
+Updated to LVM2-2.02.133
+Updated to mpv-0.12.0
+Updated to php-5.6.15
+Updated to pulseaudio-7.1
+Updated to qscintilla-2.9.1
+Updated to wine-1.7.54
+Updated to wireless-regdb-2015.10.22
+
+Updated to attica-5.16.0 (git snapshot)
+Updated to bluez-qt-5.16.0 (git snapshot)
+Updated to kapidox-5.16.0 (git snapshot)
+Updated to karchive-5.16.0 (git snapshot)
+Updated to kcodecs-5.16.0 (git snapshot)
+Updated to kconfig-5.16.0 (git snapshot)
+Updated to kcoreaddons-5.16.0 (git snapshot)
+Updated to kdbusaddons-5.16.0 (git snapshot)
+Updated to kdnssd-5.16.0 (git snapshot)
+Updated to kguiaddons-5.16.0 (git snapshot)
+Updated to ki18n-5.16.0 (git snapshot)
+Updated to kidletime-5.16.0 (git snapshot)
+Updated to kimageformats-5.16.0 (git snapshot)
+Updated to kitemmodels-5.16.0 (git snapshot)
+Updated to kitemviews-5.16.0 (git snapshot)
+Updated to kplotting-5.16.0 (git snapshot)
+Updated to kwidgetsaddons-5.16.0 (git snapshot)
+Updated to kwindowsystem-5.16.0 (git snapshot)
+Updated to modemmanager-qt-5.16.0 (git snapshot)
+Updated to networkmanager-qt-5.16.0 (git snapshot)
+Updated to solid-5.16.0 (git snapshot)
+Updated to sonnet-5.16.0 (git snapshot)
+Updated to threadweaver-5.16.0 (git snapshot)
+Updated to kauth-5.16.0 (git snapshot)
+Updated to kcompletion-5.16.0 (git snapshot)
+Updated to kcrash-5.16.0 (git snapshot)
+Updated to kdoctools-5.16.0 (git snapshot)
+Updated to kfilemetadata-5.16.0 (git snapshot)
+Updated to knotifications-5.16.0 (git snapshot)
+Updated to kpty-5.16.0 (git snapshot)
+Updated to kunitconversion-5.16.0 (git snapshot)
+Updated to kconfigwidgets-5.16.0 (git snapshot)
+Updated to kglobalaccel-5.16.0 (git snapshot)
+Updated to kpackage-5.16.0 (git snapshot)
+Updated to kservice-5.16.0 (git snapshot)
+Updated to kdesu-5.16.0 (git snapshot)
+Updated to kemoticons-5.16.0 (git snapshot)
+Updated to kiconthemes-5.16.0 (git snapshot)
+Updated to kjobwidgets-5.16.0 (git snapshot)
+Updated to kpeople-5.16.0 (git snapshot)
+Updated to ktextwidgets-5.16.0 (git snapshot)
+Updated to kwallet-5.16.0 (git snapshot)
+Updated to kxmlgui-5.16.0 (git snapshot)
+Updated to kbookmarks-5.16.0 (git snapshot)
+Updated to kio-5.16.0 (git snapshot)
+Updated to baloo-5.16.0 (git snapshot)
+Updated to frameworkintegration-5.16.0 (git snapshot)
+Updated to kdeclarative-5.16.0 (git snapshot)
+Updated to kinit-5.16.0 (git snapshot)
+Updated to knewstuff-5.16.0 (git snapshot)
+Updated to knotifyconfig-5.16.0 (git snapshot)
+Updated to kparts-5.16.0 (git snapshot)
+Updated to kxmlrpcclient-5.16.0 (git snapshot)
+Updated to kcmutils-5.16.0 (git snapshot)
+Updated to kded-5.16.0 (git snapshot)
+Updated to kdewebkit-5.16.0 (git snapshot)
+Updated to ktexteditor-5.16.0 (git snapshot)
+Updated to kactivities-5.16.0 (git snapshot)
+Updated to kdesignerplugin-5.16.0 (git snapshot)
+Updated to plasma-framework-5.16.0 (git snapshot)
+Updated to kjs-5.16.0 (git snapshot)
+Updated to kdelibs4support-5.16.0 (git snapshot)
+Updated to khtml-5.16.0 (git snapshot)
+Updated to kjsembed-5.16.0 (git snapshot)
+Updated to kmediaplayer-5.16.0 (git snapshot)
+Updated to kross-5.16.0 (git snapshot)
+Updated to krunner-5.16.0 (git snapshot)
+
+Updated to kde-cli-tools-5.4.90 (git snapshot)
+Updated to kdecoration-5.4.90 (git snapshot)
+Updated to kwayland-5.4.90 (git snapshot)
+Updated to libkscreen-5.4.90 (git snapshot)
+Updated to libksysguard-5.4.90 (git snapshot)
+Updated to breeze-5.4.90 (git snapshot)
+Updated to kwin-5.4.90 (git snapshot)
+Updated to oxygen-5.4.90 (git snapshot)
+Updated to oxygen-fonts-5.4.90 (git snapshot)
+Updated to khelpcenter-5.4.90 (git snapshot)
+Updated to kinfocenter-5.4.90 (git snapshot)
+Updated to ksysguard-5.4.90 (git snapshot)
+Updated to systemsettings-5.4.90 (git snapshot)
+Updated to plasma-workspace-5.4.90 (git snapshot)
+Updated to bluedevil-5.4.90 (git snapshot)
+Updated to kde-gtk-config-5.4.90 (git snapshot)
+Updated to khotkeys-5.4.90 (git snapshot)
+Updated to kmenuedit-5.4.90 (git snapshot)
+Updated to kscreen-5.4.90 (git snapshot)
+Updated to kwayland-integration-5.4.90 (git snapshot)
+Updated to kwrited-5.4.90 (git snapshot)
+Updated to milou-5.4.90 (git snapshot)
+Updated to plasma-nm-5.4.90 (git snapshot)
+Updated to plasma-pa-5.4.90 (git snapshot)
+Updated to plasma-workspace-wallpapers-5.4.90 (git snapshot)
+Updated to polkit-kde-agent-1-5.4.90 (git snapshot)
+Updated to powerdevil-5.4.90 (git snapshot)
+Updated to plasma-desktop-5.4.90 (git snapshot)
+Updated to kdeplasma-addons-5.4.90 (git snapshot)
+
+Rebuild nfs-utils-1.3.3 against libtirpc-1.0.1
+Rebuild rpcbind-0.2.3 against libtirpc-1.0.1
+
+# End Sun Nov  1 23:42:03 UTC 2015
+
+# Begin Fri Nov  6 16:11:32 UTC 2015
+
+colord-gtk-0.1.26
+geocode-glib-3.18.0
+gmime-2.6.20
+libpwquality-1.3.0
+libwacom-0.15
+mozjs-24.2.0
+xf86-input-wacom-0.31.0
+gjs-1.44.0
+libgweather-3.18.1
+totem-pl-parser-3.10.5
+evolution-data-server-3.18.1
+gnome-bluetooth-3.18.0
+gnome-settings-daemon-3.18.1
+grilo-0.2.14
+mutter-3.18.1
+gnome-control-center-3.18.1
+
+Updated to cryptsetup-1.7.0
+Updated to firefox-42.0
+Updated to git-2.6.3
+Updated to gmp-6.1.0
+Updated to grep-2.22
+Updated to iproute2-4.3.0
+Updated to libassuan-2.4.0
+Updated to libbluray-0.9.1
+Updated to libreoffice-5.0.3.2
+Updated to libvirt-1.2.21
+Updated to libvirt-python-1.2.21
+Updated to linux-4.3.0-krejzi
+Updated to openmpi-1.10.1
+Updated to python-pycurl-7.19.5.3
+Updated to python-setuptools-18.5
+Updated to qemu-2.4.1
+Updated to sqlite-3.9.2
+Updated to sudo-1.8.15
+Updated to util-linux-2.27.1
+Updated to xkbcomp-1.3.1
+
+Updated to libmatekbd-1.12.0
+Updated to libmatemixer-1.12.0
+Updated to libmateweather-1.12.0
+Updated to mate-backgrounds-1.12.0
+Updated to mate-desktop-1.12.0
+Updated to mate-icon-theme-1.12.0
+Updated to mate-menus-1.12.0
+Updated to mate-themes-1.12.0
+Updated to caja-1.12.0
+Updated to marco-1.12.0
+Updated to mate-panel-1.12.0
+Updated to mate-settings-daemon-1.12.0
+Updated to mate-control-center-1.12.0
+Updated to mate-applets-1.12.0
+Updated to mate-media-1.12.0
+Updated to mate-notification-daemon-1.12.0
+Updated to mate-polkit-1.12.0
+Updated to mate-power-manager-1.12.0
+Updated to mate-screensaver-1.12.0
+Updated to mate-sensors-applet-1.12.0
+Updated to mate-session-manager-1.12.0
+Updated to mate-system-monitor-1.12.0
+Updated to mate-terminal-1.12.0
+Updated to mate-utils-1.12.0
+Updated to atril-1.12.0
+Updated to caja-extensions-1.12.0
+Updated to engrampa-1.12.0
+Updated to pluma-1.12.0
+
+# End Fri Nov  6 23:20:00 UTC 2015
