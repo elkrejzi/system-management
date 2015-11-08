@@ -384,3 +384,22 @@ echo "Entering password for user armin:"
 passwd armin
 
 rm -f /etc/group- /etc/gshadow- /etc/passwd- /etc/shadow-
+
+install -dm755 /boot/syslinux
+
+install -m644 /media/ntfs/Other/Linux/conf/syslinux/* /boot/syslinux
+install -m644 /usr/lib/syslinux/*.c32 /boot/syslinux
+
+cat << "EOF"
+Now run the following from outside the chroot
+
+export LFS=/mnt/lfs
+
+for D in AccountsService alsa bluetooth lightdm-data \
+         git mysql NetworkManager postgresql upower  \
+         systemd/backlight systemd/rfkill
+do
+  rm -rf $LFS/var/lib/${D}
+  cp -a /var/lib/${D} $LFS/var/lib/${D}
+done
+EOF
