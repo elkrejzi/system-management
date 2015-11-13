@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=LVM2
-export PKGVER=2.02.133
+export PKGVER=2.02.134
 export PKGTAR=${PKGNAME}.${PKGVER}.tgz
 export PKGDIR=${PKGNAME}.${PKGVER}
 export PKGURL="ftp://sources.redhat.com/pub/lvm2/${PKGTAR}"

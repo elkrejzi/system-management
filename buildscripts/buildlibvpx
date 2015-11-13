@@ -1,15 +1,17 @@
 #!/bin/bash -e
 
 export PKGNAME=libvpx
-export PKGVER=1.4.0
+export PKGVER=1.5.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://storage.googleapis.com/downloads.webmproject.org/releases/webm/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 
 configure_override() {
-  ./configure --prefix=/usr   \
-              --enable-shared \
+  ./configure --prefix=/usr    \
+              --enable-shared  \
+              --enable-experimental \
+              --enable-spatial-svc  \
               --disable-static
 }
 

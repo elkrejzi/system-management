@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=5.15.0
+export PKGVER=5.16.0
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export DEBUG_BUILD=1
@@ -92,6 +92,11 @@ case $(basename $0) in
 esac
 
 case $(basename $0) in
+  buildkinit )
+    configure_pre() {
+      sed -i "/PROTECT/s#1#0#" ../${PKGDIR}/src/CMakeLists.txt
+    }
+ ;;
   buildkdesu )
     export POSTINST_TRIGGER=("chgrp nogroup /usr/lib/libexec/kf5/kdesud"
                              "chmod 2755 /usr/lib/libexec/kf5/kdesud")

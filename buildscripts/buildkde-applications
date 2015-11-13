@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=15.08.2
+export PKGVER=15.08.3
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export KEEP_DOC=1

@@ -3,7 +3,7 @@
 case $(basename $0) in
   buildaisleriot )
     export PKGNAME=aisleriot
-    export PKGVER=3.18.1
+    export PKGVER=3.18.2
     export CONFIGURE_FLAGS=(--with-platform=gtk-only
                             --with-card-theme-formats=svg,fixed,pysol
                             --with-pysol-card-theme-path=/usr/share/PySolFC)
@@ -14,7 +14,7 @@ case $(basename $0) in
   ;;
   buildeog )
     export PKGNAME=eog
-    export PKGVER=3.18.0
+    export PKGVER=3.18.1
   ;;
   buildepiphany )
     export PKGNAME=epiphany
@@ -25,7 +25,7 @@ case $(basename $0) in
   ;;
   buildevince )
     export PKGNAME=evince
-    export PKGVER=3.18.1
+    export PKGVER=3.18.2
     export CONFIGURE_FLAGS=(--enable-introspection)
     make_install_post() {
       install -dm755 ${DEST}/usr/lib/evince/mozilla
@@ -40,11 +40,11 @@ case $(basename $0) in
   ;;
   buildgedit )
     export PKGNAME=gedit
-    export PKGVER=3.18.1
+    export PKGVER=3.18.2
   ;;
   buildgnome-calculator )
     export PKGNAME=gnome-calculator
-    export PKGVER=3.18.1
+    export PKGVER=3.18.2
   ;;
   buildgnome-logs )
     export PKGNAME=gnome-logs
@@ -62,17 +62,17 @@ case $(basename $0) in
   ;;
   buildgnome-system-monitor )
     export PKGNAME=gnome-system-monitor
-    export PKGVER=3.18.0.1
+    export PKGVER=3.18.2
     export CONFIGURE_FLAGS=(--enable-systemd)
   ;;
   buildgnome-terminal )
     export PKGNAME=gnome-terminal
-    export PKGVER=3.18.1
+    export PKGVER=3.18.2
     export CONFIGURE_FLAGS=(--disable-migration --disable-search-provider)
   ;;
   buildgucharmap )
     export PKGNAME=gucharmap
-    export PKGVER=3.18.1
+    export PKGVER=3.18.2
     export CONFIGURE_FLAGS=(--enable-vala)
   ;;
   buildnautilus )
@@ -95,7 +95,7 @@ case $(basename $0) in
   ;;
   buildvinagre )
     export PKGNAME=vinagre
-    export PKGVER=3.18.1
+    export PKGVER=3.18.2
   ;;
   buildyelp )
     export PKGNAME=yelp

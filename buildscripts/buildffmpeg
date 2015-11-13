@@ -1,12 +1,13 @@
 #!/bin/bash -e
 
 export PKGNAME=ffmpeg
-export PKGVER=2.8.1
+export PKGVER=2.8.2
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://ffmpeg.org/releases/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export NO_OPTIMIZATION=1
+export PATCHES_LIST=("ffmpeg.patch")
 
 configure_override() {
   ./configure --prefix=/usr              \

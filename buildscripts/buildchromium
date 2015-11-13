@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=chromium
-export PKGVER=46.0.2490.80
+export PKGVER=46.0.2490.86
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://commondatastorage.googleapis.com/chromium-browser-official/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
@@ -46,6 +46,7 @@ configure_pre() {
       -Duse_system_libevent=1
       -Duse_system_libjpeg=1
       -Duse_system_libpng=1
+      -Duse_system_libvpx=1
       -Duse_system_libwebp=1
       -Duse_system_libxml=1
       -Duse_system_libxslt=1
@@ -65,7 +66,6 @@ configure_pre() {
       -Ddisable_pnacl=1
       -Ddisable_sse2=1
       -Ddisable_glibc=1)
-  #     -Duse_system_libvpx=1
 
   find third_party/icu -type f \! -regex '.*\.\(gyp\|gypi\|isolate\)' -delete
   touch chrome/test/data/webui/i18n_process_css_test.html

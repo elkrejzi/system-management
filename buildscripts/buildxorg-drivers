@@ -64,7 +64,7 @@ EOF
   ;;
   buildxf86-video-ati )
     export PKGNAME=xf86-video-ati
-    export PKGVER=7.5.99
+    export PKGVER=7.6.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://xorg.freedesktop.org/releases/individual/driver/${PKGTAR}"
   ;;
@@ -74,7 +74,9 @@ EOF
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://xorg.freedesktop.org/releases/individual/driver/${PKGTAR}"
     export CONFIGURE_FLAGS=(--enable-kms-only
-                            --disable-sna)
+                            --disable-sna
+                            --with-default-accel=uxa
+                            --with-default-dri=3)
     export POSTINST_TRIGGER=("chmod 4755 /usr/libexec/xf86-video-intel-backlight-helper")
   ;;
   buildxorg-drivers )

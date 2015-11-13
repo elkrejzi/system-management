@@ -7,7 +7,7 @@ export MULTILIB_BUILD=1
 case $(basename $0) in
   buildglib2 )
     export PKGNAME=glib
-    export PKGVER=2.46.1
+    export PKGVER=2.46.2
     export DEST=/binary/${PKGNAME}-${PKGVER}
     export KEEP_EMPTY_DIRS=1
     export PATCHES_LIST=("glib-compile-schemas-quiet.patch")
@@ -54,7 +54,7 @@ case $(basename $0) in
   ;;
   buildgdk-pixbuf )
     export PKGNAME=gdk-pixbuf
-    export PKGVER=2.32.1
+    export PKGVER=2.32.2
     export DEST=/binary/${PKGNAME}-${PKGVER}
     export CONFIGURE_FLAGS=(--with-x11 --with-libjasper)
     export CONFIGURE_FLAGS_32=(--with-x11 --with-libjasper --disable-introspection)
@@ -73,7 +73,7 @@ export POSTINST_TRIGGER=("[ -x /usr/bin/gdk-pixbuf-query-loaders ] && echo \"Pro
   ;;
   buildat-spi2-core )
     export PKGNAME=at-spi2-core
-    export PKGVER=2.18.1
+    export PKGVER=2.18.3
     export CONFIGURE_FLAGS_32=(--disable-introspection)
   ;;
   buildat-spi2-atk )
@@ -110,7 +110,7 @@ EOF
   ;;
   buildgtk3 )
     export PKGNAME=gtk+
-    export PKGVER=3.18.2
+    export PKGVER=3.18.4
     export CONFIGURE_FLAGS=(--enable-broadway-backend --enable-wayland-backend --enable-x11-backend --enable-man)
     export CONFIGURE_FLAGS_32=("${CONFIGURE_FLAGS[@]}" --disable-cloudprint --disable-introspection --disable-libcanberra)
     export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-query-immodules-3.0 ] && echo \"Processing triggers for gtk-3.0\" && /usr/bin/gtk-query-immodules-3.0 --update-cache"
