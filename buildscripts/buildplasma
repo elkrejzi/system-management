@@ -156,12 +156,8 @@ then
       git clone git://anongit.kde.org/${PKGNAME}.git
     fi
 
-    if [ ${PKGNAME} != "plasma-workspace-wallpapers" ] &&
-       [ ${PKGNAME} != "breeze-icons" ]
-    then
-      export PKGVER=$(grep "PROJECT_VERSION " ${PKGDIR}/CMakeLists.txt | cut -d \" -f2)
-      export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
-    fi
+    export PKGVER=$(grep "PROJECT_VERSION " ${PKGDIR}/CMakeLists.txt | cut -d \" -f2)
+    export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
 
     if [ -d ${PKGBUILD} ]
     then
