@@ -181,7 +181,6 @@ $(dirname $0)/buildcdrdao
 $(dirname $0)/buildcdrtools
 $(dirname $0)/builddvd+rw-tools
 $(dirname $0)/buildtranscode
-$(dirname $0)/buildOrion
 $(dirname $0)/buildsound-theme-freedesktop
 $(dirname $0)/buildbtrfs-progs
 $(dirname $0)/buildcabextract

@@ -56,7 +56,7 @@ case $(basename $0) in
   ;;
   buildpython-lxml )
     export PKGNAME=lxml
-    export PKGVER=3.4.4
+    export PKGVER=3.5.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/l/lxml/${PKGTAR}"
     export DEST=/binary/python/python-lxml-${PKGVER}

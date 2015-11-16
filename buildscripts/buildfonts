@@ -7,7 +7,7 @@ then
 fi
 
 export BAEKMUK_VER=2.2
-export CANTARELL_VER=0.0.17
+export CANTARELL_VER=0.0.18.1
 export CM_UNICODE_VER=0.7.0
 export DEJAVU_VER=2.35
 export FREEFONT_VER=20120503
@@ -16,6 +16,7 @@ export GENTIUMPLUS_VER=5.000
 export HANNOM_VER=2005
 export LIBERATION_VER=2.00.1
 export MGOPEN_VER=1.1
+export NOTO_VER=2015-09-29
 export OPENDESKTOP_VER=1.4.2
 export PARATYPE_VER=20140730
 export SCHEHERAZADE_VER=2.100
@@ -253,6 +254,29 @@ chmod 755 ${DEST}/INSTALL
 rm -rf fonts-mgopen-${MGOPEN_VER}
 
 # End mgopen
+
+# Begin noto
+
+wget -c https://github.com/googlei18n/noto-fonts/archive/v${NOTO_VER}-license-adobe.tar.gz -O - | tar xfz -
+
+export DEST=/binary/fonts/fonts-noto-${NOTO_VER//-}
+
+install -dm755 ${DEST}/usr/share/fonts/truetype/noto
+install -m644 noto-fonts-${NOTO_VER}-license-adobe/hinted/*.ttf ${DEST}/usr/share/fonts/truetype/noto
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/fc-cache ] && echo "Processing triggers for fontconfig" && /usr/bin/fc-cache /usr/share/fonts/truetype/noto
+EOF
+
+chmod 755 ${DEST}/INSTALL
+
+rm -rf noto-fonts-${NOTO_VER}-license-adobe
+
+# End noto
 
 # Begin opendesktop
 

@@ -14,7 +14,7 @@ build_all() {
   $(dirname $0)/buildlibkscreen $1
   $(dirname $0)/buildlibksysguard $1
   $(dirname $0)/buildbreeze $1
-  $(dirname $0)/buildbreeze-icons $1
+  $(dirname $0)/buildbreeze-gtk $1
   $(dirname $0)/buildkscreenlocker $1
   $(dirname $0)/buildoxygen $1
   $(dirname $0)/buildoxygen-fonts $1
@@ -55,11 +55,6 @@ case $(basename $0) in
 esac
 
 case $(basename $0) in
-  buildbreeze-icons )
-    export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-update-icon-cache ] && echo \"Processing triggers for breeze-icon-theme\" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/breeze"
-                             "[ -x /usr/bin/gtk-update-icon-cache ] && echo \"Processing triggers for breeze-dark-icon-theme\" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/breeze-dark")
-    export SPACE_ADDED=1
-  ;;
   buildoxygen-fonts )
     export POSTINST_TRIGGER=("[ -x /usr/bin/fc-cache ] && echo \"Processing triggers for fontconfig\" && /usr/bin/fc-cache /usr/share/fonts/truetype/oxygen")
     export SPACE_ADDED=1
@@ -98,7 +93,7 @@ plasmas=(
   libkscreen
   libksysguard
   breeze
-  breeze-icons
+  breeze-gtk
   kscreenlocker
   oxygen
   oxygen-fonts

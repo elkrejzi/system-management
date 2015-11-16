@@ -11,6 +11,7 @@ build_all() {
 
   $(dirname $0)/buildattica $1
   $(dirname $0)/buildbluez-qt $1
+  $(dirname $0)/buildbreeze-icons $1
   $(dirname $0)/buildkapidox $1
   $(dirname $0)/buildkarchive $1
   $(dirname $0)/buildkcodecs $1
@@ -92,6 +93,13 @@ case $(basename $0) in
 esac
 
 case $(basename $0) in
+  buildbreeze-icons )
+    export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-update-icon-cache ] && echo \"Processing triggers for breeze-icon-theme\" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/breeze"
+                             "[ -x /usr/bin/gtk-update-icon-cache ] && echo \"Processing triggers for breeze-dark-icon-theme\" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/breeze-dark")
+    export NO_STRIP=1
+    export SPACE_ADDED=1
+    unset DEBUG_BUILD
+  ;;
   buildkinit )
     configure_pre() {
       sed -i "/PROTECT/s#1#0#" ../${PKGDIR}/src/CMakeLists.txt
@@ -116,6 +124,7 @@ export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
 frameworks=(
   attica
   bluez-qt
+  breeze-icons
   kapidox
   karchive
   kcodecs
