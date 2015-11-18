@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=kmod
-export PKGVER=21
+export PKGVER=22
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://www.kernel.org/pub/linux/utils/kernel/kmod/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

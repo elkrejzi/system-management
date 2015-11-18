@@ -1,6 +1,6 @@
---- a/Makefile.am	2015-10-07 18:23:24.428043595 +0200
-+++ b/Makefile.am	2015-10-07 18:32:54.205101941 +0200
-@@ -3014,7 +3014,11 @@
+--- a/Makefile.am	2015-11-18 11:49:48.095221970 +0100
++++ b/Makefile.am	2015-11-18 11:59:46.226995885 +0100
+@@ -3109,7 +3109,11 @@
  UNINSTALL_EXEC_HOOKS += libsystemd-uninstall-hook
  
  pkgconfiglib_DATA += \
@@ -13,7 +13,7 @@
  
  pkginclude_HEADERS += \
  	src/systemd/sd-bus.h \
-@@ -5683,12 +5687,6 @@
+@@ -5766,12 +5770,6 @@
  	libsystemd-id128.la \
  	libsystemd-daemon.la
  
@@ -26,8 +26,8 @@
  # move lib from $(libdir) to $(rootlibdir) and update devel link, if needed
  compat-lib-install-hook:
  	libname=libsystemd-login.so && $(move-to-rootlibdir)
---- a/Makefile.in	2015-10-07 18:23:39.302141595 +0200
-+++ b/Makefile.in	2015-10-07 18:33:13.782280253 +0200
+--- a/Makefile.in	2015-11-18 11:50:52.650715466 +0100
++++ b/Makefile.in	2015-11-18 12:00:05.873279539 +0100
 @@ -1226,34 +1226,28 @@
  @ENABLE_COMPAT_LIBS_TRUE@	libsystemd-id128.la \
  @ENABLE_COMPAT_LIBS_TRUE@	libsystemd-daemon.la
@@ -103,7 +103,7 @@
  @ENABLE_SPLIT_USR_FALSE@	--disable-split-usr
  
  subdir = .
-@@ -4955,10 +4949,10 @@
+@@ -5029,10 +5023,10 @@
  	install-touch-usr-hook install-busnames-target-wants-hook \
  	systemd-detect-virt-install-hook dbus1-generator-install-hook \
  	$(am__append_109) libsystemd-install-hook libudev-install-hook \
@@ -116,7 +116,7 @@
  INSTALL_DATA_HOOKS = units-install-hook $(am__append_117) \
  	catalog-update-hook
  UNINSTALL_DATA_HOOKS = units-uninstall-hook catalog-remove-hook
-@@ -4995,7 +4989,10 @@
+@@ -5069,7 +5063,10 @@
  noinst_DATA = $(am__append_61) $(am__append_63)
  pkgconfigdata_DATA = src/core/systemd.pc src/udev/udev.pc
  pkgconfiglib_DATA = src/libsystemd/libsystemd.pc \
@@ -128,7 +128,7 @@
  polkitpolicy_in_in_files =  \
  	src/core/org.freedesktop.systemd1.policy.in.in
  polkitpolicy_in_files =  \
-@@ -5097,7 +5094,7 @@
+@@ -5173,7 +5170,7 @@
  	$(nodist_zshcompletion_DATA) $(am__append_62) $(am__append_64) \
  	$(gperf_txt_sources:-list.txt=-from-name.gperf) \
  	$(gperf_txt_sources) $(am__append_106) $(am__append_154) \
@@ -137,7 +137,7 @@
  	test-libsystemd-sym.c test-libudev-sym.c
  AM_CPPFLAGS = \
  	-include $(top_builddir)/config.h \
-@@ -5175,7 +5172,7 @@
+@@ -5251,7 +5248,7 @@
  # ------------------------------------------------------------------------------
  INSTALL_DIRS = $(am__append_88) $(am__append_92) \
  	$(sysconfdir)/udev/rules.d $(am__append_114) $(am__append_158) \
@@ -146,7 +146,7 @@
  	$(prefix)/lib/modules-load.d $(sysconfdir)/modules-load.d \
  	$(prefix)/lib/systemd/network $(sysconfdir)/systemd/network \
  	$(prefix)/lib/sysctl.d $(sysconfdir)/sysctl.d \
-@@ -5190,9 +5187,9 @@
+@@ -5266,9 +5263,9 @@
  LOCAL_FS_TARGET_WANTS = systemd-remount-fs.service tmp.mount \
  	var-lib-machines.mount
  MULTI_USER_TARGET_WANTS = $(am__append_291) $(am__append_298) \
@@ -159,7 +159,7 @@
  SYSINIT_TARGET_WANTS = $(am__append_71) $(am__append_78) \
  	$(am__append_80) $(am__append_85) $(am__append_91) \
  	$(am__append_95) systemd-machine-id-commit.service \
-@@ -5201,7 +5198,7 @@
+@@ -5277,7 +5274,7 @@
  	systemd-journal-flush.service \
  	systemd-journal-catalog-update.service $(am__append_159) \
  	$(am__append_163) $(am__append_171) $(am__append_180) \
@@ -168,7 +168,7 @@
  	dev-hugepages.mount dev-mqueue.mount sys-kernel-config.mount \
  	sys-kernel-debug.mount sys-fs-fuse-connections.mount \
  	systemd-sysctl.service systemd-ask-password-console.path
-@@ -5220,7 +5217,7 @@
+@@ -5296,7 +5293,7 @@
  SYSTEM_UNIT_ALIASES = $(am__append_187) $(am__append_198) \
  	$(am__append_209) $(am__append_233) $(am__append_240) \
  	$(am__append_252) $(am__append_271) $(am__append_292) \
@@ -177,7 +177,7 @@
  	reboot.target ctrl-alt-del.target getty@.service \
  	autovt@.service
  USER_UNIT_ALIASES = $(systemunitdir)/shutdown.target shutdown.target \
-@@ -8795,8 +8792,8 @@
+@@ -8935,8 +8932,8 @@
  	--with-pamlibdir=$$dc_install_base/$(pamlibdir) \
  	--with-pamconfdir=$$dc_install_base/$(pamconfdir) \
  	--with-rootprefix=$$dc_install_base --enable-compat-libs \
