@@ -200,6 +200,7 @@ $(dirname $0)/buildmtools
 $(dirname $0)/buildncftp
 $(dirname $0)/buildpowertop
 $(dirname $0)/buildrfkill
+$(dirname $0)/buildsocat
 $(dirname $0)/buildstrace
 $(dirname $0)/buildsudo
 $(dirname $0)/buildthermal_daemon

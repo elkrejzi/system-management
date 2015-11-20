@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=15.08.3
+export PKGVER=15.11.80
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export KEEP_DOC=1
@@ -15,16 +15,14 @@ export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
 case $(basename $0) in
   buildkdepim )
     export PKGNAME=kdepim
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
   ;;
   buildkdepim-runtime )
     export PKGNAME=kdepim-runtime
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
   ;;
 esac
 
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://download.kde.org/unstable/applications/${PKGVER}/src/${PKGTAR}"
 export DEST=/binary/kdepim/${PKGNAME}-${PKGVER}
 
 . $(dirname $0)/master.sh

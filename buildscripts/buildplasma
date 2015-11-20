@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=5.4.2
+export PKGVER=5.4.95
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export KEEP_DOC=1
@@ -17,7 +17,6 @@ build_all() {
   $(dirname $0)/buildbreeze-gtk $1
   $(dirname $0)/buildkscreenlocker $1
   $(dirname $0)/buildoxygen $1
-  $(dirname $0)/buildoxygen-fonts $1
   $(dirname $0)/buildkhelpcenter $1
   $(dirname $0)/buildkinfocenter $1
   $(dirname $0)/buildksysguard $1
@@ -29,6 +28,7 @@ build_all() {
   $(dirname $0)/buildkhotkeys $1
   $(dirname $0)/buildkmenuedit $1
   $(dirname $0)/buildkscreen $1
+  $(dirname $0)/buildkwallet-pam
   $(dirname $0)/buildkwayland-integration $1
   $(dirname $0)/buildkwrited $1
   $(dirname $0)/buildmilou $1
@@ -67,6 +67,7 @@ cat > ${DEST}/etc/pam.d/kde << "EOF"
 # Begin /etc/pam.d/kde
 
 auth     include        system-auth
+-auth    optional       pam_kwallet5.so
 -auth    optional       pam_gnome_keyring.so
 
 account  include        system-account
@@ -79,12 +80,17 @@ EOF
   ;;
 esac
 
-export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
-                    -DLIB_INSTALL_DIR=lib
-                    -DBUILD_TESTING=OFF
-                    -DQML_INSTALL_DIR=lib/qt5/qml
-                    -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins
-                    -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules)
+if [ "$(basename $0)" == "buildkwallet-pam" ]
+then
+  export CMAKE_FLAGS=(-DCMAKE_INSTALL_LIBDIR=/lib)
+else
+  export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
+                      -DLIB_INSTALL_DIR=lib
+                      -DBUILD_TESTING=OFF
+                      -DQML_INSTALL_DIR=lib/qt5/qml
+                      -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins
+                      -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules)
+fi
 
 plasmas=(
   kde-cli-tools
@@ -96,7 +102,6 @@ plasmas=(
   breeze-gtk
   kscreenlocker
   oxygen
-  oxygen-fonts
   khelpcenter
   kinfocenter
   ksysguard
@@ -108,6 +113,7 @@ plasmas=(
   khotkeys
   kmenuedit
   kscreen
+  kwallet-pam
   kwayland-integration
   kwrited
   milou
@@ -133,7 +139,7 @@ do
     build${plasma} )
       export PKGNAME=${plasma}
       export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-      export PKGURL="http://download.kde.org/stable/plasma/${PKGVER}/${PKGTAR}"
+      export PKGURL="http://download.kde.org/unstable/plasma/${PKGVER}/${PKGTAR}"
       if [ ${BUILD_TYPE} == "git" ]
       then
         export PKGDIR=${plasma}

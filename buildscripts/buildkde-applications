@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=15.08.3
+export PKGVER=15.11.80
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export KEEP_DOC=1
@@ -15,112 +15,81 @@ export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
 case $(basename $0) in
   buildark )
     export PKGNAME=ark
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
   ;;
   buildbaloo-widgets )
     export PKGNAME=baloo-widgets
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
     export DEBUG_BUILD=1
   ;;
   builddolphin )
     export PKGNAME=dolphin
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
   ;;
   buildgwenview )
     export PKGNAME=gwenview
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
   ;;
   buildk3b )
     export PKGNAME=k3b
     export PKGVER=2.9.90+d5b1016
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
   ;;
   buildkate )
     export PKGNAME=kate
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
   ;;
   buildkcalc )
     export PKGNAME=kcalc
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
   ;;
   buildkdebugsettings )
     export PKGNAME=kdebugsettings
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
-    export PATCHES_LIST=("kdebugsettings-kscreen.patch")
   ;;
   buildkile )
     export PKGNAME=kile
     export PKGVER=2.1+6e914a7
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
   ;;
   buildkio-extras )
     export PKGNAME=kio-extras
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
   ;;
   buildkonsole )
     export PKGNAME=konsole
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
+  ;;
+  buildksystemlog )
+    export PKGNAME=ksystemlog
   ;;
   buildkwalletmanager )
     export PKGNAME=kwalletmanager
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
   ;;
   buildlibkcddb )
     export PKGNAME=libkcddb
     export PKGVER=4.13.80+1b6ba68
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
   ;;
   buildlibkdcraw )
     export PKGNAME=libkdcraw
-    export PKGVER=4.13.3+0056b64
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
   ;;
   buildlibkexiv2 )
     export PKGNAME=libkexiv2
-    export PKGVER=4.14.1+b80b1a3
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
+  ;;
+  buildlibkipi )
+    export PKGNAME=libkipi
   ;;
   buildlibksane )
     export PKGNAME=libksane
-    export PKGVER=15.08.2+de6110a
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
   ;;
   buildokular )
     export PKGNAME=okular
     export PKGVER=15.08.0+709121c
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
   ;;
   buildskanlite )
     export PKGNAME=skanlite
     export PKGVER=1.1+0999e40
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
   ;;
   buildsmb4k )
     export PKGNAME=smb4k
     export PKGVER=1.9.65
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
+  ;;
+  buildspectacle )
+    export PKGNAME=spectacle
   ;;
 esac
 
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://download.kde.org/unstable/applications/${PKGVER}/src/${PKGTAR}"
 export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
 
 . $(dirname $0)/master.sh

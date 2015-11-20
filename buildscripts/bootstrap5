@@ -46,6 +46,7 @@ $(dirname $0)/buildkio-extras
 $(dirname $0)/buildlibkcddb
 $(dirname $0)/buildlibkdcraw
 $(dirname $0)/buildlibkexiv2
+$(dirname $0)/buildlibkipi
 $(dirname $0)/buildlibksane
 $(dirname $0)/buildoxygen-icons
 $(dirname $0)/buildqtcurve
@@ -61,11 +62,12 @@ $(dirname $0)/buildkdebugsettings
 $(dirname $0)/buildkid3
 $(dirname $0)/buildkile
 $(dirname $0)/buildkonsole
-$(dirname $0)/buildkscreengenie
+$(dirname $0)/buildksystemlog
 $(dirname $0)/buildkwalletmanager
 $(dirname $0)/buildquassel
 $(dirname $0)/buildskanlite
 $(dirname $0)/buildsmb4k
+$(dirname $0)/buildspectacle
 $(dirname $0)/buildsystemd-kcm
 $(dirname $0)/buildkdepim-frameworks
 $(dirname $0)/buildlibkgapi
