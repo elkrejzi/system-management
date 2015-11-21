@@ -1,27 +1,13 @@
 #!/bin/bash -e
 
 export PKGNAME=libxml2
-export PKGVER=2.9.2
+export PKGVER=2.9.3
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://xmlsoft.org/sources/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--with-history)
 export CONFIGURE_FLAGS_32=(--with-history --without-python)
-
-configure_pre() {
-  sed   -e /xmlInitializeCatalog/d \
-      -e 's/((ent->checked =.*&&/(((ent->checked == 0) ||\
-            ((ent->children == NULL) \&\& (ctxt->options \& XML_PARSE_NOENT))) \&\&/' \
-      -i parser.c
-}
-
-configure_pre_32() {
-  sed   -e /xmlInitializeCatalog/d \
-      -e 's/((ent->checked =.*&&/(((ent->checked == 0) ||\
-            ((ent->children == NULL) \&\& (ctxt->options \& XML_PARSE_NOENT))) \&\&/' \
-      -i parser.c
-}
 
 make_install_post_32() {
   rm -rf ${DEST}/usr/lib32/xml2Conf.sh

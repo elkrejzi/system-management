@@ -11,7 +11,7 @@ case $(basename $0) in
   ;;
   buildglibmm )
     export PKGNAME=glibmm
-    export PKGVER=2.46.1
+    export PKGVER=2.46.2
   ;;
   buildgtkmm2 )
     export PKGNAME=gtkmm
