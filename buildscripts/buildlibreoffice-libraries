@@ -55,7 +55,7 @@ case $(basename $0) in
   ;;
   buildlibetonyek )
     export PKGNAME=libetonyek
-    export PKGVER=0.1.3
+    export PKGVER=0.1.4
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://dev-www.libreoffice.org/src/libetonyek/${PKGTAR}"
   ;;
@@ -157,6 +157,14 @@ case $(basename $0) in
   buildmdds )
     export PKGNAME=mdds
     export PKGVER=0.12.1
+    export PKGTAR=${PKGNAME}_${PKGVER}.tar.bz2
+    export PKGDIR=${PKGNAME}_${PKGVER}
+    export PKGURL="http://kohei.us/files/mdds/src/${PKGTAR}"
+    unset INSTALL_CMD
+  ;;
+  buildmdds1 )
+    export PKGNAME=mdds
+    export PKGVER=1.0.0
     export PKGTAR=${PKGNAME}_${PKGVER}.tar.bz2
     export PKGDIR=${PKGNAME}_${PKGVER}
     export PKGURL="http://kohei.us/files/mdds/src/${PKGTAR}"

@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=xfsprogs
-export PKGVER=4.2.0
+export PKGVER=4.3.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="ftp://oss.sgi.com/projects/xfs/cmd_tars/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
@@ -12,11 +12,14 @@ configure_override() {
 }
 
 make_override() {
+  export OPTIMIZER="${CFLAGS}"
+  unset CFLAGS
+
   make DEBUG=-DNDEBUG     \
        INSTALL_USER=root  \
        INSTALL_GROUP=root \
        LOCAL_CONFIGURE_OPTIONS="--enable-readline" \
-       OPTIMIZER="${CFLAGS}" V=1 ${MAKE_JOBS_FLAGS}
+       V=1 ${MAKE_JOBS_FLAGS}
 }
 
 make_install_post() {

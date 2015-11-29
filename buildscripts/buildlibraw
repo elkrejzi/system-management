@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libraw
-export PKGVER=0.17.0
+export PKGVER=0.17.1
 export PKGTAR=LibRaw-${PKGVER}.tar.gz
 export PKGDIR=LibRaw-${PKGVER}
 export PKGURL="http://www.libraw.org/data/${PKGTAR}"

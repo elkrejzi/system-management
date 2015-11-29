@@ -101,14 +101,6 @@ case $(basename $0) in
       cp -rf libImaging/*.h ${DEST}/usr/include/python$(pkg-config --modversion python2)
     }
   ;;
-  buildpython-pycurl )
-    export PKGNAME=pycurl
-    export PKGVER=7.19.5.3
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/p/pycurl/${PKGTAR}"
-    export DEST=/binary/python/python-pycurl-${PKGVER}
-    export EXTRA_CFG="--with-ssl"
-  ;;
   buildpython-pygments )
     export PKGNAME=Pygments
     export PKGVER=2.0.2
@@ -154,9 +146,16 @@ case $(basename $0) in
     export PKGURL="https://pypi.python.org/packages/source/r/reportlab/${PKGTAR}"
     export DEST=/binary/python/python-reportlab-${PKGVER}
   ;;
+  buildpython-requests )
+    export PKGNAME=requests
+    export PKGVER=2.8.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/r/requests/${PKGTAR}"
+    export DEST=/binary/python/python-requests-${PKGVER}
+  ;;
   buildpython-setuptools )
     export PKGNAME=setuptools
-    export PKGVER=18.5
+    export PKGVER=18.7
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/s/setuptools/${PKGTAR}"
     export DEST=/binary/python/python-setuptools-${PKGVER}
@@ -237,9 +236,8 @@ case $(basename $0) in
       $(dirname $0)/buildpython-reportlab
       $(dirname $0)/buildpython-unidecode
       $(dirname $0)/buildpython-ipaddr
-      $(dirname $0)/buildpython-pycurl
       $(dirname $0)/buildpython-pyparsing
-      $(dirname $0)/buildpython-urlgrabber
+      $(dirname $0)/buildpython-requests
     fi
     exit 0
   ;;
@@ -250,9 +248,8 @@ if [ $(basename $0) != "buildpython-notify" ]
 then
   export NO_OPTIMIZATION=1
 
-  if [ $(basename $0) == "buildpython-ipaddr" ]     ||
-     [ $(basename $0) == "buildpython-m2crypto" ]   ||
-     [ $(basename $0) == "buildpython-urlgrabber" ]
+  if [ $(basename $0) == "buildpython-ipaddr" ]   ||
+     [ $(basename $0) == "buildpython-m2crypto" ]
   then
     export PYTHON=python
   else
@@ -306,16 +303,6 @@ case $(basename $0) in
       touch src/pynotify.override
       make clean
     }
-    make_install_post() {
-      rm -rf ${DEST}/usr/share
-    }
-  ;;
-  buildpython-urlgrabber)
-    export PKGNAME=urlgrabber
-    export PKGVER=3.1.0
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/u/urlgrabber/${PKGTAR}"
-    export DEST=/binary/python/python-urlgrabber-${PKGVER}
     make_install_post() {
       rm -rf ${DEST}/usr/share
     }

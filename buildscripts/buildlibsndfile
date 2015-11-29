@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libsndfile
-export PKGVER=1.0.25
+export PKGVER=1.0.26
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://www.mega-nerd.com/libsndfile/files/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}

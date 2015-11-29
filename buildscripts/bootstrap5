@@ -85,9 +85,8 @@ $(dirname $0)/buildlibiscsi
 $(dirname $0)/buildlibnih
 $(dirname $0)/buildlibosinfo
 $(dirname $0)/buildpython-ipaddr
-$(dirname $0)/buildpython-pycurl
 $(dirname $0)/buildpython-pyparsing
-$(dirname $0)/buildpython-urlgrabber
+$(dirname $0)/buildpython-requests
 $(dirname $0)/buildradvd
 $(dirname $0)/buildspice-protocol
 $(dirname $0)/buildusbredir

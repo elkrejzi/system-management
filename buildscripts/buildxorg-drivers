@@ -56,7 +56,7 @@ EOF
   ;;
   buildxf86-input-wacom )
     export PKGNAME=xf86-input-wacom
-    export PKGVER=0.31.0
+    export PKGVER=0.32.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="https://downloads.sourceforge.net/linuxwacom/${PKGTAR}"
     export CONFIGURE_FLAGS=(--with-udev-rules-dir=/lib/udev/rules.d

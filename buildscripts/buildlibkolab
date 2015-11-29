@@ -1,13 +1,12 @@
 #!/bin/bash -e
 
 export PKGNAME=libkolab
-export PKGVER=1.0.1
+export PKGVER=1.0.2
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://mirror.kolabsys.com/pub/releases/${PKGTAR}"
 export DEST=/binary/kdepim/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
-export PATCHES_LIST=("libkolab-fixes.patch")
 export CMAKE_FLAGS=(-DBUILD_TESTS=OFF -DCMAKE_SKIP_RPATH=ON)
 
 . $(dirname $0)/master.sh

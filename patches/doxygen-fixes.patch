@@ -1,0 +1,82 @@
+--- a/src/code.l	2015-05-31 21:01:12.000000000 +0200
++++ b/src/code.l	2015-11-29 11:20:19.654814560 +0100
+@@ -3695,7 +3695,7 @@
+ extern "C" { // some bogus code to keep the compiler happy
+   void codeYYdummy() { yy_flex_realloc(0,0); } 
+ }
+-#elif YY_FLEX_SUBMINOR_VERSION<33
+-#error "You seem to be using a version of flex newer than 2.5.4 but older than 2.5.33. These versions do NOT work with doxygen! Please use version <=2.5.4 or >=2.5.33 or expect things to be parsed wrongly!"
++#elif YY_FLEX_MAJOR_VERSION<=2 && YY_FLEX_MINOR_VERSION<=5 && YY_FLEX_SUBMINOR_VERSION<33
++#error "You seem to be using a version of flex newer than 2.5.4. These are currently incompatible with 2.5.4, and do NOT work with doxygen! Please use version 2.5.4 or expect things to be parsed wrongly! A bug report has been submitted (#732132)."
+ #endif
+ 
+--- a/src/commentscan.l	2015-05-31 21:01:12.000000000 +0200
++++ b/src/commentscan.l	2015-11-29 11:20:19.655814580 +0100
+@@ -1103,7 +1103,7 @@
+ 					      // but we need to know the position in the input buffer where this 
+ 					      // rule matched.
+ 					      // for flex 2.5.33+ we should use YY_CURRENT_BUFFER_LVALUE
+-#if YY_FLEX_MINOR_VERSION>=5 && YY_FLEX_SUBMINOR_VERSION>=33
++#if YY_FLEX_MAJOR_VERSION>=2 && (YY_FLEX_MINOR_VERSION>5 || (YY_FLEX_MINOR_VERSION==5 && YY_FLEX_SUBMINOR_VERSION>=33))
+ 					      inputPosition=prevPosition + (int)(yy_bp - YY_CURRENT_BUFFER_LVALUE->yy_ch_buf);
+ #else
+ 					      inputPosition=prevPosition + (int)(yy_bp - yy_current_buffer->yy_ch_buf);
+@@ -1165,7 +1165,7 @@
+                                           g_memberGroupHeader.resize(0);
+ 					  parseMore=TRUE;
+                                           needNewEntry = TRUE;
+-#if YY_FLEX_MINOR_VERSION>=5 && YY_FLEX_SUBMINOR_VERSION>=33
++#if YY_FLEX_MAJOR_VERSION>=2 && (YY_FLEX_MINOR_VERSION>5 || (YY_FLEX_MINOR_VERSION==5 && YY_FLEX_SUBMINOR_VERSION>=33))
+ 				          inputPosition=prevPosition + (int)(yy_bp - YY_CURRENT_BUFFER_LVALUE->yy_ch_buf) + strlen(yytext);
+ #else
+ 				          inputPosition=prevPosition + (int)(yy_bp - yy_current_buffer->yy_ch_buf) + strlen(yytext);
+--- a/src/fortrancode.l	2015-05-31 21:01:12.000000000 +0200
++++ b/src/fortrancode.l	2015-11-29 11:20:19.655814580 +0100
+@@ -1302,11 +1302,11 @@
+   return;
+ }
+ 
+-#if !defined(YY_FLEX_SUBMINOR_VERSION) 
++#if !defined(YY_FLEX_SUBMINOR_VERSION)
+ extern "C" { // some bogus code to keep the compiler happy
+-  void fortrancodeYYdummy() { yy_flex_realloc(0,0); } 
++  void fortrancodeYYdummy() { yy_flex_realloc(0,0); }
+ }
+-#elif YY_FLEX_SUBMINOR_VERSION<33
++#elif YY_FLEX_MAJOR_VERSION<=2 && YY_FLEX_MINOR_VERSION<=5 && YY_FLEX_SUBMINOR_VERSION<33
+ #error "You seem to be using a version of flex newer than 2.5.4 but older than 2.5.33. These versions do NOT work with doxygen! Please use version <=2.5.4 or >=2.5.33 or expect things to be parsed wrongly!"
+ #else
+ extern "C" { // some bogus code to keep the compiler happy
+--- a/src/pycode.l	2015-05-31 21:01:12.000000000 +0200
++++ b/src/pycode.l	2015-11-29 11:20:19.655814580 +0100
+@@ -1503,7 +1503,7 @@
+ extern "C" { // some bogus code to keep the compiler happy
+   void pycodeYYdummy() { yy_flex_realloc(0,0); } 
+ }
+-#elif YY_FLEX_SUBMINOR_VERSION<33
++#elif YY_FLEX_MAJOR_VERSION<=2 && YY_FLEX_MINOR_VERSION<=5 && YY_FLEX_SUBMINOR_VERSION<33
+ #error "You seem to be using a version of flex newer than 2.5.4. These are currently incompatible with 2.5.4, and do NOT work with doxygen! Please use version 2.5.4 or expect things to be parsed wrongly! A bug report has been submitted (#732132)."
+ #endif
+ 
+--- a/src/vhdlcode.l	2015-05-31 21:01:12.000000000 +0200
++++ b/src/vhdlcode.l	2015-11-29 11:20:19.655814580 +0100
+@@ -1613,7 +1613,7 @@
+ extern "C" { // some bogus code to keep the compiler happy
+   void vhdlcodeYYdummy() { yy_flex_realloc(0,0); } 
+ }
+-#elif YY_FLEX_SUBMINOR_VERSION<33
++#elif YY_FLEX_MAJOR_VERSION<=2 && YY_FLEX_MINOR_VERSION<=5 && YY_FLEX_SUBMINOR_VERSION<33
+ #error "You seem to be using a version of flex newer than 2.5.4 but older than 2.5.33. These versions do NOT work with doxygen! Please use version <=2.5.4 or >=2.5.33 or expect things to be parsed wrongly!"
+ #endif
+ 
+--- a/src/xmlcode.l	2015-05-31 21:01:12.000000000 +0200
++++ b/src/xmlcode.l	2015-11-29 11:20:19.655814580 +0100
+@@ -407,7 +407,7 @@
+ extern "C" { // some bogus code to keep the compiler happy
+   void xmlcodeYYdummy() { yy_flex_realloc(0,0); } 
+ }
+-#elif YY_FLEX_SUBMINOR_VERSION<33
++#elif YY_FLEX_MAJOR_VERSION<=2 && YY_FLEX_MINOR_VERSION<=5 && YY_FLEX_SUBMINOR_VERSION<33
+ #error "You seem to be using a version of flex newer than 2.5.4. These are currently incompatible with 2.5.4, and do NOT work with doxygen! Please use version 2.5.4 or expect things to be parsed wrongly! A bug report has been submitted (#732132)."
+ #endif
+ 
