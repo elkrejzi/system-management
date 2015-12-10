@@ -131,7 +131,7 @@ case $(basename $0) in
   ;;
   buildlibrsvg )
     export PKGNAME=librsvg
-    export PKGVER=2.40.11
+    export PKGVER=2.40.12
     export CONFIGURE_FLAGS=(--enable-vala)
     export POSTINST_TRIGGER=("[ -x /usr/bin/gdk-pixbuf-query-loaders ] && echo \"Processing triggers for gdk-pixbuf-2.0\" && /usr/bin/gdk-pixbuf-query-loaders --update-cache")
     make_install_post() {

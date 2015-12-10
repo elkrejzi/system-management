@@ -1,11 +1,12 @@
 #!/bin/bash -e
 
 export PKGNAME=chromium
-export PKGVER=46.0.2490.86
+export PKGVER=47.0.2526.80
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://commondatastorage.googleapis.com/chromium-browser-official/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export POSTINST_TRIGGER=("chmod 4755 /usr/lib/chromium/chrome-sandbox")
+export PATCHES_LIST=("chromium-fixes.patch")
 
 configure_pre() {
   export -n CFLAGS

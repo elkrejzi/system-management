@@ -1,5 +1,5 @@
---- a/crypto/Makefile	2015-07-09 14:02:54.000000000 +0200
-+++ b/crypto/Makefile	2015-07-09 16:30:50.402461010 +0200
+--- a/crypto/Makefile	2015-12-03 15:44:17.000000000 +0100
++++ b/crypto/Makefile	2015-12-03 18:06:43.470809152 +0100
 @@ -85,11 +85,11 @@
  	@if [ -z "$(THIS)" ]; then $(MAKE) -f $(TOP)/Makefile reflect THIS=$@; fi
  
@@ -41,8 +41,8 @@
  
  lint:
  	@target=lint; $(RECURSIVE_MAKE)
---- a/crypto/objects/Makefile	2015-07-09 14:02:56.000000000 +0200
-+++ b/crypto/objects/Makefile	2015-07-09 16:30:50.403461030 +0200
+--- a/crypto/objects/Makefile	2015-12-03 15:44:17.000000000 +0100
++++ b/crypto/objects/Makefile	2015-12-03 18:06:43.470809152 +0100
 @@ -44,11 +44,11 @@
  # objects.pl both reads and writes obj_mac.num
  obj_mac.h: objects.pl objects.txt obj_mac.num
@@ -58,8 +58,8 @@
  
  files:
  	$(PERL) $(TOP)/util/files.pl Makefile >> $(TOP)/MINFO
---- a/engines/Makefile	2015-07-09 16:30:30.276049350 +0200
-+++ b/engines/Makefile	2015-07-09 16:30:50.403461030 +0200
+--- a/engines/Makefile	2015-12-03 18:06:27.680366332 +0100
++++ b/engines/Makefile	2015-12-03 18:06:43.470809152 +0100
 @@ -72,7 +72,7 @@
  
  all:	lib subdirs
@@ -87,9 +87,9 @@
  
  tags:
  	ctags $(SRC)
---- a/Makefile.org	2015-07-09 16:30:30.276049350 +0200
-+++ b/Makefile.org	2015-07-09 16:31:50.762695062 +0200
-@@ -278,17 +278,17 @@
+--- a/Makefile.org	2015-12-03 18:06:27.680366332 +0100
++++ b/Makefile.org	2015-12-03 18:06:43.470809152 +0100
+@@ -280,17 +280,17 @@
  build_libssl: build_ssl libssl.pc
  
  build_crypto:
@@ -113,7 +113,7 @@
  
  all_testapps: build_libs build_testapps
  build_testapps:
-@@ -527,9 +527,9 @@
+@@ -532,9 +532,9 @@
  dist_pem_h:
  	(cd crypto/pem; $(MAKE) -e $(BUILDENV) pem.h; $(MAKE) clean)
  
@@ -125,7 +125,7 @@
  	@$(PERL) $(TOP)/util/mkdir-p.pl $(INSTALL_PREFIX)$(INSTALLTOP)/bin \
  		$(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR) \
  		$(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/openssl/engines \
-@@ -538,12 +538,19 @@
+@@ -543,12 +543,19 @@
  		$(INSTALL_PREFIX)$(OPENSSLDIR)/misc \
  		$(INSTALL_PREFIX)$(OPENSSLDIR)/certs \
  		$(INSTALL_PREFIX)$(OPENSSLDIR)/private
@@ -146,7 +146,7 @@
  	@set -e; liblist="$(LIBS)"; for i in $$liblist ;\
  	do \
  		if [ -f "$$i" ]; then \
-@@ -627,12 +634,7 @@
+@@ -632,12 +639,7 @@
  		done; \
  	done
  
@@ -160,8 +160,8 @@
  	@pod2man="`cd ./util; ./pod2mantest $(PERL)`"; \
  	here="`pwd`"; \
  	filecase=; \
---- a/Makefile.shared	2015-07-09 16:30:30.276049350 +0200
-+++ b/Makefile.shared	2015-07-09 16:30:50.404461051 +0200
+--- a/Makefile.shared	2015-12-03 18:06:27.680366332 +0100
++++ b/Makefile.shared	2015-12-03 18:06:43.471809180 +0100
 @@ -105,6 +105,7 @@
      SHAREDFLAGS="$${SHAREDFLAGS:-$(CFLAGS) $(SHARED_LDFLAGS)}"; \
      LIBPATH=`for x in $$LIBDEPS; do echo $$x; done | sed -e 's/^ *-L//;t' -e d | uniq`; \
@@ -178,9 +178,9 @@
  			( $(SET_X); rm -f $$SHLIB$$SHLIB_SUFFIX; \
  			  ln -s $$prev $$SHLIB$$SHLIB_SUFFIX ); \
  		fi; \
---- a/test/Makefile	2015-07-09 14:03:09.000000000 +0200
-+++ b/test/Makefile	2015-07-09 16:30:50.404461051 +0200
-@@ -134,7 +134,7 @@
+--- a/test/Makefile	2015-12-03 15:44:31.000000000 +0100
++++ b/test/Makefile	2015-12-03 18:06:43.471809180 +0100
+@@ -138,7 +138,7 @@
  tags:
  	ctags $(SRC)
  
@@ -189,7 +189,7 @@
  
  apps:
  	@(cd ..; $(MAKE) DIRS=apps all)
-@@ -408,121 +408,121 @@
+@@ -416,121 +416,121 @@
  		link_app.$${shlib_target}
  
  $(RSATEST)$(EXE_EXT): $(RSATEST).o $(DLIBCRYPTO)
@@ -350,7 +350,7 @@
  
  $(VERIFYEXTRATEST)$(EXE_EXT): $(VERIFYEXTRATEST).o
  	@target=$(VERIFYEXTRATEST) $(BUILD_CMD)
-@@ -538,7 +538,7 @@
+@@ -549,7 +549,7 @@
  #	fi
  
  dummytest$(EXE_EXT): dummytest.o $(DLIBCRYPTO)

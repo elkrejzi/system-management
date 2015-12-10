@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+export PKGNAME=luajit
+export PKGVER=2.0.4
+export PKGTAR=LuaJIT-${PKGVER}.tar.gz
+export PKGDIR=LuaJIT-${PKGVER}
+export PKGURL="http://luajit.org/download/LuaJIT-2.0.4.tar.gz"
+export MAKE_JOBS_FLAGS="-j4"
+export MAKE_FLAGS="amalg PREFIX=/usr"
+export MAKE_INSTALL_FLAGS="PREFIX=/usr"
+
+configure_override() {
+  export CCOPT=${CFLAGS}
+}
+
+make_install_post() {
+  rm -f ${DEST}/usr/lib/*.a
+}
+
+. $(dirname $0)/master.sh

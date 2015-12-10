@@ -6,12 +6,12 @@ export MATE_MAJOR_VER=1.12
 case $(basename $0) in
   buildatril )
     export PKGNAME=atril
-    export PKGVER=1.12.0
+    export PKGVER=1.12.1
     export CONFIGURE_FLAGS=(--enable-pixbuf)
   ;;
   buildcaja )
     export PKGNAME=caja
-    export PKGVER=1.12.0
+    export PKGVER=1.12.1
     export CONFIGURE_FLAGS=(--disable-packagekit
                             --disable-update-mimedb
                             --disable-icon-update
@@ -28,24 +28,24 @@ case $(basename $0) in
   ;;
   buildlibmatekbd )
     export PKGNAME=libmatekbd
-    export PKGVER=1.12.0
+    export PKGVER=1.12.1
   ;;
   buildlibmatemixer )
     export PKGNAME=libmatemixer
-    export PKGVER=1.12.0
+    export PKGVER=1.12.1
   ;;
   buildlibmateweather )
     export PKGNAME=libmateweather
-    export PKGVER=1.12.0
+    export PKGVER=1.12.1
     export CONFIGURE_FLAGS=(--enable-python --enable-locations-compression)
   ;;
   buildmarco )
     export PKGNAME=marco
-    export PKGVER=1.12.0
+    export PKGVER=1.12.1
   ;;
   buildmate-applets )
     export PKGNAME=mate-applets
-    export PKGVER=1.12.0
+    export PKGVER=1.12.1
     export CONFIGURE_FLAGS=(--with-cpufreq-lib=cpupower)
   ;;
   buildmate-backgrounds )
@@ -56,11 +56,11 @@ case $(basename $0) in
   ;;
   buildmate-control-center )
     export PKGNAME=mate-control-center
-    export PKGVER=1.12.0
+    export PKGVER=1.12.1
   ;;
   buildmate-desktop )
     export PKGNAME=mate-desktop
-    export PKGVER=1.12.0
+    export PKGVER=1.12.1
     export CONFIGURE_FLAGS=(--disable-desktop-docs)
   ;;
   buildmate-icon-theme )
@@ -82,7 +82,7 @@ EOF
   ;;
   buildmate-media )
     export PKGNAME=mate-media
-    export PKGVER=1.12.0
+    export PKGVER=1.12.1
   ;;
   buildmate-menus )
     export PKGNAME=mate-menus
@@ -90,11 +90,11 @@ EOF
   ;;
   buildmate-notification-daemon )
     export PKGNAME=mate-notification-daemon
-    export PKGVER=1.12.0
+    export PKGVER=1.12.1
   ;;
   buildmate-panel )
     export PKGNAME=mate-panel
-    export PKGVER=1.12.0
+    export PKGVER=1.12.1
   ;;
   buildmate-polkit )
     export PKGNAME=mate-polkit
@@ -102,7 +102,7 @@ EOF
   ;;
   buildmate-power-manager )
     export PKGNAME=mate-power-manager
-    export PKGVER=1.12.0
+    export PKGVER=1.12.1
   ;;
   buildmate-screensaver )
     export PKGNAME=mate-screensaver
@@ -128,30 +128,30 @@ EOF
   ;;
   buildmate-sensors-applet )
     export PKGNAME=mate-sensors-applet
-    export PKGVER=1.12.0
+    export PKGVER=1.12.1
   ;;
   buildmate-session-manager )
     export PKGNAME=mate-session-manager
-    export PKGVER=1.12.0
+    export PKGVER=1.12.1
     export CONFIGURE_FLAGS=(--with-systemd --disable-upower)
   ;;
   buildmate-settings-daemon )
     export PKGNAME=mate-settings-daemon
-    export PKGVER=1.12.0
+    export PKGVER=1.12.1
     export KEEP_EMPTY_DIRS=1
   ;;
   buildmate-system-monitor )
     export PKGNAME=mate-system-monitor
-    export PKGVER=1.12.0
+    export PKGVER=1.12.1
     export USER_CXXFLAGS="-std=c++11"
   ;;
   buildmate-terminal )
     export PKGNAME=mate-terminal
-    export PKGVER=1.12.0
+    export PKGVER=1.12.1
   ;;
   buildmate-themes )
     export PKGNAME=mate-themes
-    export PKGVER=1.12.0
+    export PKGVER=1.12.1
     export PKGTAR=${PKGNAME}-gtk${GTK_MAJOR_VER}-${PKGVER}.tar.xz
     export PKGDIR=${PKGNAME}-gtk${GTK_MAJOR_VER}-${PKGVER}
     export KEEP_STATIC=1
@@ -174,7 +174,7 @@ EOF
   ;;
   buildpluma )
     export PKGNAME=pluma
-    export PKGVER=1.12.0
+    export PKGVER=1.12.1
   ;;
 esac
 

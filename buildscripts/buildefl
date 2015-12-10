@@ -1,0 +1,24 @@
+#!/bin/bash -e
+
+export PKGNAME=efl
+export PKGVER=1.16.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://download.enlightenment.org/rel/libs/efl/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+export CONFIGURE_FLAGS=(--enable-drm
+                        --enable-egl
+                        --enable-gl-drm
+                        --enable-harfbuzz
+                        --enable-image-loader-webp
+                        --enable-systemd
+                        --enable-wayland
+                        --enable-xinput22
+                        --enable-xpresent
+                        --with-opengl=es)
+
+configure_pre() {
+  unset CXX
+}
+
+. $(dirname $0)/master.sh

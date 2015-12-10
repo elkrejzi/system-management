@@ -55,7 +55,7 @@ case $(basename $0) in
   ;;
   buildlibetonyek )
     export PKGNAME=libetonyek
-    export PKGVER=0.1.4
+    export PKGVER=0.1.5
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://dev-www.libreoffice.org/src/libetonyek/${PKGTAR}"
   ;;

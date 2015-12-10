@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+export PKGNAME=bullet
+export PKGVER=2.83.6
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGDIR=${PKGNAME}3-${PKGVER}
+export PKGURL="https://github.com/bulletphysics/bullet3/archive/${PKGVER}.tar.gz"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export CMAKE_FLAGS=(-DBUILD_SHARED_LIBS=1
+                    -DINSTALL_EXTRA_LIBS=1
+                    -DINSTALL_LIBS=1)
+
+. $(dirname $0)/master.sh

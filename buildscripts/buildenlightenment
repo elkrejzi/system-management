@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+export PKGNAME=enlightenment
+export PKGVER=0.20.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://download.enlightenment.org/rel/apps/enlightenment/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+export CONFIGURE_FLAGS=(--enable-wayland
+                        --enable-wayland-egl
+                        --enable-xwayland
+                        --disable-wl-weekeyboard)
+
+. $(dirname $0)/master.sh

@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=openldap
-export PKGVER=2.4.42
+export PKGVER=2.4.43
 export PKGTAR=${PKGNAME}-${PKGVER}.tgz
 export PKGURL="ftp://ftp.openldap.org/pub/OpenLDAP/openldap-release/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

@@ -110,7 +110,7 @@ EOF
   ;;
   buildgtk3 )
     export PKGNAME=gtk+
-    export PKGVER=3.18.5
+    export PKGVER=3.18.6
     export CONFIGURE_FLAGS=(--enable-broadway-backend --enable-wayland-backend --enable-x11-backend --enable-man)
     export CONFIGURE_FLAGS_32=("${CONFIGURE_FLAGS[@]}" --disable-cloudprint --disable-introspection --disable-libcanberra)
     export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-query-immodules-3.0 ] && echo \"Processing triggers for gtk-3.0\" && /usr/bin/gtk-query-immodules-3.0 --update-cache"

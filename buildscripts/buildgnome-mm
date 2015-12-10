@@ -3,7 +3,7 @@
 case $(basename $0) in
   buildatkmm )
     export PKGNAME=atkmm
-    export PKGVER=2.24.1
+    export PKGVER=2.24.2
   ;;
   buildcairomm )
     export PKGNAME=cairomm

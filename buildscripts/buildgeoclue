@@ -1,10 +1,10 @@
 #!/bin/bash -e
 
 export PKGNAME=geoclue
-export PKGVER=2.4.0
+export PKGVER=2.4.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://www.freedesktop.org/software/geoclue/releases/${PKGVER:0:3}/${PKGTAR}"
-export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
+export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 
 make_install_post() {

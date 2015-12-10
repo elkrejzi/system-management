@@ -1,5 +1,5 @@
---- a/apps/CA.pl.in	2015-01-15 15:43:49.000000000 +0100
-+++ b/apps/CA.pl.in	2015-01-23 16:41:04.907251056 +0100
+--- a/apps/CA.pl.in	2015-12-03 15:04:23.000000000 +0100
++++ b/apps/CA.pl.in	2015-12-03 18:05:39.341017005 +0100
 @@ -53,7 +53,7 @@
  $X509="$openssl x509";
  $PKCS12="$openssl pkcs12";
@@ -9,8 +9,8 @@
  $CAKEY="cakey.pem";
  $CAREQ="careq.pem";
  $CACERT="cacert.pem";
---- a/apps/CA.sh	2015-01-15 15:43:14.000000000 +0100
-+++ b/apps/CA.sh	2015-01-23 16:41:04.907251056 +0100
+--- a/apps/CA.sh	2015-12-03 15:04:23.000000000 +0100
++++ b/apps/CA.sh	2015-12-03 18:05:39.341017005 +0100
 @@ -68,7 +68,7 @@
  X509="$OPENSSL x509"
  PKCS12="openssl pkcs12"
@@ -20,8 +20,8 @@
  CAKEY=./cakey.pem
  CAREQ=./careq.pem
  CACERT=./cacert.pem
---- a/apps/openssl.cnf	2015-01-22 15:58:06.000000000 +0100
-+++ b/apps/openssl.cnf	2015-01-23 16:41:04.907251056 +0100
+--- a/apps/openssl.cnf	2015-12-03 15:04:23.000000000 +0100
++++ b/apps/openssl.cnf	2015-12-03 18:05:39.342017033 +0100
 @@ -39,7 +39,7 @@
  ####################################################################
  [ CA_default ]
@@ -31,9 +31,9 @@
  certs		= $dir/certs		# Where the issued certs are kept
  crl_dir		= $dir/crl		# Where the issued crl are kept
  database	= $dir/index.txt	# database index file.
---- a/Configure	2015-01-22 15:58:32.000000000 +0100
-+++ b/Configure	2015-01-23 16:41:04.908251085 +0100
-@@ -1871,7 +1871,7 @@
+--- a/Configure	2015-12-03 15:04:23.000000000 +0100
++++ b/Configure	2015-12-03 18:05:39.342017033 +0100
+@@ -1901,7 +1901,7 @@
  		}
  	elsif	(/^#define\s+ENGINESDIR/)
  		{
@@ -42,8 +42,8 @@
  		$foo =~ s/\\/\\\\/g;
  		print OUT "#define ENGINESDIR \"$foo\"\n";
  		}
---- a/engines/ccgost/Makefile	2015-01-22 17:12:24.000000000 +0100
-+++ b/engines/ccgost/Makefile	2015-01-23 16:41:26.177860910 +0100
+--- a/engines/ccgost/Makefile	2015-12-03 15:44:29.000000000 +0100
++++ b/engines/ccgost/Makefile	2015-12-03 18:05:39.342017033 +0100
 @@ -47,7 +47,7 @@
  		pfx=lib; \
  		if expr "$(PLATFORM)" : "Cygwin" >/dev/null; then \
@@ -67,8 +67,8 @@
  	fi
  
  links:
---- a/engines/Makefile	2015-01-22 17:12:24.000000000 +0100
-+++ b/engines/Makefile	2015-01-23 16:41:48.666493045 +0100
+--- a/engines/Makefile	2015-12-03 15:44:29.000000000 +0100
++++ b/engines/Makefile	2015-12-03 18:05:39.342017033 +0100
 @@ -107,13 +107,13 @@
  	@[ -n "$(INSTALLTOP)" ] # should be set by top Makefile...
  	@if [ -n "$(SHARED_LIBS)" ]; then \
@@ -99,9 +99,9 @@
  		done; \
  	fi
  	@target=install; $(RECURSIVE_MAKE)
---- a/Makefile.org	2015-01-22 15:58:06.000000000 +0100
-+++ b/Makefile.org	2015-01-23 16:41:04.908251085 +0100
-@@ -541,7 +541,7 @@
+--- a/Makefile.org	2015-12-03 15:04:23.000000000 +0100
++++ b/Makefile.org	2015-12-03 18:05:39.343017061 +0100
+@@ -537,7 +537,7 @@
  install_sw:
  	@$(PERL) $(TOP)/util/mkdir-p.pl $(INSTALL_PREFIX)$(INSTALLTOP)/bin \
  		$(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR) \
@@ -110,8 +110,8 @@
  		$(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/pkgconfig \
  		$(INSTALL_PREFIX)$(INSTALLTOP)/include/openssl \
  		$(INSTALL_PREFIX)$(OPENSSLDIR)/misc \
---- a/Makefile.shared	2015-01-20 13:33:36.000000000 +0100
-+++ b/Makefile.shared	2015-01-23 16:41:04.909251114 +0100
+--- a/Makefile.shared	2015-12-03 15:04:23.000000000 +0100
++++ b/Makefile.shared	2015-12-03 18:05:39.343017061 +0100
 @@ -153,7 +153,7 @@
  	NOALLSYMSFLAGS='-Wl,--no-whole-archive'; \
  	SHAREDFLAGS="$(CFLAGS) $(SHARED_LDFLAGS) -shared -Wl,-Bsymbolic -Wl,-soname=$$SHLIB$$SHLIB_SOVER$$SHLIB_SUFFIX"

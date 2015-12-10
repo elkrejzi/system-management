@@ -4,7 +4,7 @@ case $(basename $0) in
 
   buildperl-archive-zip )
     export PKGNAME=Archive-Zip
-    export PKGVER=1.53
+    export PKGVER=1.55
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="http://search.cpan.org/CPAN/authors/id/P/PH/PHRED/${PKGTAR}"
     export DEST=/binary/perl/perl-archive-zip-${PKGVER}
@@ -113,7 +113,7 @@ make_install_override() {
   ;;
   buildperl-xml-simple )
     export PKGNAME=XML-Simple
-    export PKGVER=2.20
+    export PKGVER=2.22
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="http://search.cpan.org/CPAN/authors/id/G/GR/GRANTM/${PKGTAR}"
     export DEST=/binary/perl/perl-xml-simple-${PKGVER}
