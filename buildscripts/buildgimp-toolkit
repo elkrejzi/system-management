@@ -41,7 +41,7 @@ case $(basename $0) in
   ;;
   buildcairo )
     export PKGNAME=cairo
-    export PKGVER=1.14.4
+    export PKGVER=1.14.6
     export DEST=/binary/${PKGNAME}-${PKGVER}
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://cairographics.org/releases/${PKGTAR}"
@@ -82,7 +82,7 @@ export POSTINST_TRIGGER=("[ -x /usr/bin/gdk-pixbuf-query-loaders ] && echo \"Pro
   ;;
   buildgtk2 )
     export PKGNAME=gtk+
-    export PKGVER=2.24.28
+    export PKGVER=2.24.29
     export DEST=/binary/${PKGNAME}-${PKGVER}
     export CONFIGURE_FLAGS=(--enable-man)
     export CONFIGURE_FLAGS_32=(--disable-introspection)
