@@ -2,7 +2,7 @@
 
 export PKGNAME=linux
 export PKGVER=4.3
-export PATCHVER=4.3.2
+export PATCHVER=4.3.3
 export COMMON_URL="https://cdn.kernel.org/pub/linux/kernel/v4.x"
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="${COMMON_URL}/${PKGTAR}"

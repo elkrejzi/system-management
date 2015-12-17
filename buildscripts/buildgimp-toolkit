@@ -54,7 +54,7 @@ case $(basename $0) in
   ;;
   buildgdk-pixbuf )
     export PKGNAME=gdk-pixbuf
-    export PKGVER=2.32.2
+    export PKGVER=2.32.3
     export DEST=/binary/${PKGNAME}-${PKGVER}
     export CONFIGURE_FLAGS=(--with-x11 --with-libjasper)
     export CONFIGURE_FLAGS_32=(--with-x11 --with-libjasper --disable-introspection)

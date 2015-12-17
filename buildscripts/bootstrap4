@@ -85,7 +85,6 @@ $(dirname $0)/buildprelink
 $(dirname $0)/buildt1lib
 $(dirname $0)/buildtotem-pl-parser
 $(dirname $0)/builduhttpmock
-$(dirname $0)/buildvte290
 $(dirname $0)/buildvte
 $(dirname $0)/buildyelp-xsl
 $(dirname $0)/buildzenity

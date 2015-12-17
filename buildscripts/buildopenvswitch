@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+export PKGNAME=openvswitch
+export PKGVER=2.4.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://openvswitch.org/releases/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
+export KEEP_STATIC=1
+
+make_install_post() {
+  rm -rf ${DEST}/etc/bash_completion.d ${DEST}/var/run
+}
+
+. $(dirname $0)/master.sh

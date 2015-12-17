@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export MAJOR_VER=5.22
-export MINOR_VER=0
+export MINOR_VER=1
 
 export PKGNAME=perl
 export PKGVER=${MAJOR_VER}.${MINOR_VER}

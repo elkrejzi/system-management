@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=15.11.80
+export PKGVER=15.12.0
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export KEEP_DOC=1
@@ -88,7 +88,7 @@ do
     build${kdepim} )
       export PKGNAME=${kdepim}
       export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-      export PKGURL="http://download.kde.org/unstable/applications/${PKGVER}/src/${PKGTAR}"
+      export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
       if [ ${BUILD_TYPE} == "git" ]
       then
         export PKGDIR=${kdepim}

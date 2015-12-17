@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=qemu
-export PKGVER=2.4.1
+export PKGVER=2.5.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://wiki.qemu-project.org/download/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
@@ -26,7 +26,7 @@ KERNEL=="kvm", GROUP="kvm", MODE="0660"
 KERNEL=="vhost-net", GROUP="kvm", MODE="0660", TAG+="uaccess", OPTIONS+="static_node=vhost-net"
 EOF
 
-  strip --strip-unneeded ${DEST}/usr/bin/* ${DEST}/usr/lib/*.so ${DEST}/usr/libexec/*
+  strip --strip-unneeded ${DEST}/usr/bin/* ${DEST}/usr/libexec/*
 }
 
 . $(dirname $0)/master.sh

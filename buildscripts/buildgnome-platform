@@ -44,7 +44,7 @@ case $(basename $0) in
   ;;
   buildgnome-online-accounts )
     export PKGNAME=gnome-online-accounts
-    export PKGVER=3.18.2.1
+    export PKGVER=3.18.3
     export CONFIGURE_FLAGS=(--enable-kerberos)
   ;;
   buildgnome-themes-standard )
@@ -96,7 +96,7 @@ case $(basename $0) in
   ;;
   buildlibgdata )
     export PKGNAME=libgdata
-    export PKGVER=0.17.3
+    export PKGVER=0.17.4
   ;;
   buildlibgnome-keyring )
     export PKGNAME=libgnome-keyring
@@ -159,7 +159,7 @@ case $(basename $0) in
   ;;
   buildtotem-pl-parser )
     export PKGNAME=totem-pl-parser
-    export PKGVER=3.10.5
+    export PKGVER=3.10.6
   ;;
   buildvte )
     export PKGNAME=vte

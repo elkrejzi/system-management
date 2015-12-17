@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
-export PKGVER=5.0.3.2
-export SHARED_URL="https://download.documentfoundation.org/libreoffice/src/${PKGVER:0:4}/"
+export PKGVER=5.0.4.2
+export SHARED_URL="https://download.documentfoundation.org/libreoffice/src/${PKGVER:0:5}/"
 
 export PKGNAME=libreoffice
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
@@ -33,6 +33,9 @@ configure_pre() {
       -i bin/distro-install-desktop-integration
   sed -e "/distro-install-file-lists/d" -i Makefile.in
   chmod +x bin/unpack-sources
+
+  # libetonyek 0.1.4+ issue
+  mv writerperfect/qa/unit/data/impress/libetonyek/{fail,pass}/v6.zip
 }
 
 configure_override() {

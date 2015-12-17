@@ -39,8 +39,8 @@ $(dirname $0)/buildcaja-extensions
 $(dirname $0)/buildengrampa
 $(dirname $0)/buildpluma
 $(dirname $0)/buildextra-cmake-modules
-$(dirname $0)/buildkde-frameworks-git
-$(dirname $0)/buildplasma-git
+$(dirname $0)/buildkde-frameworks
+$(dirname $0)/buildplasma
 $(dirname $0)/buildbaloo-widgets
 $(dirname $0)/buildkio-extras
 $(dirname $0)/buildlibkcddb
@@ -81,6 +81,7 @@ $(dirname $0)/buildbridge-utils
 $(dirname $0)/buildcelt051
 $(dirname $0)/builddnsmasq
 $(dirname $0)/buildebtables
+$(dirname $0)/buildlibcacard
 $(dirname $0)/buildlibiscsi
 $(dirname $0)/buildlibnih
 $(dirname $0)/buildlibosinfo

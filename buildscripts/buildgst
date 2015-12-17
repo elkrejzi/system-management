@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=1.6.1
+export PKGVER=1.6.2
 export MAKE_JOBS_FLAGS="-j4"
 
 case $(basename $0) in
