@@ -226,6 +226,7 @@ $(dirname $0)/builddesktop-file-utils
 $(dirname $0)/buildshared-mime-info
 $(dirname $0)/buildqtbase
 $(dirname $0)/buildqtmodules
+$(dirname $0)/buildqtwebkit
 $(dirname $0)/buildfirefox
 $(dirname $0)/buildthunderbird
 $(dirname $0)/buildsamba

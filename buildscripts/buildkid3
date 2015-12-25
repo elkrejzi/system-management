@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=kid3
-export PKGVER=3.3.0
+export PKGVER=3.3.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://downloads.sourceforge.net/kid3/${PKGTAR}"
 export DEST=/binary/plasma/${PKGNAME}-${PKGVER}

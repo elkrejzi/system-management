@@ -64,7 +64,7 @@ case $(basename $0) in
   ;;
   buildgrilo )
     export PKGNAME=grilo
-    export PKGVER=0.2.14
+    export PKGVER=0.2.15
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://ftp.gnome.org/pub/gnome/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
   ;;

@@ -58,6 +58,8 @@ post_install_config() {
   ln -sf libperl.so.${PKGVER} ${DEST}/usr/lib/libperl.so.${MAJOR_VER}
   ln -sf libperl.so.${MAJOR_VER} ${DEST}/usr/lib/libperl.so
 
+  chmod 755 ${DEST}/usr/lib/libperl.so.${PKGVER}
+
   ln -sf perl ${DEST}/usr/bin/perl${PKGVER}
 
   sed -e '/(makepl_arg =>/   s/""/"INSTALLDIRS=vendor"/' \

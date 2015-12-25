@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=ocl-icd
-export PKGVER=2.2.7
+export PKGVER=2.2.8
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://forge.imag.fr/frs/download.php/667/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

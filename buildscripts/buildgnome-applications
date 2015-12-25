@@ -77,14 +77,14 @@ case $(basename $0) in
   ;;
   buildnautilus )
     export PKGNAME=nautilus
-    export PKGVER=3.18.3
+    export PKGVER=3.18.4
     export CONFIGURE_FLAGS=(--disable-packagekit
                             --disable-update-mimedb
                             --disable-tracker)
   ;;
   buildnetwork-manager-applet )
     export PKGNAME=network-manager-applet
-    export PKGVER=1.0.8
+    export PKGVER=1.0.10
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://ftp.gnome.org/pub/gnome/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
     export CONFIGURE_FLAGS=(--disable-migration)

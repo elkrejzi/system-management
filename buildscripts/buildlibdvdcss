@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libdvdcss
-export PKGVER=1.3.0
+export PKGVER=1.4.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://download.videolan.org/pub/videolan/libdvdcss/${PKGVER}/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}

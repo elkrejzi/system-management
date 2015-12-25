@@ -33,11 +33,11 @@ then
 export DEFAULT_CXX_M32="g++ -m32"
 fi
 
-export DEFAULT_CFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
-export DEFAULT_CXXFLAGS="-march=sandybridge -fomit-frame-pointer -O2 -pipe -fstack-protector-strong"
+export DEFAULT_CFLAGS="-march=sandybridge -fomit-frame-pointer -Ofast -pipe -fstack-protector-strong"
+export DEFAULT_CXXFLAGS="-march=sandybridge -fomit-frame-pointer -Ofast -pipe -fstack-protector-strong"
 
-export DEFAULT_DEBUG_CFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"
-export DEFAULT_DEBUG_CXXFLAGS="-march=sandybridge -g -O2 -pipe -fstack-protector-strong"
+export DEFAULT_DEBUG_CFLAGS="-march=sandybridge -g -Ofast -pipe -fstack-protector-strong"
+export DEFAULT_DEBUG_CXXFLAGS="-march=sandybridge -g -Ofast -pipe -fstack-protector-strong"
 
 if [ -z ${PKGNAME} ] || [ -z ${PKGVER} ]
 then
@@ -61,7 +61,7 @@ then
   then
     export PKGBUILD=${PKGDIR}
   else
-    export PKGBUILD=build
+    export PKGBUILD=${PKGNAME}-build
     export PATH_TO_SOURCE="../${PKGDIR}"
   fi
 fi

@@ -1,11 +1,6 @@
 #!/bin/bash -e
 
-if [ $(basename $0) == "buildplasma-workspace" ]
-then
-  export PKGVER=5.5.1.1
-else
-  export PKGVER=5.5.1
-fi
+export PKGVER=5.5.2
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export KEEP_DOC=1
@@ -144,13 +139,7 @@ do
     build${plasma} )
       export PKGNAME=${plasma}
       export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-      if [ $(basename $0) == "buildplasma-workspace" ]
-      then
-        export PKGURL="http://download.kde.org/stable/plasma/${PKGVER:0:5}/${PKGTAR}"
-        export PKGDIR=${PKGNAME}-${PKGVER:0:5}
-      else
-        export PKGURL="http://download.kde.org/stable/plasma/${PKGVER}/${PKGTAR}"
-      fi
+      export PKGURL="http://download.kde.org/stable/plasma/${PKGVER}/${PKGTAR}"
       if [ ${BUILD_TYPE} == "git" ]
       then
         export PKGDIR=${plasma}

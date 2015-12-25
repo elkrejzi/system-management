@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
 export PKGNAME=boost
-export PKGVER=1.59.0
-export TARVER=1_59_0
+export PKGVER=1.60.0
+export TARVER=1_60_0
 export PKGTAR=${PKGNAME}_${TARVER}.tar.bz2
 export PKGDIR=${PKGNAME}_${TARVER}
 export PKGURL="https://downloads.sourceforge.net/boost/${PKGTAR}"

@@ -86,6 +86,8 @@ $(dirname $0)/buildpatch
 $(dirname $0)/buildtar
 $(dirname $0)/buildtexinfo
 $(dirname $0)/buildcheck
+$(dirname $0)/buildlibmnl
+$(dirname $0)/buildlibnftnl
 $(dirname $0)/buildiptables
 $(dirname $0)/buildless
 $(dirname $0)/buildlibpipeline

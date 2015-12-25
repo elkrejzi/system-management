@@ -89,7 +89,7 @@ case $(basename $0) in
   ;;
   buildlibXi )
     export PKGNAME=libXi
-    export PKGVER=1.7.5
+    export PKGVER=1.7.6
   ;;
   buildlibXinerama )
     export PKGNAME=libXinerama

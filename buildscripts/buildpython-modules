@@ -169,7 +169,7 @@ case $(basename $0) in
   ;;
   buildpython-snowballstemmer )
     export PKGNAME=snowballstemmer
-    export PKGVER=1.2.0
+    export PKGVER=1.2.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/s/snowballstemmer/${PKGTAR}"
     export DEST=/binary/python/python-snowballstemmer-${PKGVER}

@@ -32,7 +32,8 @@ then
     do
       sed -i "s:qDebug:qt_noop(); // &:g" ${f}
     done
+  }
 fi
-}
+
 
 . $(dirname $0)/master.sh

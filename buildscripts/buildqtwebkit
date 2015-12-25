@@ -1,1 +1,31 @@
-buildqtmodules
+#!/bin/bash -e
+
+export PKGNAME=qtwebkit
+export PKGVER=5.6.0-beta
+export PKGTAR=${PKGNAME}-opensource-src-${PKGVER}.tar.gz
+export PKGDIR=${PKGNAME}-opensource-src-${PKGVER}
+export MAKE_JOBS_FLAGS="-j4"
+export NO_OPTIMIZATION=1
+export MAKE_INSTALL_FLAGS="INSTALL_ROOT=\${DEST}"
+
+configure_post() {
+  # No debug symbols for this module. Taken from Debian
+  echo "QMAKE_CXXFLAGS -= -g" >> .qmake.conf
+  echo "QMAKE_CXXFLAGS -= -gstabs" >> .qmake.conf
+}
+
+configure_override() {
+  syncqt.pl -version 5.6.0 Source/sync.profile
+
+  qmake
+}
+
+make_post() {
+  find . -name "*.pc" -exec perl -pi -e "s, -L$PWD/?\S+,,g" {} \;
+}
+
+make_install_post() {
+  find ${DEST}/usr/lib -name "*.prl" -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+}
+
+. $(dirname $0)/master.sh

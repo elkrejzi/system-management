@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=iptables
-export PKGVER=1.4.21
+export PKGVER=1.6.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://www.netfilter.org/projects/iptables/files/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
