@@ -3,7 +3,7 @@
 export PKGNAME=fuse
 export PKGVER=2.9.4
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-export PKGURL="https://downloads.sourceforge.net/fuse/${PKGTAR}"
+export PKGURL="https://github.com/libfuse/libfuse/releases/download/fuse_$(echo ${PKGVER} | sed 's|\.|_|g')/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
 make_install_post() {
