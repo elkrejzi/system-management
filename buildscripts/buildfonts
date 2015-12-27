@@ -1,13 +1,7 @@
 #!/bin/bash -e
 
-if [ -d "/binary/fonts" ]
-then
-  echo "Old packages directory exists. Removing!"
-  rm -rf /binary/fonts
-fi
-
 export BAEKMUK_VER=2.2
-export CANTARELL_VER=0.0.18.1
+export CANTARELL_VER=0.0.19
 export CM_UNICODE_VER=0.7.0
 export DEJAVU_VER=2.35
 export FREEFONT_VER=20120503
@@ -16,20 +10,34 @@ export GENTIUMPLUS_VER=5.000
 export HANNOM_VER=2005
 export LIBERATION_VER=2.00.1
 export MGOPEN_VER=1.1
-export NOTO_VER=2015-09-29
+export NOTO_VER=2015-12-17
+export NOTO_REV=3f1dc1296bc3d01495a1478bb9a6f76d19040195
 export OPENDESKTOP_VER=1.4.2
 export PARATYPE_VER=20140730
 export SCHEHERAZADE_VER=2.100
 export VLGOTHIC_VER=20141206
 
-# Begin baekmuk
+checkdest() {
+  if [ -e ${DEST} ]
+  then
+    echo "Old package installation directory exists. Removing."
+    rm -rf ${DEST}
+  fi
+}
 
-wget -c https://kldp.net/frs/download.php/1429/baekmuk-ttf-${BAEKMUK_VER}.tar.gz -O - | tar xfz -
+case $(basename $0) in
+  buildfonts-baekmuk )
 
-export DEST=/binary/fonts/fonts-baekmuk-${BAEKMUK_VER}
+    # Begin baekmuk
 
-install -dm755 ${DEST}/usr/share/fonts/truetype/baekmuk
-install -m644 baekmuk-ttf-${BAEKMUK_VER}/ttf/*.ttf ${DEST}/usr/share/fonts/truetype/baekmuk
+    wget -c https://kldp.net/frs/download.php/1429/baekmuk-ttf-${BAEKMUK_VER}.tar.gz -O - | tar xfz -
+
+    export DEST=/binary/fonts/fonts-baekmuk-${BAEKMUK_VER}
+
+    checkdest
+
+    install -dm755 ${DEST}/usr/share/fonts/truetype/baekmuk
+    install -m644 baekmuk-ttf-${BAEKMUK_VER}/ttf/*.ttf ${DEST}/usr/share/fonts/truetype/baekmuk
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
@@ -39,23 +47,28 @@ cp -rf --remove-destination usr /
 [ -x /usr/bin/fc-cache ] && echo "Processing triggers for fontconfig" && /usr/bin/fc-cache /usr/share/fonts/truetype/baekmuk
 EOF
 
-chmod 755 ${DEST}/INSTALL
+    chmod 755 ${DEST}/INSTALL
 
-rm -rf baekmuk-ttf-${BAEKMUK_VER}
+    rm -rf baekmuk-ttf-${BAEKMUK_VER}
 
-# End baekmuk
+    # End baekmuk
 
-# Begin cantarell
+  ;;
+  buildfonts-cantarell )
 
-wget -c http://ftp.gnome.org/pub/gnome/sources/cantarell-fonts/0.0/cantarell-fonts-${CANTARELL_VER}.tar.xz -O - | tar xfJ -
+    # Begin cantarell
 
-export DEST=/binary/fonts/fonts-cantarell-${CANTARELL_VER}
+    wget -c http://ftp.gnome.org/pub/gnome/sources/cantarell-fonts/0.0/cantarell-fonts-${CANTARELL_VER}.tar.xz -O - | tar xfJ -
 
-pushd cantarell-fonts-${CANTARELL_VER}
+    export DEST=/binary/fonts/fonts-cantarell-${CANTARELL_VER}
 
-./configure --prefix=/usr --with-fontdir=/usr/share/fonts/opentype/cantarell
+    checkdest
 
-make install DESTDIR=${DEST}
+    pushd cantarell-fonts-${CANTARELL_VER}
+
+    ./configure --prefix=/usr --with-fontdir=/usr/share/fonts/opentype/cantarell
+
+    make install DESTDIR=${DEST}
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
@@ -65,22 +78,27 @@ cp -rf --remove-destination usr /
 [ -x /usr/bin/fc-cache ] && echo "Processing triggers for fontconfig" && /usr/bin/fc-cache /usr/share/fonts/opentype/cantarell
 EOF
 
-chmod 755 ${DEST}/INSTALL
+    chmod 755 ${DEST}/INSTALL
 
-popd
+    popd
 
-rm -rf cantarell-fonts-${CANTARELL_VER}
+    rm -rf cantarell-fonts-${CANTARELL_VER}
 
-# End cantarell
+    # End cantarell
 
-# Begin cm-unicode
+  ;;
+  buildfonts-cm-unicode )
 
-wget -c http://downloads.sourceforge.net/cm-unicode/cm-unicode-${CM_UNICODE_VER}-ttf.tar.xz -O - | tar xfJ -
+    # Begin cm-unicode
 
-export DEST=/binary/fonts/fonts-cm-unicode-${CM_UNICODE_VER}
+    wget -c http://downloads.sourceforge.net/cm-unicode/cm-unicode-${CM_UNICODE_VER}-ttf.tar.xz -O - | tar xfJ -
 
-install -dm755 ${DEST}/usr/share/fonts/truetype/cm-unicode
-install -m644 cm-unicode-${CM_UNICODE_VER}/*.ttf ${DEST}/usr/share/fonts/truetype/cm-unicode
+    export DEST=/binary/fonts/fonts-cm-unicode-${CM_UNICODE_VER}
+
+    checkdest
+
+    install -dm755 ${DEST}/usr/share/fonts/truetype/cm-unicode
+    install -m644 cm-unicode-${CM_UNICODE_VER}/*.ttf ${DEST}/usr/share/fonts/truetype/cm-unicode
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
@@ -90,22 +108,27 @@ cp -rf --remove-destination usr /
 [ -x /usr/bin/fc-cache ] && echo "Processing triggers for fontconfig" && /usr/bin/fc-cache /usr/share/fonts/truetype/cm-unicode
 EOF
 
-chmod 755 ${DEST}/INSTALL
+    chmod 755 ${DEST}/INSTALL
 
-rm -rf cm-unicode-${CM_UNICODE_VER}
+    rm -rf cm-unicode-${CM_UNICODE_VER}
 
-# End cm-unicode
+    # End cm-unicode
 
-# Begin dejavu
+  ;;
+  buildfonts-dejavu )
 
-wget -c http://downloads.sourceforge.net/dejavu/dejavu-fonts-ttf-${DEJAVU_VER}.tar.bz2 -O - | tar xfj -
+    # Begin dejavu
 
-export DEST=/binary/fonts/fonts-dejavu-${DEJAVU_VER}
+    wget -c http://downloads.sourceforge.net/dejavu/dejavu-fonts-ttf-${DEJAVU_VER}.tar.bz2 -O - | tar xfj -
 
-install -dm755 ${DEST}/usr/share/fontconfig/conf.avail ${DEST}/usr/share/fonts/truetype/dejavu
+    export DEST=/binary/fonts/fonts-dejavu-${DEJAVU_VER}
 
-install -m644 dejavu-fonts-ttf-${DEJAVU_VER}/fontconfig/*.conf ${DEST}/usr/share/fontconfig/conf.avail
-install -m644 dejavu-fonts-ttf-${DEJAVU_VER}/ttf/*.ttf ${DEST}/usr/share/fonts/truetype/dejavu
+    checkdest
+
+    install -dm755 ${DEST}/usr/share/fontconfig/conf.avail ${DEST}/usr/share/fonts/truetype/dejavu
+
+    install -m644 dejavu-fonts-ttf-${DEJAVU_VER}/fontconfig/*.conf ${DEST}/usr/share/fontconfig/conf.avail
+    install -m644 dejavu-fonts-ttf-${DEJAVU_VER}/ttf/*.ttf ${DEST}/usr/share/fonts/truetype/dejavu
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
@@ -115,20 +138,25 @@ cp -rf --remove-destination usr /
 [ -x /usr/bin/fc-cache ] && echo "Processing triggers for fontconfig" && /usr/bin/fc-cache /usr/share/fonts/truetype/dejavu
 EOF
 
-chmod 755 ${DEST}/INSTALL
+    chmod 755 ${DEST}/INSTALL
 
-rm -rf dejavu-fonts-ttf-${DEJAVU_VER}
+    rm -rf dejavu-fonts-ttf-${DEJAVU_VER}
 
-# End dejavu
+    # End dejavu
 
-# Begin freefont
+  ;;
+  buildfonts-freefont )
 
-wget -c https://ftp.gnu.org/pub/gnu/freefont/freefont-ttf-${FREEFONT_VER}.zip -O - | bsdtar xf -
+    # Begin freefont
 
-export DEST=/binary/fonts/fonts-freefont-${FREEFONT_VER}
+    wget -c https://ftp.gnu.org/pub/gnu/freefont/freefont-ttf-${FREEFONT_VER}.zip -O - | bsdtar xf -
 
-install -dm755 ${DEST}/usr/share/fonts/truetype/freefont
-install -m644 freefont-${FREEFONT_VER}/*.ttf ${DEST}/usr/share/fonts/truetype/freefont
+    export DEST=/binary/fonts/fonts-freefont-${FREEFONT_VER}
+
+    checkdest
+
+    install -dm755 ${DEST}/usr/share/fonts/truetype/freefont
+    install -m644 freefont-${FREEFONT_VER}/*.ttf ${DEST}/usr/share/fonts/truetype/freefont
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
@@ -138,21 +166,26 @@ cp -rf --remove-destination usr /
 [ -x /usr/bin/fc-cache ] && echo "Processing triggers for fontconfig" && /usr/bin/fc-cache /usr/share/fonts/truetype/freefont
 EOF
 
-chmod 755 ${DEST}/INSTALL
+    chmod 755 ${DEST}/INSTALL
 
-rm -rf freefont-${FREEFONT_VER}
+    rm -rf freefont-${FREEFONT_VER}
 
-# End freefont
+    # End freefont
 
-# Begin gentiumbasic
+  ;;
+  buildfonts-gentiumbasic )
 
-export DEST=/binary/fonts/fonts-gentiumbasic-${GENTIUMBASIC_VER}
+    # Begin gentiumbasic
 
-install -dm755 ${DEST}/usr/share/fonts/truetype/gentiumbasic
+    export DEST=/binary/fonts/fonts-gentiumbasic-${GENTIUMBASIC_VER}
 
-wget -c "http://scripts.sil.org/cms/scripts/render_download.php?format=file&media_id=GentiumBasic_${GENTIUMBASIC_VER}&filename=GentiumBasic_${GENTIUMBASIC_VER}.zip" -O - | bsdtar xf - --strip-components=1 -C ${DEST}/usr/share/fonts/truetype/gentiumbasic
+    checkdest
 
-rm -f ${DEST}/usr/share/fonts/truetype/gentiumbasic/*.txt
+    install -dm755 ${DEST}/usr/share/fonts/truetype/gentiumbasic
+
+    wget -c "http://scripts.sil.org/cms/scripts/render_download.php?format=file&media_id=GentiumBasic_${GENTIUMBASIC_VER}&filename=GentiumBasic_${GENTIUMBASIC_VER}.zip" -O - | bsdtar xf - --strip-components=1 -C ${DEST}/usr/share/fonts/truetype/gentiumbasic
+
+    rm -f ${DEST}/usr/share/fonts/truetype/gentiumbasic/*.txt
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
@@ -162,18 +195,23 @@ cp -rf --remove-destination usr /
 [ -x /usr/bin/fc-cache ] && echo "Processing triggers for fontconfig" && /usr/bin/fc-cache /usr/share/fonts/truetype/gentiumbasic
 EOF
 
-chmod 755 ${DEST}/INSTALL
+    chmod 755 ${DEST}/INSTALL
 
-# End gentiumbasic
+    # End gentiumbasic
 
-# Begin gentiumplus
+  ;;
+  buildfonts-gentiumplus )
 
-wget -c "https://scripts.sil.org/cms/scripts/render_download.php?format=file&media_id=GentiumPlus-${GENTIUMPLUS_VER}.zip&filename=GentiumPlus-${GENTIUMPLUS_VER}.zip" -O - | bsdtar xf -
+    # Begin gentiumplus
 
-export DEST=/binary/fonts/fonts-gentiumplus-${GENTIUMPLUS_VER}
+    wget -c "https://scripts.sil.org/cms/scripts/render_download.php?format=file&media_id=GentiumPlus-${GENTIUMPLUS_VER}.zip&filename=GentiumPlus-${GENTIUMPLUS_VER}.zip" -O - | bsdtar xf -
 
-install -dm755 ${DEST}/usr/share/fonts/truetype/gentiumplus
-install -m644 GentiumPlus-${GENTIUMPLUS_VER}/*.ttf ${DEST}/usr/share/fonts/truetype/gentiumplus
+    export DEST=/binary/fonts/fonts-gentiumplus-${GENTIUMPLUS_VER}
+
+    checkdest
+
+    install -dm755 ${DEST}/usr/share/fonts/truetype/gentiumplus
+    install -m644 GentiumPlus-${GENTIUMPLUS_VER}/*.ttf ${DEST}/usr/share/fonts/truetype/gentiumplus
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
@@ -183,19 +221,24 @@ cp -rf --remove-destination usr /
 [ -x /usr/bin/fc-cache ] && echo "Processing triggers for fontconfig" && /usr/bin/fc-cache /usr/share/fonts/truetype/gentiumplus
 EOF
 
-chmod 755 ${DEST}/INSTALL
+    chmod 755 ${DEST}/INSTALL
 
-rm -rf GentiumPlus-${GENTIUMPLUS_VER}
+    rm -rf GentiumPlus-${GENTIUMPLUS_VER}
 
-# End gentiumplus
+    # End gentiumplus
 
-# Begin hannom
+  ;;
+  buildfonts-hannom )
 
-export DEST=/binary/fonts/fonts-hannom-${HANNOM_VER}
+    # Begin hannom
 
-install -dm755 ${DEST}/usr/share/fonts/truetype/hannom
+    export DEST=/binary/fonts/fonts-hannom-${HANNOM_VER}
 
-wget -c http://downloads.sourceforge.net/vietunicode/hannomH.zip -O - | bsdtar xf - -C ${DEST}/usr/share/fonts/truetype/hannom
+    checkdest
+
+    install -dm755 ${DEST}/usr/share/fonts/truetype/hannom
+
+    wget -c http://downloads.sourceforge.net/vietunicode/hannomH.zip -O - | bsdtar xf - -C ${DEST}/usr/share/fonts/truetype/hannom
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
@@ -205,18 +248,23 @@ cp -rf --remove-destination usr /
 [ -x /usr/bin/fc-cache ] && echo "Processing triggers for fontconfig" && /usr/bin/fc-cache /usr/share/fonts/truetype/hannom
 EOF
 
-chmod 755 ${DEST}/INSTALL
+    chmod 755 ${DEST}/INSTALL
 
-# End hannom
+    # End hannom
 
-# Begin liberation
+  ;;
+  buildfonts-liberation )
 
-wget -c https://fedorahosted.org/releases/l/i/liberation-fonts/liberation-fonts-ttf-${LIBERATION_VER}.tar.gz -O - | tar xfz -
+    # Begin liberation
 
-export DEST=/binary/fonts/fonts-liberation-${LIBERATION_VER}
+    wget -c https://fedorahosted.org/releases/l/i/liberation-fonts/liberation-fonts-ttf-${LIBERATION_VER}.tar.gz -O - | tar xfz -
 
-install -dm755 ${DEST}/usr/share/fonts/truetype/liberation
-install -m644 liberation-fonts-ttf-${LIBERATION_VER}/*.ttf ${DEST}/usr/share/fonts/truetype/liberation
+    export DEST=/binary/fonts/fonts-liberation-${LIBERATION_VER}
+
+    checkdest
+
+    install -dm755 ${DEST}/usr/share/fonts/truetype/liberation
+    install -m644 liberation-fonts-ttf-${LIBERATION_VER}/*.ttf ${DEST}/usr/share/fonts/truetype/liberation
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
@@ -226,20 +274,25 @@ cp -rf --remove-destination usr /
 [ -x /usr/bin/fc-cache ] && echo "Processing triggers for fontconfig" && /usr/bin/fc-cache /usr/share/fonts/truetype/liberation
 EOF
 
-chmod 755 ${DEST}/INSTALL
+    chmod 755 ${DEST}/INSTALL
 
-rm -rf liberation-fonts-ttf-${LIBERATION_VER}
+    rm -rf liberation-fonts-ttf-${LIBERATION_VER}
 
-# End liberation
+    # End liberation
 
-# Begin mgopen
+  ;;
+  buildfonts-mgopen )
 
-wget -c http://http.debian.net/debian/pool/main/f/fonts-mgopen/fonts-mgopen_${MGOPEN_VER}.orig.tar.bz2 -O - | tar xfj -
+    # Begin mgopen
 
-export DEST=/binary/fonts/fonts-mgopen-${MGOPEN_VER}
+    wget -c http://http.debian.net/debian/pool/main/f/fonts-mgopen/fonts-mgopen_${MGOPEN_VER}.orig.tar.bz2 -O - | tar xfj -
 
-install -dm755 ${DEST}/usr/share/fonts/truetype/mgopen
-install -m644 fonts-mgopen-${MGOPEN_VER}/TTFs/*.ttf ${DEST}/usr/share/fonts/truetype/mgopen
+    export DEST=/binary/fonts/fonts-mgopen-${MGOPEN_VER}
+
+    checkdest
+
+    install -dm755 ${DEST}/usr/share/fonts/truetype/mgopen
+    install -m644 fonts-mgopen-${MGOPEN_VER}/TTFs/*.ttf ${DEST}/usr/share/fonts/truetype/mgopen
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
@@ -249,20 +302,31 @@ cp -rf --remove-destination usr /
 [ -x /usr/bin/fc-cache ] && echo "Processing triggers for fontconfig" && /usr/bin/fc-cache /usr/share/fonts/truetype/mgopen
 EOF
 
-chmod 755 ${DEST}/INSTALL
+    chmod 755 ${DEST}/INSTALL
 
-rm -rf fonts-mgopen-${MGOPEN_VER}
+    rm -rf fonts-mgopen-${MGOPEN_VER}
 
-# End mgopen
+    # End mgopen
 
-# Begin noto
+  ;;
+  buildfonts-noto )
 
-wget -c https://github.com/googlei18n/noto-fonts/archive/v${NOTO_VER}-license-adobe.tar.gz -O - | tar xfz -
+    # Begin noto
 
-export DEST=/binary/fonts/fonts-noto-${NOTO_VER//-}
+    #wget -c https://github.com/googlei18n/noto-fonts/archive/v${NOTO_VER}-license-adobe.tar.gz -O - | tar xfz -
 
-install -dm755 ${DEST}/usr/share/fonts/truetype/noto
-install -m644 noto-fonts-${NOTO_VER}-license-adobe/hinted/*.ttf ${DEST}/usr/share/fonts/truetype/noto
+    install -dm755 noto-fonts
+
+    wget -c https://github.com/googlei18n/noto-fonts/archive/${NOTO_REV}.zip -O - | bsdtar xf - -C noto-fonts --strip-components=1
+
+    export DEST=/binary/fonts/fonts-noto-${NOTO_VER//-}
+
+    checkdest
+
+    install -dm755 ${DEST}/usr/share/fonts/truetype/noto
+
+    #install -m644 noto-fonts-${NOTO_VER}-license-adobe/hinted/Noto*.ttf ${DEST}/usr/share/fonts/truetype/noto
+    install -m644 noto-fonts/hinted/Noto*.ttf ${DEST}/usr/share/fonts/truetype/noto
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
@@ -272,20 +336,26 @@ cp -rf --remove-destination usr /
 [ -x /usr/bin/fc-cache ] && echo "Processing triggers for fontconfig" && /usr/bin/fc-cache /usr/share/fonts/truetype/noto
 EOF
 
-chmod 755 ${DEST}/INSTALL
+    chmod 755 ${DEST}/INSTALL
 
-rm -rf noto-fonts-${NOTO_VER}-license-adobe
+    #rm -rf noto-fonts-${NOTO_VER}-license-adobe
+    rm -rf noto-fonts
 
-# End noto
+    # End noto
 
-# Begin opendesktop
+  ;;
+  buildfonts-opendesktop )
 
-wget -c https://sources.archlinux.org/other/opendesktop-fonts/opendesktop-fonts-${OPENDESKTOP_VER}.tar.gz -O - | tar xfz -
+    # Begin opendesktop
 
-export DEST=/binary/fonts/fonts-opendesktop-${OPENDESKTOP_VER}
+    wget -c https://sources.archlinux.org/other/opendesktop-fonts/opendesktop-fonts-${OPENDESKTOP_VER}.tar.gz -O - | tar xfz -
 
-install -dm755 ${DEST}/usr/share/fonts/truetype/opendesktop
-install -m644 opendesktop-fonts-${OPENDESKTOP_VER}/*.ttf ${DEST}/usr/share/fonts/truetype/opendesktop
+    export DEST=/binary/fonts/fonts-opendesktop-${OPENDESKTOP_VER}
+
+    checkdest
+
+    install -dm755 ${DEST}/usr/share/fonts/truetype/opendesktop
+    install -m644 opendesktop-fonts-${OPENDESKTOP_VER}/*.ttf ${DEST}/usr/share/fonts/truetype/opendesktop
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
@@ -295,23 +365,28 @@ cp -rf --remove-destination usr /
 [ -x /usr/bin/fc-cache ] && echo "Processing triggers for fontconfig" && /usr/bin/fc-cache /usr/share/fonts/truetype/opendesktop
 EOF
 
-chmod 755 ${DEST}/INSTALL
+    chmod 755 ${DEST}/INSTALL
 
-rm -rf opendesktop-fonts-${OPENDESKTOP_VER}
+    rm -rf opendesktop-fonts-${OPENDESKTOP_VER}
 
-# End opendesktop
+    # End opendesktop
 
-# Begin paratype
+  ;;
+  buildfonts-paratype )
 
-export DEST=/binary/fonts/fonts-paratype-${PARATYPE_VER}
+    # Begin paratype
 
-install -dm755 ${DEST}/usr/share/fonts/truetype/paratype
+    export DEST=/binary/fonts/fonts-paratype-${PARATYPE_VER}
 
-wget -c http://www.paratype.com/uni/public/PTSans.zip -O - | bsdtar xf - -C ${DEST}/usr/share/fonts/truetype/paratype
-wget -c http://www.paratype.com/uni/public/PTSerif.zip -O - | bsdtar xf - -C ${DEST}/usr/share/fonts/truetype/paratype
-wget -c http://www.paratype.com/uni/public/PTMono.zip -O - | bsdtar xf - -C ${DEST}/usr/share/fonts/truetype/paratype
+    checkdest
 
-rm -f ${DEST}/usr/share/fonts/truetype/paratype/*.txt
+    install -dm755 ${DEST}/usr/share/fonts/truetype/paratype
+
+    wget -c http://www.paratype.com/uni/public/PTSans.zip -O - | bsdtar xf - -C ${DEST}/usr/share/fonts/truetype/paratype
+    wget -c http://www.paratype.com/uni/public/PTSerif.zip -O - | bsdtar xf - -C ${DEST}/usr/share/fonts/truetype/paratype
+    wget -c http://www.paratype.com/uni/public/PTMono.zip -O - | bsdtar xf - -C ${DEST}/usr/share/fonts/truetype/paratype
+
+    rm -f ${DEST}/usr/share/fonts/truetype/paratype/*.txt
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
@@ -321,18 +396,23 @@ cp -rf --remove-destination usr /
 [ -x /usr/bin/fc-cache ] && echo "Processing triggers for fontconfig" && /usr/bin/fc-cache /usr/share/fonts/truetype/paratype
 EOF
 
-chmod 755 ${DEST}/INSTALL
+    chmod 755 ${DEST}/INSTALL
 
-# End paratype
+    # End paratype
 
-# Begin scheherazade
+  ;;
+  buildfonts-scheherazade )
 
-wget -c "http://scripts.sil.org/cms/scripts/render_download.php?format=file&media_id=Scheherazade-${SCHEHERAZADE_VER}.zip&filename=Scheherazade-${SCHEHERAZADE_VER}.zip" -O - | bsdtar xf -
+    # Begin scheherazade
 
-export DEST=/binary/fonts/fonts-scheherazade-${SCHEHERAZADE_VER}
+    wget -c "http://scripts.sil.org/cms/scripts/render_download.php?format=file&media_id=Scheherazade-${SCHEHERAZADE_VER}.zip&filename=Scheherazade-${SCHEHERAZADE_VER}.zip" -O - | bsdtar xf -
 
-install -dm755 ${DEST}/usr/share/fonts/truetype/scheherazade
-install -m644 Scheherazade-${SCHEHERAZADE_VER}/*.ttf ${DEST}/usr/share/fonts/truetype/scheherazade
+    export DEST=/binary/fonts/fonts-scheherazade-${SCHEHERAZADE_VER}
+
+    checkdest
+
+    install -dm755 ${DEST}/usr/share/fonts/truetype/scheherazade
+    install -m644 Scheherazade-${SCHEHERAZADE_VER}/*.ttf ${DEST}/usr/share/fonts/truetype/scheherazade
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
@@ -342,20 +422,26 @@ cp -rf --remove-destination usr /
 [ -x /usr/bin/fc-cache ] && echo "Processing triggers for fontconfig" && /usr/bin/fc-cache /usr/share/fonts/truetype/scheherazade
 EOF
 
-chmod 755 ${DEST}/INSTALL
+    chmod 755 ${DEST}/INSTALL
 
-rm -rf Scheherazade-${SCHEHERAZADE_VER}
+    rm -rf Scheherazade-${SCHEHERAZADE_VER}
 
-# End scheherazade
+    # End scheherazade
 
-# Begin vlgothic
+  ;;
+  buildfonts-vlgothic )
 
-wget -c http://jaist.dl.sourceforge.jp/vlgothic/62375/VLGothic-${VLGOTHIC_VER}.tar.xz -O - | tar xfJ -
+    # Begin vlgothic
 
-export DEST=/binary/fonts/fonts-vlgothic-${VLGOTHIC_VER}
+    wget -c http://jaist.dl.sourceforge.jp/vlgothic/62375/VLGothic-${VLGOTHIC_VER}.tar.xz -O - | tar xfJ -
 
-install -dm755 ${DEST}/usr/share/fonts/truetype/vlgothic
-install -m644 VLGothic/*.ttf ${DEST}/usr/share/fonts/truetype/vlgothic
+    export DEST=/binary/fonts/fonts-vlgothic-${VLGOTHIC_VER}
+
+    install -dm755 ${DEST}/usr/share/fonts/truetype/vlgothic
+
+    checkdest
+
+    install -m644 VLGothic/*.ttf ${DEST}/usr/share/fonts/truetype/vlgothic
 
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash
@@ -365,18 +451,38 @@ cp -rf --remove-destination usr /
 [ -x /usr/bin/fc-cache ] && echo "Processing triggers for fontconfig" && /usr/bin/fc-cache /usr/share/fonts/truetype/vlgothic
 EOF
 
-chmod 755 ${DEST}/INSTALL
+    chmod 755 ${DEST}/INSTALL
 
-rm -rf VLGothic
+    rm -rf VLGothic
 
-# End vlgothic
+    # End vlgothic
 
-if [ ! -z $1 ]
-then
-  for dir in /binary/fonts/*
-  do
-    pushd ${dir}
-      ./INSTALL
-    popd
-  done
-fi
+  ;;
+  buildfonts )
+    $(dirname $0)/buildfonts-baekmuk
+    $(dirname $0)/buildfonts-cantarell
+    $(dirname $0)/buildfonts-cm-unicode
+    $(dirname $0)/buildfonts-dejavu
+    $(dirname $0)/buildfonts-freefont
+    $(dirname $0)/buildfonts-gentiumbasic
+    $(dirname $0)/buildfonts-gentiumplus
+    $(dirname $0)/buildfonts-hannom
+    $(dirname $0)/buildfonts-liberation
+    $(dirname $0)/buildfonts-mgopen
+    $(dirname $0)/buildfonts-noto
+    $(dirname $0)/buildfonts-opendesktop
+    $(dirname $0)/buildfonts-paratype
+    $(dirname $0)/buildfonts-scheherazade
+    $(dirname $0)/buildfonts-vlgothic
+
+    if [ ! -z $1 ]
+    then
+      for dir in /binary/fonts/*
+      do
+        pushd ${dir}
+          ./INSTALL
+        popd
+      done
+    fi
+  ;;
+esac

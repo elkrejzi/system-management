@@ -19,11 +19,14 @@ $(dirname $0)/buildlibusbmuxd
 $(dirname $0)/buildlibimobiledevice
 $(dirname $0)/buildcln
 $(dirname $0)/buildfontforge
+$(dirname $0)/buildguile
 $(dirname $0)/buildlibatasmart
 $(dirname $0)/buildlibdmtx
 $(dirname $0)/buildlibzip
 $(dirname $0)/buildlm_sensors
 $(dirname $0)/buildlmdb
+$(dirname $0)/buildmozjs17
+$(dirname $0)/buildmozjs24
 $(dirname $0)/buildparted
 $(dirname $0)/buildqrencode
 $(dirname $0)/buildxapian-core

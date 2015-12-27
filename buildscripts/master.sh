@@ -10,25 +10,25 @@ export SROOT=/media/ntfs/Other/Linux/sources
 export PROOT=/media/ntfs/Other/Linux/patches
 
 # Default C compiler used to build 64 bit packages
-if [ -z ${DEFAULT_CC} ]
+if [ -z "${DEFAULT_CC}" ]
 then
   export DEFAULT_CC="gcc"
 fi
 
 # Default C++ compiler used to build 64 bit packages
-if [ -z ${DEFAULT_CXX} ]
+if [ -z "${DEFAULT_CXX}" ]
 then
   export DEFAULT_CXX="g++"
 fi
 
 # Default C compiler used to build 32 bit packages
-if [ -z ${DEFAULT_CC_M32} ]
+if [ -z "${DEFAULT_CC_M32}" ]
 then
 export DEFAULT_CC_M32="gcc -m32"
 fi
 
 # Default C++ compiler used to build 32 bit packages
-if [ -z ${DEFAULT_CXX_M32} ]
+if [ -z "${DEFAULT_CXX_M32}" ]
 then
 export DEFAULT_CXX_M32="g++ -m32"
 fi

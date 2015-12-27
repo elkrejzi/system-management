@@ -10,7 +10,7 @@ export NO_STRIP=1
 
 post_extract_action() {
   rm -rf eigen-*
-  install -dm755 ${PKGDIR}
+  install -dm755 ${PKGDIR} ${PKGBUILD}
 
   bsdtar xf ${SROOT}/${PKGTAR} --strip-components=1 -C ${PKGDIR}
 }

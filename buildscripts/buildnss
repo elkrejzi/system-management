@@ -5,17 +5,20 @@ export PKGVER=3.21
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGBUILD=${PKGNAME}-${PKGVER}/nss
 export PKGURL="https://ftp.mozilla.org/pub/security/nss/releases/NSS_${PKGVER/./_}_RTM/src/${PKGTAR}"
-export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 export PATCHES_LIST=("nss-standalone.patch")
 export PATCHES_LIST_32=("nss-standalone.patch")
 
 configure_override() {
-  export XCFLAGS=${CFLAGS}
+  export XCFLAGS=${CFLAGS/-Ofast/-O2}
+  unset CFLAGS
+  export CXXFLAGS=${CFLAGS/-Ofast/-O2}
 }
 
 configure_override_32() {
-  export XCFLAGS=${CFLAGS}
+  export XCFLAGS=${CFLAGS/-Ofast/-O2}
+  unset CFLAGS
+  export CXXFLAGS=${CFLAGS/-Ofast/-O2}
 }
 
 make_override() {

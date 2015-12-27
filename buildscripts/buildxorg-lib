@@ -184,8 +184,8 @@ case $(basename $0) in
     $(dirname $0)/buildlibXft
     $(dirname $0)/buildlibXi
     $(dirname $0)/buildlibXinerama
-    $(dirname $0)/buildlibXpresent
     $(dirname $0)/buildlibXrandr
+    $(dirname $0)/buildlibXpresent
     $(dirname $0)/buildlibXres
     $(dirname $0)/buildlibXtst
     $(dirname $0)/buildlibXv

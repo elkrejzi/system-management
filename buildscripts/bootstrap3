@@ -160,14 +160,6 @@ $(dirname $0)/buildespeak
 $(dirname $0)/buildre2c
 $(dirname $0)/buildninja
 $(dirname $0)/buildspeech-dispatcher
-$(dirname $0)/buildlibgnome-keyring
-$(dirname $0)/buildscons
-$(dirname $0)/buildapr
-$(dirname $0)/buildapr-util
-$(dirname $0)/buildhttpd
-$(dirname $0)/buildserf
-$(dirname $0)/buildgit
-$(dirname $0)/buildsubversion
 $(dirname $0)/buildlibassuan
 $(dirname $0)/buildlibksba
 $(dirname $0)/buildpkcs11-helper

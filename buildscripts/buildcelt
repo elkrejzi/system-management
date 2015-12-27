@@ -9,4 +9,8 @@ export MAKE_JOBS_FLAGS="-j4"
 export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
 export CONFIGURE_FLAGS=(--enable-custom-modes)
 
+configure_pre() {
+  export CFLAGS=${CFLAGS/-Ofast/-O3}
+}
+
 . $(dirname $0)/master.sh

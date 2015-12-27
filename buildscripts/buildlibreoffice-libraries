@@ -31,7 +31,7 @@ case $(basename $0) in
   ;;
   buildlibcdr )
     export PKGNAME=libcdr
-    export PKGVER=0.1.1
+    export PKGVER=0.1.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://dev-www.libreoffice.org/src/libcdr/${PKGTAR}"
   ;;

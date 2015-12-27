@@ -15,4 +15,8 @@ export CONFIGURE_FLAGS=(--enable-compat185
                         --enable-tcl
                         --with-tcl=/usr/lib)
 
+configure_pre() {
+  export CFLAGS=${CFLAGS/-Ofast/-O3}
+}
+
 . $(dirname $0)/master.sh

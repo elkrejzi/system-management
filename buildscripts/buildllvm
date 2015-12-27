@@ -2,15 +2,128 @@
 
 export PKGNAME=llvm
 export PKGVER=3.7.0
-export PKGTAR=${PKGNAME}-${PKGVER}.src.tar.xz
-export PKGURL="http://llvm.org/releases/${PKGVER}/${PKGTAR}"
-export PKGDIR=${PKGNAME}-${PKGVER}.src
+
+proj=(
+  cfe
+  clang-tools-extra
+  compiler-rt
+  libcxx
+  libcxxabi
+  libunwind
+  lld
+  lldb
+  openmp
+  polly
+)
+
+prepare_src_common() {
+  if [ ${f} == "cfe" ]
+  then
+    sed -i "/ld-linux-x86-64/s/lib64/lib/" cfe/lib/Driver/Tools.cpp
+    mv ${f} ${PKGDIR}/tools/clang
+  elif [ ${f} == "clang-tools-extra" ]
+  then
+    mv ${f} ${PKGDIR}/tools/clang/tools/extra
+  elif [ ${f} == "lld" ] || [ ${f} == "lldb" ] || [ ${f} == "polly" ]
+  then
+    mv ${f} ${PKGDIR}/tools
+  elif [ ${f} != "cfe" ] && [ ${f} != "clang-tools-extra" ] && [ ${f} != "llvm" ]
+  then
+    mv ${f} ${PKGDIR}/projects
+  fi
+}
+
+if [ "$(basename $0)" == "buildllvm-svn" ]
+then
+  export PKGDIR=${PKGNAME}
+
+  prepare_src_override() {
+    if [ -e ${PKGDIR} ] || [ -e ${PKGBUILD} ]
+    then
+      if [ -z ${RECURSIVE_CALL} ]
+      then
+        echo "Warning: Old source and/or build dir exists. Removing."
+        rm -rf ${PKGDIR} ${PKGBUILD}
+      fi
+    fi
+
+    for f in ${PKGNAME} ${proj[@]}
+    do
+      if [ -e git/${f}.tar.xz ]
+      then
+        tar xf git/${f}.tar.xz
+        pushd ${f}
+          svn up
+        popd
+      else
+        svn co http://llvm.org/svn/llvm-project/${f}/trunk ${f}
+      fi
+
+      prepare_src_common
+    done
+
+    pushd ${PKGDIR}
+      PKGVER=$(grep "PACKAGE_VERSION=" configure | cut -d \' -f 2)$(svn info | grep "Revision:" | awk '{print $2}')
+      export PKGVER=${PKGVER/svn/.svn}
+    popd
+
+    if [ -z ${DEST_SET} ]
+    then
+      export DEST=/binary/${PKGNAME}-${PKGVER}
+      export DEST_SET=1
+    fi
+
+    if [ -e ${DEST} ] || [ -e ${DEST}-debug ]
+    then
+      if [ ${PKG_BUILDING} != 1 ]
+      then
+        echo "Warning: Old package installation dir exits. Removing."
+        rm -rf ${DEST} ${DEST}-debug
+      fi
+    fi
+
+    export PKG_BUILDING=1
+
+    PKGDIR=${PKGDIR}/tools/lldb patch_apply lldb-avoid-linking-to-libLLVM.patch
+
+    install -dm755 ${PKGBUILD}
+  }
+else
+  export PKGTAR=${PKGNAME}-${PKGVER}.src.tar.xz
+  export PKGURL="http://llvm.org/releases/${PKGVER}/${PKGTAR}"
+  export PKGDIR=${PKGNAME}-${PKGVER}.src
+  export PATCHES_LIST=("llvm-link-tools-against-libLLVM.patch" "llvm-export-more-symbols.patch")
+  export PATCHES_LIST_32=("${PATCHES_LIST[@]}")
+
+  post_extract_action() {
+    if [ -z ${POST_PREPARE} ]
+    then
+      export POST_PREPARE=1
+      export RECURSIVE_CALL=1
+      for f in ${proj[@]}
+      do
+        PKGURL="http://llvm.org/releases/${PKGVER}/${f}-${PKGVER}.src.tar.xz" \
+        CMAKE_BUILD=0 prepare_src ${f}-${PKGVER}.src.tar.xz
+
+        if [ -d ${f}-${PKGVER}.src ]
+        then
+          mv ${f}-${PKGVER}.src ${f}
+        fi
+
+        prepare_src_common
+
+      done
+
+      PKGDIR=${PKGDIR}/tools/clang/tools/extra patch_apply clang-tools-extra-install-clang-query.patch
+      PKGDIR=${PKGDIR}/tools/lldb patch_apply lldb-avoid-linking-to-libLLVM.patch
+    fi
+  }
+fi
 
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export MULTILIB_BUILD=1
-export PATCHES_LIST=("llvm-link-tools-against-libLLVM.patch" "llvm-export-more-symbols.patch")
-export PATCHES_LIST_32=("${PATCHES_LIST[@]}")
+
 
 export SHARED_FLAGS=(-DCLANG_INCLUDE_TESTS=OFF
                      -DLLVM_BUILD_LLVM_DYLIB=ON
@@ -77,22 +190,28 @@ EOF
 
   cp -r ../${PKGDIR}/tools/clang/bindings/python/clang ${DEST}/usr/lib/python2.7/site-packages/
 
-  install -dm755 ${DEST}/usr/lib/clang-analyzer
+  if [ $(basename $0) != "buildllvm-svn" ]
+  then
+    install -dm755 ${DEST}/usr/lib/clang-analyzer
 
-  for _tool in scan-build scan-view
-  do
-    cp -r ../${PKGDIR}/tools/clang/tools/$_tool ${DEST}/usr/lib/clang-analyzer/
-    ln -sf ../lib/clang-analyzer/$_tool/$_tool ${DEST}/usr/bin/
-  done
+    for _tool in scan-build scan-view
+    do
+      cp -r ../${PKGDIR}/tools/clang/tools/$_tool ${DEST}/usr/lib/clang-analyzer/
+      ln -sf ../lib/clang-analyzer/$_tool/$_tool ${DEST}/usr/bin/
+    done
 
-  ln -sf /usr/bin/clang ${DEST}/usr/lib/clang-analyzer/scan-build/clang
-  mv ${DEST}/usr/lib/clang-analyzer/scan-build/scan-build.1 ${DEST}/usr/share/man/man1
+    ln -sf /usr/bin/clang ${DEST}/usr/lib/clang-analyzer/scan-build/clang
+    mv ${DEST}/usr/lib/clang-analyzer/scan-build/scan-build.1 ${DEST}/usr/share/man/man1
+
+    python -m compileall ${DEST}/usr/lib/clang-analyzer
+    python -O -m compileall ${DEST}/usr/lib/clang-analyzer
+  else
+    python -m compileall ${DEST}/usr/share/scan-view
+    python -O -m compileall ${DEST}/usr/share/scan-view
+  fi
 
   python -m compileall ${DEST}/usr/lib/python2.7/site-packages/clang
   python -O -m compileall ${DEST}/usr/lib/python2.7/site-packages/clang
-
-  python -m compileall ${DEST}/usr/lib/clang-analyzer
-  python -O -m compileall ${DEST}/usr/lib/clang-analyzer
 
   python -m compileall ${DEST}/usr/lib/python2.7/site-packages/lldb
   python -O -m compileall ${DEST}/usr/lib/python2.7/site-packages/lldb
@@ -111,62 +230,6 @@ make_install_post_32() {
 
 post_install_config() {
   remove_rpath
-}
-
-proj=(
-  cfe
-  clang-tools-extra
-  compiler-rt
-  libcxx
-  libcxxabi
-  libunwind
-  lld
-  lldb
-  openmp
-  polly
-)
-
-post_extract_action() {
-  if [ -z ${POST_PREPARE} ]
-  then
-    export POST_PREPARE=1
-    export RECURSIVE_CALL=1
-    for f in ${proj[@]}
-    do
-
-      PKGURL="http://llvm.org/releases/${PKGVER}/${f}-${PKGVER}.src.tar.xz" \
-      CMAKE_BUILD=0 prepare_src ${f}-${PKGVER}.src.tar.xz
-
-      if [ -d ${f}-${PKGVER}.src ]
-      then
-        mv ${f}-${PKGVER}.src ${f}
-      fi
-
-      if [ ${f} == "cfe" ]
-      then
-        sed -i "/ld-linux-x86-64/s/lib64/lib/" cfe/lib/Driver/Tools.cpp
-        mv ${f} ${PKGDIR}/tools/clang
-      elif [ ${f} == "clang-tools-extra" ]
-      then
-        PKGDIR=clang-tools-extra patch_apply clang-tools-extra-install-clang-query.patch
-        mv ${f} ${PKGDIR}/tools/clang/tools/extra
-      elif [ ${f} == "lldb" ]
-      then
-        PKGDIR=lldb patch_apply lldb-avoid-linking-to-libLLVM.patch
-      fi
-
-      if [ ${f} == "lld" ] || [ ${f} == "lldb" ] || [ ${f} == "polly" ]
-      then
-        mv ${f} ${PKGDIR}/tools
-      else
-        if [ ${f} != "cfe" ] && [ ${f} != "clang-tools-extra" ]
-        then
-          mv ${f} ${PKGDIR}/projects
-        fi
-      fi
-
-    done
-  fi
 }
 
 . $(dirname $0)/master.sh
