@@ -168,8 +168,10 @@ $(dirname $0)/buildgnupg
 $(dirname $0)/builddirmngr
 $(dirname $0)/buildgcr
 $(dirname $0)/buildgpgme
-$(dirname $0)/buildpinentry
 $(dirname $0)/buildopenssh
+$(dirname $0)/buildpinentry
+$(dirname $0)/buildqtwebkit
+$(dirname $0)/buildwebkitgtk
 
 find /binary -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
 
