@@ -437,9 +437,9 @@ EOF
 
     export DEST=/binary/fonts/fonts-vlgothic-${VLGOTHIC_VER}
 
-    install -dm755 ${DEST}/usr/share/fonts/truetype/vlgothic
-
     checkdest
+
+    install -dm755 ${DEST}/usr/share/fonts/truetype/vlgothic
 
     install -m644 VLGothic/*.ttf ${DEST}/usr/share/fonts/truetype/vlgothic
 

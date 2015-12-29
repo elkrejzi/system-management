@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libclc
-export PKGVER=0.2.0.svn248480
+export PKGVER=0.2.0.svn256486
 export MAKE_JOBS_FLAGS="-j4"
 export NO_STRIP=1
 

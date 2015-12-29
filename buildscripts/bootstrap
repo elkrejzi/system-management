@@ -132,6 +132,7 @@ $(dirname $0)/buildgobject-introspection
 $(dirname $0)/buildlibaio
 $(dirname $0)/buildlibatomic_ops
 $(dirname $0)/buildlibcap-ng
+$(dirname $0)/buildlibpng
 $(dirname $0)/buildlibssh2
 $(dirname $0)/buildlibtasn1
 $(dirname $0)/buildlzo
@@ -143,10 +144,13 @@ $(dirname $0)/buildpopt
 $(dirname $0)/buildrtmpdump
 $(dirname $0)/buildvala
 $(dirname $0)/buildcurl
+$(dirname $0)/buildfreetype
+$(dirname $0)/buildfontconfig
 $(dirname $0)/buildgc
 $(dirname $0)/buildgnutls
 $(dirname $0)/buildlibarchive
 $(dirname $0)/buildlibmicrohttpd
+$(dirname $0)/buildpixman
 $(dirname $0)/buildsystemd
 $(dirname $0)/buildlibgudev
 $(dirname $0)/buildLVM2
@@ -164,15 +168,21 @@ popd
 
 $(dirname $0)/buildutil-linux
 
+$(dirname $0)/buildxorg-proto
+$(dirname $0)/buildutil-macros
+$(dirname $0)/buildxorg-lib
+$(dirname $0)/buildxorg-xcb-util
 $(dirname $0)/buildchrpath
 $(dirname $0)/buildcmake 1
+$(dirname $0)/builddbus
+$(dirname $0)/builddbus-glib
+$(dirname $0)/builddbus-python
 $(dirname $0)/buildfirebird
 $(dirname $0)/buildhtop
 $(dirname $0)/buildiana-etc
 $(dirname $0)/buildlibedit
 $(dirname $0)/buildlibgnome-keyring
 $(dirname $0)/buildlibical
-$(dirname $0)/buildlibpng
 $(dirname $0)/buildlibusb
 $(dirname $0)/buildlibusb-compat
 $(dirname $0)/buildman-pages
@@ -184,6 +194,7 @@ $(dirname $0)/buildscons
 $(dirname $0)/buildswig
 $(dirname $0)/buildunixODBC
 $(dirname $0)/buildusbutils
+$(dirname $0)/buildwayland
 $(dirname $0)/buildyasm
 $(dirname $0)/buildcyrus-sasl 1
 $(dirname $0)/buildopenldap
@@ -209,14 +220,6 @@ popd
 
 $(dirname $0)/buildpostgresql
 
-$(dirname $0)/buildfreetype
-$(dirname $0)/buildfontconfig
-$(dirname $0)/buildpixman
-$(dirname $0)/buildwayland
-$(dirname $0)/buildxorg-proto
-$(dirname $0)/buildutil-macros
-$(dirname $0)/buildxorg-lib
-$(dirname $0)/buildxorg-xcb-util
 $(dirname $0)/buildapr
 $(dirname $0)/buildapr-util
 $(dirname $0)/buildbluez
@@ -241,9 +244,6 @@ $(dirname $0)/buildpython3
 $(dirname $0)/buildruby
 $(dirname $0)/buildsubversion
 $(dirname $0)/buildllvm-svn
-$(dirname $0)/builddbus
-$(dirname $0)/builddbus-glib
-$(dirname $0)/builddbus-python
 $(dirname $0)/buildintel-ucode
 $(dirname $0)/buildlsb-release
 $(dirname $0)/buildfuse

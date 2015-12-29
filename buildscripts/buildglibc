@@ -43,8 +43,8 @@ make_post_32() {
 }
 
 configure_override() {
-  CFLAGS="-march=sandybridge -g -Ofast -pipe"   \
-  CXXFLAGS="-march=sandybridge -g -Ofast -pipe" \
+  CFLAGS="-march=sandybridge -g -O3 -pipe"   \
+  CXXFLAGS="-march=sandybridge -g -O3 -pipe" \
   ../src/configure --prefix=/usr --libdir=/usr/lib --libexecdir=/usr/lib         \
                    --disable-profile --enable-add-ons --enable-kernel=3.4.0      \
                    --enable-bind-now --enable-multi-arch --enable-obsolete-rpc   \
@@ -53,8 +53,8 @@ configure_override() {
 }
 
 configure_override_32() {
-  CFLAGS="-march=sandybridge -g -Ofast -pipe"   \
-  CXXFLAGS="-march=sandybridge -g -Ofast -pipe" \
+  CFLAGS="-march=sandybridge -g -O3 -pipe"   \
+  CXXFLAGS="-march=sandybridge -g -O3 -pipe" \
   ../src/configure --prefix=/usr --libdir=/usr/lib32 --libexecdir=/usr/lib32     \
                    --disable-profile --enable-add-ons --enable-kernel=3.4.0      \
                    --enable-bind-now --enable-multi-arch --enable-obsolete-rpc   \

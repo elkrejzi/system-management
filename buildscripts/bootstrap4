@@ -25,7 +25,6 @@ $(dirname $0)/buildlibdmtx
 $(dirname $0)/buildlibzip
 $(dirname $0)/buildlm_sensors
 $(dirname $0)/buildlmdb
-$(dirname $0)/buildmozjs17
 $(dirname $0)/buildmozjs24
 $(dirname $0)/buildparted
 $(dirname $0)/buildqrencode

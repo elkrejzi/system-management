@@ -110,6 +110,7 @@ case $(basename $0) in
     export PKGVER=0.1.4
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://downloads.sourceforge.net/libwpd/${PKGTAR}"
+    export CONFIGURE_FLAGS=(--disable-werror)
   ;;
   buildliborcus )
     export PKGNAME=liborcus
@@ -144,7 +145,7 @@ case $(basename $0) in
   ;;
   buildlibwpg )
     export PKGNAME=libwpg
-    export PKGVER=0.3.0
+    export PKGVER=0.3.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://downloads.sourceforge.net/libwpg/${PKGTAR}"
   ;;
