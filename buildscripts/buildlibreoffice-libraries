@@ -107,7 +107,7 @@ case $(basename $0) in
   ;;
   buildlibodfgen )
     export PKGNAME=libodfgen
-    export PKGVER=0.1.4
+    export PKGVER=0.1.6
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://downloads.sourceforge.net/libwpd/${PKGTAR}"
     export CONFIGURE_FLAGS=(--disable-werror)
@@ -133,13 +133,13 @@ case $(basename $0) in
   ;;
   buildlibvisio )
     export PKGNAME=libvisio
-    export PKGVER=0.1.4
+    export PKGVER=0.1.5
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://dev-www.libreoffice.org/src/libvisio/${PKGTAR}"
   ;;
   buildlibwpd )
     export PKGNAME=libwpd
-    export PKGVER=0.10.0
+    export PKGVER=0.10.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://downloads.sourceforge.net/libwpd/${PKGTAR}"
   ;;

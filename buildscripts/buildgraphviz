@@ -7,6 +7,7 @@ export PKGURL="http://graphviz.org/pub/graphviz/stable/SOURCES/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export PATCHES_LIST=("graphviz-qt5.patch")
 export POSTINST_TRIGGER=("/usr/bin/dot -c")
+export CONFIGURE_FLAGS=(--disable-java --disable-php)
 
 configure_pre() {
   if [ -e /usr/bin/luac ]

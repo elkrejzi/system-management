@@ -1,12 +1,11 @@
 #!/bin/bash -e
 
 export PKGNAME=doxygen
-export PKGVER=1.8.10
+export PKGVER=1.8.11
 export PKGTAR=${PKGNAME}-${PKGVER}.src.tar.gz
 export PKGURL="http://ftp.stack.nl/pub/users/dimitri/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
-export PATCHES_LIST=("doxygen-fixes.patch" "doxygen-qt5.patch")
 export CMAKE_FLAGS=(-Dbuild_search=ON -Dbuild_wizard=ON -Duse_libclang=ON)
 
 make_install_post() {

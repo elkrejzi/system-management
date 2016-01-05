@@ -6,12 +6,12 @@ export MATE_MAJOR_VER=1.12
 case $(basename $0) in
   buildatril )
     export PKGNAME=atril
-    export PKGVER=1.12.1
+    export PKGVER=1.12.2
     export CONFIGURE_FLAGS=(--enable-pixbuf)
   ;;
   buildcaja )
     export PKGNAME=caja
-    export PKGVER=1.12.1
+    export PKGVER=1.12.2
     export CONFIGURE_FLAGS=(--disable-packagekit
                             --disable-update-mimedb
                             --disable-icon-update
@@ -151,7 +151,7 @@ EOF
   ;;
   buildmate-themes )
     export PKGNAME=mate-themes
-    export PKGVER=1.12.1
+    export PKGVER=1.12.2
     export PKGTAR=${PKGNAME}-gtk${GTK_MAJOR_VER}-${PKGVER}.tar.xz
     export PKGDIR=${PKGNAME}-gtk${GTK_MAJOR_VER}-${PKGVER}
     export KEEP_STATIC=1

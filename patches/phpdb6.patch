@@ -1,7 +1,6 @@
-diff -Naur a/configure b/configure
---- a/configure	2014-06-25 17:45:34.000000000 +0200
-+++ b/configure	2014-07-13 20:59:32.001642816 +0200
-@@ -31367,8 +31367,13 @@
+--- a/configure	2015-12-16 11:41:54.000000000 +0100
++++ b/configure	2016-01-04 12:42:32.351939233 +0100
+@@ -26147,8 +26147,13 @@
  
    dbdp4="/usr/local/BerkeleyDB.4."
    dbdp5="/usr/local/BerkeleyDB.5."
@@ -17,7 +16,7 @@ diff -Naur a/configure b/configure
        THIS_PREFIX=$i
        THIS_INCLUDE=$i/db5/db.h
        break
-@@ -31376,6 +31381,14 @@
+@@ -26156,6 +26161,14 @@
        THIS_PREFIX=$i
        THIS_INCLUDE=$i/db4/db.h
        break
@@ -32,7 +31,7 @@ diff -Naur a/configure b/configure
      elif test -f "$i/include/db5.1/db.h"; then
        THIS_PREFIX=$i
        THIS_INCLUDE=$i/include/db5.1/db.h
-@@ -31422,7 +31435,7 @@
+@@ -26202,7 +26215,7 @@
    if test -z "$THIS_INCLUDE"; then
      as_fn_error $? "DBA: Could not find necessary header file(s)." "$LINENO" 5
    fi
@@ -41,7 +40,7 @@ diff -Naur a/configure b/configure
      if test -f $THIS_PREFIX/$PHP_LIBDIR/lib$LIB.a || test -f $THIS_PREFIX/$PHP_LIBDIR/lib$LIB.$SHLIB_SUFFIX_NAME; then
        lib_found="";
  
-@@ -31452,7 +31465,7 @@
+@@ -26232,7 +26245,7 @@
  /* end confdefs.h.  */
  
  #include "$THIS_INCLUDE"
@@ -50,9 +49,8 @@ diff -Naur a/configure b/configure
              yes
  #endif
  
-diff -Naur a/ext/dba/config.m4 b/ext/dba/config.m4
---- a/ext/dba/config.m4	2014-06-25 15:06:23.000000000 +0200
-+++ b/ext/dba/config.m4	2014-07-13 20:59:41.164810766 +0200
+--- a/ext/dba/config.m4	2015-12-16 11:41:58.000000000 +0100
++++ b/ext/dba/config.m4	2016-01-04 12:42:32.352939255 +0100
 @@ -362,7 +362,7 @@
        break
      fi

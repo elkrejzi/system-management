@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=iso-codes
-export PKGVER=3.63
+export PKGVER=3.64
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://pkg-isocodes.alioth.debian.org/downloads/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
