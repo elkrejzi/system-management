@@ -19,7 +19,6 @@ $(dirname $0)/buildlibusbmuxd
 $(dirname $0)/buildlibimobiledevice
 $(dirname $0)/buildcln
 $(dirname $0)/buildfontforge
-$(dirname $0)/buildguile
 $(dirname $0)/buildlibatasmart
 $(dirname $0)/buildlibdmtx
 $(dirname $0)/buildlibzip
@@ -35,7 +34,6 @@ $(dirname $0)/buildalsa-utils
 $(dirname $0)/builddoxygen
 $(dirname $0)/buildebook-tools
 $(dirname $0)/buildgrantlee
-$(dirname $0)/buildibus
 $(dirname $0)/buildlibdbusmenu-qt
 $(dirname $0)/buildlibqalculate
 $(dirname $0)/buildphonon

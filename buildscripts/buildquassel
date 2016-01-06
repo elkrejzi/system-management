@@ -7,7 +7,11 @@ export PKGURL="http://quassel-irc.org/pub/${PKGTAR}"
 export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
-export PATCHES_LIST=("quassel-qt55.patch")
+export PATCHES_LIST=("quassel-qt55.patch" "quassel-snorenotify.patch")
 export CMAKE_FLAGS=(-DUSE_QT5=ON -DWITH_KDE=ON -DWITH_WEBKIT=OFF)
+
+configure_pre() {
+  sed -i '/qglobal.h/i #define QT_NO_VERSION_TAGGING 1' ../${PKGDIR}/CMakeLists.txt
+}
 
 . $(dirname $0)/master.sh

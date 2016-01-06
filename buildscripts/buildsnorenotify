@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=snorenotify
-export PKGVER=0.5.3
+export PKGVER=0.6.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/KDE/snorenotify/archive/v${PKGVER}.tar.gz"
 export DEST=/binary/plasma/${PKGNAME}-${PKGVER}

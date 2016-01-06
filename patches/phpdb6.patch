@@ -1,5 +1,5 @@
---- a/configure	2015-12-16 11:41:54.000000000 +0100
-+++ b/configure	2016-01-04 12:42:32.351939233 +0100
+--- a/configure	2016-01-06 11:05:07.000000000 +0100
++++ b/configure	2016-01-06 15:16:39.365797711 +0100
 @@ -26147,8 +26147,13 @@
  
    dbdp4="/usr/local/BerkeleyDB.4."
@@ -7,7 +7,7 @@
 -  for i in $PHP_DB4 ${dbdp5}1 ${dbdp5}0 ${dbdp4}8 ${dbdp4}7 ${dbdp4}6 ${dbdp4}5 ${dbdp4}4 ${dbdp4}3 ${dbdp4}2 ${dbdp4}1 ${dbdp}0 /usr/local /usr; do
 -    if test -f "$i/db5/db.h"; then
 +  dbdp6="/usr/local/BerkeleyDB.6."
-+  for i in $PHP_DB4 ${dbdp6}.1 ${dbdp6}.0 ${dbdp5}1 ${dbdp5}0 ${dbdp4}8 ${dbdp4}7 ${dbdp4}6 ${dbdp4}5 ${dbdp4}4 ${dbdp4}3 ${dbdp4}2 ${dbdp4}1 ${dbdp}0 /usr/local /usr; do
++  for i in $PHP_DB4 ${dbdp6}1 ${dbdp6}0 ${dbdp5}3 ${dbdp5}1 ${dbdp5}0 ${dbdp4}8 ${dbdp4}7 ${dbdp4}6 ${dbdp4}5 ${dbdp4}4 ${dbdp4}3 ${dbdp4}2 ${dbdp4}1 ${dbdp}0 /usr/local /usr; do
 +    if test -f "$i/db6/db.h"; then
 +      THIS_PREFIX=$i
 +      THIS_INCLUDE=$i/db6/db.h
@@ -28,19 +28,19 @@
 +      THIS_PREFIX=$i
 +      THIS_INCLUDE=$i/include/db6.0/db.h
 +      break
-     elif test -f "$i/include/db5.1/db.h"; then
+     elif test -f "$i/include/db5.3/db.h"; then
        THIS_PREFIX=$i
-       THIS_INCLUDE=$i/include/db5.1/db.h
-@@ -26202,7 +26215,7 @@
+       THIS_INCLUDE=$i/include/db5.3/db.h
+@@ -26206,7 +26219,7 @@
    if test -z "$THIS_INCLUDE"; then
      as_fn_error $? "DBA: Could not find necessary header file(s)." "$LINENO" 5
    fi
--  for LIB in db-5.1 db-5.0 db-4.8 db-4.7 db-4.6 db-4.5 db-4.4 db-4.3 db-4.2 db-4.1 db-4.0 db-4 db4 db; do
-+  for LIB in db-6.1 db-6.0 db-5.1 db-5.0 db-4.8 db-4.7 db-4.6 db-4.5 db-4.4 db-4.3 db-4.2 db-4.1 db-4.0 db-4 db4 db; do
+-  for LIB in db-5.3 db-5.1 db-5.0 db-4.8 db-4.7 db-4.6 db-4.5 db-4.4 db-4.3 db-4.2 db-4.1 db-4.0 db-4 db4 db; do
++  for LIB in db-6.1 db-6.0 db-5.3 db-5.1 db-5.0 db-4.8 db-4.7 db-4.6 db-4.5 db-4.4 db-4.3 db-4.2 db-4.1 db-4.0 db-4 db4 db; do
      if test -f $THIS_PREFIX/$PHP_LIBDIR/lib$LIB.a || test -f $THIS_PREFIX/$PHP_LIBDIR/lib$LIB.$SHLIB_SUFFIX_NAME; then
        lib_found="";
  
-@@ -26232,7 +26245,7 @@
+@@ -26236,7 +26249,7 @@
  /* end confdefs.h.  */
  
  #include "$THIS_INCLUDE"
@@ -49,14 +49,14 @@
              yes
  #endif
  
---- a/ext/dba/config.m4	2015-12-16 11:41:58.000000000 +0100
-+++ b/ext/dba/config.m4	2016-01-04 12:42:32.352939255 +0100
-@@ -362,7 +362,7 @@
+--- a/ext/dba/config.m4	2016-01-06 11:05:14.000000000 +0100
++++ b/ext/dba/config.m4	2016-01-06 15:08:11.151469874 +0100
+@@ -366,7 +366,7 @@
        break
      fi
    done
--  PHP_DBA_DB_CHECK(4, db-5.1 db-5.0 db-4.8 db-4.7 db-4.6 db-4.5 db-4.4 db-4.3 db-4.2 db-4.1 db-4.0 db-4 db4 db, [(void)db_create((DB**)0, (DB_ENV*)0, 0)])
-+  PHP_DBA_DB_CHECK(4, db-6.1 db-6.0 db-5.1 db-5.0 db-4.8 db-4.7 db-4.6 db-4.5 db-4.4 db-4.3 db-4.2 db-4.1 db-4.0 db-4 db4 db, [(void)db_create((DB**)0, (DB_ENV*)0, 0)])
+-  PHP_DBA_DB_CHECK(4, db-5.3 db-5.1 db-5.0 db-4.8 db-4.7 db-4.6 db-4.5 db-4.4 db-4.3 db-4.2 db-4.1 db-4.0 db-4 db4 db, [(void)db_create((DB**)0, (DB_ENV*)0, 0)])
++  PHP_DBA_DB_CHECK(4, db-6.1 db-6.0 db-5.3 db-5.1 db-5.0 db-4.8 db-4.7 db-4.6 db-4.5 db-4.4 db-4.3 db-4.2 db-4.1 db-4.0 db-4 db4 db, [(void)db_create((DB**)0, (DB_ENV*)0, 0)])
  fi
  PHP_DBA_STD_RESULT(db4,Berkeley DB4)
  
