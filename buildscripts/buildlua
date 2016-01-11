@@ -14,7 +14,7 @@ configure_override() {
 }
 
 make_override() {
-  make MYCFLAGS="${CFLAGS} -fPIC" linux ${MAKE_JOBS_FLAGS}
+  make MYCFLAGS="${CFLAGS} -DLUA_COMPAT_5_1" linux ${MAKE_JOBS_FLAGS}
 }
 
 make_install_override() {
