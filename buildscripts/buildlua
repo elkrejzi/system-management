@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
-export LUA_MAJOR=5.2
+export LUA_MAJOR=5.3
 export PKGNAME=lua
-export PKGVER=${LUA_MAJOR}.4
+export PKGVER=${LUA_MAJOR}.2
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://www.lua.org/ftp/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

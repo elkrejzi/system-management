@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=powertop
-export PKGVER=2.7
+export PKGVER=2.8
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://01.org/sites/default/files/downloads/powertop/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

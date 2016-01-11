@@ -1,13 +1,5 @@
-Submitted By:            Igor Živković <contact at igor hyphen zivkovic dot from dot hr>
-Date:                    2013-06-19
-Initial Package Version: 5.2.2
-Upstream Status:         Rejected
-Origin:                  Arch Linux packages repository
-Description:             Adds the compilation of a shared library.
-
-diff -Naur lua-5.2.2.orig/Makefile lua-5.2.2/Makefile
---- lua-5.2.2.orig/Makefile	2012-05-17 16:05:54.000000000 +0200
-+++ lua-5.2.2/Makefile	2013-06-19 20:04:12.338167412 +0200
+--- a/Makefile	2015-11-18 20:00:04.000000000 +0100
++++ b/Makefile	2016-01-11 11:46:37.042252261 +0100
 @@ -52,7 +52,7 @@
  all:	$(PLAT)
  
@@ -17,20 +9,19 @@ diff -Naur lua-5.2.2.orig/Makefile lua-5.2.2/Makefile
  
  test:	dummy
  	src/lua -v
-diff -Naur lua-5.2.2.orig/src/Makefile lua-5.2.2/src/Makefile
---- lua-5.2.2.orig/src/Makefile	2012-12-27 11:51:43.000000000 +0100
-+++ lua-5.2.2/src/Makefile	2013-06-19 20:04:40.924213226 +0200
+--- a/src/Makefile	2015-05-27 13:10:11.000000000 +0200
++++ b/src/Makefile	2016-01-11 11:46:57.155482812 +0100
 @@ -7,7 +7,7 @@
  PLAT= none
  
- CC= gcc
--CFLAGS= -O2 -Wall -DLUA_COMPAT_ALL $(SYSCFLAGS) $(MYCFLAGS)
-+CFLAGS= -fPIC -O2 -Wall -DLUA_COMPAT_ALL $(SYSCFLAGS) $(MYCFLAGS)
+ CC= gcc -std=gnu99
+-CFLAGS= -O2 -Wall -Wextra -DLUA_COMPAT_5_2 $(SYSCFLAGS) $(MYCFLAGS)
++CFLAGS= -fPIC -O2 -Wall -Wextra -DLUA_COMPAT_5_2 $(SYSCFLAGS) $(MYCFLAGS)
  LDFLAGS= $(SYSLDFLAGS) $(MYLDFLAGS)
  LIBS= -lm $(SYSLIBS) $(MYLIBS)
  
 @@ -29,6 +29,7 @@
- PLATS= aix ansi bsd freebsd generic linux macosx mingw posix solaris
+ PLATS= aix bsd c89 freebsd generic linux macosx mingw posix solaris
  
  LUA_A=	liblua.a
 +LUA_SO= liblua.so

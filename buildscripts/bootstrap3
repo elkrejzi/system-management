@@ -71,6 +71,7 @@ $(dirname $0)/buildlibssh
 $(dirname $0)/buildlibtar
 $(dirname $0)/buildlibupnp
 $(dirname $0)/buildlive-media
+$(dirname $0)/buildluajit
 $(dirname $0)/buildneon
 $(dirname $0)/buildopencore-amr
 $(dirname $0)/buildschroedinger

@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
 export PKGNAME=linux-api-headers
-export PKGVER=4.3
-export PATCHVER=4.4-rc8
+export PKGVER=4.4
+export PATCHVER=
 export COMMON_URL="https://cdn.kernel.org/pub/linux/kernel/v4.x"
 export PKGTAR=linux-${PKGVER}.tar.xz
 export PKGURL="${COMMON_URL}/${PKGTAR}"
@@ -16,7 +16,7 @@ post_extract_action() {
   then
     if [ ! -e ${SROOT}/patch-${PATCHVER}.xz ]
     then
-      wget -c ${COMMON_URL}/testing/patch-${PATCHVER}.xz -O ${SROOT}/patch-${PATCHVER}.xz || exit ${PIPESTATUS}
+      wget -c ${COMMON_URL}/patch-${PATCHVER}.xz -O ${SROOT}/patch-${PATCHVER}.xz || exit ${PIPESTATUS}
     fi
     pushd ${PKGDIR}
       xz -cd ${SROOT}/patch-${PATCHVER}.xz | patch -Np1 -i -

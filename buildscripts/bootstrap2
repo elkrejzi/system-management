@@ -69,6 +69,8 @@ $(dirname $0)/buildlibinput
 $(dirname $0)/buildlibunwind
 $(dirname $0)/buildgtk2
 $(dirname $0)/buildgtk3
+$(dirname $0)/builddconf
+$(dirname $0)/buildgsettings-desktop-schemas
 $(dirname $0)/buildiso-codes
 $(dirname $0)/buildlibglade
 $(dirname $0)/buildlibnotify
@@ -154,8 +156,6 @@ $(dirname $0)/buildhicolor-icon-theme
 $(dirname $0)/buildicon-naming-utils
 $(dirname $0)/buildmime-types
 $(dirname $0)/buildadwaita-icon-theme
-$(dirname $0)/builddconf
-$(dirname $0)/buildgsettings-desktop-schemas
 $(dirname $0)/buildglib-networking
 $(dirname $0)/buildgnome-themes-standard
 $(dirname $0)/builddesktop-file-utils

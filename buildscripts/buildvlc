@@ -20,4 +20,8 @@ export CONFIGURE_FLAGS=(--enable-a52
                         --enable-vcdx
                         --disable-freerdp)
 
+configure_pre() {
+  sed -i "/LUA_COMPAT_MODULE/i #define LUA_COMPAT_APIINTCASTS" modules/lua/vlc.h
+}
+
 . $(dirname $0)/master.sh

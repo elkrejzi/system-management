@@ -9,6 +9,8 @@ export POSTINST_TRIGGER=("chmod 4755 /usr/lib/chromium/chrome-sandbox")
 export PATCHES_LIST=("chromium-fixes.patch")
 
 configure_pre() {
+  CFLAGS=${CFLAGS/-Ofast/-O3}
+  CXXFLAGS=${CXXFLAGS/-Ofast/-O3}
   export -n CFLAGS
   export -n CXXFLAGS
 

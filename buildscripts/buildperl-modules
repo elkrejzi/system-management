@@ -66,7 +66,7 @@ make_install_post() {
   ;;
   buildperl-uri )
     export PKGNAME=URI
-    export PKGVER=1.69
+    export PKGVER=1.71
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/${PKGTAR}"
     export DEST=/binary/perl/perl-uri-${PKGVER}

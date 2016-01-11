@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=5.5.2
+export PKGVER=5.5.3
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export KEEP_DOC=1
@@ -16,7 +16,6 @@ build_all() {
   $(dirname $0)/buildbreeze $1
   $(dirname $0)/buildbreeze-gtk $1
   $(dirname $0)/buildkscreenlocker $1
-  $(dirname $0)/buildoxygen $1
   $(dirname $0)/buildkhelpcenter $1
   $(dirname $0)/buildkinfocenter $1
   $(dirname $0)/buildksysguard $1
@@ -101,7 +100,6 @@ plasmas=(
   breeze
   breeze-gtk
   kscreenlocker
-  oxygen
   khelpcenter
   kinfocenter
   ksysguard

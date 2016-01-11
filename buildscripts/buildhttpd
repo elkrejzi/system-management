@@ -13,6 +13,8 @@ configure_override() {
   sed -e "s@User apache@User httpd@" -i docs/conf/httpd.conf.in
   sed -e "s@Group apache@Group httpd@" -i docs/conf/httpd.conf.in
 
+  sed -i "s:LUA_COMPAT_ALL:LUA_COMPAT_5_1:g" modules/lua/mod_lua.h
+
   ./configure --enable-layout=BLFS \
               --enable-mods-shared="all cgi" \
               --enable-mpms-shared=all \

@@ -9,18 +9,18 @@ export PKGURL="https://github.com/LMDB/lmdb/archive/${PKGTAR}"
 export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
 
 configure_override() {
-  sed -i "s:man/:share/&:g" Makefile
+  true
 }
 
 make_override() {
-  make prefix=/usr OPT="${CFLAGS}"
+  make prefix=/usr mandir=/usr/share/man OPT="${CFLAGS}"
 }
 
 make_install_override() {
   install -dm755 ${DEST}/usr/bin ${DEST}/usr/share/man/man1
   install -dm755 ${DEST}/usr/include ${DEST}/usr/lib
 
-  make prefix=/usr OPT="${CFLAGS}" install DESTDIR=${DEST}
+  make prefix=/usr mandir=/usr/share/man OPT="${CFLAGS}" install DESTDIR=${DEST}
 
   rm -rf ${DEST}/usr/lib/liblmdb.a
 }

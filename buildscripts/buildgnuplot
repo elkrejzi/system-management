@@ -9,4 +9,8 @@ export CONFIGURE_FLAGS=(--with-qt=qt5 --libexecdir=/usr/bin WX_CONFIG=/usr/bin/w
 export MAKE_FLAGS="pkglibexecdir=/usr/bin"
 export MAKE_INSTALL_FLAGS="pkglibexecdir=/usr/bin"
 
+configure_pre() {
+  sed -i "s#luaL_checkint(#luaL_checkinteger(#g" term/lua.trm
+}
+
 . $(dirname $0)/master.sh

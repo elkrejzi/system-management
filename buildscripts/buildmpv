@@ -12,7 +12,7 @@ configure_override() {
   ./bootstrap.py
   ./waf configure --prefix=/usr      \
                   --confdir=/etc/mpv \
-                  --lua=52           \
+                  --lua=luajit       \
                   --enable-cdda      \
                   --enable-openal    \
                   --enable-sdl2      \

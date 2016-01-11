@@ -1,0 +1,274 @@
+
+systemctl disable avahi-{daemon,dnsconfd} cups-browsed dnsmasq httpd krb5-{kadmind,kdc,kpropd} libvirt{d,-guests} ModemManager mysqld NetworkManager{,-wait-online} nmbd org.cups.cupsd php-fpm postfix postgresql radvd saslauthd slapd smbd svnserve thermald winbindd wpa_supplicant git-daemon.socket saned.socket
+
+systemctl mask wpa_supplicant
+systemctl enable systemd-{networkd,timesyncd}
+
+install -dm755 /media/ntfs /media/other /media/win
+
+cat > /etc/fstab << "EOF"
+#
+# /etc/fstab: static file system information
+#
+# <file system>	<dir>	<type>	<options>	<dump>	<pass>
+
+/dev/sda8 /     ext4 noatime,errors=remount-ro 0 1
+/dev/sda7 /home ext4 noatime                   0 2
+/dev/sda6 none  swap defaults                  0 0
+
+none /var/tmp tmpfs defaults 0 0
+
+UUID=8E4E2A444E2A2585 /media/win   ntfs defaults 0 0
+UUID=52EE5236EE521319 /media/ntfs  ntfs defaults 0 0
+UUID=2E10C0B527EB6783 /media/other ntfs defaults 0 0
+EOF
+
+rm -f /etc/gshadow* /etc/shadow*
+
+cat > /etc/group << "EOF"
+root:x:0:
+bin:x:1:daemon
+sys:x:2:
+kmem:x:3:
+tape:x:4:
+tty:x:5:
+daemon:x:6:
+floppy:x:7:
+disk:x:8:
+lp:x:9:
+dialout:x:10:
+audio:x:11:
+video:x:12:
+utmp:x:13:
+usb:x:14:
+cdrom:x:15:
+adm:x:16:
+messagebus:x:18:
+lpadmin:x:19:
+named:x:20:
+systemd-journal:x:23:
+input:x:24:
+httpd:x:25:
+polkitd:x:27:
+rpc:x:28:
+postfix:x:32:
+postdrop:x:33:
+mail:x:34:
+mysql:x:40:
+postgres:x:41:
+dnsmasq:x:44:
+sshd:x:50:
+git:x:55:
+kvm:x:61:
+wireshark:x:62:
+lightdm:x:63:
+rtkit:x:65:
+scanner:x:70:
+colord:x:71:
+systemd-bus-proxy:x:72:
+systemd-journal-gateway:x:73:
+systemd-journal-remote:x:74:
+systemd-journal-upload:x:75:
+systemd-network:x:76:
+systemd-resolve:x:77:
+systemd-timesync:x:78:
+ldap:x:83:
+avahi:x:84:
+avahi-autoipd:x:85:
+netdev:x:86:
+sambashare:x:97:
+nogroup:x:99:
+users:x:999:
+EOF
+
+cat > /etc/passwd << "EOF"
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/dev/null:/bin/false
+daemon:x:6:6:Daemon User:/dev/null:/bin/false
+lp:x:9:9:Print Service User:/var/spool/cups:/bin/false
+messagebus:x:18:18:D-Bus Message Daemon User:/var/run/dbus:/bin/false
+named:x:20:20::/var/cache/bind:/bin/false
+httpd:x:25:25:HTTP Daemon Owner:/var/www:/bin/false
+polkitd:x:27:27:PolicyKit Daemon Owner:/etc/polkit-1:/bin/false
+rpc:x:28:28:RPC Bind Daemon Owner:/dev/null:/bin/false
+postfix:x:32:32:Postfix Daemon Owner:/var/spool/postfix:/bin/false
+mysql:x:40:40:MySQL Server:/var/lib/mysql:/bin/false
+postgres:x:41:41:PostgreSQL Server:/var/lib/postgresql:/bin/bash
+dnsmasq:x:44:44:dnsmasq daemon:/:/sbin/nologin
+sshd:x:50:50:OpenSSH PrivSep:/var/run/sshd:/sbin/nologin
+git:x:55:55:Git Repositories Owner:/var/lib/git:/bin/bash
+lightdm:x:63:63:Light Display Manager:/var/lib/lightdm:/sbin/nologin
+rtkit:x:65:65:RealtimeKit:/proc:/sbin/nologin
+colord:x:71:71:Color Daemon Owner:/var/lib/colord:/bin/false
+systemd-bus-proxy:x:72:72:systemd Bus Proxy:/:/bin/false
+systemd-journal-gateway:x:73:73:systemd Journal Gateway:/:/bin/false
+systemd-journal-remote:x:74:74:systemd Journal Remote:/:/bin/false
+systemd-journal-upload:x:75:75:systemd Journal Upload:/:/bin/false
+systemd-network:x:76:76:systemd Network Management:/:/bin/false
+systemd-resolve:x:77:77:systemd Resolver:/:/bin/false
+systemd-timesync:x:78:78:systemd Time Synchronization:/:/bin/false
+ldap:x:83:83:OpenLDAP Daemon Owner:/var/lib/openldap:/bin/false
+avahi:x:84:84:Avahi Daemon Owner:/var/run/avahi-daemon:/bin/false
+avahi-autoipd:x:85:85:Avahi AutoIPD Owner:/var/lib/avahi-autoipd:/bin/false
+nobody:x:99:99:Unprivileged User:/dev/null:/bin/false
+EOF
+
+grpconv
+pwconv
+
+useradd -c "Armin K" -MU armin
+
+gpasswd -a armin kvm
+gpasswd -a armin systemd-journal
+gpasswd -a armin wireshark
+
+cat > /etc/hosts << "EOF"
+# Begin /etc/hosts
+
+127.0.0.1	localhost	localhost.localdomain
+::1		localhost	localhost.localdomain
+127.0.1.1	krejzi
+
+# End /etc/hosts
+EOF
+
+echo "krejzi" > /etc/hostname
+echo "nameserver 127.0.0.1" > /etc/resolv.conf
+
+ln -sf /usr/share/zoneinfo/Europe/Sarajevo /etc/localtime
+
+cat > /etc/locale.conf << "EOF"
+LANG=en_US.UTF-8
+EOF
+
+cat > /etc/vconsole.conf << "EOF"
+KEYMAP=croat
+FONT=Lat2-Terminus16
+FONT_MAP=8859-2
+EOF
+
+cat > /etc/X11/xorg.conf.d/00-keyboard.conf << "EOF"
+# Read and parsed by systemd-localed. It's probably wise not to edit this file
+# manually too freely.
+Section "InputClass"
+        Identifier "system-keyboard"
+        MatchIsKeyboard "on"
+        Option "XkbLayout" "hr"
+        Option "XkbModel" "pc105"
+EndSection
+EOF
+
+cat >> /etc/httpd/httpd.conf << "EOF"
+<Proxy fcgi://127.0.0.1:9000>
+  ProxySet timeout=600
+</Proxy>
+
+ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://127.0.0.1:9000/var/www/$1
+DirectoryIndex index.php index.html
+
+#<FilesMatch "\.php$">
+#	SetHandler application/x-httpd-php
+#</FilesMatch>
+#<FilesMatch "\.phps$">
+#	SetHandler application/x-httpd-php-source
+#</FilesMatch>
+
+Include /etc/httpd/extra/cgit.conf
+Include /etc/httpd/extra/git.conf
+EOF
+
+for module in include_module proxy_module proxy_connect_module proxy_fcgi_module dav_module suexec_module dav_fs_module vhost_alias_module userdir_module rewrite_module
+do
+  sed -i "/LoadModule ${module}/s:#Lo:Lo:g" /etc/httpd/httpd.conf
+done
+
+sed -i "/LoadModule rewrite_module/a #LoadModule php5_module /usr/lib/httpd/modules/libphp5.so" /etc/httpd/httpd.conf
+
+sed -i "s:#background=:background=/media/ntfs/Docs/Slike/dark_game_scene-hd.jpg:g" /etc/lightdm/lightdm-gtk-greeter.conf
+
+sed -i "/root ALL/a  armin ALL=(ALL) NOPASSWD: ALL" /etc/sudoers
+
+sed -i "s:#hpaio:hpaio:g" /etc/sane.d/dll.conf
+
+install -dm755 /etc/modprobe.d
+install -dm755 /etc/wpa_supplicant
+
+echo "blacklist wl" > /etc/modprobe.d/local.conf
+
+install -m600 /media/ntfs/Other/Linux/conf/nm/* /etc/NetworkManager/system-connections
+install -m644 /media/ntfs/Other/Linux/conf/network/* /etc/systemd/network
+install -m600 /media/ntfs/Other/Linux/conf/wpa/* /etc/wpa_supplicant
+
+cat > /etc/rc.local << "EOF"
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+#test -e /sys/kernel/debug/vgaswitcheroo/switch && echo OFF > /sys/kernel/debug/vgaswitcheroo/switch
+
+#echo 5 > /proc/sys/vm/laptop_mode
+
+#echo 976 > /sys/class/backlight/intel_backlight/brightness
+
+echo 1 > /proc/sys/net/ipv4/ip_forward
+iptables -t nat -A POSTROUTING -o wlan0 -j MASQUERADE
+iptables -A FORWARD -i wlan0 -o eth0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i eth0 -o wlan0 -j ACCEPT
+
+#ethtool -s eth0 wol d
+#echo 'auto' > '/sys/bus/usb/devices/1-1.3/power/control'
+
+exit 0
+EOF
+
+sed -i 's#;date.timezone =#date.timezone = "Europe/Sarajevo"#' /etc/php/php.ini
+
+sed -i "s:#ProcessSizeMax=2G:ProcessSizeMax=4G:;s:#ExternalSizeMax=2G:ExternalSizeMax=4G:;s:#JournalSizeMax=767M:JournalSizeMax=1G:" /etc/systemd/coredump.conf
+sed -i "s:#HandleLidSwitch=suspend:HandleLidSwitch=ignore:g" /etc/systemd/logind.conf
+sed -i "s:#DefaultTimeoutStopSec=90s:DefaultTimeoutStopSec=30s:g" /etc/systemd/system.conf
+
+install -dm755 /lib/firmware
+
+cp -a /media/ntfs/Other/Linux/kernel_firmware/* /lib/firmware
+
+find /lib/firmware -type d -exec chmod 755 {} \;
+find /lib/firmware -type f -exec chmod 644 {} \;
+
+systemctl enable lightdm
+
+echo "Entering password for user root:"
+passwd
+echo "Entering password for user armin:"
+passwd armin
+
+rm -f /etc/group- /etc/gshadow- /etc/passwd- /etc/shadow-
+
+install -dm755 /boot/syslinux
+
+install -m644 /media/ntfs/Other/Linux/conf/syslinux/* /boot/syslinux
+install -m644 /usr/lib/syslinux/*.c32 /boot/syslinux
+
+cat << "EOF"
+Now run the following from outside the chroot
+
+export LFS=/mnt/lfs
+
+for D in AccountsService alsa bluetooth lightdm-data \
+         git mysql NetworkManager postgresql upower  \
+         systemd/backlight systemd/rfkill
+do
+  rm -rf $LFS/var/lib/${D}
+  cp -a /var/lib/${D} $LFS/var/lib/${D}
+done
+EOF

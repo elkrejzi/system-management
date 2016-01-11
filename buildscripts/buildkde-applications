@@ -140,10 +140,6 @@ case $(basename $0) in
   buildgwenview )
     export PKGNAME=gwenview
   ;;
-  buildk3b )
-    export PKGNAME=k3b
-    export PKGVER=2.9.90+d5b1016
-  ;;
   buildkate )
     export PKGNAME=kate
   ;;
@@ -184,10 +180,6 @@ EOF
   ;;
   buildkwalletmanager )
     export PKGNAME=kwalletmanager
-  ;;
-  buildlibkcddb )
-    export PKGNAME=libkcddb
-    export PKGVER=4.13.80+1b6ba68
   ;;
   buildlibkdcraw )
     export PKGNAME=libkdcraw
