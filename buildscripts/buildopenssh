@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=openssh
-export PKGVER=7.1p1
+export PKGVER=7.1p2
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
@@ -21,6 +21,9 @@ export CONFIGURE_FLAGS=(--sysconfdir=/etc/ssh
                         --with-xauth=/usr/bin/xauth
                         --with-default-path=/usr/local/bin:/usr/bin:/bin
                         --with-superuser-path=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin)
+
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
 
 make_install_post() {
   rm -rf ${DEST}/var

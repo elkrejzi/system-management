@@ -7,6 +7,9 @@ export PKGURL="https://downloads.sourceforge.net/djvu/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--disable-desktopfiles)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 make_install_post() {
   for sz in 22 32 48 64
   do

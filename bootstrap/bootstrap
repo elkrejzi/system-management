@@ -37,4 +37,6 @@ $(dirname $0)/034-openssl
 $(dirname $0)/035-ca-certs
 $(dirname $0)/036-wget
 $(dirname $0)/037-nano
-$(dirname $0)/038-clean
+$(dirname $0)/038-libffi
+$(dirname $0)/039-llvm
+$(dirname $0)/040-clean

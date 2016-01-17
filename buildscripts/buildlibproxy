@@ -11,4 +11,7 @@ export CMAKE_FLAGS=(-DCMAKE_SKIP_RPATH=ON
                     -DWITH_WEBKIT=OFF
                     -DWITH_KDE4=OFF)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 . $(dirname $0)/master.sh

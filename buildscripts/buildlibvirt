@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libvirt
-export PKGVER=1.3.0
+export PKGVER=1.3.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://libvirt.org/sources/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
@@ -9,6 +9,9 @@ export KEEP_EMPTY_DIRS=1
 export CONFIGURE_FLAGS=(--with-init-script=systemd
                         --with-qemu-user=nobody
                         --with-qemu-group=nogroup)
+
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
 
 make_post() {
   sed -i 's|/etc/sysconfig/|/etc/default/|' daemon/libvirtd.service src/virtlockd.service tools/libvirt-guests.service tools/libvirt-guests.sh tools/virt-pki-validate

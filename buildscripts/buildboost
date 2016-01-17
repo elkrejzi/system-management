@@ -9,7 +9,8 @@ export PKGURL="https://downloads.sourceforge.net/boost/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
 configure_override() {
-  ./bootstrap.sh --with-toolset=gcc --with-icu
+  #./bootstrap.sh --with-toolset=gcc --with-icu
+  ./bootstrap.sh --with-toolset=clang --with-icu
 }
 
 make_override() {
@@ -17,7 +18,8 @@ make_override() {
 }
 
 make_install_override() {
-  ./b2 install threading=multi variant=release link=shared runtime-link=shared toolset=gcc cflags="${CFLAGS}" --prefix=${DEST}/usr ${MAKE_JOBS_FLAGS}
+  #./b2 install threading=multi variant=release link=shared runtime-link=shared toolset=gcc cflags="${CFLAGS}" cxxflags="${CXXFLAGS}" --prefix=${DEST}/usr ${MAKE_JOBS_FLAGS}
+  ./b2 install threading=multi variant=release link=shared runtime-link=shared toolset=clang cflags="${CFLAGS}" cxxflags="${CXXFLAGS} -stdlib=libc++" linkflags="-stdlib=libc++" --prefix=${DEST}/usr ${MAKE_JOBS_FLAGS}
 }
 
 . $(dirname $0)/master.sh

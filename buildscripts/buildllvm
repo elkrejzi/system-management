@@ -3,6 +3,11 @@
 export PKGNAME=llvm
 export PKGVER=3.7.1
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++"
+export DEFAULT_CC_M32="clang -m32"
+export DEFAULT_CXX_M32="clang++ -m32"
+
 proj=(
   cfe
   clang-tools-extra
@@ -126,16 +131,20 @@ export MULTILIB_BUILD=1
 
 
 export SHARED_FLAGS=(-DCLANG_INCLUDE_TESTS=OFF
+                     -DCOMPILER_RT_INCLUDE_TESTS=OFF
                      -DLLVM_BUILD_LLVM_DYLIB=ON
                      -DLLVM_DYLIB_EXPORT_ALL=ON
                      -DLLVM_ENABLE_DOXYGEN=OFF
                      -DLLVM_ENABLE_FFI=ON
+                     -DLLVM_ENABLE_LIBCXX=ON
                      -DLLVM_ENABLE_LIBCXXABI=ON
                      -DLLVM_ENABLE_RTTI=ON
                      -DLLVM_INCLUDE_EXAMPLES=OFF
                      -DLLVM_INCLUDE_TESTS=OFF
                      -DLLVM_LINK_LLVM_DYLIB=ON
                      -DLIBCXX_ENABLE_ASSERTIONS=OFF
+                     -DLIBCXX_INCLUDE_DOCS=OFF
+                     -DLIBCXX_INCLUDE_TESTS=OFF
                      -DLIBCXXABI_ENABLE_ASSERTIONS=OFF
                      -DLIBCXXABI_ENABLE_STATIC=OFF
                      -DLIBCXXABI_USE_LLVM_UNWINDER=ON

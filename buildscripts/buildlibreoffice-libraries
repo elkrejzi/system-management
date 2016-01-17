@@ -5,6 +5,9 @@ export USER_CFLAGS="-DBOOST_ERROR_CODE_HEADER_ONLY -DBOOST_SYSTEM_NO_DEPRECATED"
 export USER_CXXFLAGS="-DBOOST_ERROR_CODE_HEADER_ONLY -DBOOST_SYSTEM_NO_DEPRECATED"
 export MAKE_JOBS_FLAGS="-j4"
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 case $(basename $0) in
   buildcppunit )
     export PKGNAME=cppunit
@@ -55,7 +58,7 @@ case $(basename $0) in
   ;;
   buildlibetonyek )
     export PKGNAME=libetonyek
-    export PKGVER=0.1.5
+    export PKGVER=0.1.6
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://dev-www.libreoffice.org/src/libetonyek/${PKGTAR}"
   ;;
@@ -71,12 +74,14 @@ case $(basename $0) in
     export PKGVER=0.1.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://dev-www.libreoffice.org/src/libfreehand/${PKGTAR}"
+    export PATCHES_LIST=("libfreehand-fixes.patch")
   ;;
   buildlibgltf )
     export PKGNAME=libgltf
     export PKGVER=0.0.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://dev-www.libreoffice.org/src/libgltf/${PKGTAR}"
+    export CONFIGURE_FLAGS=(--disable-werror)
     unset INSTALL_CMD
   ;;
   buildlibixion )
@@ -88,7 +93,7 @@ case $(basename $0) in
   ;;
   buildliblangtag )
     export PKGNAME=liblangtag
-    export PKGVER=0.5.7
+    export PKGVER=0.5.8
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="https://bitbucket.org/tagoh/liblangtag/downloads/${PKGTAR}"
     unset INSTALL_CMD
@@ -117,6 +122,7 @@ case $(basename $0) in
     export PKGVER=0.7.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://kohei.us/files/ixion/src/${PKGTAR}"
+    export CONFIGURE_FLAGS=(--disable-werror)
   ;;
   buildlibpagemaker )
     export PKGNAME=libpagemaker
@@ -126,7 +132,7 @@ case $(basename $0) in
   ;;
   buildlibrevenge )
     export PKGNAME=librevenge
-    export PKGVER=0.0.3
+    export PKGVER=0.0.4
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://downloads.sourceforge.net/libwpd/${PKGTAR}"
     unset INSTALL_CMD
@@ -210,16 +216,16 @@ case $(basename $0) in
     $(dirname $0)/buildlibrevenge
     $(dirname $0)/buildrasqal
     $(dirname $0)/buildlibixion
+    $(dirname $0)/buildliblangtag
     $(dirname $0)/buildlibwpd
     $(dirname $0)/buildlibabw
     $(dirname $0)/buildlibcdr
     $(dirname $0)/buildlibcmis
-    $(dirname $0)/buildlibe
+    $(dirname $0)/buildlibe-book
     $(dirname $0)/buildlibetonyek
     $(dirname $0)/buildlibexttextcat
     $(dirname $0)/buildlibfreehand
     $(dirname $0)/buildlibgltf
-    $(dirname $0)/buildliblangtag
     $(dirname $0)/buildlibmspub
     $(dirname $0)/buildlibmwaw
     $(dirname $0)/buildlibodfgen

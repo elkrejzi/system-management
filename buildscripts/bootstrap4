@@ -224,8 +224,6 @@ $(dirname $0)/buildopenmpi
 $(dirname $0)/buildqrupdate
 $(dirname $0)/buildSuiteSparse
 $(dirname $0)/buildarpack-ng
-$(dirname $0)/buildlibgcrypt15
-$(dirname $0)/buildlibpng12
 
 find /binary -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
 

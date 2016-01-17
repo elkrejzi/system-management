@@ -75,7 +75,7 @@ case $(basename $0) in
   ;;
   buildgtksourceview )
     export PKGNAME=gtksourceview
-    export PKGVER=3.18.1
+    export PKGVER=3.18.2
   ;;
   buildgtk-vnc )
     export PKGNAME=gtk-vnc
@@ -182,5 +182,8 @@ if [ -z ${PKGURL} ]
 then
   export PKGURL="http://ftp.gnome.org/pub/gnome/sources/${PKGNAME}/${PKGVER:0:4}/${PKGTAR}"
 fi
+
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
 
 . $(dirname $0)/master.sh

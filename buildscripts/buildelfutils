@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=elfutils
-export PKGVER=0.164
+export PKGVER=0.165
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://fedorahosted.org/releases/e/l/elfutils/${PKGVER}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

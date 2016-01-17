@@ -667,4 +667,9 @@ ln -sf /tools/lib/libstdc++.so{,.6} ${LFS}/usr/lib
 ln -sf /tools/lib32/libgcc_s.so{,.1} ${LFS}/usr/lib32
 ln -sf /tools/lib32/libstdc++.so{,.6} ${LFS}/usr/lib32
 
+ln -sf /tools/lib/libc++.so{,.1} ${LFS}/usr/lib
+ln -sf /tools/lib/libc++abi.so{,.1} ${LFS}/usr/lib
+ln -sf /tools/lib32/libc++.so{,.1} ${LFS}/usr/lib32
+ln -sf /tools/lib32/libc++abi.so{,.1} ${LFS}/usr/lib32
+
 ln -sf bash ${LFS}/bin/sh

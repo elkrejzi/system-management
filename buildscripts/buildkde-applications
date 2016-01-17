@@ -1,9 +1,12 @@
 #!/bin/bash -e
 
-export PKGVER=15.12.0
+export PKGVER=15.12.1
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export KEEP_DOC=1
+
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
 
 export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
                     -DLIB_INSTALL_DIR=lib
@@ -167,7 +170,7 @@ EOF
   ;;
   buildkile )
     export PKGNAME=kile
-    export PKGVER=2.1+6e914a7
+    export PKGVER=2.1+78f81fb
   ;;
   buildkio-extras )
     export PKGNAME=kio-extras
@@ -195,7 +198,7 @@ EOF
   ;;
   buildokular )
     export PKGNAME=okular
-    export PKGVER=15.08.0+709121c
+    export PKGVER=15.08.2+0772330
   ;;
   buildskanlite )
     export PKGNAME=skanlite

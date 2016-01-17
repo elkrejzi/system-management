@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=cgit
-export PKGVER=0.11.2
+export PKGVER=0.12
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://git.zx2c4.com/cgit/snapshot/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
@@ -10,6 +10,7 @@ export POSTINST_TRIGGER=("getent group httpd > /dev/null && getent passwd httpd 
                          "if [ ! -e /etc/cgitrc ]" "then" "  cp -r /etc/cgitrc.dist /etc/cgitrc" "fi")
 
 export MAKE_INSTALL_FLAGS="CGIT_SCRIPT_PATH=/usr/share/cgit prefix=/usr"
+export DEFAULT_CC="clang"
 
 configure_override() {
   make get-git

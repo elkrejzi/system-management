@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=dhcp
-export PKGVER=4.3.3
+export PKGVER=4.3.3-P1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="ftp://ftp.isc.org/isc/dhcp/${PKGVER}/${PKGTAR}"
 export KEEP_EMPTY_DIRS=1
@@ -17,6 +17,8 @@ export CONFIGURE_FLAGS=(--sysconfdir=/etc/dhcp
                         --with-srv6-lease-file=/var/lib/dhcpd/dhcpd6.leases
                         --with-cli-lease-file=/var/lib/dhclient/dhclient.leases
                         --with-cli6-lease-file=/var/lib/dhclient/dhclient6.leases)
+
+export DEFAULT_CC="clang"
 
 make_install_override() {
   make -C dhcpctl install DESTDIR=${DEST}/client

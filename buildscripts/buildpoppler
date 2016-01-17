@@ -1,15 +1,18 @@
 #!/bin/bash -e
 
 export PKGNAME=poppler
-export PKGVER=0.39.0
+export PKGVER=0.40.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://poppler.freedesktop.org/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--enable-xpdf-headers)
 export CONFIGURE_FLAGS_32=(--libdir=/usr/lib --enable-static)
-export DEFAULT_CC_M32="gcc"
-export DEFAULT_CXX_M32="g++"
+
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+export DEFAULT_CC_M32="clang"
+export DEFAULT_CXX_M32="clang++ -stdlib=libc++"
 
 configure_pre_32() {
   unset PKG_CONFIG_PATH

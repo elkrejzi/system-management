@@ -1,0 +1,22 @@
+--- a/src/lib/FHPath.h	2015-05-18 06:50:01.000000000 +0200
++++ b/src/lib/FHPath.h	2016-01-16 18:15:06.715857561 +0100
+@@ -16,7 +16,7 @@
+ namespace libfreehand
+ {
+ 
+-class FHTransform;
++struct FHTransform;
+ 
+ class FHPathElement
+ {
+--- a/src/lib/Makefile.am	2015-05-13 18:54:40.000000000 +0200
++++ b/src/lib/Makefile.am	2016-01-16 18:15:03.080740498 +0100
+@@ -56,7 +56,7 @@
+ 
+ $(top_builddir)/src/lib/tokenhash.h : $(top_builddir)/src/lib/tokens.gperf
+ 	$(GPERF) --compare-strncmp -C -m 20 $(top_builddir)/src/lib/tokens.gperf \
+-		| $(SED) -e 's/(char\*)0/(char\*)0, 0/g' > $(top_builddir)/src/lib/tokenhash.h
++		| $(SED) -e 's/(char\*)0/(char\*)0, 0/g' -e 's/register //g' > $(top_builddir)/src/lib/tokenhash.h
+ 
+ $(top_builddir)/src/lib/tokens.gperf : $(top_srcdir)/src/lib/tokens.txt gentoken.pl
+ 	perl $(top_srcdir)/src/lib/gentoken.pl $(top_srcdir)/src/lib/tokens.txt \

@@ -9,6 +9,9 @@ export MAKE_JOBS_FLAGS="-j4"
 export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
 export PATCHES_LIST=("id3lib.patch")
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 configure_pre() {
   libtoolize -fc
   aclocal

@@ -1,0 +1,105 @@
+#!/bin/bash -e
+
+. $(dirname $0)/000_shared
+
+proj=(
+  cfe
+  compiler-rt
+  libcxx
+  libcxxabi
+  libunwind
+  openmp
+)
+
+cmake_shared=(
+  -DCMAKE_INSTALL_PREFIX=/tools
+  -DCMAKE_BUILD_TYPE=Release
+  -DCLANG_ENABLE_ARCMT=OFF
+  -DCLANG_ENABLE_STATIC_ANALYZER=OFF
+  -DCLANG_INCLUDE_TESTS=OFF
+  -DCOMPILER_RT_INCLUDE_TESTS=OFF
+  -DLLVM_BUILD_LLVM_DYLIB=ON
+  -DLLVM_ENABLE_FFI=ON
+  -DLLVM_ENABLE_LIBCXXABI=ON
+  -DLLVM_ENABLE_RTTI=ON
+  -DLLVM_INCLUDE_DOCS=OFF
+  -DLLVM_INCLUDE_EXAMPLES=OFF
+  -DLLVM_INCLUDE_TESTS=OFF
+  -DLLVM_LINK_LLVM_DYLIB=ON
+  -DLIBCXX_ENABLE_ASSERTIONS=OFF
+  -DLIBCXX_INCLUDE_DOCS=OFF
+  -DLIBCXX_INCLUDE_TESTS=OFF
+  -DLIBCXXABI_ENABLE_ASSERTIONS=OFF
+  -DLIBCXXABI_ENABLE_STATIC=OFF
+  -DLIBCXXABI_USE_LLVM_UNWINDER=ON
+  -DLIBUNWIND_ENABLE_ASSERTIONS=OFF
+  -DLIBUNWIND_ENABLE_SHARED=OFF
+  -DLLVM_TARGETS_TO_BUILD="X86"
+)
+
+for dir in llvm ${proj[@]}
+do
+  rm -rf ${dir}
+done
+
+for proj in llvm ${proj[@]}
+do
+  if [ -e $HOME/git/${proj}.tar.xz ]
+  then
+    tar xf $HOME/git/${proj}.tar.xz
+    pushd ${proj}
+      svn up
+    popd
+    else
+      svn co http://llvm.org/svn/llvm-project/${proj}/trunk ${proj}
+    fi
+
+  if [ ${proj} == "cfe" ]
+  then
+    sed -i "/ld-linux-x86-64/s/lib64/lib/" cfe/lib/Driver/Tools.cpp
+    mv ${proj} llvm/tools/clang
+  elif [ ${proj} != "cfe" ] && [ ${proj} != "llvm" ]
+  then
+    mv ${proj} llvm/projects
+  fi
+done
+
+pushd llvm
+  LLVM_VER=$(grep "PACKAGE_VERSION=" configure | cut -d \' -f 2)$(svn info | grep "Revision:" | awk '{print $2}')
+  export LLVM_VER=${LLVM_VER/svn/.svn}
+
+  sed -i "s:CLANG_HAVE_LIBXML 1:CLANG_HAVE_LIBXML 0:g" tools/clang/CMakeLists.txt
+popd
+
+rm -rf llvm-build llvm-build32 ${LOGDIR}/llvm-${LLVM_VER}.log
+
+install -dm755 llvm-build llvm-build32
+
+{
+
+  time {
+  pushd llvm-build
+    cmake ${cmake_shared[@]} ../llvm
+    make
+    make install
+  popd
+
+  export CC="gcc -m32"
+  export CXX="g++ -m32"
+
+  pushd llvm-build32
+    cmake ${cmake_shared[@]} -DLLVM_LIBDIR_SUFFIX=32 -DLLVM_TARGET_ARCH=i686 -DLLVM_DEFAULT_TARGET_TRIPLE=i686-pc-linux-gnu ../llvm
+    make -C projects/libcxx
+
+    for dir in libcxx libcxxabi libunwind
+    do
+      make -C projects/${dir} install DESTDIR=$PWD/dest
+    done
+  popd
+  }
+
+} 2>&1 | tee ${LOGDIR}/llvm-${LLVM_VER}.log
+
+[ $PIPESTATUS = 0 ] || exit $PIPESTATUS
+
+rm -rf llvm-build llvm-build32 llvm

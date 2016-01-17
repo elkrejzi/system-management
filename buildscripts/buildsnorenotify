@@ -7,6 +7,12 @@ export PKGURL="https://github.com/KDE/snorenotify/archive/v${PKGVER}.tar.gz"
 export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
-export CMAKE_FLAGS=(-DCMAKE_INSTALL_LIBDIR=lib -DWITH_QT4=OFF)
+export CMAKE_FLAGS=(-DLIB_INSTALL_DIR=lib
+                    -DBUILD_TESTING=OFF
+                    -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins
+                    -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules)
+
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
 
 . $(dirname $0)/master.sh

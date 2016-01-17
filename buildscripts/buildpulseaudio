@@ -1,8 +1,9 @@
 #!/bin/bash -e
 
 export PKGNAME=pulseaudio
-export PKGVER=7.1
-export SHLIBVER=${PKGVER}
+export PKGVER=7.99.2
+export SHLIBVER=7.99
+#export SHLIBVER=${PKGVER}
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://freedesktop.org/software/pulseaudio/releases/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
@@ -10,6 +11,11 @@ export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--disable-bluez4 --disable-rpath --with-module-dir=/usr/lib/pulse/modules)
 export CONFIGURE_FLAGS_32=(--disable-bluez4 --disable-rpath --with-module-dir=/usr/lib/pulse/modules)
+
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+export DEFAULT_CC_M32="clang -m32"
+export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
 
 _libs="libpulse.la libpulse-simple.la libpulse-mainloop-glib.la"
 _pkglibs="libpulsecommon-${SHLIBVER}.la libpulsedsp.la"

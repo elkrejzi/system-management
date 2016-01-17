@@ -8,6 +8,9 @@ export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export CMAKE_FLAGS=(-Dbuild_search=ON -Dbuild_wizard=ON -Duse_libclang=ON)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 make_install_post() {
   install -dm755 ${DEST}/usr/share/man/man1
   install -m644  ../${PKGDIR}/doc/*.1 ${DEST}/usr/share/man/man1

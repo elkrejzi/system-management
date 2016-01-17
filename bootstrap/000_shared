@@ -74,7 +74,8 @@ ZLIB_VER=1.2.8
 LIBARCHIVE_VER=3.1.2
 OPENSSL_VER=1.0.2e
 WGET_VER=1.17.1
-NANO_VER=2.5.0
+NANO_VER=2.5.1
+LIBFFI_VER=3.2.1
 
 if [ ! -z $1 ]
 then
@@ -118,9 +119,11 @@ http://libarchive.org/downloads/libarchive-${LIBARCHIVE_VER}.tar.gz
 https://www.openssl.org/source/openssl-${OPENSSL_VER}.tar.gz
 ${GNU_MIRROR}/wget/wget-${WGET_VER}.tar.xz
 ${GNU_MIRROR}/nano/nano-${NANO_VER}.tar.gz
+ftp://sourceware.org/pub/libffi/libffi-${LIBFFI_VER}.tar.gz
 
 https://raw.githubusercontent.com/elkrejzi/system-management/master/patches/gcc-pure64.patch
 https://raw.githubusercontent.com/elkrejzi/system-management/master/patches/glibc-pure64.patch
+https://raw.githubusercontent.com/elkrejzi/system-management/master/patches/libffi.patch
 EOF
 
     if [ ! -z "${LINUX_PATCH_VER}" ]

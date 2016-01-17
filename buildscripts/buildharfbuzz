@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=harfbuzz
-export PKGVER=1.1.2
+export PKGVER=1.1.3
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://www.freedesktop.org/software/harfbuzz/release/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
@@ -9,5 +9,9 @@ export DEBUG_BUILD=1
 export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--with-gobject --with-graphite2)
 export CONFIGURE_FLAGS_32=("${CONFIGURE_FLAGS[@]}" --disable-introspection)
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+export DEFAULT_CC_M32="clang -m32"
+export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
 
 . $(dirname $0)/master.sh

@@ -11,6 +11,9 @@ export MAKE_JOBS_FLAGS="-j4"
 export PATH_TO_SOURCE="../../source"
 export CMAKE_BUILD=1
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 make_install_post() {
   find ${DEST} -name "*.a" -delete
 }

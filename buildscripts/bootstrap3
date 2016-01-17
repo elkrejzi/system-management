@@ -121,6 +121,7 @@ $(dirname $0)/buildlibrevenge
 $(dirname $0)/buildnet-snmp
 $(dirname $0)/buildrasqal
 $(dirname $0)/buildlibixion
+$(dirname $0)/buildliblangtag
 $(dirname $0)/buildlibwpd
 $(dirname $0)/buildlibabw
 $(dirname $0)/buildlibcdr
@@ -130,7 +131,6 @@ $(dirname $0)/buildlibetonyek
 $(dirname $0)/buildlibexttextcat
 $(dirname $0)/buildlibfreehand
 $(dirname $0)/buildlibgltf
-$(dirname $0)/buildliblangtag
 $(dirname $0)/buildlibmspub
 $(dirname $0)/buildlibmwaw
 $(dirname $0)/buildlibodfgen

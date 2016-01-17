@@ -1,13 +1,16 @@
 #!/bin/bash -e
 
 export PKGNAME=sqlite
-export PKGVER=3.10.0
-export PKGDLVER=3100000
+export PKGVER=3.10.1
+export PKGDLVER=3100100
 export PKGTAR=${PKGNAME}-autoconf-${PKGDLVER}.tar.gz
 export PKGDIR=${PKGNAME}-autoconf-${PKGDLVER}
 export PKGURL="http://sqlite.org/2016/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
+
+export DEFAULT_CC="clang"
+export DEFAULT_CC_M32="clang -m32"
 
 export USER_CFLAGS="-DSQLITE_ENABLE_FTS3=1 \
                     -DSQLITE_ENABLE_COLUMN_METADATA=1 \

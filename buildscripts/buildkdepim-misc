@@ -1,9 +1,12 @@
 #!/bin/bash -e
 
-export PKGVER=15.12.0
+export PKGVER=15.12.1
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export KEEP_DOC=1
+
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
 
 export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
                     -DLIB_INSTALL_DIR=lib

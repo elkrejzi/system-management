@@ -1,9 +1,37 @@
 #!/bin/bash -e
 
-export PKGVER=15.12.0
+export PKGVER=15.12.1
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export KEEP_DOC=1
+
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
+if [ $(basename $0) == "buildkmime" ]
+then
+  configure_pre() {
+    sed -i "s#stdlib.h#cmath#g" ../${PKGDIR}/src/kmime_dateformatter.cpp
+  }
+fi
+
+if [ $(basename $0) == "buildkdepimlibs" ]
+then
+  configure_pre() {
+    sed -i "s#stdlib.h#cmath#g" ../${PKGDIR}/kioslave/src/nntp/nntp.cpp
+  }
+
+  configure_post() {
+    sed -i 's:^:#include "/usr/include/c++/v1/exception" //:g' akonadi/src/core/std_exception.h
+  }
+fi
+
+if [ $(basename $0) == "buildakonadi-search" ]
+then
+  configure_pre() {
+    sed -i "/akonadisearchdebugdialog.h/i #include <errno.h>" ../${PKGDIR}/debug/akonadisearchdebugdialog.cpp
+  }
+fi
 
 build_all() {
   export PKG_AUTO_INSTALL=1

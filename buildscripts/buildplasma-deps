@@ -28,6 +28,7 @@ case $(basename $0) in
                         -DPHONON_INSTALL_QT_EXTENSIONS_INTO_SYSTEM_QT=ON)
     configure_pre() {
       sed -i "s:BSD_SOURCE:DEFAULT_SOURCE:g" ../${PKGDIR}/cmake/FindPhononInternal.cmake
+      sed -i 's|#include <QtCore/QtGlobal>|#define QT_NO_VERSION_TAGGING 1\n &|'  ../${PKGDIR}/cmake/FindPhononInternal.cmake
     }
   ;;
   buildphonon-backend-gstreamer )
@@ -74,5 +75,8 @@ esac
 export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
+
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
 
 . $(dirname $0)/master.sh

@@ -1,0 +1,18 @@
+--- a/interfaces/cc/aspell.h	2011-07-02 23:53:27.000000000 +0200
++++ b/interfaces/cc/aspell.h	2016-01-13 11:40:23.460404068 +0100
+@@ -237,6 +237,7 @@
+ /******************************** errors ********************************/
+ 
+ 
++#ifndef __cplusplus
+ extern const struct AspellErrorInfo * const aerror_other;
+ extern const struct AspellErrorInfo * const aerror_operation_not_supported;
+ extern const struct AspellErrorInfo * const   aerror_cant_copy;
+@@ -322,6 +323,7 @@
+ extern const struct AspellErrorInfo * const   aerror_bad_magic;
+ extern const struct AspellErrorInfo * const aerror_expression;
+ extern const struct AspellErrorInfo * const   aerror_invalid_expression;
++#endif
+ 
+ 
+ /******************************* speller *******************************/
