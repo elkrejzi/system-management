@@ -3,7 +3,7 @@
 export PKGNAME=gnome-keyring
 export PKGVER=3.16.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-export PKGURL="http://ftp.gnome.org/pub/gnome/sources/gnome-keyring/${PKGVER:0:4}/${PKGTAR}"
+export PKGURL="https://download.gnome.org/sources/gnome-keyring/${PKGVER:0:4}/${PKGTAR}"
 export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export POSTINST_TRIGGER=("setcap cap_ipc_lock=ep /usr/bin/gnome-keyring-daemon")

@@ -3,7 +3,7 @@
 export PKGNAME=NetworkManager
 export PKGVER=1.0.10
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-export PKGURL="http://ftp.gnome.org/pub/gnome/sources/NetworkManager/${PKGVER:0:3}/${PKGTAR}"
+export PKGURL="https://download.gnome.org/sources/NetworkManager/${PKGVER:0:3}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1
 export CONFIGURE_FLAGS=(--enable-doc \

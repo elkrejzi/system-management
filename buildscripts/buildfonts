@@ -58,7 +58,7 @@ EOF
 
     # Begin cantarell
 
-    wget -c http://ftp.gnome.org/pub/gnome/sources/cantarell-fonts/0.0/cantarell-fonts-${CANTARELL_VER}.tar.xz -O - | tar xfJ -
+    wget -c https://download.gnome.org/sources/cantarell-fonts/0.0/cantarell-fonts-${CANTARELL_VER}.tar.xz -O - | tar xfJ -
 
     export DEST=/binary/fonts/fonts-cantarell-${CANTARELL_VER}
 

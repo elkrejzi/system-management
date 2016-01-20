@@ -54,7 +54,7 @@ case $(basename $0) in
     export PKGNAME=gnome-nettool
     export PKGVER=3.8.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://ftp.gnome.org/pub/gnome/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
+    export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
   ;;
   buildgnome-power-manager )
     export PKGNAME=gnome-power-manager
@@ -86,7 +86,7 @@ case $(basename $0) in
     export PKGNAME=network-manager-applet
     export PKGVER=1.0.10
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://ftp.gnome.org/pub/gnome/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
+    export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
     export CONFIGURE_FLAGS=(--disable-migration)
   ;;
   buildseahorse )
@@ -111,7 +111,7 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
 if [ -z ${PKGURL} ]
 then
-  export PKGURL="http://ftp.gnome.org/pub/gnome/sources/${PKGNAME}/${PKGVER:0:4}/${PKGTAR}"
+  export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:4}/${PKGTAR}"
 fi
 
 . $(dirname $0)/master.sh

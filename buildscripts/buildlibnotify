@@ -3,7 +3,7 @@
 export PKGNAME=libnotify
 export PKGVER=0.7.6
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-export PKGURL="http://ftp.gnome.org/pub/gnome/sources/libnotify/${PKGVER:0:3}/${PKGTAR}"
+export PKGURL="https://download.gnome.org/sources/libnotify/${PKGVER:0:3}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
 . $(dirname $0)/master.sh

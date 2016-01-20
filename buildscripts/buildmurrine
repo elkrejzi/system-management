@@ -3,7 +3,7 @@
 export PKGNAME=murrine
 export PKGVER=0.98.2
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-export PKGURL="http://ftp.gnome.org/pub/gnome/sources/murrine/${PKGVER:0:3}/${PKGTAR}"
+export PKGURL="https://download.gnome.org/sources/murrine/${PKGVER:0:3}/${PKGTAR}"
 export DEST=/binary/mate/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--enable-animation --enable-animationrtl)

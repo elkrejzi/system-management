@@ -166,14 +166,14 @@ EOF
     export PKGNAME=clutter-gtk
     export PKGVER=1.6.6
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://ftp.gnome.org/pub/gnome/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
+    export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
     unset MULTILIB_BUILD
   ;;
   buildclutter-gst )
     export PKGNAME=clutter-gst
     export PKGVER=3.0.14
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://ftp.gnome.org/pub/gnome/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
+    export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
     unset MULTILIB_BUILD
   ;;
 esac
@@ -187,7 +187,7 @@ fi
 
 if [ -z ${PKGURL} ]
 then
-  export PKGURL="http://ftp.gnome.org/pub/gnome/sources/${PKGNAME}/${PKGVER:0:4}/${PKGTAR}"
+  export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:4}/${PKGTAR}"
 fi
 
 . $(dirname $0)/master.sh
