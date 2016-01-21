@@ -1,12 +1,15 @@
 #!/bin/bash -e
 
 export PKGNAME=gparted
-export PKGVER=0.24.0
-export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGVER=0.25.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://downloads.sourceforge.net/gparted/${PKGTAR}"
 export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--disable-doc)
+
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
 
 make_install_post() {
   install -dm755 ${DEST}/usr/share/polkit-1/actions

@@ -1,12 +1,1 @@
-#!/bin/bash -e
-
-export PKGNAME=gnome-video-effects
-export PKGVER=0.4.1
-export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-export PKGURL="https://download.gnome.org/sources/gnome-video-effects/${PKGVER:0:3}/${PKGTAR}"
-export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
-export MAKE_JOBS_FLAGS="-j4"
-export KEEP_STATIC=1
-export NO_STRIP=1
-
-. $(dirname $0)/master.sh
+buildgnome-platform

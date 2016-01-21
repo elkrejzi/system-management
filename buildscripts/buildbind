@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=bind
-export PKGVER=9.10.3-P2
+export PKGVER=9.10.3-P3
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="ftp://ftp.isc.org/isc/bind/${PKGVER}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
@@ -16,6 +16,8 @@ export CONFIGURE_FLAGS=(--sysconfdir=/etc/bind
                         --with-dlz-bdb
                         --with-dlz-ldap
                         --with-dlz-odbc=/usr)
+
+export DEFAULT_CC="clang"
 
 configure_post() {
   sed  -i "/DLZDRIVER_LIBS/s:ldb:& -lodbc:" bin/named/Makefile

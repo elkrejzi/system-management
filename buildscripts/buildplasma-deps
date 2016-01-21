@@ -75,8 +75,9 @@ esac
 export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
+export USER_CXXFLAGS="-stdlib=libc++"
 
 export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
+export DEFAULT_CXX="clang++"
 
 . $(dirname $0)/master.sh

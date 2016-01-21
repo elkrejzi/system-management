@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+export PKGNAME=cups-pk-helper
+export PKGVER=0.2.5
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
+export PKGURL="http://www.freedesktop.org/software/cups-pk-helper/releases/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+export CC="clang"
+
+. $(dirname $0)/master.sh

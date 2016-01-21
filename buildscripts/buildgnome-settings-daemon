@@ -1,11 +1,1 @@
-#!/bin/bash -e
-
-export PKGNAME=gnome-settings-daemon
-export PKGVER=3.18.2
-export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-export PKGURL="https://download.gnome.org/sources/gnome-settings-daemon/${PKGVER:0:4}/${PKGTAR}"
-export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
-export MAKE_JOBS_FLAGS="-j4"
-export MAKE_INSTALL_FLAGS="udevrulesdir=/lib/udev/rules.d"
-
-. $(dirname $0)/master.sh
+buildgnome-platform

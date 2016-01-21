@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+export PKGNAME=xdg-user-dirs
+export PKGVER=0.15
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
+export PKGURL="http://user-dirs.freedesktop.org/releases/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+export CC="clang"
+
+. $(dirname $0)/master.sh

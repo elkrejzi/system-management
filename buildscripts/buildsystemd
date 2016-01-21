@@ -1,14 +1,17 @@
 #!/bin/bash -e
 
 export PKGNAME=systemd
-export PKGVER=228
+export PKGVER=228+e5b5f51
 export MAKE_JOBS_FLAGS="-j4"
 export DEBUG_BUILD=1
 export KEEP_EMPTY_DIRS=1
 export MULTILIB_BUILD=1
 export PATCHES_LIST=("systemd-compat.patch")
 export PATCHES_LIST_32=("systemd-compat.patch")
-export USER_CFLAGS="-fno-lto"
+export USER_CFLAGS="-fno-lto -Wno-unknown-attributes"
+
+export DEFAULT_CC="clang"
+export DEFAULT_CC_M32="clang -m32"
 
 export CONFIGURE_FLAGS=(--disable-efi
                         --disable-firstboot

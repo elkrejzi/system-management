@@ -7,13 +7,48 @@ case $(basename $0) in
     export NO_STRIP=1
     export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-update-icon-cache ] && echo \"Processing triggers for adwaita-icon-theme\" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/Adwaita")
   ;;
+  buildcaribou )
+    export PKGNAME=caribou
+    export PKGVER=0.4.19
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
+  ;;
   builddconf )
     export PKGNAME=dconf
     export PKGVER=0.24.0
   ;;
+  buildevolution-data-server )
+    export PKGNAME=evolution-data-server
+    export PKGVER=3.18.4
+    export CONFIGURE_FLAGS=(--disable-uoa
+                          --with-krb5=/usr
+                          --with-openldap
+                          --enable-vala-bindings)
+  ;;
   buildgcr )
     export PKGNAME=gcr
     export PKGVER=3.18.0
+  ;;
+  buildgdm )
+    export PKGNAME=gdm
+    export PKGVER=3.18.2
+    export KEEP_EMPTY_DIRS=1
+    export CONFIGURE_FLAGS=(--without-plymouth --with-default-pam-config=lfs)
+    export POSTINST_TRIGGER=("getent group gdm > /dev/null || groupadd -g 21 gdm"
+                             "getent passwd gdm > /dev/null || useradd -c \"GDM Daemon Owner\" -d /var/lib/gdm -g gdm -s /bin/false -u 21 gdm\n"
+                             "if [ ! -e /var/log/gdm ]" "then"
+                             "  install -dm755 -o root -g root /var/log/gdm" "fi\n"
+                             "if [ ! -e /var/lib/gdm ]" "then"
+                             "  install -dm1770 -o root -g gdm /var/lib/gdm" "fi\n"
+                             "if [ ! -e /var/cache/gdm ]" "then"
+                             "  install -dm1755 -o root -g gdm /var/cache/gdm" "fi\n"
+                             "if [ ! -e /run/gdm ]" "then"
+                             "  install -dm711 -o root -g gdm /run/gdm"
+                             "  install -dm755 -o gdm  -g gdm /run/gdm/greeter" "fi")
+    make_install_post() {
+      rm -rf ${DEST}/var
+      sed -i "/user = gdm/d" ${DEST}/etc/pam.d/gdm-launch-environment
+    }
   ;;
   buildgeocode-glib )
     export PKGNAME=geocode-glib
@@ -37,15 +72,65 @@ case $(basename $0) in
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
     export CONFIGURE_FLAGS=(--enable-smime)
   ;;
+  buildgnome-backgrounds )
+    export PKGNAME=gnome-backgrounds
+    export PKGVER=3.18.0
+    export KEEP_STATIC=1
+    export NO_STRIP=1
+  ;;
+  buildgnome-bluetooth )
+    export PKGNAME=gnome-bluetooth
+    export PKGVER=3.18.2
+  ;;
+  buildgnome-control-center )
+    export PKGNAME=gnome-control-center
+    export PKGVER=3.18.2
+  ;;
   buildgnome-desktop )
     export PKGNAME=gnome-desktop
     export PKGVER=3.18.2
     export CONFIGURE_FLAGS=(--with-gnome-distributor=Krejzi)
   ;;
+  buildgnome-keyring )
+    export PKGNAME=gnome-keyring
+    export PKGVER=3.16.0
+    export POSTINST_TRIGGER=("setcap cap_ipc_lock=ep /usr/bin/gnome-keyring-daemon")
+    export CONFIGURE_FLAGS=(--with-pam-dir=/lib/security)
+  ;;
+  buildgnome-menus )
+    export PKGNAME=gnome-menus
+    export PKGVER=3.13.3
+  ;;
   buildgnome-online-accounts )
     export PKGNAME=gnome-online-accounts
     export PKGVER=3.18.3
     export CONFIGURE_FLAGS=(--enable-kerberos)
+  ;;
+  buildgnome-session )
+    export PKGNAME=gnome-session
+    export PKGVER=3.18.1.2
+  ;;
+  buildgnome-settings-daemon )
+    export PKGNAME=gnome-settings-daemon
+    export PKGVER=3.18.2
+    export MAKE_INSTALL_FLAGS="udevrulesdir=/lib/udev/rules.d"
+  ;;
+  buildgnome-shell )
+    export PKGNAME=gnome-shell
+    export PKGVER=3.18.3
+    export DEBUG_BUILD=1
+    make_install_post() {
+      install -dm755 ${DEST}/usr/lib/gnome-shell/mozilla
+
+      mv ${DEST}/usr/lib/mozilla/plugins/libgnome-shell-browser-plugin.so ${DEST}/usr/lib/gnome-shell/mozilla
+      ln -sf ../../gnome-shell/mozilla/libgnome-shell-browser-plugin.so ${DEST}/usr/lib/mozilla/plugins/libgnome-shell-browser-plugin.so
+    }
+  ;;
+  buildgnome-shell-extensions )
+    export PKGNAME=gnome-shell-extensions
+    export PKGVER=3.18.3
+    export KEEP_STATIC=1
+    export NO_STRIP=1
   ;;
   buildgnome-themes-standard )
     export PKGNAME=gnome-themes-standard
@@ -62,6 +147,20 @@ case $(basename $0) in
       fi
     }
   ;;
+  buildgnome-user-docs )
+    export PKGNAME=gnome-user-docs
+    export PKGVER=3.18.1
+    export KEEP_STATIC=1
+    export NO_STRIP=1
+  ;;
+  buildgnome-video-effects )
+    export PKGNAME=gnome-video-effects
+    export PKGVER=0.4.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="https://download.gnome.org/sources/gnome-video-effects/${PKGVER:0:3}/${PKGTAR}"
+    export KEEP_STATIC=1
+    export NO_STRIP=1
+  ;;
   buildgrilo )
     export PKGNAME=grilo
     export PKGVER=0.2.15
@@ -71,6 +170,7 @@ case $(basename $0) in
   buildgsettings-desktop-schemas )
     export PKGNAME=gsettings-desktop-schemas
     export PKGVER=3.18.1
+    export KEEP_STATIC=1
     export NO_STRIP=1
   ;;
   buildgtksourceview )
@@ -97,6 +197,10 @@ case $(basename $0) in
   buildlibgdata )
     export PKGNAME=libgdata
     export PKGVER=0.17.4
+  ;;
+  buildlibgee )
+    export PKGNAME=libgee
+    export PKGVER=0.18.0
   ;;
   buildlibgnome-keyring )
     export PKGNAME=libgnome-keyring
@@ -140,7 +244,7 @@ case $(basename $0) in
   ;;
   buildlibsecret )
     export PKGNAME=libsecret
-    export PKGVER=0.18.3
+    export PKGVER=0.18.4
   ;;
   buildlibsoup )
     export PKGNAME=libsoup
@@ -150,6 +254,12 @@ case $(basename $0) in
   buildlibwnck )
     export PKGNAME=libwnck
     export PKGVER=3.14.0
+  ;;
+  buildmutter )
+    export PKGNAME=mutter
+    export PKGVER=3.18.2
+    export DEBUG_BUILD=1
+    export CONFIGURE_FLAGS=(--enable-compile-warnings=minimum)
   ;;
   buildrest )
     export PKGNAME=rest
@@ -185,5 +295,7 @@ fi
 
 export DEFAULT_CC="clang"
 export DEFAULT_CXX="clang++ -stdlib=libc++"
+export DEFAULT_CC_M32="clang -m32"
+export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
 
 . $(dirname $0)/master.sh

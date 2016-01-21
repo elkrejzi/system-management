@@ -204,6 +204,7 @@ case $(basename $0) in
 esac
 
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export DEST=/binary/xorg/lib/${PKGNAME}-${PKGVER}
 
 if [ -z ${PKGURL} ]
 then
@@ -212,6 +213,5 @@ fi
 
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
-export DEST=/binary/xorg/lib/${PKGNAME}-${PKGVER}
 
 . $(dirname $0)/master.sh

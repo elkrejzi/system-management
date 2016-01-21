@@ -196,6 +196,7 @@ $(dirname $0)/buildswig
 $(dirname $0)/buildunixODBC
 $(dirname $0)/buildusbutils
 $(dirname $0)/buildwayland
+$(dirname $0)/buildwayland-protocols
 $(dirname $0)/buildyasm
 $(dirname $0)/buildcyrus-sasl 1
 $(dirname $0)/buildopenldap

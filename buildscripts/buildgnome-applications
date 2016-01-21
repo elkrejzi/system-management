@@ -40,11 +40,20 @@ case $(basename $0) in
   ;;
   buildgedit )
     export PKGNAME=gedit
-    export PKGVER=3.18.2
+    export PKGVER=3.18.3
   ;;
   buildgnome-calculator )
     export PKGNAME=gnome-calculator
     export PKGVER=3.18.2
+  ;;
+  buildgnome-color-manager )
+    export PKGNAME=gnome-color-manager
+    export PKGVER=3.18.0
+    export CONFIGURE_FLAGS=(--disable-packagekit)
+  ;;
+  buildgnome-disk-utility )
+    export PKGNAME=gnome-disk-utility
+    export PKGVER=3.18.3.1
   ;;
   buildgnome-logs )
     export PKGNAME=gnome-logs
@@ -68,7 +77,11 @@ case $(basename $0) in
   buildgnome-terminal )
     export PKGNAME=gnome-terminal
     export PKGVER=3.18.2
-    export CONFIGURE_FLAGS=(--disable-migration --disable-search-provider)
+    export CONFIGURE_FLAGS=(--disable-migration)
+  ;;
+  buildgnome-tweak-tool )
+    export PKGNAME=gnome-tweak-tool
+    export PKGVER=3.18.1
   ;;
   buildgucharmap )
     export PKGNAME=gucharmap
@@ -84,7 +97,7 @@ case $(basename $0) in
   ;;
   buildnetwork-manager-applet )
     export PKGNAME=network-manager-applet
-    export PKGVER=1.0.10
+    export PKGVER=1.1.90
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
     export CONFIGURE_FLAGS=(--disable-migration)
@@ -96,6 +109,16 @@ case $(basename $0) in
   buildvinagre )
     export PKGNAME=vinagre
     export PKGVER=3.18.2
+  ;;
+  buildvino )
+    export PKGNAME=vino
+    export PKGVER=3.18.1
+  ;;
+  buildxdg-user-dirs-gtk )
+    export PKGNAME=xdg-user-dirs-gtk
+    export PKGVER=0.10
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER}/${PKGTAR}"
   ;;
   buildyelp )
     export PKGNAME=yelp
@@ -113,5 +136,8 @@ if [ -z ${PKGURL} ]
 then
   export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:4}/${PKGTAR}"
 fi
+
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
 
 . $(dirname $0)/master.sh

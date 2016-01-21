@@ -7,6 +7,9 @@ export PKGURL="https://launchpad.net/inkscape/${PKGVER}.x/${PKGVER}/+download/${
 export MAKE_JOBS_FLAGS="-j4"
 export USER_CXXFLAGS="-std=c++11"
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 make_install_post() {
   sed -i "s:application/pdf;application/postscript;image/x-eps;::g" ${DEST}/usr/share/applications/inkscape.desktop
 

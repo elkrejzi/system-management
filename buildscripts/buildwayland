@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=wayland
-export PKGVER=1.9.0
+export PKGVER=1.9.91
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://wayland.freedesktop.org/releases/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
@@ -9,5 +9,8 @@ export DEBUG_BUILD=1
 export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--disable-documentation)
 export CONFIGURE_FLAGS_32=(--disable-documentation)
+
+export DEFAULT_CC="clang"
+export DEFAULT_CC_M32="clang -m32"
 
 . $(dirname $0)/master.sh

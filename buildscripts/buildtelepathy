@@ -1,0 +1,30 @@
+#!/bin/bash -e
+
+case $(basename $0) in
+  buildtelepathy-glib )
+    export PKGNAME=telepathy-glib
+    export PKGVER=0.24.1
+    export CONFIGURE_FLAGS=(--enable-vala-bindings)
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+  ;;
+  buildtelepathy-logger )
+    export PKGNAME=telepathy-logger
+    export PKGVER=0.8.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+  ;;
+  buildtelepathy-mission-control )
+    export PKGNAME=telepathy-mission-control
+    export PKGVER=5.16.3
+    export CONFIGURE_FLAGS=(--disable-upower)
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+  ;;
+esac
+
+export PKGURL="http://telepathy.freedesktop.org/releases/${PKGNAME}/${PKGTAR}"
+export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
+export MAKE_JOBS_FLAGS="-j4"
+
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
+. $(dirname $0)/master.sh

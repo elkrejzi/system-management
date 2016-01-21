@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=NetworkManager
-export PKGVER=1.0.10
+export PKGVER=1.1.90
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://download.gnome.org/sources/NetworkManager/${PKGVER:0:3}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
@@ -11,6 +11,9 @@ export CONFIGURE_FLAGS=(--enable-doc \
                         --with-suspend-resume=systemd
                         --with-pppd-plugin-dir=/usr/lib/pppd/2.4.7
                         --with-systemdsystemunitdir=/lib/systemd/system)
+
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
 
 make_install_post() {
   rm -rf ${DEST}/lib/systemd/system/network-online.target.wants ${DEST}/var/run
