@@ -109,6 +109,7 @@ case $(basename $0) in
   buildvinagre )
     export PKGNAME=vinagre
     export PKGVER=3.18.2
+    export PATCHES_LIST=("vinagre.patch")
   ;;
   buildvino )
     export PKGNAME=vino

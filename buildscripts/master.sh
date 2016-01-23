@@ -405,12 +405,6 @@ printf '[ -x /sbin/ldconfig ] && echo "Processing triggers for glibc" && /sbin/l
 }
 
 build_package() {
-  if [ -z $1 ]
-  then
-    local MULTILIB=0
-  else
-    local MULTILIB=1
-  fi
 
   if [ -z ${PATH_TO_SOURCE} ]
   then
@@ -561,8 +555,14 @@ build_package() {
 }
 
 export PKG_BUILDING=0
+export MULTILIB=0
 
-function_exists prepare_src_override && prepare_src_override ${PKGTAR} || prepare_src ${PKGTAR}
+if [ "$(function_exists prepare_src_override; echo $?)" == "0" ]
+then
+  prepare_src_override ${PKGTAR}
+else
+  prepare_src ${PKGTAR}
+fi
 
 if [ ! -z ${PATCHES_LIST} ]
 then
@@ -581,6 +581,8 @@ function_exists build_package_override && build_package_override || build_packag
 if [ ! -z ${MULTILIB_BUILD} ]
 then
 
+  export MULTILIB=1
+
   function_exists prepare_src_override && prepare_src_override ${PKGTAR} || prepare_src ${PKGTAR}
 
   if [ ! -z ${PATCHES_LIST_32} ]
@@ -595,7 +597,7 @@ then
     unset LEN i
   fi
 
-  function_exists build_package_32_override && build_package_32_override || build_package 1
+  function_exists build_package_32_override && build_package_32_override || build_package
 fi
 
 function_exists post_install_clean_override && post_install_clean_override || post_install_clean

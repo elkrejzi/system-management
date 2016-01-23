@@ -1,23 +1,26 @@
 #!/bin/bash -e
 
 export PKGNAME=libpng
-export PKGVER=1.6.20
+export PKGVER=1.6.21
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://downloads.sourceforge.net/libpng/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS_32=(--program-suffix=-32)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CC_M32="clang -m32"
+
 post_extract_action() {
   local APNG="libpng-${PKGVER}-apng.patch.gz"
 
   if [ ! -e ${SROOT}/${APNG} ]
   then
-    wget -c https://downloads.sourceforge.net/libpng-apng/${APNG} -O ${SROOT}/${APNG} || exit ${PIPESTATUS}
+    wget -c https://downloads.sourceforge.net/apng/${APNG} -O ${SROOT}/${APNG} || exit ${PIPESTATUS}
   fi
 
   pushd ${PKGDIR}
-    gunzip -c ${SROOT}/${APNG} | patch -Np1 -i -
+    gunzip -c ${SROOT}/${APNG} | patch -Np0 -i -
   popd
 }
 

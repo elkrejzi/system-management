@@ -1,12 +1,12 @@
 #!/bin/bash -e
 
 export PKGNAME=hdf5
-export PKGVER=1.8.15-patch1
+export PKGVER=1.8.16
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://www.hdfgroup.org/ftp/HDF5/current/src/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
-export CONFIGURE_FLAGS=(--enable-production --enable-threadsafe --disable-sharedlib-rpath)
+export CONFIGURE_FLAGS=(--enable-production --disable-sharedlib-rpath)
 
 configure_pre() {
   sed -i "s:BSD_SOURCE:DEFAULT_SOURCE:g" configure configure.ac

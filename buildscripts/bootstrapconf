@@ -57,10 +57,8 @@ postdrop:x:33:
 mail:x:34:
 mysql:x:40:
 postgres:x:41:
-dnsmasq:x:44:
 sshd:x:50:
 git:x:55:
-kvm:x:61:
 wireshark:x:62:
 lightdm:x:63:
 rtkit:x:65:
@@ -96,7 +94,6 @@ rpc:x:28:28:RPC Bind Daemon Owner:/dev/null:/bin/false
 postfix:x:32:32:Postfix Daemon Owner:/var/spool/postfix:/bin/false
 mysql:x:40:40:MySQL Server:/var/lib/mysql:/bin/false
 postgres:x:41:41:PostgreSQL Server:/var/lib/postgresql:/bin/bash
-dnsmasq:x:44:44:dnsmasq daemon:/:/sbin/nologin
 sshd:x:50:50:OpenSSH PrivSep:/var/run/sshd:/sbin/nologin
 git:x:55:55:Git Repositories Owner:/var/lib/git:/bin/bash
 lightdm:x:63:63:Light Display Manager:/var/lib/lightdm:/sbin/nologin
@@ -120,7 +117,6 @@ pwconv
 
 useradd -c "Armin K" -MU armin
 
-gpasswd -a armin kvm
 gpasswd -a armin systemd-journal
 gpasswd -a armin wireshark
 
@@ -183,8 +179,6 @@ for module in include_module proxy_module proxy_connect_module proxy_fcgi_module
 do
   sed -i "/LoadModule ${module}/s:#Lo:Lo:g" /etc/httpd/httpd.conf
 done
-
-sed -i "/LoadModule rewrite_module/a #LoadModule php5_module /usr/lib/httpd/modules/libphp5.so" /etc/httpd/httpd.conf
 
 sed -i "s:#background=:background=/media/ntfs/Docs/Slike/dark_game_scene-hd.jpg:g" /etc/lightdm/lightdm-gtk-greeter.conf
 
@@ -254,7 +248,7 @@ EOF
 sed -i 's#;date.timezone =#date.timezone = "Europe/Sarajevo"#' /etc/php/php.ini
 
 sed -i "s:#ProcessSizeMax=2G:ProcessSizeMax=4G:;s:#ExternalSizeMax=2G:ExternalSizeMax=4G:;s:#JournalSizeMax=767M:JournalSizeMax=1G:" /etc/systemd/coredump.conf
-sed -i "s:#HandleLidSwitch=suspend:HandleLidSwitch=ignore:g" /etc/systemd/logind.conf
+sed -i "s:#HandleLidSwitch=suspend:HandleLidSwitch=ignore:g;s:#KillUserProcesses=no:KillUserProcesses=yes:g" /etc/systemd/logind.conf
 sed -i "s:#DefaultTimeoutStopSec=90s:DefaultTimeoutStopSec=30s:g" /etc/systemd/system.conf
 
 install -dm755 /lib/firmware

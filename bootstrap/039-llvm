@@ -51,7 +51,7 @@ do
       svn up
     popd
     else
-      svn co http://llvm.org/svn/llvm-project/${proj}/trunk ${proj}
+      svn co http://llvm.org/svn/llvm-project/${proj}/branches/release_38 ${proj}
     fi
 
   if [ ${proj} == "cfe" ]

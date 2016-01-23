@@ -32,7 +32,7 @@ case $(basename $0) in
   ;;
   buildperl-io-socket-ssl )
     export PKGNAME=IO-Socket-SSL
-    export PKGVER=2.020
+    export PKGVER=2.022
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="http://search.cpan.org/CPAN/authors/id/S/SU/SULLR/${PKGTAR}"
     export DEST=/binary/perl/perl-io-socket-ssl-${PKGVER}
@@ -71,52 +71,12 @@ make_install_post() {
     export PKGURL="http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/${PKGTAR}"
     export DEST=/binary/perl/perl-uri-${PKGVER}
   ;;
-  buildperl-xml-namespacesupport )
-    export PKGNAME=XML-NamespaceSupport
-    export PKGVER=1.11
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="http://search.cpan.org/CPAN/authors/id/P/PE/PERIGRIN/${PKGTAR}"
-    export DEST=/binary/perl/perl-xml-namespacesupport-${PKGVER}
-  ;;
   buildperl-xml-parser )
     export PKGNAME=XML-Parser
     export PKGVER=2.44
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="http://search.cpan.org/CPAN/authors/id/T/TO/TODDR/${PKGTAR}"
     export DEST=/binary/perl/perl-xml-parser-${PKGVER}
-  ;;
-  buildperl-xml-sax )
-    export PKGNAME=XML-SAX
-    export PKGVER=0.99
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="http://search.cpan.org/CPAN/authors/id/G/GR/GRANTM/${PKGTAR}"
-    export DEST=/binary/perl/perl-xml-sax-${PKGVER}
-    export PATCHES_LIST=("perl-xml-sax.patch")
-  ;;
-  buildperl-xml-sax-base )
-    export PKGNAME=XML-SAX-Base
-    export PKGVER=1.08
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="http://search.cpan.org/CPAN/authors/id/G/GR/GRANTM/${PKGTAR}"
-    export DEST=/binary/perl/perl-xml-sax-base-${PKGVER}
-  ;;
-  buildperl-xml-sax-expat )
-    export PKGNAME=XML-SAX-Expat
-    export PKGVER=0.51
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="http://search.cpan.org/CPAN/authors/id/B/BJ/BJOERN/${PKGTAR}"
-    export DEST=/binary/perl/perl-xml-sax-expat-${PKGVER}
-
-make_install_override() {
-  make pure_install DESTDIR=${DEST}
-}
-  ;;
-  buildperl-xml-simple )
-    export PKGNAME=XML-Simple
-    export PKGVER=2.22
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="http://search.cpan.org/CPAN/authors/id/G/GR/GRANTM/${PKGTAR}"
-    export DEST=/binary/perl/perl-xml-simple-${PKGVER}
   ;;
   buildperl-modules )
     if [ -z $1 ]
@@ -128,11 +88,6 @@ make_install_override() {
     if [ $1 == 1 ]
     then
       $(dirname $0)/buildperl-xml-parser
-      $(dirname $0)/buildperl-xml-namespacesupport
-      $(dirname $0)/buildperl-xml-sax-base
-      $(dirname $0)/buildperl-xml-sax
-      $(dirname $0)/buildperl-xml-sax-expat
-      $(dirname $0)/buildperl-xml-simple
       $(dirname $0)/buildperl-archive-zip
       $(dirname $0)/buildperl-error
       $(dirname $0)/buildperl-sgmls

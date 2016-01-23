@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
 export PKGNAME=run-parts
-export PKGVER=4.5.1
+export PKGVER=4.6
 export PKGTAR=debianutils_${PKGVER}.tar.xz
-export PKGDIR=debianutils #-${PKGVER}
+export PKGDIR=debianutils-${PKGVER}
 export PKGURL="http://http.debian.net/debian/pool/main/d/debianutils/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 

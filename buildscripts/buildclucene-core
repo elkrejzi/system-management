@@ -9,4 +9,7 @@ export CMAKE_BUILD=1
 export PATCHES_LIST=("clucene-fixes.patch")
 export CMAKE_FLAGS=(-DBUILD_CONTRIBS_LIB=ON)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 . $(dirname $0)/master.sh

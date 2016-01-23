@@ -43,53 +43,61 @@ then
   export PKGDIR=${PKGNAME}
 
   prepare_src_override() {
-    if [ -e ${PKGDIR} ] || [ -e ${PKGBUILD} ]
+    if [ ${MULTILIB} == 0 ]
     then
-      if [ -z ${RECURSIVE_CALL} ]
+      if [ -e ${PKGDIR} ] || [ -e ${PKGBUILD} ]
       then
-        echo "Warning: Old source and/or build dir exists. Removing."
-        rm -rf ${PKGDIR} ${PKGBUILD}
-      fi
-    fi
-
-    for f in ${PKGNAME} ${proj[@]}
-    do
-      if [ -e git/${f}.tar.xz ]
-      then
-        tar xf git/${f}.tar.xz
-        pushd ${f}
-          svn up
-        popd
-      else
-        svn co http://llvm.org/svn/llvm-project/${f}/trunk ${f}
+        if [ -z ${RECURSIVE_CALL} ]
+        then
+          echo "Warning: Old source and/or build dir exists. Removing."
+          rm -rf ${PKGDIR} ${PKGBUILD}
+        fi
       fi
 
-      prepare_src_common
-    done
+      for f in ${PKGNAME} ${proj[@]}
+      do
+        if [ -e git/${f}.tar.xz ]
+        then
+          tar xf git/${f}.tar.xz
+          pushd ${f}
+            svn up
+          popd
+        else
+          #svn co http://llvm.org/svn/llvm-project/${f}/trunk ${f}
+          svn co http://llvm.org/svn/llvm-project/${f}/branches/release_38 ${f}
+        fi
 
-    pushd ${PKGDIR}
-      PKGVER=$(grep "PACKAGE_VERSION=" configure | cut -d \' -f 2)$(svn info | grep "Revision:" | awk '{print $2}')
-      export PKGVER=${PKGVER/svn/.svn}
-    popd
+        prepare_src_common
+      done
 
-    if [ -z ${DEST_SET} ]
-    then
-      export DEST=/binary/${PKGNAME}-${PKGVER}
-      export DEST_SET=1
-    fi
+      pushd ${PKGDIR}
+        PKGVER=$(grep "PACKAGE_VERSION=" configure | cut -d \' -f 2)$(svn info | grep "Revision:" | awk '{print $2}')
+        export PKGVER=${PKGVER/svn/.svn}
+      popd
 
-    if [ -e ${DEST} ] || [ -e ${DEST}-debug ]
-    then
-      if [ ${PKG_BUILDING} != 1 ]
+      if [ -z ${DEST_SET} ]
       then
-        echo "Warning: Old package installation dir exits. Removing."
-        rm -rf ${DEST} ${DEST}-debug
+        export DEST=/binary/${PKGNAME}-${PKGVER}
+        export DEST_SET=1
       fi
+
+      if [ -e ${DEST} ] || [ -e ${DEST}-debug ]
+      then
+        if [ ${PKG_BUILDING} != 1 ]
+        then
+          echo "Warning: Old package installation dir exits. Removing."
+          rm -rf ${DEST} ${DEST}-debug
+        fi
+      fi
+
+      export PKG_BUILDING=1
+
+      PKGDIR=${PKGDIR}/tools/lldb patch_apply lldb-avoid-linking-to-libLLVM.patch
+
+      cp -a ${PKGDIR} ${PKGDIR}-checkout
+    else
+      mv ${PKGDIR}-checkout ${PKGDIR}
     fi
-
-    export PKG_BUILDING=1
-
-    PKGDIR=${PKGDIR}/tools/lldb patch_apply lldb-avoid-linking-to-libLLVM.patch
 
     install -dm755 ${PKGBUILD}
   }

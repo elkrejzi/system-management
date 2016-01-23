@@ -153,7 +153,6 @@ $(dirname $0)/builddictionaries 1
 $(dirname $0)/builddmz-cursor-theme
 $(dirname $0)/buildfonts 1
 $(dirname $0)/buildhicolor-icon-theme
-$(dirname $0)/buildicon-naming-utils
 $(dirname $0)/buildmime-types
 $(dirname $0)/buildadwaita-icon-theme
 $(dirname $0)/buildglib-networking

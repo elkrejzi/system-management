@@ -61,7 +61,6 @@ $(dirname $0)/buildgnome-desktop
 $(dirname $0)/buildgnome-menus
 $(dirname $0)/buildgnome-online-accounts
 $(dirname $0)/buildgnome-video-effects
-$(dirname $0)/buildgtk-engines
 $(dirname $0)/buildgtk-vnc
 $(dirname $0)/buildgtksourceview
 $(dirname $0)/buildlibgee
@@ -80,9 +79,7 @@ $(dirname $0)/buildlibwnck
 $(dirname $0)/buildlibxklavier
 $(dirname $0)/buildlibwacom
 $(dirname $0)/buildmate-desktop
-$(dirname $0)/buildmurrine
 $(dirname $0)/buildnetwork-manager-applet
-$(dirname $0)/buildpangox-compat
 $(dirname $0)/buildprelink
 $(dirname $0)/buildt1lib
 $(dirname $0)/buildtelepathy-logger
@@ -226,22 +223,7 @@ $(dirname $0)/buildunrar
 $(dirname $0)/buildvalgrind
 $(dirname $0)/buildwhois
 $(dirname $0)/buildxfsprogs
-$(dirname $0)/buildfltk
-$(dirname $0)/buildgl2ps
-$(dirname $0)/buildglpk
-$(dirname $0)/buildGraphicsMagick
-$(dirname $0)/buildhwloc
 $(dirname $0)/buildjdk
-$(dirname $0)/buildlapack
-$(dirname $0)/buildlibcerf
-$(dirname $0)/buildqhull
-$(dirname $0)/buildqscintilla
-$(dirname $0)/buildwxwidgets
-$(dirname $0)/buildgnuplot
-$(dirname $0)/buildopenmpi
-$(dirname $0)/buildqrupdate
-$(dirname $0)/buildSuiteSparse
-$(dirname $0)/buildarpack-ng
 
 find /binary -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
 

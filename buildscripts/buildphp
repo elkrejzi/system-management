@@ -94,6 +94,8 @@ configure_pre() {
 
   sed -i 's#syslog.target ##g' sapi/fpm/php-fpm.service.in
   sed -i 's#@localstatedir@/run/#/run/php-fpm/#g' sapi/fpm/php-fpm.service.in
+
+  sed -i "s#buffio.h#tidy&#g" ext/tidy/tidy.c
 }
 
 make_install_post() {

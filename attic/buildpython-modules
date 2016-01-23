@@ -1,0 +1,68 @@
+#!/bin/bash -e
+
+case $(basename $0) in
+
+  buildpython-pyparsing )
+    export PKGNAME=pyparsing
+    export PKGVER=2.0.3
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/p/pyparsing/${PKGTAR}"
+    export DEST=/binary/python/python-pyparsing-${PKGVER}
+  ;;
+  buildpython-requests )
+    export PKGNAME=requests
+    export PKGVER=2.8.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/r/requests/${PKGTAR}"
+    export DEST=/binary/python/python-requests-${PKGVER}
+  ;;
+
+esac
+
+export NO_OPTIMIZATION=1
+
+if [ $(basename $0) == "buildpython-ipaddr" ]
+then
+  export PYTHON=python
+else
+  export PYTHON=python3
+fi
+
+configure_override() {
+  true
+}
+make_override() {
+  if [ ${MULTILIB} == 0 ]
+  then
+    ${PYTHON} setup.py build ${EXTRA_CFG}
+  else
+    python setup.py build ${EXTRA_CFG}
+  fi
+}
+make_install_override() {
+  if [ ${MULTILIB} == 0 ]
+  then
+    ${PYTHON} setup.py install --root=${DEST} --optimize=1
+  else
+    python setup.py install --root=${DEST} --optimize=1
+  fi
+}
+
+case $(basename $0) in
+  buildpython-ipaddr)
+    export PKGNAME=ipaddr
+    export PKGVER=2.1.11
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/i/ipaddr/${PKGTAR}"
+    export DEST=/binary/python/python-ipaddr-${PKGVER}
+  ;;
+  *)
+    export MULTILIB_BUILD=1
+    export DEFAULT_CC_M32="gcc"
+    configure_override_32() {
+      true
+    }
+  ;;
+esac
+
+. $(dirname $0)/master.sh

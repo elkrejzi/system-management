@@ -1,13 +1,5 @@
-Submitted By:            Igor Živković <contact@igor-zivkovic.from.hr>
-Date:                    2013-10-17
-Initial Package Version: 2.3.3.4
-Upstream Status:         Reported
-Origin:                  Debian
-Description:             Fixed building and installing of contribs-lib if specified by config.
-
-diff -Naur clucene-2.3.3.4.orig/CMakeLists.txt clucene-2.3.3.4/CMakeLists.txt
---- clucene-2.3.3.4.orig/CMakeLists.txt	2013-10-17 11:32:30.064546492 +0200
-+++ clucene-2.3.3.4/CMakeLists.txt	2013-10-17 11:33:58.559550441 +0200
+--- a/CMakeLists.txt	2011-03-17 01:21:07.000000000 +0100
++++ b/CMakeLists.txt	2016-01-22 01:43:37.148109260 +0100
 @@ -163,7 +163,7 @@
    SET(BUILD_CONTRIBS_LIB 1)
  ENDIF ( BUILD_CONTRIBS )
@@ -17,9 +9,8 @@ diff -Naur clucene-2.3.3.4.orig/CMakeLists.txt clucene-2.3.3.4/CMakeLists.txt
  ENDIF ( BUILD_CONTRIBS_LIB )
  
  
-diff -Naur clucene-2.3.3.4.orig/src/contribs-lib/CMakeLists.txt clucene-2.3.3.4/src/contribs-lib/CMakeLists.txt
---- clucene-2.3.3.4.orig/src/contribs-lib/CMakeLists.txt	2013-10-17 11:32:30.076546493 +0200
-+++ clucene-2.3.3.4/src/contribs-lib/CMakeLists.txt	2013-10-17 11:33:58.560550441 +0200
+--- a/src/contribs-lib/CMakeLists.txt	2011-03-17 01:21:07.000000000 +0100
++++ b/src/contribs-lib/CMakeLists.txt	2016-01-22 01:43:37.148109260 +0100
 @@ -106,9 +106,26 @@
  )
  TARGET_LINK_LIBRARIES(clucene-contribs-lib ${clucene_contrib_extra_libs})
@@ -47,3 +38,13 @@ diff -Naur clucene-2.3.3.4.orig/src/contribs-lib/CMakeLists.txt clucene-2.3.3.4/
 +install(TARGETS clucene-contribs-lib 
 +        DESTINATION ${LIB_DESTINATION}  
 +        COMPONENT runtime )
+--- a/src/shared/CLucene/LuceneThreads.h	2011-03-17 01:21:07.000000000 +0100
++++ b/src/shared/CLucene/LuceneThreads.h	2016-01-22 01:43:30.450975553 +0100
+@@ -7,6 +7,7 @@
+ #ifndef _LuceneThreads_h
+ #define  _LuceneThreads_h
+ 
++#include <pthread.h>
+ 
+ CL_NS_DEF(util)
+ class CLuceneThreadIdCompare;

@@ -1,15 +1,15 @@
 #!/bin/bash -e
 
 export PKGNAME=chromium
-export PKGVER=48.0.2564.71
+export PKGVER=48.0.2564.82
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://commondatastorage.googleapis.com/chromium-browser-official/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export POSTINST_TRIGGER=("chmod 4755 /usr/lib/chromium/chrome-sandbox")
-export PATCHES_LIST=("chromium-fixes.patch" "chromium-vaapi.patch")
+export PATCHES_LIST=("chromium-fixes.patch" "chromium-libcxx.patch" "chromium-vaapi.patch")
 
-#export DEFAULT_CC="clang"
-#export DEFAULT_CXX="clang++"
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -std=c++11 -stdlib=libc++"
 
 configure_pre() {
   CFLAGS=${CFLAGS/-Ofast/-O3}
@@ -23,7 +23,7 @@ configure_pre() {
       -Dgoogle_default_client_secret=xZ5yO6MG_uMyrh0srUAkJ4KG
       -Dwerror=
       -Dchromeos=0
-      -Dclang=0
+      -Dclang=1
       -Dclang_use_chrome_plugins=0
       -Dpython_ver=2.7
       -Dlinux_link_gsettings=1
@@ -38,7 +38,7 @@ configure_pre() {
       -Dlogging_like_official_build=1
       -Dtracing_like_official_build=1
       -Dfieldtrial_testing_like_official_build=1
-      -Drelease_extra_cflags="$CFLAGS"
+      -Drelease_extra_cflags="${CFLAGS}"
       -Dlibspeechd_h_prefix=speech-dispatcher/
       -Dffmpeg_branding=Chrome
       -Dproprietary_codecs=1

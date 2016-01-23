@@ -106,7 +106,7 @@ case $(basename $0) in
   ;;
   buildlibmwaw )
     export PKGNAME=libmwaw
-    export PKGVER=0.3.6
+    export PKGVER=0.3.7
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://downloads.sourceforge.net/libmwaw/${PKGTAR}"
   ;;
