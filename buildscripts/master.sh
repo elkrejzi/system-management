@@ -482,31 +482,29 @@ build_package() {
       function_exists configure_pre_32 && configure_pre_32
     fi
 
-    if [ ${MULTILIB} == 0 ]
+    if [ ${MULTILIB} == 0 ] && [ "$(function_exists configure_override; echo $?)" == "0" ]
     then
-      cfg_override=configure_override
-    else
-      cfg_override=configure_override_32
-    fi
-
-    function_exists $cfg_override && $cfg_override || {
-    if [ ! -z ${CMAKE_BUILD} ]
+      configure_override
+    elif [ ${MULTILIB} == 1 ] && [ "$(function_exists configure_override_32; echo $?)" == "0" ]
     then
-      cmake -DCMAKE_INSTALL_PREFIX=/usr     \
-            -DCMAKE_C_FLAGS="${CFLAGS}"     \
-            -DCMAKE_CXX_FLAGS="${CXXFLAGS}" \
-            "${ADDITIONAL_CMAKE_FLAGS[@]}"  \
-            -Wno-dev ${PATH_TO_SOURCE}
+      configure_override_32
     else
-      ${PATH_TO_SOURCE}/configure --prefix=/usr             \
-                                  --sysconfdir=/etc         \
-                                  --localstatedir=/var      \
-                                  --mandir=/usr/share/man   \
-                                  --infodir=/usr/share/info \
-                                  "${ADDITIONAL_CONFIGURE_FLAGS[@]}"
+      if [ ! -z ${CMAKE_BUILD} ]
+      then
+        cmake -DCMAKE_INSTALL_PREFIX=/usr     \
+              -DCMAKE_C_FLAGS="${CFLAGS}"     \
+              -DCMAKE_CXX_FLAGS="${CXXFLAGS}" \
+              "${ADDITIONAL_CMAKE_FLAGS[@]}"  \
+              -Wno-dev ${PATH_TO_SOURCE}
+      else
+        ${PATH_TO_SOURCE}/configure --prefix=/usr             \
+                                    --sysconfdir=/etc         \
+                                    --localstatedir=/var      \
+                                    --mandir=/usr/share/man   \
+                                    --infodir=/usr/share/info \
+                                    "${ADDITIONAL_CONFIGURE_FLAGS[@]}"
+      fi
     fi
-
-    }
 
     if [ ${MULTILIB} == 0 ]
     then
