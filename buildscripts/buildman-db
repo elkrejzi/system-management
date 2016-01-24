@@ -6,6 +6,8 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://download.savannah.gnu.org/releases/man-db/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
+export DEFAULT_CC="clang"
+
 export CONFIGURE_FLAGS=(--disable-setuid
                         --with-browser=/usr/bin/lynx
                         --with-vgrind=/usr/bin/vgrind

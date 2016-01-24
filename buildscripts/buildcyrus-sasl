@@ -21,6 +21,8 @@ export CONFIGURE_FLAGS=("${ADDITIONAL_CONFIGURE_FLAGS[@]}"
                         --enable-sql
                         --enable-auth-sasldb)
 
+export DEFAULT_CC="clang"
+
 configure_pre() {
   autoreconf -fi
 

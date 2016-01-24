@@ -7,6 +7,8 @@ export PKGURL="http://http.debian.net/debian/pool/main/h/hostname/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export MAKE_INSTALL_FLAGS="BASEDIR=\${DEST}"
 
+export DEFAULT_CC="clang"
+
 configure_override() {
   true
 }

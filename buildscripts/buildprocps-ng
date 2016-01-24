@@ -9,6 +9,9 @@ export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--sbindir=/sbin --enable-watch8bit)
 export CONFIGURE_FLAGS_32=(--sbindir=/sbin)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CC_M32="clang -m32"
+
 configure_pre() {
   sed -i "s:ncursesw/::g" watch.c
 }

@@ -284,11 +284,13 @@ case $(basename $0) in
   ;;
   *)
     export MULTILIB_BUILD=1
-    export DEFAULT_CC_M32="gcc"
     configure_override_32() {
       true
     }
   ;;
 esac
+
+export DEFAULT_CC="clang"
+export DEFAULT_CC_M32="clang"
 
 . $(dirname $0)/master.sh

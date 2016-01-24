@@ -6,4 +6,6 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://alioth.debian.org/frs/download.php/file/3979/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
+export DEFAULT_CC="clang"
+
 . $(dirname $0)/master.sh

@@ -13,6 +13,9 @@ export PATCHES_LIST_32=("openssl.patch" "openssl-fixes.patch")
 export MAKE_INSTALL_FLAGS="INSTALL_PREFIX=\${DEST} MANDIR=/usr/share/man MANSUFFIX=ssl"
 export MAKE_INSTALL_FLAGS_32="INSTALL_PREFIX=\${PWD}/dest"
 
+export DEFAULT_CC="clang"
+export DEFAULT_CC_M32="clang -m32"
+
 configure_override() {
   ./Configure --prefix=/usr \
               --openssldir=/etc/ssl \

@@ -16,6 +16,9 @@ export CONFIGURE_FLAGS=(--enable-shared
                         --enable-unicode=ucs4
                         --with-dbmliborder=bdb:gdbm:ndbm)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 configure_pre() {
   rm -r Modules/expat Modules/zlib Modules/_ctypes/{darwin,libffi}*
 }

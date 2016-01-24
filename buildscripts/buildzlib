@@ -7,6 +7,9 @@ export PKGURL="http://zlib.net/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 
+export DEFAULT_CC="clang"
+export DEFAULT_CC_M32="clang -m32"
+
 configure_override() {
   ./configure --prefix=/usr
 }

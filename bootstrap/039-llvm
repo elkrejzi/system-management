@@ -93,7 +93,7 @@ install -dm755 llvm-build llvm-build32
 
     for dir in libcxx libcxxabi libunwind
     do
-      make -C projects/${dir} install DESTDIR=$PWD/dest
+      make -C projects/${dir} install
     done
   popd
   }

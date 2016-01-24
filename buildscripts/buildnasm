@@ -8,4 +8,6 @@ export MAKE_JOBS_FLAGS="-j4"
 export KEEP_STATIC=1
 export MAKE_INSTALL_FLAGS="prefix=\${DEST}/usr mandir=\${DEST}/usr/share/man"
 
+export DEFAULT_CC="clang"
+
 . $(dirname $0)/master.sh

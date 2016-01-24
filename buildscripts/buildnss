@@ -9,6 +9,9 @@ export MULTILIB_BUILD=1
 export PATCHES_LIST=("nss-standalone.patch")
 export PATCHES_LIST_32=("nss-standalone.patch")
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 configure_override() {
   export XCFLAGS=${CFLAGS/-Ofast/-O2}
   unset CFLAGS
@@ -31,7 +34,8 @@ make_override() {
     NSPR_INCLUDE_DIR=/usr/include/nspr \
     USE_SYSTEM_ZLIB=1                  \
     ZLIB_LIBS=-lz                      \
-    NSS_USE_SYSTEM_SQLITE=1 ${OPT}
+    NSS_USE_SYSTEM_SQLITE=1 ${OPT}     \
+    CC="${DEFAULT_CC}" CCC="${DEFAULT_CXX}"
 }
 
 make_install_override() {

@@ -6,8 +6,12 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://www.kernel.org/pub/software/utils/pciutils/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
+export DEFAULT_CC="clang"
+
 configure_override() {
   wget http://pci-ids.ucw.cz/v2.2/pci.ids -O pci.ids
+
+  sed -i "s#gcc#${CC}#g" Makefile
 }
 
 make_override() {

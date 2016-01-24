@@ -11,6 +11,9 @@ export MAKE_INSTALL_FLAGS_32="prefix=/usr libdir=/usr/lib32 mandir=/usr/share/ma
 export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done\n"
                     "cp -rf --remove-destination usr/share/man/man3 /usr/share/man")
 
+export DEFAULT_CC="clang"
+export DEFAULT_CC_M32="clang -m32"
+
 configure_override() {
   true
 }
@@ -20,12 +23,7 @@ configure_override_32() {
 }
 
 make_override() {
-  if [ ${MULTILIB} == 0 ]
-  then
-    make OPT="${CFLAGS}" ${MAKE_JOBS_FLAGS}
-  else
-    make CC="${CC}" OPT="${CFLAGS}" ${MAKE_JOBS_FLAGS}
-  fi
+  make CC="${CC}" OPT="${CFLAGS}" ${MAKE_JOBS_FLAGS}
 }
 
 post_install_config() {

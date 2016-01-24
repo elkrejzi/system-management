@@ -4,3 +4,4 @@
 /usr/bin/strip --strip-unneeded /tools/{,s}bin/*
 
 rm -rf /tools/{,share}/{info,man,doc}
+rm -rf /tools/lib/*.la

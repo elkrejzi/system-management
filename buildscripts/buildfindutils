@@ -8,6 +8,8 @@ export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1
 export CONFIGURE_FLAGS=(--localstatedir=/var/lib/locate)
 
+export DEFAULT_CC="clang"
+
 make_install_post() {
   install -dm755 ${DEST}/bin
 

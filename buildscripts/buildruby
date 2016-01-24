@@ -9,4 +9,7 @@ export KEEP_EMPTY_DIRS=1
 export KEEP_STATIC=1
 export CONFIGURE_FLAGS=(--enable-shared --disable-install-capi)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 . $(dirname $0)/master.sh

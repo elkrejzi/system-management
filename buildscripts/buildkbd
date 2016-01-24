@@ -7,6 +7,8 @@ export PKGURL="https://www.kernel.org/pub/linux/utils/kbd/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--enable-libkeymap --enable-optional-progs)
 
+export DEFAULT_CC="clang"
+
 configure_pre() {
   rm -rf docs/reference/libkeymap/Doxyfile
 }

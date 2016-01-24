@@ -9,6 +9,9 @@ export KEEP_EMPTY_DIRS=1
 export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS_32=(--without-python)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CC_M32="clang -m32"
+
 make_install_post_32() {
   rm -rf ${DEST}/usr/lib32/xsltConf.sh
 }

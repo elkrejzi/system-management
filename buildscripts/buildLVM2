@@ -7,6 +7,9 @@ export PKGDIR=${PKGNAME}.${PKGVER}
 export PKGURL="ftp://sources.redhat.com/pub/lvm2/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 configure_override() {
   ./configure --prefix=/usr       \
               --exec-prefix=      \

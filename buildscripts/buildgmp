@@ -14,6 +14,11 @@ export CONFIGURE_FLAGS=(--enable-cxx
                         --target=x86_64-unknown-linux-gnu)
 export CONFIGURE_FLAGS_32=(${CONFIGURE_FLAGS[@]} --includedir=/usr/lib32/gmp)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+export DEFAULT_CC_M32="clang -m32"
+export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
+
 configure_pre_32() {
   export ABI=32
 }

@@ -19,6 +19,11 @@ export CONFIGURE_FLAGS=("${CONFIGURE_FLAGS_SHARED[@]}"
 
 export CONFIGURE_FLAGS_32=("${CONFIGURE_FLAGS_SHARED[@]}")
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+export DEFAULT_CC_M32="clang -m32"
+export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
+
 make_install_post() {
   install -dm755 ${DEST}/lib
 

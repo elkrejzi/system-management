@@ -12,4 +12,6 @@ export CONFIGURE_FLAGS=(--enable-unicode
                         --enable-cgroup
                         --enable-oom)
 
+export DEFAULT_CC="clang"
+
 . $(dirname $0)/master.sh

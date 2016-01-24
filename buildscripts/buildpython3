@@ -16,6 +16,9 @@ export CONFIGURE_FLAGS=(--enable-shared
                         --without-ensurepip
                         --with-dbmliborder=bdb:gdbm:ndbm)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 configure_pre() {
   sed -i -e "s|^#.* /usr/local/bin/python|#!/usr/bin/python3|" Lib/cgi.py
 

@@ -6,8 +6,10 @@ export PKGTAR=zip30.tar.gz
 export PKGDIR=zip30
 export PKGURL="https://downloads.sourceforge.net/infozip/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MAKE_FLAGS="-f unix/Makefile generic_gcc"
+export MAKE_FLAGS="-f unix/Makefile generic CC=\${DEFAULT_CC}"
 export MAKE_INSTALL_FLAGS="-f unix/Makefile prefix=\${DEST}/usr MANDIR=\${DEST}/usr/share/man/man1"
+
+export DEFAULT_CC="clang"
 
 configure_override() {
   sed -i "s:-O3:${CFLAGS}:g" unix/configure

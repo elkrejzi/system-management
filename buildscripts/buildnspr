@@ -11,6 +11,9 @@ export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--with-mozilla --with-pthreads --enable-64bit)
 export CONFIGURE_FLAGS_32=(--with-mozilla --with-pthreads)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CC_M32="clang -m32"
+
 configure_pre() {
   sed -ri 's#^(RELEASE_BINS =).*#\1#' pr/src/misc/Makefile.in
   sed -i 's#$(LIBRARY) ##' config/rules.mk

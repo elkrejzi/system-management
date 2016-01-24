@@ -7,4 +7,6 @@ export PKGURL="http://libssh2.org/download/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 
+export DEFAULT_CC="clang"
+
 . $(dirname $0)/master.sh

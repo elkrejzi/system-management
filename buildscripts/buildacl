@@ -13,6 +13,9 @@ export MAKE_FLAGS_32="OPTIMIZER="
 export MAKE_INSTALL_FLAGS="install-dev install-lib DIST_ROOT=\${DEST}"
 export MAKE_INSTALL_FLAGS_32="install-dev install-lib DIST_ROOT=\${PWD}/dest"
 
+export DEFAULT_CC="clang"
+export DEFAULT_CC_M32="clang -m32"
+
 make_install_post() {
   install -dm755 ${DEST}/lib
   mv ${DEST}/usr/lib/libacl.so.* ${DEST}/lib

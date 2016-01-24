@@ -5,6 +5,8 @@ pkg_remove() {
   find * -type d | sort -r | while read file ; do rmdir --ignore-fail-on-non-empty -v "/$file" ; done
 }
 
+export PKG_AUTO_INSTALL=1
+
 $(dirname $0)/buildlibclc
 $(dirname $0)/buildlibdrm
 $(dirname $0)/buildlibomxil-bellagio

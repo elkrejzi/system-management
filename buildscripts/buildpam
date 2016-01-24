@@ -9,6 +9,8 @@ export KEEP_EMPTY_DIRS=1
 export POSTINST_TRIGGER=("chmod 4755 /sbin/unix_chkpwd")
 export CONFIGURE_FLAGS=(--enable-securedir=/lib/security)
 
+export DEFAULT_CC="clang"
+
 post_install_config() {
   chmod 4755 ${DEST}/sbin/unix_chkpwd
 

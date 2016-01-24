@@ -11,4 +11,7 @@ export PATCHES_LIST_32=("libffi.patch")
 export CONFIGURE_FLAGS=(--enable-pax_emutramp)
 export CONFIGURE_FLAGS_32=(--enable-pax_emutramp)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CC_M32="clang -m32"
+
 . $(dirname $0)/master.sh

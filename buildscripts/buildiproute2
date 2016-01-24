@@ -5,7 +5,9 @@ export PKGVER=4.4.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://www.kernel.org/pub/linux/utils/net/iproute2/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MAKE_FLAGS="CCOPTS=${CFLAGS}"
+export MAKE_FLAGS="CCOPTS=\${CFLAGS} CC=\${DEFAULT_CC}"
+
+export DEFAULT_CC="clang"
 
 configure_override() {
   true

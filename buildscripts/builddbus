@@ -18,6 +18,9 @@ export CONFIGURE_FLAGS_EXTRA=(--enable-systemd
 export CONFIGURE_FLAGS=("${CONFIGURE_FLAGS_EXTRA[@]}" --with-systemdsystemunitdir=/lib/systemd/system)
 export CONFIGURE_FLAGS_32=("${CONFIGURE_FLAGS_EXTRA[@]}" --without-x)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CC_M32="clang -m32"
+
 make_install_post() {
   rm -rf ${DEST}/var/run
 

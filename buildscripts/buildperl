@@ -12,6 +12,8 @@ export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1
 export MAKE_FLAGS="all"
 
+export DEFAULT_CC="clang"
+
 configure_override() {
   export BUILD_ZLIB=False
   export ZLIB_INCLUDE=/usr/include
@@ -40,6 +42,7 @@ configure_override() {
                -des -Uafs -Ud_csh -Ud_ualarm  \
                -Uusesfio -Uusenm -Ui_libutil  \
                -Dcccdlflags='-fPIC'   \
+               -Dcc="${CC}" \
                -Doptimize="${CFLAGS}"
 
   make libperl.so.${PKGVER} SHRPLDFLAGS='$(LDDLFLAGS) -Wl,-soname,libperl.so.${MAJOR_VER}'

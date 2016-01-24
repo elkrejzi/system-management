@@ -12,6 +12,8 @@ export KEEP_STATIC=1
 export CONFIGURE_FLAGS=(--enable-64bit)
 export MAKE_INSTALL_FLAGS="install-private-headers"
 
+export DEFAULT_CC="clang"
+
 make_post() {
   sed -e "s@^\(TK_SRC_DIR='\).*@\1/usr/include'@" \
       -e "/TK_B/s@='\(-L\)\?.*unix@='\1/usr/lib@" \

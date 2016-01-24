@@ -9,4 +9,7 @@ export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--enable-libgdbm-compat)
 export CONFIGURE_FLAGS_32=(--enable-libgdbm-compat)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CC_M32="clang -m32"
+
 . $(dirname $0)/master.sh

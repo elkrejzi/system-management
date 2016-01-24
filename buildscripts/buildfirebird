@@ -22,6 +22,9 @@ export CONFIGURE_FLAGS=(--with-system-icu
                         --without-fbplugins
                         --with-fbmsg=/usr/share/firebird)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 make_install_override() {
   install -dm755 ${DEST}/usr/bin ${DEST}/usr/share/firebird
 

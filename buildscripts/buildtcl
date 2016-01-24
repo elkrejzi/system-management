@@ -12,6 +12,9 @@ export KEEP_STATIC=1
 export CONFIGURE_FLAGS=(--enable-64bit --without-tzdata)
 export MAKE_INSTALL_FLAGS="install-private-headers"
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 configure_pre() {
   rm -rf ../pkgs/sqlite*
 }

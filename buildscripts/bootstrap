@@ -5,6 +5,8 @@ pkg_remove() {
   find * -type d | sort -r | while read file ; do rmdir --ignore-fail-on-non-empty -v "/$file" ; done
 }
 
+export PKG_AUTO_INSTALL=1
+
 $(dirname $0)/buildlinux-api-headers
 $(dirname $0)/buildglibc
 $(dirname $0)/buildtzdata
@@ -160,6 +162,8 @@ pushd /binary/systemd-[0-9]*
   pkg_remove
 popd
 
+cp -rfv /binary/systemd-[0-9]*/lib/*.so.* /lib
+
 $(dirname $0)/buildsystemd
 
 pushd /binary/util-linux-[0-9]*
@@ -167,7 +171,6 @@ pushd /binary/util-linux-[0-9]*
 popd
 
 $(dirname $0)/buildutil-linux
-
 $(dirname $0)/buildxorg-proto
 $(dirname $0)/buildutil-macros
 $(dirname $0)/buildxorg-lib

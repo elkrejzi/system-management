@@ -7,6 +7,8 @@ export PKGURL="https://www.kernel.org/pub/linux/utils/cryptsetup/v${PKGVER:0:3}/
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--enable-cryptsetup-reencrypt)
 
+export DEFAULT_CC="clang"
+
 make_install_post() {
   install -dm755 ${DEST}/lib
 
