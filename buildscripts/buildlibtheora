@@ -10,4 +10,7 @@ export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--disable-examples --disable-sdltest)
 export CONFIGURE_FLAGS_32=(--disable-asm --disable-examples --disable-sdltest)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CC_M32="clang -m32"
+
 . $(dirname $0)/master.sh

@@ -10,7 +10,6 @@ export POSTINST_TRIGGER=("[ -x /usr/bin/dconf ] && echo \"Processing triggers fo
 export CONFIGURE_FLAGS=(--enable-wayland --enable-python-library --with-python=python3)
 
 export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
 
 make_install_post() {
   export SPACE_ADDED=1

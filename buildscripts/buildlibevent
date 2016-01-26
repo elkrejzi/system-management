@@ -7,4 +7,6 @@ export PKGDIR=${PKGNAME}-${PKGVER}-stable
 export PKGURL="http://downloads.sourceforge.net/levent/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
+export DEFAULT_CC="clang"
+
 . $(dirname $0)/master.sh

@@ -18,6 +18,11 @@ export COMMON_CONFIGURE_FLAGS=(--enable-video-wayland
 export CONFIGURE_FLAGS=("${COMMON_CONFIGURE_FLAGS[@]}")
 export CONFIGURE_FLAGS_32=("${COMMON_CONFIGURE_FLAGS[@]}")
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+export DEFAULT_CC_M32="clang -m32"
+export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
+
 post_install_config() {
   rm -rf ${DEST}/usr/lib*/libSDL2.a
 }

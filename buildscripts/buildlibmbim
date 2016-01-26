@@ -5,5 +5,8 @@ export PKGVER=1.12.2
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://www.freedesktop.org/software/libmbim/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--disable-more-warnings)
+
+export DEFAULT_CC="clang"
 
 . $(dirname $0)/master.sh

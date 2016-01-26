@@ -9,6 +9,8 @@ export KEEP_STATIC=1
 export PATCHES_LIST=("libpcap-fixes.patch")
 export CONFIGURE_FLAGS=(--disable-dbus)
 
+export DEFAULT_CC="clang"
+
 make_post() {
   sed -i '/INSTALL_DATA.*libpcap.a\|RANLIB.*libpcap.a/ s/^/#/' Makefile
 }

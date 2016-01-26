@@ -171,6 +171,7 @@ pushd /binary/util-linux-[0-9]*
 popd
 
 $(dirname $0)/buildutil-linux
+
 $(dirname $0)/buildxorg-proto
 $(dirname $0)/buildutil-macros
 $(dirname $0)/buildxorg-lib

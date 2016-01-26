@@ -9,6 +9,7 @@ export DEBUG_BUILD=1
 export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--with-gobject --with-graphite2)
 export CONFIGURE_FLAGS_32=("${CONFIGURE_FLAGS[@]}" --disable-introspection)
+
 export DEFAULT_CC="clang"
 export DEFAULT_CXX="clang++ -stdlib=libc++"
 export DEFAULT_CC_M32="clang -m32"

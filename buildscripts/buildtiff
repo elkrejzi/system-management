@@ -9,4 +9,9 @@ export MULTILIB_BUILD=1
 export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done\n"
                     "cp -rf --remove-destination usr/share/man/man3 /usr/share/man")
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+export DEFAULT_CC_M32="clang -m32"
+export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
+
 . $(dirname $0)/master.sh

@@ -6,9 +6,12 @@ export PKGTAR=${PKGNAME}.${PKGVER/pre9/.pre9}.tar.gz
 export PKGDIR=${PKGNAME}.${PKGVER/pre9/}
 export PKGURL="http://www.labs.hpe.com/personal/Jean_Tourrilhes/Linux/${PKGTAR}"
 
+export DEFAULT_CC="clang"
+
 configure_override() {
   sed -i "s:BUILD_STATIC:# &:" Makefile
   sed -i "s:-Os:& ${CFLAGS}:g" Makefile
+  sed -i "s:CC = gcc:CC = ${CC}:g" Makefile
 
   unset CFLAGS
 }

@@ -10,4 +10,7 @@ export CONFIGURE_FLAGS=(--with-jpeg8)
 export CONFIGURE_FLAGS_32=(--with-jpeg8 --without-simd)
 export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done")
 
+export DEFAULT_CC="clang"
+export DEFAULT_CC_M32="clang -m32"
+
 . $(dirname $0)/master.sh

@@ -7,11 +7,16 @@ export PKGDIR=comm-esr38
 export PKGURL="https://ftp.mozilla.org/pub/mozilla.org/thunderbird/releases/${PKGVER}/source/${PKGTAR}"
 export NO_OPTIMIZATION=1
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 configure_override() {
   sed -i "s:-\$(MOZ_APP_VERSION)::g" config/baseconfig.mk mozilla/config/baseconfig.mk
   sed -e '/^ftglyph.h/i ftfntfmt.h'                     \
       -e '/^freetype\/ftcache.h/a freetype\/ftfntfmt.h' \
       -i mozilla/config/system-headers
+
+  sed -i "/class MessagePort/d" mozilla/dom/events/MessageEvent.h
 
 cat > mozconfig << "EOF"
 ac_add_options --enable-application=mail

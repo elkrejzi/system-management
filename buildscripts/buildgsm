@@ -11,6 +11,9 @@ export MULTILIB_BUILD=1
 export PATCHES_LIST=("gsm.patch")
 export PATCHES_LIST_32=("gsm.patch")
 
+export DEFAULT_CC="clang"
+export DEFAULT_CC_M32="clang -m32"
+
 configure_override() {
   true
 }
@@ -20,14 +23,7 @@ configure_override_32() {
 }
 
 make_override() {
-  if [ ${MULTILIB} == 1 ]
-  then
-    sed -i "/-shared/s:-shared:\$(LDFLAGS) &:" Makefile
-
-    make CCFLAGS="-m32 -c -fPIC ${CFLAGS}" LDFLAGS="-m32" ${MAKE_JOBS_FLAGS}
-  else
-    make CCFLAGS="-c -fPIC ${CFLAGS}" ${MAKE_JOBS_FLAGS}
-  fi
+  make CC="${DEFAULT_CC}" CCFLAGS="-c -fPIC ${CFLAGS}" ${MAKE_JOBS_FLAGS}
 }
 
 make_install_override() {

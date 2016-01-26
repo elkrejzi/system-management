@@ -10,4 +10,7 @@ export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--with-module-suffix=.so)
 export CONFIGURE_FLAGS_32=(--with-module-suffix=.so --with-cpu=i586)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CC_M32="clang -m32"
+
 . $(dirname $0)/master.sh

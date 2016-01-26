@@ -32,4 +32,7 @@ export CONFIGURE_FLAGS_32=("${COMMON_CONFIGURE_FLAGS[@]}"
                            --disable-sane
                            --disable-vala)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CC_M32="clang -m32"
+
 . $(dirname $0)/master.sh

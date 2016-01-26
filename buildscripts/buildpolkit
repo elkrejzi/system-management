@@ -13,6 +13,8 @@ export POSTINST_TRIGGER=("getent group polkitd > /dev/null || groupadd -g 27 pol
                          "chmod 700 /etc/polkit-1/rules.d /usr/share/polkit-1/rules.d"
                          "chown polkitd:polkitd /etc/polkit-1/rules.d /usr/share/polkit-1/rules.d")
 
+export DEFAULT_CC="clang"
+
 configure_pre() {
   sed "s:/sys/fs/cgroup/systemd/:/bin:g" -i configure
 }

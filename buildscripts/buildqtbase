@@ -16,7 +16,7 @@ export DEBUG_BUILD=1
 export MAKE_INSTALL_FLAGS="INSTALL_ROOT=\${DEST}"
 
 export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
 
 configure_override() {
   ./configure -prefix         /usr               \

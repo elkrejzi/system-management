@@ -29,6 +29,7 @@ $(dirname $0)/buildlibid3tag
 $(dirname $0)/buildimlib2
 $(dirname $0)/buildw3m
 $(dirname $0)/buildxdg-utils
+$(dirname $0)/buildxkeyboard-config
 $(dirname $0)/buildlibdaemon
 $(dirname $0)/buildlibgusb
 $(dirname $0)/buildmozjs17
@@ -87,7 +88,6 @@ $(dirname $0)/buildxbitmaps
 $(dirname $0)/buildxorg-app
 $(dirname $0)/buildfont-util
 $(dirname $0)/buildxcursor-themes
-$(dirname $0)/buildxkeyboard-config
 $(dirname $0)/buildfftw
 $(dirname $0)/buildibus
 $(dirname $0)/buildtalloc

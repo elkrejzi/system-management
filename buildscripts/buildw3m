@@ -14,6 +14,9 @@ export CONFIGURE_FLAGS=(--enable-image=x11,fb
                         --disable-w3mmailer
                         --disable-mouse)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 configure_post() {
   sed -i "s:lImlib2:& -lX11:" Makefile
 }

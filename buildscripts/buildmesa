@@ -9,47 +9,54 @@ then
     export PKGDIR=${PKGNAME}
     export PKGBUILD=${PKGDIR}
 
-    if [ -e ${PKGDIR} ] || [ -e ${PKGBUILD} ]
+    if [ ${MULTILIB} == 0 ]
     then
-      if [ -z ${RECURSIVE_CALL} ]
+      if [ -e ${PKGDIR} ] || [ -e ${PKGBUILD} ]
       then
-        echo "Warning: Old source and/or build dir exists. Removing."
-        rm -rf ${PKGDIR} ${PKGBUILD}
+        if [ -z ${RECURSIVE_CALL} ]
+        then
+          echo "Warning: Old source and/or build dir exists. Removing."
+          rm -rf ${PKGDIR} ${PKGBUILD}
+        fi
       fi
-    fi
 
-    if [ -e git/${PKGNAME}.tar.xz ]
-    then
-      tar xf git/${PKGNAME}.tar.xz
-      pushd ${PKGNAME}
-        git fetch origin
-        git reset --hard origin/master
+      if [ -e git/${PKGNAME}.tar.xz ]
+      then
+        tar xf git/${PKGNAME}.tar.xz
+        pushd ${PKGNAME}
+          git fetch origin
+          git reset --hard origin/master
+        popd
+      else
+        git clone git://anongit.freedesktop.org/mesa/mesa
+      fi
+
+      pushd ${PKGDIR}
+        export PKGVER="$(cat VERSION | sed s/-devel//)-$(git describe | cut -d - -f 4)"
+        autoreconf -fi
       popd
-    else
-      git clone git://anongit.freedesktop.org/mesa/mesa
-    fi
 
-    pushd ${PKGDIR}
-      export PKGVER="$(cat VERSION | sed s/-devel//)-$(git describe | cut -d - -f 4)"
-      autoreconf -fi
-    popd
-
-    if [ -z ${DEST_SET} ]
-    then
-      export DEST=/binary/${PKGNAME}-${PKGVER}
-      export DEST_SET=1
-    fi
-
-    if [ -e ${DEST} ] || [ -e ${DEST}-debug ]
-    then
-      if [ ${PKG_BUILDING} != 1 ]
+      if [ -z ${DEST_SET} ]
       then
-        echo "Warning: Old package installation dir exits. Removing."
-        rm -rf ${DEST} ${DEST}-debug
+        export DEST=/binary/${PKGNAME}-${PKGVER}
+        export DEST_SET=1
       fi
-    fi
 
-    export PKG_BUILDING=1
+      if [ -e ${DEST} ] || [ -e ${DEST}-debug ]
+      then
+        if [ ${PKG_BUILDING} != 1 ]
+        then
+          echo "Warning: Old package installation dir exits. Removing."
+          rm -rf ${DEST} ${DEST}-debug
+        fi
+      fi
+
+      export PKG_BUILDING=1
+
+      cp -a ${PKGDIR} ${PKGDIR}-checkout
+    else
+      mv ${PKGDIR}-checkout ${PKGDIR}
+    fi
   }
 else
   export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
@@ -59,14 +66,13 @@ fi
 export MAKE_JOBS_FLAGS="-j4"
 export DEBUG_BUILD=1
 export MULTILIB_BUILD=1
-export PATCHES_LIST=("mesalib-xdemos.patch")
-export PATCHES_LIST_32=("mesalib-xdemos.patch")
+export PATCHES_LIST=("mesalib-xdemos.patch" "mesa-clang.patch")
+export PATCHES_LIST_32=("mesalib-xdemos.patch" "mesa-clang.patch")
 
-#export DEFAULT_CC="clang"
-#export DEFAULT_CXX="clang++-std=c++11 -stdlib=libc++"
-
-#export DEFAULT_CC_M32="clang -m32"
-#export DEFAULT_CXX_M32="clang++ -std=c++11 -stdlib=libc++ -m32"
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+export DEFAULT_CC_M32="clang -m32"
+export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
 
 configure_pre() {
   sed -i 's/LLVM_SO_NAME=.*/LLVM_SO_NAME=LLVM/' configure
