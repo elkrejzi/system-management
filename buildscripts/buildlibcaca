@@ -19,4 +19,7 @@ export CONFIGURE_FLAGS=(--disable-doc
                         --disable-python
                         --disable-ruby)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 . $(dirname $0)/master.sh

@@ -10,6 +10,8 @@ export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destina
 export PATCHES_LIST=("a52dec-fixes.patch")
 export CONFIGURE_FLAGS=(--enable-shared)
 
+export DEFAULT_CC="clang"
+
 configure_pre() {
   autoreconf -fi
 }

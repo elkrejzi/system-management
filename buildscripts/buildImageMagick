@@ -7,6 +7,9 @@ export PKGURL="http://www.imagemagick.org/download/${PKGTAR}"
 export KEEP_LA=1
 export MAKE_JOBS_FLAGS="-j4"
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 export CONFIGURE_FLAGS=(--enable-hdri
                         --with-gslib
                         --with-gvc
@@ -16,6 +19,10 @@ export CONFIGURE_FLAGS=(--enable-hdri
                         --with-dejavu-font-dir=/usr/share/fonts/truetype/dejavu
                         --with-gs-font-dir=/usr/share/ghostscript/fonts
                         --with-perl-options=INSTALLDIRS=vendor)
+
+configure_pre() {
+  sed -i "s:fopenmp:&=libgomp:g" configure
+}
 
 make_install_post() {
   rm -rf ${DEST}/usr/lib/*.la

@@ -9,4 +9,6 @@ export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destina
                     "cp -rf --remove-destination usr/bin/gdlib-config /usr/bin")
 export PATCHES_LIST=("libgd-fixes.patch")
 
+export DEFAULT_CC="clang"
+
 . $(dirname $0)/master.sh

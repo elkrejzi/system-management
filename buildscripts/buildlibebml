@@ -7,4 +7,11 @@ export PKGURL="http://dl.matroska.org/downloads/libebml/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
+configure_pre() {
+   sed -i "/cstring/i #include <cstdlib>" ebml/EbmlBinary.h
+}
+
 . $(dirname $0)/master.sh

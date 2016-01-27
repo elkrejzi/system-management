@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=vlc
-export PKGVER=2.2.1
+export PKGVER=3.0.0-git
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://download.videolan.org/pub/videolan/vlc/${PKGVER}/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
@@ -16,12 +16,10 @@ export CONFIGURE_FLAGS=(--enable-a52
                         --enable-ncurses
                         --enable-opus
                         --enable-realrtsp
-                        --enable-upnp
-                        --enable-vcdx
-                        --disable-freerdp)
+                        --enable-upnp)
 
-configure_pre() {
-  sed -i "/LUA_COMPAT_MODULE/i #define LUA_COMPAT_APIINTCASTS" modules/lua/vlc.h
-}
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+export BUILDCC="clang"
 
 . $(dirname $0)/master.sh

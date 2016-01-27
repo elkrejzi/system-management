@@ -7,4 +7,7 @@ export PKGURL="ftp://ftp.gnupg.org/gcrypt/gpgme/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--disable-fd-passing --disable-gpgsm-test)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 . $(dirname $0)/master.sh

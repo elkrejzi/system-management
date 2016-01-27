@@ -86,7 +86,6 @@ esac
 if [ "$(basename $0)" == "buildkwallet-pam" ]
 then
   export CMAKE_FLAGS=(-DCMAKE_INSTALL_LIBDIR=/lib -DCMAKE_INSTALL_LIBEXECDIR=/usr/lib/libexec)
-  export PATCHES_LIST=("kwallet-pam.patch")
 else
   export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
                       -DLIB_INSTALL_DIR=lib

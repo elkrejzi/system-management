@@ -5,6 +5,8 @@ pkg_remove() {
   find * -type d | sort -r | while read file ; do rmdir --ignore-fail-on-non-empty -v "/$file" ; done
 }
 
+export PKG_AUTO_INSTALL=1
+
 $(dirname $0)/builddjvulibre
 $(dirname $0)/buildexiv2
 $(dirname $0)/buildfribidi
@@ -66,6 +68,7 @@ $(dirname $0)/buildlibmodplug
 $(dirname $0)/buildlibmpcdec
 $(dirname $0)/buildlibmpeg2
 $(dirname $0)/buildlibmtp
+$(dirname $0)/buildlibnfs
 $(dirname $0)/buildlibshout
 $(dirname $0)/buildlibssh
 $(dirname $0)/buildlibtar

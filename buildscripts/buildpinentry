@@ -6,6 +6,9 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="ftp://ftp.gnupg.org/gcrypt/pinentry/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 configure_pre() {
   sed -i "s:ncursesw/::g" pinentry/pinentry-curses.c
 }

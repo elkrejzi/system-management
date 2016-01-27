@@ -8,6 +8,9 @@ export PKGURL="http://download.videolan.org/pub/videolan/x264/snapshots/${PKGTAR
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 configure_override() {
   ./configure --prefix=/usr    \
               --enable-shared  \

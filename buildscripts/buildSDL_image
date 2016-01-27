@@ -11,4 +11,6 @@ export CONFIGURE_FLAGS=(--disable-jpg-shared
                         --disable-tif-shared
                         --disable-webp-shared)
 
+export DEFAULT_CC="clang"
+
 . $(dirname $0)/master.sh

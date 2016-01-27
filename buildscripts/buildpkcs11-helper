@@ -7,6 +7,8 @@ export PKGDIR=${PKGNAME}-${PKGNAME}-${PKGVER}
 export PKGURL="https://github.com/OpenSC/pkcs11-helper/archive/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
+export DEFAULT_CC="clang"
+
 configure_pre() {
   autoreconf -fi
 }

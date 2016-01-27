@@ -11,9 +11,14 @@ export MAKE_INSTALL_FLAGS="INSTALL_PLUGINS_DIR=\${DEST}/usr/lib/ladspa/ \
                            INSTALL_INCLUDE_DIR=\${DEST}/usr/include/ \
                            INSTALL_BINARY_DIR=\${DEST}/usr/bin/"
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 configure_override() {
   sed -e 's/mkdirhier/mkdir -p/' \
-      -e "s#-O3#${CFLAGS}#" \
+      -e "s#-O3#${CFLAGS}#"      \
+      -e "/CC/s#cc#${CC}#"       \
+      -e "/CPP/s#c++#${CXX}#"    \
       -i makefile
 
   unset CFLAGS

@@ -11,4 +11,7 @@ export PATCHES_LIST=("zbar-fixes.patch")
 export CONFIGURE_FLAGS=(--without-qt)
 export LDFLAGS=-lm
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 . $(dirname $0)/master.sh

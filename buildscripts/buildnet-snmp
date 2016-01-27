@@ -23,6 +23,8 @@ export CONFIGURE_FLAGS=(--enable-ipv6
                         --with-python-modules
                         --with-mib-modules="host misc/ipfwacc ucd-snmp/diskio tunnel ucd-snmp/dlmod")
 
+export DEFAULT_CC="clang"
+
 make_post() {
   sed -i "s:install --basedir=\$\$dir:install --basedir=\$\$dir --root=${DEST}:" Makefile
 }

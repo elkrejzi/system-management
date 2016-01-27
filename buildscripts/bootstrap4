@@ -68,7 +68,6 @@ $(dirname $0)/buildlibgtop
 $(dirname $0)/buildlibgweather
 $(dirname $0)/buildlibgxps
 $(dirname $0)/buildlibkpathsea
-$(dirname $0)/buildlibnfs
 $(dirname $0)/buildliboauth
 $(dirname $0)/buildlibpaper
 $(dirname $0)/buildlibpeas

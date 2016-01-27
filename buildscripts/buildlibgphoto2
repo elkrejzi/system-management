@@ -9,6 +9,9 @@ export KEEP_LA=1
 export POSTINST_TRIGGER=("udevadm hwdb --update")
 export CONFIGURE_FLAGS=(--disable-rpath)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 make_install_post() {
   rm -rf ${DEST}/usr/include/gphoto2/gphoto2 ${DEST}/usr/lib/*.la ${DEST}/usr/lib/udev
 

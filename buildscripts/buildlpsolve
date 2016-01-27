@@ -6,8 +6,10 @@ export PKGTAR=lp_solve_${PKGVER}_source.tar.gz
 export PKGDIR=lp_solve_5.5
 export PKGURL="https://downloads.sourceforge.net/lpsolve/${PKGTAR}"
 
+export DEFAULT_CC="clang"
+
 configure_override() {
-  sed -e "s|-O3|${CFLAGS}|g" -i lp_solve/ccc lpsolve55/ccc
+  sed -e "s|-O3|${CFLAGS}|g;s|c=cc|c=${CC}|g" -i lp_solve/ccc lpsolve55/ccc
 
   unset CFLAGS
 }
