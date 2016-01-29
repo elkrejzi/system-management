@@ -39,34 +39,49 @@ cmake_shared=(
 
 for dir in llvm ${proj[@]}
 do
-  rm -rf ${dir}
+  rm -rf ${dir} ${dir}-${LLVM_VER}.src
 done
 
-for proj in llvm ${proj[@]}
-do
-  if [ -e $HOME/git/${proj}.tar.xz ]
-  then
-    tar xf $HOME/git/${proj}.tar.xz
-    pushd ${proj}
-      svn up
-    popd
-    else
-      svn co http://llvm.org/svn/llvm-project/${proj}/branches/release_38 ${proj}
-    fi
+if [ -z $1 ]
+then
+  for project in llvm ${proj[@]}
+  do
+    tar xf ${SROOT}/${project}-${LLVM_VER}.src.tar.xz
+    mv ${project}-${LLVM_VER}.src ${project}
+  done
+fi
 
-  if [ ${proj} == "cfe" ]
+for project in llvm ${proj[@]}
+do
+  if [ ! -d llvm ]
+  then
+    if [ -e $HOME/git/${project}.tar.xz ]
+    then
+      tar xf $HOME/git/${project}.tar.xz
+      pushd ${project}
+        svn up
+      popd
+    else
+      svn co http://llvm.org/svn/llvm-project/${project}/trunk ${project}
+    fi
+  fi
+
+  if [ ${project} == "cfe" ]
   then
     sed -i "/ld-linux-x86-64/s/lib64/lib/" cfe/lib/Driver/Tools.cpp
-    mv ${proj} llvm/tools/clang
-  elif [ ${proj} != "cfe" ] && [ ${proj} != "llvm" ]
+    mv ${project} llvm/tools/clang
+  elif [ ${project} != "cfe" ] && [ ${project} != "llvm" ]
   then
-    mv ${proj} llvm/projects
+    mv ${project} llvm/projects
   fi
 done
 
 pushd llvm
-  LLVM_VER=$(grep "PACKAGE_VERSION=" configure | cut -d \' -f 2)$(svn info | grep "Revision:" | awk '{print $2}')
-  export LLVM_VER=${LLVM_VER/svn/.svn}
+  if [ ! -z $1 ]
+  then
+    LLVM_VER=$(grep "PACKAGE_VERSION=" configure | cut -d \' -f 2)$(svn info | grep "Revision:" | awk '{print $2}')
+    export LLVM_VER=${LLVM_VER/svn/.svn}
+  fi
 
   sed -i "s:CLANG_HAVE_LIBXML 1:CLANG_HAVE_LIBXML 0:g" tools/clang/CMakeLists.txt
 popd

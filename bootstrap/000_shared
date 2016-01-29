@@ -76,6 +76,7 @@ OPENSSL_VER=1.0.2e
 WGET_VER=1.17.1
 NANO_VER=2.5.1
 LIBFFI_VER=3.2.1
+LLVM_VER=3.8.0rc1
 
 if [ ! -z $1 ]
 then
@@ -120,6 +121,13 @@ https://www.openssl.org/source/openssl-${OPENSSL_VER}.tar.gz
 ${GNU_MIRROR}/wget/wget-${WGET_VER}.tar.xz
 ${GNU_MIRROR}/nano/nano-${NANO_VER}.tar.gz
 ftp://sourceware.org/pub/libffi/libffi-${LIBFFI_VER}.tar.gz
+http://llvm.org/releases/${LLVM_VER}/llvm-${LLVM_VER}.src.tar.xz
+http://llvm.org/releases/${LLVM_VER}/cfe-${LLVM_VER}.src.tar.xz
+http://llvm.org/releases/${LLVM_VER}/compiler-rt-${LLVM_VER}.src.tar.xz
+http://llvm.org/releases/${LLVM_VER}/libcxx-${LLVM_VER}.src.tar.xz
+http://llvm.org/releases/${LLVM_VER}/libcxxabi-${LLVM_VER}.src.tar.xz
+http://llvm.org/releases/${LLVM_VER}/libunwind-${LLVM_VER}.src.tar.xz
+http://llvm.org/releases/${LLVM_VER}/openmp-${LLVM_VER}.src.tar.xz
 
 https://raw.githubusercontent.com/elkrejzi/system-management/master/patches/gcc-pure64.patch
 https://raw.githubusercontent.com/elkrejzi/system-management/master/patches/glibc-pure64.patch
