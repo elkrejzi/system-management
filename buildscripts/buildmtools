@@ -6,8 +6,11 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://ftp.gnu.org/gnu/mtools/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
+export DEFAULT_CC="clang"
+
 configure_pre() {
   sed -i '/^SAMPLE FILE$/s:^:# :' mtools.conf
+  sed -i "/UNUSED/s|;x||g" sysincludes.h
 }
 
 make_install_post() {

@@ -6,6 +6,8 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://downloads.sourceforge.net/hdparm/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
+export DEFAULT_CC="clang"
+
 configure_override() {
   sed -i "s:-O2:${CFLAGS}:g" Makefile
 

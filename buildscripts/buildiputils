@@ -8,6 +8,8 @@ export PKGURL="https://github.com/iputils/iputils/archive/s${PKGVER}.tar.gz"
 export MAKE_JOBS_FLAGS="-j4"
 export POSTINST_TRIGGER=("setcap cap_net_raw=ep /bin/ping")
 
+export DEFAULT_CC="clang"
+
 configure_override() {
   sed -i "s#-O3#${CFLAGS}#g" Makefile
 

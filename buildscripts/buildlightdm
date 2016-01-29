@@ -10,6 +10,9 @@ export CONFIGURE_FLAGS=(--disable-tests
                         --with-greeter-user=lightdm
                         --with-greeter-session=lightdm-gtk-greeter)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 make_install_post() {
   rm -rf ${DEST}/etc/apparmor.d ${DEST}/etc/init
 

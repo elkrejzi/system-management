@@ -5,6 +5,7 @@ export PKGVER=3.15.11
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://downloads.sourceforge.net/hplip/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
+
 export CONFIGURE_FLAGS=(--enable-qt4
                         --enable-foomatic-ppd-install
                         --enable-hpcups-install
@@ -15,7 +16,11 @@ export CONFIGURE_FLAGS=(--enable-qt4
                         --enable-foomatic-drv-install
                         --enable-pp-build
                         --disable-foomatic-rip-hplip-install)
+
 export MAKE_INSTALL_FLAGS="rulesdir=/lib/udev/rules.d rulessystemdir=/lib/systemd/system"
+
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
 
 configure_pre() {
   for i in ppd/hpijs/*.ppd.gz

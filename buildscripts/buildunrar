@@ -6,8 +6,11 @@ export PKGTAR=unrarsrc-${PKGVER}.tar.gz
 export PKGDIR=unrar
 export PKGURL="http://www.rarlab.com/rar/${PKGTAR}"
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 configure_override() {
-  sed -i "s:-O2:${CFLAGS}:g" makefile
+  sed -i "s:-O2:${CFLAGS}:g;/CXX/s:g++:${CXX}:g" makefile
 
   unset CFLAGS
 }

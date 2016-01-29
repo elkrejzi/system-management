@@ -7,6 +7,7 @@ export PKGURL="https://bitbucket.org/france/transcode-tcforge/downloads/${PKGTAR
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export PATCHES_LIST=("transcode-fixes.patch")
+
 export CONFIGURE_FLAGS=(--enable-libv4l2
                         --enable-libv4lconvert
                         --enable-libmpeg2
@@ -29,6 +30,9 @@ export CONFIGURE_FLAGS=(--enable-libv4l2
                         --enable-lzo
                         --enable-mjpegtools
                         --enable-imagemagick)
+
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
 
 configure_pre() {
   sed -i "s:#include <freetype/ftglyph.h>:#include FT_GLYPH_H:" filter/subtitler/load_font.c

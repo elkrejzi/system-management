@@ -7,8 +7,11 @@ export PKGURL="http://fy.chalmers.se/~appro/linux/DVD+RW/tools/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export PATCHES_LIST=("dvd+rw-tools-fixes.patch")
-export MAKE_FLAGS="all rpl8"
+export MAKE_FLAGS="all rpl8 CC=\${DEFAULT_CC} CXX=\${DEFAULT_CXX}"
 export MAKE_INSTALL_FLAGS="prefix=\${DEST}/usr"
+
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
 
 configure_override() {
   sed -i "s:-O2:${CFLAGS}:g" Makefile.m4

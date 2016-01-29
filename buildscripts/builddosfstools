@@ -8,6 +8,8 @@ export MAKE_JOBS_FLAGS="-j4"
 export MAKE_FLAGS="PREFIX=/usr SBINDIR=/sbin"
 export MAKE_INSTALL_FLAGS="PREFIX=/usr SBINDIR=/sbin"
 
+export DEFAULT_CC="clang"
+
 configure_override() {
   sed -i "s:-O2:${CFLAGS}:g" Makefile
 

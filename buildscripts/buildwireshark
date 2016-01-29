@@ -12,4 +12,7 @@ export POSTINST_TRIGGER=("getent group wireshark > /dev/null || groupadd -g 62 w
                          "chmod 6550 /usr/bin/tshark"
                          "chmod 6550 /usr/bin/dumpcap")
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 . $(dirname $0)/master.sh

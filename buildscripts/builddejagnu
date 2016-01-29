@@ -8,4 +8,7 @@ export MAKE_JOBS_FLAGS="-j4"
 export KEEP_STATIC=1
 export NO_STRIP=1
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 . $(dirname $0)/master.sh

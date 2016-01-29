@@ -6,6 +6,8 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://libspectre.freedesktop.org/releases/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
+export DEFAULT_CC="clang"
+
 configure_pre() {
   sed -i "s/ e_/ gs_error_/" libspectre/spectre-gs.c
 }

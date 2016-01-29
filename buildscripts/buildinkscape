@@ -10,6 +10,12 @@ export USER_CXXFLAGS="-std=c++11"
 export DEFAULT_CC="clang"
 export DEFAULT_CXX="clang++ -stdlib=libc++"
 
+configure_pre() {
+  sed -i "s:fopenmp:&=libgomp:g" configure
+  sed -i "s#abs(#&(double)#g" src/libavoid/connector.cpp
+  sed -i "s#abs(static_cast<int>#abs(static_cast<double>#g" src/ui/tools/flood-tool.cpp
+}
+
 make_install_post() {
   sed -i "s:application/pdf;application/postscript;image/x-eps;::g" ${DEST}/usr/share/applications/inkscape.desktop
 

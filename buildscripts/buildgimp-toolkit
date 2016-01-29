@@ -162,6 +162,9 @@ EOF
                             --enable-x11-backend
                             --enable-evdev-input)
     unset MULTILIB_BUILD
+    configure_pre() {
+      sed -i "/int main (void)/d" configure
+    }
   ;;
   buildclutter-gtk )
     export PKGNAME=clutter-gtk

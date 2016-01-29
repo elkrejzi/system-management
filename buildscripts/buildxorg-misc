@@ -31,7 +31,7 @@ case $(basename $0) in
   ;;
   buildxkeyboard-config )
     export PKGNAME=xkeyboard-config
-    export PKGVER=2.16
+    export PKGVER=2.17
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://xorg.freedesktop.org/releases/individual/data/xkeyboard-config/${PKGTAR}"
     export CONFIGURE_FLAGS=(--with-xkb-rules-symlink=xorg)

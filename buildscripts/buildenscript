@@ -7,4 +7,6 @@ export PKGURL="https://ftp.gnu.org/gnu/enscript/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--sysconfdir=/etc/enscript)
 
+export DEFAULT_CC="clang"
+
 . $(dirname $0)/master.sh

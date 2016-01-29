@@ -7,6 +7,9 @@ export PKGURL="http://libopenraw.freedesktop.org/download/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export POSTINST_TRIGGER=("[ -x /usr/bin/gdk-pixbuf-query-loaders ] && echo \"Processing triggers for gdk-pixbuf-2.0\" && /usr/bin/gdk-pixbuf-query-loaders --update-cache")
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 make_install_post() {
   export SPACE_ADDED=1
 }

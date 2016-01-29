@@ -7,6 +7,9 @@ export PKGURL="http://download-origin.transmissionbt.com/files/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--without-gtk)
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 configure_post() {
   pushd qt
     qmake "QMAKE_CFLAGS+=${CFLAGS}" "QMAKE_CXXFLAGS+=${CXXFLAGS}"

@@ -9,6 +9,8 @@ export MAKE_JOBS_FLAGS="-j4"
 export KEEP_STATIC=1
 export CONFIGURE_FLAGS=(--bindir=/sbin)
 
+export DEFAULT_CC="clang"
+
 make_install_post() {
   rm -rf ${DEST}/usr/lib/libbtrfs.a ${DEST}/usr/share/man/man8/{btrfsck,btrfs-zero-log}.8.gz
 

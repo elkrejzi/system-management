@@ -104,7 +104,7 @@ case $(basename $0) in
   buildgnome-online-accounts )
     export PKGNAME=gnome-online-accounts
     export PKGVER=3.18.3
-    export CONFIGURE_FLAGS=(--enable-kerberos)
+    export CONFIGURE_FLAGS=(--enable-kerberos --disable-compile-warnings)
   ;;
   buildgnome-session )
     export PKGNAME=gnome-session
@@ -166,6 +166,7 @@ case $(basename $0) in
     export PKGVER=0.2.15
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
+    export CONFIGURE_FLAGS=(--disable-compile-warnings)
   ;;
   buildgsettings-desktop-schemas )
     export PKGNAME=gsettings-desktop-schemas
@@ -225,6 +226,7 @@ case $(basename $0) in
     export PKGVER=0.2.3.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
+    export CONFIGURE_FLAGS=(--disable-compile-warnings)
   ;;
   buildlibpeas )
     export PKGNAME=libpeas

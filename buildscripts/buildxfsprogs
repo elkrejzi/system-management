@@ -7,6 +7,8 @@ export PKGURL="ftp://oss.sgi.com/projects/xfs/cmd_tars/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export MAKE_INSTALL_FLAGS="install-dev"
 
+export DEFAULT_CC="clang"
+
 configure_override() {
   true
 }
@@ -18,7 +20,7 @@ make_override() {
   make DEBUG=-DNDEBUG     \
        INSTALL_USER=root  \
        INSTALL_GROUP=root \
-       LOCAL_CONFIGURE_OPTIONS="--enable-readline" \
+       LOCAL_CONFIGURE_OPTIONS="--enable-readline --disable-lib64" \
        V=1 ${MAKE_JOBS_FLAGS}
 }
 

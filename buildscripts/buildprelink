@@ -7,4 +7,7 @@ export PKGDIR=${PKGNAME}
 export PKGURL="https://people.redhat.com/jakub/prelink/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 . $(dirname $0)/master.sh

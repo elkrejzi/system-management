@@ -6,12 +6,17 @@ export PKGTAR=imap-${PKGVER}.tar.gz
 export PKGDIR=imap-${PKGVER}
 export PKGURL="ftp://ftp.cac.washington.edu/imap/${PKGTAR}"
 
+export DEFAULT_CC="clang"
+
 configure_override() {
   sed -i "s#BSD_SOURCE#DEFAULT_SOURCE#g" src/osdep/unix/os_{ln,sl}x.h
 
   sed -i "s#BASELDFLAGS=\"\$(PAMLDFLAGS)\"#BASELDFLAGS=\"../c-client/c-client.a \$(PAMLDFLAGS)\"#g" src/osdep/unix/Makefile
   sed -i "s#\$(BINARIES);\$(RANLIB)#\$(BINARIES) \$(LIBRARIES);\$(RANLIB)#g" src/osdep/unix/Makefile
   sed -i "s#\$(CCLIENTLIB) ##g" $(grep -rl "(CCLIENTLIB)")
+
+  echo "${CC}" > src/c-client/CCTYPE
+  echo "${CFLAGS} -fPIC -DCHUNKSIZE=65536" > src/c-client/CFLAGS
 
 /bin/echo -e '
 ldbs:  an

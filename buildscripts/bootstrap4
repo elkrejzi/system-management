@@ -5,6 +5,8 @@ pkg_remove() {
   find * -type d | sort -r | while read file ; do rmdir --ignore-fail-on-non-empty -v "/$file" ; done
 }
 
+export PKG_AUTO_INSTALL=1
+
 $(dirname $0)/buildxorg-server
 $(dirname $0)/buildxf86-input-evdev
 $(dirname $0)/buildxf86-input-libinput

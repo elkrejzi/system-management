@@ -8,6 +8,10 @@ export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--with-system-readline
                         --without-guile
                         --with-system-gdbinit=/etc/gdb/gdbinit)
+
 export MAKE_INSTALL_FLAGS="-C gdb"
+
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
 
 . $(dirname $0)/master.sh
