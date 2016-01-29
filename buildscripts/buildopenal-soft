@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=openal-soft
-export PKGVER=1.17.1
+export PKGVER=1.17.2
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://kcat.strangesoft.net/openal-releases/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}

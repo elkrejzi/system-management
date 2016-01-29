@@ -10,6 +10,7 @@ export POSTINST_TRIGGER=("getent group httpd > /dev/null && getent passwd httpd 
                          "if [ ! -e /etc/cgitrc ]" "then" "  cp -r /etc/cgitrc.dist /etc/cgitrc" "fi")
 
 export MAKE_INSTALL_FLAGS="CGIT_SCRIPT_PATH=/usr/share/cgit prefix=/usr"
+
 export DEFAULT_CC="clang"
 
 configure_override() {

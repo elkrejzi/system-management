@@ -1,12 +1,12 @@
 #!/bin/bash -e
 
 export PKGNAME=chromium
-export PKGVER=48.0.2564.82
+export PKGVER=48.0.2564.97
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://commondatastorage.googleapis.com/chromium-browser-official/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export POSTINST_TRIGGER=("chmod 4755 /usr/lib/chromium/chrome-sandbox")
-export PATCHES_LIST=("chromium-fixes.patch" "chromium-libcxx.patch" "chromium-vaapi.patch")
+export PATCHES_LIST=("chromium-fixes.patch" "chromium-libcxx.patch")
 
 export DEFAULT_CC="clang"
 export DEFAULT_CXX="clang++ -std=c++11 -stdlib=libc++"
@@ -22,7 +22,7 @@ configure_pre() {
       -Dgoogle_default_client_id=11433373901.apps.googleusercontent.com
       -Dgoogle_default_client_secret=xZ5yO6MG_uMyrh0srUAkJ4KG
       -Dwerror=
-      -Dchromeos=0
+      -Dchromeos=1
       -Dclang=1
       -Dclang_use_chrome_plugins=0
       -Dpython_ver=2.7

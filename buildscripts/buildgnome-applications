@@ -11,6 +11,7 @@ case $(basename $0) in
   buildcheese )
     export PKGNAME=cheese
     export PKGVER=3.18.1
+    export CONFIGURE_FLAGS=(--disable-compile-warnings)
   ;;
   buildeog )
     export PKGNAME=eog
@@ -26,7 +27,7 @@ case $(basename $0) in
   buildevince )
     export PKGNAME=evince
     export PKGVER=3.18.2
-    export CONFIGURE_FLAGS=(--enable-introspection)
+    export CONFIGURE_FLAGS=(--enable-introspection --disable-compile-warnings)
     make_install_post() {
       install -dm755 ${DEST}/usr/lib/evince/mozilla
       mv ${DEST}/usr/lib/mozilla/plugins/libevbrowserplugin.so ${DEST}/usr/lib/evince/mozilla
@@ -44,7 +45,7 @@ case $(basename $0) in
   ;;
   buildgnome-calculator )
     export PKGNAME=gnome-calculator
-    export PKGVER=3.18.2
+    export PKGVER=3.18.3
   ;;
   buildgnome-color-manager )
     export PKGNAME=gnome-color-manager
@@ -90,7 +91,7 @@ case $(basename $0) in
   ;;
   buildnautilus )
     export PKGNAME=nautilus
-    export PKGVER=3.18.4
+    export PKGVER=3.18.5
     export CONFIGURE_FLAGS=(--disable-packagekit
                             --disable-update-mimedb
                             --disable-tracker)
@@ -109,7 +110,7 @@ case $(basename $0) in
   buildvinagre )
     export PKGNAME=vinagre
     export PKGVER=3.18.2
-    export PATCHES_LIST=("vinagre.patch")
+    export CONFIGURE_FLAGS=(--disable-compile-warnings)
   ;;
   buildvino )
     export PKGNAME=vino

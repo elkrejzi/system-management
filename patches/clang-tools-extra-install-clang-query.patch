@@ -1,8 +1,0 @@
---- a/clang-query/tool/CMakeLists.txt	2015-06-20 21:28:07.000000000 +0200
-+++ b/clang-query/tool/CMakeLists.txt	2015-10-03 17:35:10.191474407 +0200
-@@ -10,3 +10,5 @@
-   clangQuery
-   clangTooling
-   )
-+
-+install(TARGETS clang-query RUNTIME DESTINATION bin)

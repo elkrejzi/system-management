@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=firefox
-export PKGVER=43.0.4
+export PKGVER=44.0
 export PKGTAR=${PKGNAME}-${PKGVER}.source.tar.xz
 export PKGURL="https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/${PKGVER}/source/${PKGTAR}"
 export NO_OPTIMIZATION=1
@@ -41,7 +41,6 @@ ac_add_options --enable-strip
 
 ac_add_options --enable-default-toolkit=cairo-gtk3
 ac_add_options --enable-gio
-ac_add_options --enable-gstreamer=1.0
 ac_add_options --enable-official-branding
 ac_add_options --enable-pulseaudio
 ac_add_options --enable-safe-browsing
@@ -51,6 +50,7 @@ ac_add_options --enable-url-classifier
 ac_add_options --disable-gconf
 ac_add_options --disable-gnomeui
 ac_add_options --disable-gnomevfs
+ac_add_options --disable-gstreamer
 
 ac_add_options --disable-crashreporter
 ac_add_options --disable-debug
