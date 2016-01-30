@@ -10,8 +10,6 @@ export POSTINST_TRIGGER=("getent group rtkit > /dev/null || groupadd -g 65 rtkit
                          "getent passwd rtkit > /dev/null || useradd -c \"RealtimeKit\" -d /proc -g rtkit -u 65 -s /sbin/nologin rtkit")
 export CONFIGURE_FLAGS=(--with-systemdsystemunitdir=/lib/systemd/system)
 
-export DEFAULT_CC="clang"
-
 configure_pre() {
   autoreconf -fi
 }

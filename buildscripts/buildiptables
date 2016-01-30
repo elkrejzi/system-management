@@ -10,8 +10,6 @@ export CONFIGURE_FLAGS=(--sbindir=/sbin
                         --with-xtlibdir=/lib/xtables
                         --enable-libipq)
 
-export DEFAULT_CC="clang"
-
 make_install_post() {
   ln -sf ../../sbin/xtables-multi ${DEST}/usr/bin/iptables-xml
 

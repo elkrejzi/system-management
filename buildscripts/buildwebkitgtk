@@ -12,9 +12,6 @@ export CMAKE_FLAGS=(-DCMAKE_SKIP_RPATH=ON
                     -DLIB_INSTALL_DIR=/usr/lib)
 export USER_CXXFLAGS="-stdlib=libc++"
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++"
-
 configure_pre() {
   sed -i "/pow/s#, 3#, 3.0#g" ../${PKGDIR}/Source/WebCore/rendering/shapes/BoxShape.cpp
 }

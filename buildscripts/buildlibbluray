@@ -8,6 +8,4 @@ export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--disable-bdjava)
 
-export DEFAULT_CC="clang"
-
 . $(dirname $0)/master.sh

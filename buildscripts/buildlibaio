@@ -9,9 +9,6 @@ export MULTILIB_BUILD=1
 export MAKE_INSTALL_FLAGS="prefix=\${DEST}/usr"
 export MAKE_INSTALL_FLAGS_32="prefix=\${PWD}/dest/usr libdir=\${PWD}/dest/usr/lib32"
 
-export DEFAULT_CC="clang"
-export DEFAULT_CC_M32="clang -m32"
-
 configure_override() {
   export CFLAGS=${CFLAGS/-fstack-protector-strong/}
 }

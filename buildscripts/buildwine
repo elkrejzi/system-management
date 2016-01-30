@@ -13,11 +13,6 @@ export PATH_TO_SOURCE="../${PKGNAME}-${PKGVER}"
 export CONFIGURE_FLAGS=(--with-gstreamer --with-x --enable-win64)
 export CONFIGURE_FLAGS_32=(--with-gstreamer --with-x --with-wine64=${PWD}/wine-build64)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-export DEFAULT_CC_M32="clang -m32"
-export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
-
 make_install_override() {
   if [ ${MULTILIB} == 1 ]
   then

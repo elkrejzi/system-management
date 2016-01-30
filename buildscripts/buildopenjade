@@ -18,9 +18,6 @@ export CONFIGURE_FLAGS=(--datadir=/usr/share/sgml/OpenJade
 
 export MAKE_INSTALL_FLAGS="install-man"
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 make_install_post() {
   install -m644 dsssl/catalog ${DEST}/usr/share/sgml/OpenJade
   install -m644 dsssl/*.{dtd,dsl,sgm} ${DEST}/usr/share/sgml/OpenJade

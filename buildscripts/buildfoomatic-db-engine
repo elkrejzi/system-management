@@ -10,6 +10,4 @@ export KEEP_STATIC=1
 export NO_STRIP=1
 export CONFIGURE_FLAGS=(PERL_INSTALLDIRS=vendor)
 
-export DEFAULT_CC="clang"
-
 . $(dirname $0)/master.sh

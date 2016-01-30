@@ -7,9 +7,6 @@ export PKGURL="http://www.bzip.org/${PKGVER}/${PKGURL}"
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 
-export DEFAULT_CC="clang"
-export DEFAULT_CC_M32="clang -m32"
-
 configure_override_shared() {
   sed -e 's/^CFLAGS=\(.*\)$/CFLAGS=\1 \$(BIGFILES)/' -i ./Makefile-libbz2_so
 

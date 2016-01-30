@@ -10,9 +10,6 @@ export MAKE_FLAGS_32="-C libcap prefix=/usr lib=lib32"
 export MAKE_INSTALL_FLAGS="RAISE_SETFCAP=no PAM_LIBDIR=\${DEST}/lib prefix=/usr"
 export MAKE_INSTALL_FLAGS_32="-C libcap prefix=/usr lib=lib32"
 
-export DEFAULT_CC="clang"
-export DEFAULT_CC_M32="clang -m32"
-
 configure_override() {
   sed -i "s|-D_FILE_OFFSET_BITS=64|& ${CFLAGS}|" Make.Rules
   sed -i "s| gcc| ${CC}|" Make.Rules

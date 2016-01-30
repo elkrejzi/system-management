@@ -6,9 +6,6 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://s3.amazonaws.com/json-c_releases/releases/${PKGTAR}"
 export MULTILIB_BUILD=1
 
-export DEFAULT_CC="clang"
-export DEFAULT_CC_M32="clang -m32"
-
 configure_post() {
   find . -name "Makefile" -exec sed -i "s:-Werror ::g" {} \;
 }

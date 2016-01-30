@@ -7,8 +7,6 @@ export PKGDIR=${PKGNAME}_${PKGVER}_src
 export PKGURL="ftp://sunsite.ualberta.ca/pub/Mirror/lsof/lsof_4.89.tar.bz2"
 export MAKE_JOBS_FLAGS="-j4"
 
-export DEFAULT_CC="clang"
-
 post_extract_action() {
   bsdtar xf lsof_${PKGVER}/lsof_${PKGVER}_src.tar
   rm -rf lsof_${PKGVER}

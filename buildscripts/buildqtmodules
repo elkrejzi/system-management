@@ -78,8 +78,6 @@ if [ ${PKGNAME} == "qtwebengine" ]
 then
   export PATCHES_LIST=("qtwebengine-libcxx.patch")
 
-  export DEFAULT_CC="clang"
-  export DEFAULT_CXX="clang++ -stdlib=libc++"
 
   configure_pre() {
     # No debug symbols for this module. Taken from Debian

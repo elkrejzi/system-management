@@ -8,8 +8,6 @@ export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1
 export PATCHES_LIST=("httpd.patch")
 
-export DEFAULT_CC="clang"
-
 configure_override() {
   sed -e "s@/srv/www@/var/www@" -i config.layout
   sed -e "s@User apache@User httpd@" -i docs/conf/httpd.conf.in

@@ -6,8 +6,6 @@ export PKGTAR=imap-${PKGVER}.tar.gz
 export PKGDIR=imap-${PKGVER}
 export PKGURL="ftp://ftp.cac.washington.edu/imap/${PKGTAR}"
 
-export DEFAULT_CC="clang"
-
 configure_override() {
   sed -i "s#BSD_SOURCE#DEFAULT_SOURCE#g" src/osdep/unix/os_{ln,sl}x.h
 

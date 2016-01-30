@@ -7,9 +7,6 @@ export PKGURL="http://tukaani.org/xz/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 
-export DEFAULT_CC="clang"
-export DEFAULT_CC_M32="clang -m32"
-
 post_install_config() {
   install -dm755 ${DEST}/bin ${DEST}/lib
 

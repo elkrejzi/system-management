@@ -10,8 +10,6 @@ export KEEP_STATIC=1
 export PATCHES_LIST=("ppp.patch")
 export USER_CFLAGS="-D_GNU_SOURCE"
 
-export DEFAULT_CC="clang"
-
 configure_override() {
   sed -i "s:^#FILTER=y:FILTER=y:" pppd/Makefile.linux
   sed -i "s:^#HAVE_INET6=y:HAVE_INET6=y:" pppd/Makefile.linux

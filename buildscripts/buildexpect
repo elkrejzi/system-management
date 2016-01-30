@@ -10,6 +10,4 @@ export CONFIGURE_FLAGS=(--enable-shared
                         --with-tcl=/usr/lib
                         --with-tclinclude=/usr/include)
 
-export DEFAULT_CC="clang"
-
 . $(dirname $0)/master.sh

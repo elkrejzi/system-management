@@ -290,7 +290,6 @@ case $(basename $0) in
   ;;
 esac
 
-export DEFAULT_CC="clang"
 export DEFAULT_CC_M32="clang"
 
 . $(dirname $0)/master.sh

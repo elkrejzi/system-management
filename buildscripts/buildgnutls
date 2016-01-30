@@ -9,11 +9,6 @@ export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--enable-local-libopts --disable-guile)
 export CONFIGURE_FLAGS_32=(--enable-local-libopts --disable-guile --disable-hardware-acceleration)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-export DEFAULT_CC_M32="clang -m32"
-export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
-
 make_install_post() {
   make -C doc/reference install-data-local DESTDIR=${DEST}
 

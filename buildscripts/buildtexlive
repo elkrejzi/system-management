@@ -41,9 +41,6 @@ export CONFIGURE_FLAGS=(--datarootdir=/usr/share
                         --with-system-zziplib
                         --with-banner-add=" - BLFS")
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 post_extract_action() {
   if [ ! -e ${SROOT}/${TEXMFTAR} ]
   then

@@ -11,9 +11,6 @@ export CONFIGURE_FLAGS=(--sbindir=/sbin
                         --without-tcp-wrappers
                         --disable-gss)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 configure_pre() {
   sed -i "/daemon_init/s:\!::" utils/statd/statd.c
 }

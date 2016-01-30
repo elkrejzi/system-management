@@ -44,9 +44,4 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://gstreamer.freedesktop.org/src/${PKGNAME}/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-export DEFAULT_CC_M32="clang -m32"
-export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
-
 . $(dirname $0)/master.sh

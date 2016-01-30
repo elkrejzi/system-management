@@ -10,7 +10,4 @@ export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--disable-documentation)
 export CONFIGURE_FLAGS_32=(--disable-documentation)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CC_M32="clang -m32"
-
 . $(dirname $0)/master.sh

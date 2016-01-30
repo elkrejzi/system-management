@@ -12,8 +12,6 @@ export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1
 export MAKE_FLAGS="all"
 
-export DEFAULT_CC="clang"
-
 configure_override() {
   export BUILD_ZLIB=False
   export ZLIB_INCLUDE=/usr/include

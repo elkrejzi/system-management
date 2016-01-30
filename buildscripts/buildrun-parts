@@ -7,8 +7,6 @@ export PKGDIR=debianutils-${PKGVER}
 export PKGURL="http://http.debian.net/debian/pool/main/d/debianutils/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
-export DEFAULT_CC="clang"
-
 make_install_override() {
   install -Dm755 run-parts ${DEST}/usr/bin/run-parts
   install -Dm644 run-parts.8 ${DEST}/usr/share/man/man8/run-parts.8

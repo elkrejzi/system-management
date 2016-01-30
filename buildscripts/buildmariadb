@@ -32,9 +32,6 @@ export CMAKE_FLAGS=(-DSYSCONFDIR=/etc/mysql
                     -DWITH_SSL=system
                     -DWITH_ZLIB=system)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 configure_pre() {
   rm -rf ../${PKGDIR}/storage/tokudb
 }

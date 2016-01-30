@@ -8,9 +8,6 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="${SHARED_URL}/${PKGTAR}"
 export PATCHES_LIST=("libreoffice-no-tests.patch")
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++"
-
 post_extract_action() {
   for c in dictionaries help translations
   do

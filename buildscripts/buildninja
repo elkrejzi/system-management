@@ -5,9 +5,6 @@ export PKGVER=1.6.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/martine/ninja/archive/v${PKGVER}.tar.gz"
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 configure_override() {
   true
 }

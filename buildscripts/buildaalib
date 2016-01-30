@@ -11,8 +11,6 @@ export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destina
                     "cp -rf --remove-destination usr/share/aclocal /usr/share"
                     "cp -rf --remove-destination usr/share/man/man3 /usr/share/man")
 
-export DEFAULT_CC="clang"
-
 configure_pre() {
   sed -i '/AM_PATH_AALIB,/s/AM_PATH_AALIB/[&]/' aalib.m4
   sed -i '203s/return;/return (1);/' src/aalinuxkbd.c

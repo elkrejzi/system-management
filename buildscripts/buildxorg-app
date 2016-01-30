@@ -217,6 +217,4 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export DEST=/binary/xorg/app/${PKGNAME}-${PKGVER}
 export PKGURL="http://xorg.freedesktop.org/releases/individual/app/${PKGTAR}"
 
-export DEFAULT_CC="clang"
-
 . $(dirname $0)/master.sh

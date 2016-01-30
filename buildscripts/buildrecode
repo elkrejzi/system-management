@@ -8,8 +8,6 @@ export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destina
 export PATCHES_LIST=("recode-fixes.patch")
 export CONFIGURE_FLAGS=(--without-included-gettext)
 
-export DEFAULT_CC="clang"
-
 configure_pre() {
   rm -rf acinclude.m4
   autoreconf -fi

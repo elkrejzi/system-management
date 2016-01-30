@@ -13,8 +13,6 @@ export CONFIGURE_FLAGS=(--disable-locking
                         --enable-avahi
                         --enable-libusb_1_0)
 
-export DEFAULT_CC="clang"
-
 make_install_post() {
   echo "#hpaio" >> ${DEST}/etc/sane.d/dll.conf
 

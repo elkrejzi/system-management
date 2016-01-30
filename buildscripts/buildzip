@@ -9,8 +9,6 @@ export MAKE_JOBS_FLAGS="-j4"
 export MAKE_FLAGS="-f unix/Makefile generic CC=\${DEFAULT_CC}"
 export MAKE_INSTALL_FLAGS="-f unix/Makefile prefix=\${DEST}/usr MANDIR=\${DEST}/usr/share/man/man1"
 
-export DEFAULT_CC="clang"
-
 configure_override() {
   sed -i "s:-O3:${CFLAGS}:g" unix/configure
 

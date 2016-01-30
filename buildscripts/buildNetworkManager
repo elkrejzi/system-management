@@ -12,9 +12,6 @@ export CONFIGURE_FLAGS=(--enable-doc \
                         --with-pppd-plugin-dir=/usr/lib/pppd/2.4.7
                         --with-systemdsystemunitdir=/lib/systemd/system)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 make_install_post() {
   rm -rf ${DEST}/lib/systemd/system/network-online.target.wants ${DEST}/var/run
 

@@ -7,7 +7,4 @@ export PKGURL="https://ftp.gnu.org/gnu/aspell/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export PATCHES_LIST=("aspell-fixes.patch")
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 . $(dirname $0)/master.sh

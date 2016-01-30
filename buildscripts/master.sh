@@ -12,25 +12,25 @@ export PROOT=/media/ntfs/Other/Linux/patches
 # Default C compiler used to build 64 bit packages
 if [ -z "${DEFAULT_CC}" ]
 then
-  export DEFAULT_CC="gcc"
+  export DEFAULT_CC="clang"
 fi
 
 # Default C++ compiler used to build 64 bit packages
 if [ -z "${DEFAULT_CXX}" ]
 then
-  export DEFAULT_CXX="g++"
+  export DEFAULT_CXX="clang++ -stdlib=libc++"
 fi
 
 # Default C compiler used to build 32 bit packages
 if [ -z "${DEFAULT_CC_M32}" ]
 then
-export DEFAULT_CC_M32="gcc -m32"
+  export DEFAULT_CC_M32="clang -m32"
 fi
 
 # Default C++ compiler used to build 32 bit packages
 if [ -z "${DEFAULT_CXX_M32}" ]
 then
-export DEFAULT_CXX_M32="g++ -m32"
+  export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
 fi
 
 export DEFAULT_CFLAGS="-march=sandybridge -fomit-frame-pointer -Ofast -pipe -fstack-protector-strong"

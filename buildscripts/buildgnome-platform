@@ -295,9 +295,4 @@ then
   export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:4}/${PKGTAR}"
 fi
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-export DEFAULT_CC_M32="clang -m32"
-export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
-
 . $(dirname $0)/master.sh

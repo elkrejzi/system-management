@@ -6,9 +6,6 @@ export CMAKE_BUILD=1
 export KEEP_DOC=1
 export USER_CXXFLAGS="-stdlib=libc++"
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++"
-
 build_all() {
   export PKG_AUTO_INSTALL=1
 

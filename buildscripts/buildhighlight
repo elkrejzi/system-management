@@ -6,8 +6,6 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://www.andre-simon.de/zip/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export MAKE_FLAGS="CXX=\${DEFAULT_CXX}"
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
 
 configure_override() {
   sed -i "/TEMPLATE/a QT += widgets" src/gui-qt/highlight.pro

@@ -19,9 +19,6 @@ export CONFIGURE_FLAGS=(--enable-qt4
 
 export MAKE_INSTALL_FLAGS="rulesdir=/lib/udev/rules.d rulessystemdir=/lib/systemd/system"
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 configure_pre() {
   for i in ppd/hpijs/*.ppd.gz
   do

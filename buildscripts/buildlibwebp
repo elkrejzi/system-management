@@ -13,6 +13,4 @@ export CONFIGURE_FLAGS=(--enable-swap-16bit-csp
                         --enable-libwebpdemux
                         --enable-libwebpmux)
 
-export DEFAULT_CC="clang"
-
 . $(dirname $0)/master.sh

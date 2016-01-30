@@ -18,6 +18,4 @@ export CONFIGURE_FLAGS=(--with-berkeley-db
                         --without-sqlite2
                         --with-apr=/usr/bin/apr-1-config)
 
-export DEFAULT_CC="clang"
-
 . $(dirname $0)/master.sh

@@ -9,8 +9,6 @@ export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1
 export PATCHES_LIST=("lua-shared-lib.patch")
 
-export DEFAULT_CC="clang"
-
 configure_override() {
   sed -i '/#define LUA_ROOT/s:/usr/local:/usr:' src/luaconf.h
   sed -i "s/gcc/${CC}/g" src/Makefile

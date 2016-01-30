@@ -8,9 +8,6 @@ export PKGBUILD=${PKGDIR}/libraries/liblmdb
 export PKGURL="https://github.com/LMDB/lmdb/archive/${PKGTAR}"
 export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 configure_override() {
   true
 }

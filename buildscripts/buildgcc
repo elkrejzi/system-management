@@ -9,6 +9,8 @@ export PKGDIR=src
 export PKGBUILD=build
 export DEBUG_BUILD=1
 export PATCHES_LIST=("gcc-pure64.patch")
+export DEFAULT_CC="gcc"
+export DEFAULT_CXX="g++"
 
 post_extract_action() {
   mv ${PKGNAME}-${PKGVER} src

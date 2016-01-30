@@ -18,8 +18,6 @@ export CONFIGURE_FLAGS=(--sysconfdir=/etc/dhcp
                         --with-cli-lease-file=/var/lib/dhclient/dhclient.leases
                         --with-cli6-lease-file=/var/lib/dhclient/dhclient6.leases)
 
-export DEFAULT_CC="clang"
-
 make_install_override() {
   make -C dhcpctl install DESTDIR=${DEST}/client
   make -C client install DESTDIR=${DEST}/client

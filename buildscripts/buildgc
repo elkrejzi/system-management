@@ -7,9 +7,6 @@ export PKGURL="http://www.hboehm.info/gc/gc_source/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--enable-cplusplus)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 make_install_post() {
   rm -rf ${DEST}/usr/share
 

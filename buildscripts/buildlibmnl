@@ -5,5 +5,6 @@ export PKGVER=1.0.3
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://www.netfilter.org/projects/libmnl/files/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
+export DEFAULT_CC="gcc"
 
 . $(dirname $0)/master.sh

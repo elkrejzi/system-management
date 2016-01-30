@@ -84,8 +84,6 @@ export CONFIGURE_FLAGS=(--sysconfdir=/etc/php
                         --with-pear
                         --enable-zend-signals)
 
-export DEFAULT_CC="clang"
-
 configure_pre() {
   sed -i "s#.default##g" sapi/fpm/Makefile.frag
 

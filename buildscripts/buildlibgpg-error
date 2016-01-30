@@ -7,9 +7,6 @@ export PKGURL="ftp://ftp.gnupg.org/gcrypt/libgpg-error/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 
-export DEFAULT_CC="clang"
-export DEFAULT_CC_M32="clang -m32"
-
 make_install_post() {
   install -dm755 ${DEST}/lib
 

@@ -8,9 +8,6 @@ export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS_32=(--with-include-path=/usr/lib32/gmp)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CC_M32="clang -m32"
-
 post_install_config() {
   rm -rf ${DEST}/usr/*/*.a
 }

@@ -10,9 +10,6 @@ export PATCHES_LIST=("systemd-compat.patch")
 export PATCHES_LIST_32=("systemd-compat.patch")
 export USER_CFLAGS="-fno-lto -Wno-unknown-attributes"
 
-export DEFAULT_CC="clang"
-export DEFAULT_CC_M32="clang -m32"
-
 export CONFIGURE_FLAGS=(--disable-efi
                         --disable-firstboot
                         --disable-ldconfig

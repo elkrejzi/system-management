@@ -8,7 +8,4 @@ export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export CMAKE_FLAGS=(-DUSE_QT5=ON)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 . $(dirname $0)/master.sh

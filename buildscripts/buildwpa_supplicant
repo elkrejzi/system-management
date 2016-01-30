@@ -11,9 +11,6 @@ export KEEP_DOC=1
 export USER_CFLAGS="-MMD"
 export USER_CXXFLAGS="-MMD"
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 configure_override() {
 cat > .config << "EOF"
 CONFIG_BACKEND=file

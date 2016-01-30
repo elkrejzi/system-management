@@ -7,9 +7,6 @@ export PKGURL="https://downloads.sourceforge.net/freetype/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 
-export DEFAULT_CC="clang"
-export DEFAULT_CC_M32="clang -m32"
-
 configure_pre() {
   sed -i  -e "/AUX.*.gxvalid/s@^# @@" \
           -e "/AUX.*.otvalid/s@^# @@" \

@@ -8,7 +8,4 @@ export MAKE_JOBS_FLAGS="-j4"
 export POSTINST_TRIGGER=("udevadm hwdb --update")
 export CONFIGURE_FLAGS=(--with-udev-dir=/lib/udev)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 . $(dirname $0)/master.sh

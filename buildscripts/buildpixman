@@ -12,9 +12,6 @@ export PATCHES_LIST_32=("pixman-clang.patch")
 export CONFIGURE_FLAGS=(--disable-gtk --disable-libpng)
 export CONFIGURE_FLAGS_32=(--disable-gtk --disable-libpng)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CC_M32="clang -m32"
-
 configure_pre() {
   autoreconf -fi
   sed -i "s:fopenmp:&=libgomp:g" configure

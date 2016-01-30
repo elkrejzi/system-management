@@ -7,8 +7,6 @@ export PKGURL="https://www.kernel.org/pub/linux/utils/usb/usbutils/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--disable-zlib --datadir=/usr/share/misc)
 
-export DEFAULT_CC="clang"
-
 configure_pre() {
   wget -c http://www.linux-usb.org/usb.ids
 }

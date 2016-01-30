@@ -7,6 +7,4 @@ export PKGURL="http://download.videolan.org/pub/videolan/libaacs/${PKGVER}/${PKG
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 
-export DEFAULT_CC="clang"
-
 . $(dirname $0)/master.sh

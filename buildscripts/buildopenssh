@@ -22,9 +22,6 @@ export CONFIGURE_FLAGS=(--sysconfdir=/etc/ssh
                         --with-default-path=/usr/local/bin:/usr/bin:/bin
                         --with-superuser-path=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 make_install_post() {
   rm -rf ${DEST}/var
 

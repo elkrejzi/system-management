@@ -11,6 +11,4 @@ export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destina
                     "udevadm hwdb --update")
 export CONFIGURE_FLAGS=(--with-udev=/lib/udev)
 
-export DEFAULT_CC="clang"
-
 . $(dirname $0)/master.sh

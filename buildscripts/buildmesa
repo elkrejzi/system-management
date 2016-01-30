@@ -69,11 +69,6 @@ export MULTILIB_BUILD=1
 export PATCHES_LIST=("mesalib-xdemos.patch" "mesa-clang.patch")
 export PATCHES_LIST_32=("mesalib-xdemos.patch" "mesa-clang.patch")
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-export DEFAULT_CC_M32="clang -m32"
-export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
-
 configure_pre() {
   sed -i 's/LLVM_SO_NAME=.*/LLVM_SO_NAME=LLVM/' configure
 }

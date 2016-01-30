@@ -15,11 +15,6 @@ export COMMON_CONFIGURE_FLAGS=(--disable-alsa-shared
 export CONFIGURE_FLAGS=("${COMMON_CONFIGURE_FLAGS[@]}")
 export CONFIGURE_FLAGS_32=("${COMMON_CONFIGURE_FLAGS[@]}")
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-export DEFAULT_CC_M32="clang -m32"
-export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
-
 configure_pre() {
   sed -i '/_XData32/s:register long:register _Xconst long:' src/video/x11/SDL_x11sym.h
 }

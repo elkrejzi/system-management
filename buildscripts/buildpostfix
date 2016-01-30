@@ -7,8 +7,6 @@ export PKGURL="ftp://ftp.porcupine.org/mirrors/postfix-release/official/${PKGTAR
 export KEEP_DOC=1
 export KEEP_EMPTY_DIRS=1
 
-export DEFAULT_CC="clang"
-
 configure_override() {
   sed -i 's/Linux.3\*/Linux.[34]\*/' makedefs
 

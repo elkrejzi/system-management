@@ -18,9 +18,6 @@ export COMMON_CONFIGURE_FLAGS=(--enable-mesg
                                --disable-kill
                                --disable-static)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CC_M32="clang -m32"
-
 configure_override() {
   ./configure ${COMMON_CONFIGURE_FLAGS[@]} --with-systemdsystemunitdir=/lib/systemd/system
 }

@@ -7,8 +7,6 @@ export PKGURL="http://upower.freedesktop.org/releases/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1
 
-export DEFAULT_CC="clang"
-
 make_install_post() {
   install -dm755 ${DEST}/etc/systemd/system/graphical.target.wants
 

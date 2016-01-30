@@ -7,8 +7,6 @@ export PKGURL="https://tuxera.com/opensource/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--with-fuse=external)
 
-export DEFAULT_CC="clang"
-
 make_post() {
   install -dm755 ${DEST}/lib
 }

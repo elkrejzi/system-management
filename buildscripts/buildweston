@@ -9,6 +9,4 @@ export DEBUG_BUILD=1
 export POSTINST_TRIGGER=("chmod 4755 /usr/bin/weston-launch")
 export CONFIGURE_FLAGS=(--enable-demo-clients-install)
 
-export DEFAULT_CC="clang"
-
 . $(dirname $0)/master.sh

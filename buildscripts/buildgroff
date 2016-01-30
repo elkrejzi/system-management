@@ -6,9 +6,6 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://ftp.gnu.org/gnu/groff/${PKGTAR}"
 export KEEP_EMPTY_DIRS=1
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 make_install_post() {
   for file in eqn tbl
   do

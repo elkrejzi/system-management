@@ -9,9 +9,6 @@ export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--disable-padlock-support)
 export CONFIGURE_FLAGS_32=(--disable-padlock-support)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CC_M32="clang -m32"
-
 configure_pre_32() {
   sed 's:path="amd64":path="i586 i386":' -i mpi/config.links
 }

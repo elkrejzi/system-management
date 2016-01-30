@@ -9,8 +9,6 @@ export MAKE_JOBS_FLAGS="-j4"
 export KEEP_STATIC=1
 export MAKE_INSTALL_FLAGS="install_prefix=\${DEST}"
 
-export DEFAULT_CC="clang"
-
 make_install_post() {
   echo "NotShowIn=KDE;GNOME;MATE;" >> ${DEST}/usr/share/applications/xscreensaver-properties.desktop
 

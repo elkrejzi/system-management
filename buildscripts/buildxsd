@@ -8,9 +8,6 @@ export PKGURL="http://www.codesynthesis.com/download/xsd/${PKGVER:0:3}/${PKGTAR}
 export MAKE_JOBS_FLAGS="-j4"
 export PATCHES_LIST=("xsd-fixes.patch")
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 configure_override() {
   sed -i "/algorithm/a #include <iostream>" libxsd-frontend/xsd-frontend/semantic-graph/elements.cxx
 }

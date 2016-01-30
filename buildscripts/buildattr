@@ -11,9 +11,6 @@ export MAKE_FLAGS_32="OPTIMIZER="
 export MAKE_INSTALL_FLAGS="install-dev install-lib DIST_ROOT=\${DEST}"
 export MAKE_INSTALL_FLAGS_32="install-dev install-lib DIST_ROOT=\${PWD}/dest"
 
-export DEFAULT_CC="clang"
-export DEFAULT_CC_M32="clang -m32"
-
 configure_pre() {
   sed -i -e "/SUBDIRS/s|man2||" man/Makefile
 }

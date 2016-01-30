@@ -9,5 +9,9 @@ export KEEP_STATIC=1
 export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--program-prefix="eu-")
 export CONFIGURE_FLAGS_32=(--program-prefix="eu-")
+export DEFAULT_CC="gcc"
+export DEFAULT_CXX="g++"
+export DEFAULT_CC_M32="gcc -m32"
+export DEFAULT_CXX_M32="g++ -m32"
 
 . $(dirname $0)/master.sh

@@ -9,8 +9,6 @@ export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1
 export CONFIGURE_FLAGS=(--without-flite)
 
-export DEFAULT_CC="clang"
-
 configure_pre() {
   sed -i "s/cicero //g" configure.ac
   sed -i "s/sd_cicero//g" src/modules/Makefile.am

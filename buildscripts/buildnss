@@ -9,9 +9,6 @@ export MULTILIB_BUILD=1
 export PATCHES_LIST=("nss-standalone.patch")
 export PATCHES_LIST_32=("nss-standalone.patch")
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 configure_override() {
   export XCFLAGS=${CFLAGS/-Ofast/-O2}
   unset CFLAGS

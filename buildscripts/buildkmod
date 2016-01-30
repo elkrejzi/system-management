@@ -10,8 +10,6 @@ export CONFIGURE_FLAGS=(--bindir=/bin
                         --with-xz
                         --with-zlib)
 
-export DEFAULT_CC="clang"
-
 make_install_post() {
   install -dm755 ${DEST}/sbin
 

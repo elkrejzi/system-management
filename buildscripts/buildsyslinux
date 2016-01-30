@@ -8,6 +8,7 @@ export KEEP_INSTALL_DIRS=1
 export NO_OPTIMIZATION=1
 export MAKE_FLAGS="bios"
 export MAKE_INSTALL_FLAGS="INSTALLROOT=\${DEST}/ AUXDIR=/usr/lib/syslinux/ bios install"
+export DEFAULT_CC="gcc"
 
 configure_override() {
   sed 's|diag libinstaller dos win32 win64 dosutil txt|libinstaller txt|g' -i Makefile

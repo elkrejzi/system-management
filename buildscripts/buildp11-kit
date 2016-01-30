@@ -9,7 +9,4 @@ export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--enable-doc)
 export CONFIGURE_FLAGS_32=(--with-module-path=/usr/lib32/pkcs11)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CC_M32="clang -m32"
-
 . $(dirname $0)/master.sh

@@ -6,8 +6,6 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://www.kernel.org/pub/software/network/rfkill/"
 export MAKE_JOBS_FLAGS="-j4"
 
-export DEFAULT_CC="clang"
-
 configure_override() {
   sed -i "s:-O2 -g:${CFLAGS}:g" Makefile
 

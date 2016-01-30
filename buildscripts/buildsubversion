@@ -7,9 +7,6 @@ export PKGURL="https://archive.apache.org/dist/subversion/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export POSTINST_TRIGGER=("install -dm700 /run/svnserve")
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 configure_override() {
   export RUBYDIR=$(ruby -e "require 'rbconfig'" -e "CONFIG = RbConfig::MAKEFILE_CONFIG" -e "puts RbConfig::expand(CONFIG[\"vendorarchdir\"])")
 

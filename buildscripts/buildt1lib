@@ -9,7 +9,4 @@ export INSTALL_CMD=("for dir in usr/include usr/lib usr/share ; do cp -rf --remo
 export PATCHES_LIST=("t1lib.patch")
 export MAKE_FLAGS="without_doc"
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 . $(dirname $0)/master.sh

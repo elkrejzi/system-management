@@ -16,9 +16,6 @@ export CONFIGURE_FLAGS=(--enable-dynamic
 export MAKE_FLAGS="all so SHARE_JPEG=1 SHARE_LIBPNG=1 SHARE_LIBTIFF=1 SHARE_ZLIB=1 SHARE_IJS=1 SHARE_EXPAT=1 WHICH_CMS=lcms2 SHARE_LCMS=1 LCMS2DIR=/usr SHARE_FT=1"
 export MAKE_INSTALL_FLAGS="soinstall"
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 configure_pre() {
   rm -rf cups/libs expat freetype ijs jpeg jpegxr lcms lcms2 libpng tiff zlib
 

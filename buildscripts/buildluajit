@@ -9,9 +9,6 @@ export MAKE_JOBS_FLAGS="-j4"
 export MAKE_FLAGS="amalg PREFIX=/usr CC=\${DEFAULT_CC}"
 export MAKE_INSTALL_FLAGS="PREFIX=/usr"
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 configure_override() {
   export CCOPT=${CFLAGS}
 }

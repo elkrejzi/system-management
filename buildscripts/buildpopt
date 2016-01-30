@@ -6,6 +6,4 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://rpm5.org/files/popt/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
-export DEFAULT_CC="clang"
-
 . $(dirname $0)/master.sh

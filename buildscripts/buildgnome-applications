@@ -139,7 +139,4 @@ then
   export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:4}/${PKGTAR}"
 fi
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 . $(dirname $0)/master.sh

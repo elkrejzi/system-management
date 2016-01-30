@@ -21,11 +21,6 @@ export CONFIGURE_FLAGS_32=(--disable-libusb
                            --disable-dbus
                            --disable-pam)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-export DEFAULT_CC_M32="clang -m32"
-export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
-
 configure_pre() {
   sed -i "/MAN.*.EXT/s:.gz::g" configure config-scripts/cups-manpages.m4
   sed -i "s:555:755:g;s:444:644:g" Makedefs.in

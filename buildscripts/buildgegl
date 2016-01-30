@@ -8,9 +8,6 @@ export MAKE_JOBS_FLAGS="-j4"
 export PATCHES_LIST=("gegl-fixes.patch")
 export MAKE_FLAGS="LC_ALL=en_US"
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 configure_pre() {
   sed -i "s:UF_long:SuiteSparse_long:g" operations/external/matting-levin.c
 }

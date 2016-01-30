@@ -17,8 +17,6 @@ export CONFIGURE_FLAGS=(--sysconfdir=/etc/bind
                         --with-dlz-ldap
                         --with-dlz-odbc=/usr)
 
-export DEFAULT_CC="clang"
-
 configure_post() {
   sed  -i "/DLZDRIVER_LIBS/s:ldb:& -lodbc:" bin/named/Makefile
 }

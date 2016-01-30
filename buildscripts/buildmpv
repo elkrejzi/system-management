@@ -8,9 +8,6 @@ export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export USER_CFLAGS="-I/usr/include/samba-4.0"
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 configure_override() {
   ./bootstrap.py
   ./waf configure --prefix=/usr      \

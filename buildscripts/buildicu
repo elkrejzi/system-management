@@ -9,11 +9,6 @@ export PKGBUILD=${PKGDIR}/source
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-export DEFAULT_CC_M32="clang -m32"
-export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
-
 make_install_post_32() {
   mv dest/usr/bin/icu-config ${DEST}/usr/bin/icu-config-32
 }

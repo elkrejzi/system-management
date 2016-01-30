@@ -13,9 +13,6 @@ fi
 
 export USER_CXXFLAGS="-stdlib=libc++"
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++"
-
 configure_override() {
   ./bootstrap --prefix=/usr             \
               --parallel=4              \

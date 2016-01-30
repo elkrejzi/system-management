@@ -9,9 +9,6 @@ export CONFIGURE_FLAGS=(--without-rcdir
                         --with-gs-path=/usr/bin/gs
                         --with-pdftops-path=/usr/bin/gs)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 configure_pre() {
   sed -i "s:cups.service:org.cups.cupsd.service:g" utils/cups-browsed.service
 }

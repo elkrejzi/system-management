@@ -10,7 +10,4 @@ export CMAKE_BUILD=1
 export CMAKE_FLAGS=(-DLIB_INSTALL_DIR=lib -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules)
 export USER_CXXFLAGS="-stdlib=libc++"
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++"
-
 . $(dirname $0)/master.sh

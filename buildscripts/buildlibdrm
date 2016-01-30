@@ -10,9 +10,6 @@ export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--enable-udev --disable-valgrind)
 export CONFIGURE_FLAGS_32=(--enable-udev --disable-valgrind)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CC_M32="clang -m32"
-
 configure_pre() {
   sed -e "/pthread-stubs/d" -i configure.ac
   autoreconf -fi

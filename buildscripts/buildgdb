@@ -11,7 +11,4 @@ export CONFIGURE_FLAGS=(--with-system-readline
 
 export MAKE_INSTALL_FLAGS="-C gdb"
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 . $(dirname $0)/master.sh

@@ -51,7 +51,4 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export DEST=/binary/xorg/xcb/${PKGNAME}-${PKGVER}
 export PKGURL="http://xorg.freedesktop.org/releases/individual/xcb/${PKGTAR}"
 
-export DEFAULT_CC="clang"
-export DEFAULT_CC_M32="clang -m32"
-
 . $(dirname $0)/master.sh

@@ -31,9 +31,6 @@ export CONFIGURE_FLAGS=(--enable-libv4l2
                         --enable-mjpegtools
                         --enable-imagemagick)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 configure_pre() {
   sed -i "s:#include <freetype/ftglyph.h>:#include FT_GLYPH_H:" filter/subtitler/load_font.c
   sed -i "s:av_close_input_file:avformat_close_input:g" import/probe_ffmpeg.c

@@ -11,6 +11,4 @@ export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destina
 export PATCHES_LIST=("libquicktime-fixes.patch")
 export CONFIGURE_FLAGS=(--enable-gpl --with-libdv --without-doxygen)
 
-export DEFAULT_CC="clang"
-
 . $(dirname $0)/master.sh

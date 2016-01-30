@@ -7,6 +7,7 @@ export PKGURL="http://download.oracle.com/berkeley-db/${PKGTAR}"
 export PKGBUILD=${PKGNAME}-${PKGVER}/build_unix
 export MAKE_JOBS_FLAGS="-j4"
 export PATH_TO_SOURCE="../dist"
+
 export CONFIGURE_FLAGS=(--enable-compat185
                         --enable-cxx
                         --enable-dbm
@@ -14,6 +15,9 @@ export CONFIGURE_FLAGS=(--enable-compat185
                         --enable-sql
                         --enable-tcl
                         --with-tcl=/usr/lib)
+
+export DEFAULT_CC="gcc"
+export DEFAULT_CXX="g++"
 
 configure_pre() {
   export CFLAGS=${CFLAGS/-Ofast/-O3}

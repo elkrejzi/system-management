@@ -14,9 +14,6 @@ export CMAKE_FLAGS=(-DCMAKE_INSTALL_LIBDIR=lib
                     -DWITH_JPEG=ON
                     -DWITH_PULSE=ON)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 make_install_post() {
   remove_rpath
 }

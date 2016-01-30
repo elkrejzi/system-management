@@ -6,6 +6,7 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="ftp://ftp.gnupg.org/gcrypt/gnupg/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--enable-gpgtar --enable-symcryptrun --enable-standard-socket)
+export DEFAULT_CC="gcc"
 
 make_install_post() {
   rm -rf ${DEST}/usr/share/gnupg/com-certs.pem

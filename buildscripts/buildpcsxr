@@ -8,8 +8,6 @@ export PKGURL="https://sources.archlinux.org/other/community/pcsxr/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--enable-libcdio --enable-opengl)
 
-export DEFAULT_CC="clang"
-
 configure_pre() {
   autoreconf -fi
 }

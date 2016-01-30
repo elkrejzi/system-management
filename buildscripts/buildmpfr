@@ -9,6 +9,4 @@ export DEBUG_BUILD=1
 export PATCHES_LIST=("mpfr.patch")
 export CONFIGURE_FLAGS=(--enable-thread-safe)
 
-export DEFAULT_CC="clang"
-
 . $(dirname $0)/master.sh

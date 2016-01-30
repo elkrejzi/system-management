@@ -8,6 +8,7 @@ export MAKE_JOBS_FLAGS="-j4"
 export PATCHES_LIST=("crda-fixes.patch")
 export MAKE_FLAGS="LIBDIR=/lib/crda REG_BIN=/lib/crda/regulatory.bin RUNTIME_PUBKEY_DIR=/lib/crda/pubkeys RUNTIME_PUBKEY_ONLY=1 V=1"
 export MAKE_INSTALL_FLAGS="LIBDIR=/lib/crda"
+export DEFAULT_CC="gcc"
 
 configure_override() {
   sed -i "s:-O2 -fpic:${CFLAGS} -fpic:g" Makefile

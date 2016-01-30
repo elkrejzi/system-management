@@ -7,5 +7,6 @@ export PKGURL="https://launchpad.net/lightdm-gtk-greeter/${PKGVER:0:3}/${PKGVER}
 export DEST=/binary/mate/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--with-libxklavier)
+export DEFAULT_CC="gcc"
 
 . $(dirname $0)/master.sh

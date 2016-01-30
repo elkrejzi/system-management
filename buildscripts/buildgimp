@@ -8,6 +8,4 @@ export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1
 export CONFIGURE_FLAGS=(--with-lcms=lcms2)
 
-export DEFAULT_CC="clang"
-
 . $(dirname $0)/master.sh

@@ -8,8 +8,6 @@ export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--enable-custom-modes)
 
-export DEFAULT_CC="clang"
-
 configure_pre() {
   export CFLAGS=${CFLAGS/-Ofast/-O3}
 }

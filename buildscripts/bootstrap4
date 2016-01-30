@@ -132,6 +132,7 @@ $(dirname $0)/buildgnome-tweak-tool
 $(dirname $0)/buildgnome-system-monitor
 $(dirname $0)/buildgvfs
 $(dirname $0)/buildseahorse
+$(dirname $0)/buildsimple-scan
 $(dirname $0)/buildvinagre
 $(dirname $0)/buildvino
 $(dirname $0)/buildxdg-user-dirs

@@ -6,8 +6,6 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://ftp.gnu.org/gnu/texinfo/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
-export DEFAULT_CC="clang"
-
 generate_install_override() {
 cat > ${DEST}/INSTALL << "EOF"
 #!/bin/bash

@@ -6,8 +6,6 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://fedorapeople.org/~steved/libnfsidmap/${PKGVER}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
-export DEFAULT_CC="clang"
-
 make_install_post() {
   install -dm755 ${DEST}/lib
 

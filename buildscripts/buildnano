@@ -7,8 +7,6 @@ export PKGURL="https://ftp.gnu.org/gnu/nano/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--enable-utf8)
 
-export DEFAULT_CC="clang"
-
 configure_pre() {
   sed -i "s:DO_DOWN_VOID:do_down_void:g" src/winio.c
   sed -i "s:or(up_void:or(do_up_void:g" src/winio.c

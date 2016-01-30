@@ -14,8 +14,6 @@ export MAKE_FLAGS_COMMON=(prefix=/usr USE_LIBPCRE=1 NO_CROSS_DIRECTORY_HARDLINKS
 export MAKE_FLAGS="${MAKE_FLAGS_COMMON[@]} V=1"
 export MAKE_INSTALL_FLAGS="${MAKE_FLAGS_COMMON[@]}"
 
-export DEFAULT_CC="clang"
-
 configure_override() {
   sed -i "/CC/s#cc#${CC}#g;s#-g -O2#${CFLAGS}#g" Makefile
 }

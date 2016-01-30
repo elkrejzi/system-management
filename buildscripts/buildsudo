@@ -14,8 +14,6 @@ export CONFIGURE_FLAGS=(--libexecdir=/usr/lib
                         --with-rundir=/run/sudo
                         --with-passprompt="[sudo] password for %p: ")
 
-export DEFAULT_CC="clang"
-
 make_install_post() {
   rm -rf ${DEST}/run
 

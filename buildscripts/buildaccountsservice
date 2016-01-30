@@ -9,9 +9,6 @@ export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1
 export CONFIGURE_FLAGS=(--enable-admin-group=adm)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 make_install_post() {
   install -dm755 ${DEST}/etc/systemd/system/graphical.target.wants
 

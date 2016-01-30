@@ -11,8 +11,6 @@ export POSTINST_TRIGGER=("getent group httpd > /dev/null && getent passwd httpd 
 
 export MAKE_INSTALL_FLAGS="CGIT_SCRIPT_PATH=/usr/share/cgit prefix=/usr"
 
-export DEFAULT_CC="clang"
-
 configure_override() {
   make get-git
 }

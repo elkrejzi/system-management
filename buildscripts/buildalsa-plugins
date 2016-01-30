@@ -9,9 +9,6 @@ export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS_32=(--disable-avcodec)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CC_M32="clang -m32"
-
 configure_pre() {
   sed -i "/speex_preprocess/i#include <stdint.h>" speex/pcm_speex.c
 }

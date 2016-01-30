@@ -84,7 +84,4 @@ then
   export USER_CXXFLAGS="-stdlib=libc++"
 fi
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++"
-
 . $(dirname $0)/master.sh

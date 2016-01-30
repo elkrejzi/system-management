@@ -10,9 +10,4 @@ export CMAKE_BUILD=1
 export MULTILIB_BUILD=1
 export CMAKE_FLAGS_32=(-DLIB_SUFFIX=32)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-export DEFAULT_CC_M32="clang -m32"
-export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
-
 . $(dirname $0)/master.sh

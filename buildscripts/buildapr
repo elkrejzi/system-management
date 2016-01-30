@@ -7,6 +7,4 @@ export PKGURL="https://archive.apache.org/dist/apr/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--with-installbuilddir=/usr/share/apr-1/build)
 
-export DEFAULT_CC="clang"
-
 . $(dirname $0)/master.sh

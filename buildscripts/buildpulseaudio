@@ -12,11 +12,6 @@ export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--disable-bluez4 --disable-rpath --with-module-dir=/usr/lib/pulse/modules)
 export CONFIGURE_FLAGS_32=(--disable-bluez4 --disable-rpath --with-module-dir=/usr/lib/pulse/modules)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-export DEFAULT_CC_M32="clang -m32"
-export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
-
 _libs="libpulse.la libpulse-simple.la libpulse-mainloop-glib.la"
 _pkglibs="libpulsecommon-${SHLIBVER}.la libpulsedsp.la"
 

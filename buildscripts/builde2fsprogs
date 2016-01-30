@@ -20,9 +20,6 @@ export CONFIGURE_FLAGS_32=("${COMMON_CONFIGURE_FLAGS[@]}"
                            --disable-imager
                            --disable-resizer)
 
-export DEFAULT_CC="clang"
-export DEFAULT_CC_M32="clang -m32"
-
 configure_override() {
   ./configure --prefix=/usr "${CONFIGURE_FLAGS[@]}"
 }

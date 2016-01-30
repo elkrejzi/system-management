@@ -3,11 +3,6 @@
 export PKGNAME=llvm
 export PKGVER=3.8.0rc1
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++"
-export DEFAULT_CC_M32="clang -m32"
-export DEFAULT_CXX_M32="clang++ -m32"
-
 proj=(
   cfe
   clang-tools-extra

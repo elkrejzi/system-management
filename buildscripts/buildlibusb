@@ -5,6 +5,4 @@ export PKGVER=1.0.20
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://downloads.sourceforge.net/libusb/${PKGTAR}"
 
-export DEFAULT_CC="clang"
-
 . $(dirname $0)/master.sh

@@ -7,7 +7,4 @@ export PKGURL="http://download.savannah.nongnu.org/releases/openexr/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export INSTALL_CMD=("for dir in usr/include usr/lib usr/share ; do cp -rf --remove-destination \$dir /usr ; done")
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 . $(dirname $0)/master.sh

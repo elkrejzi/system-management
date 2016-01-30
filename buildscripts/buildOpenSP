@@ -15,9 +15,6 @@ export CONFIGURE_FLAGS=(--disable-doc-build
 export MAKE_FLAGS="pkgdatadir=/usr/share/sgml/OpenSP"
 export MAKE_INSTALL_FLAGS="pkgdatadir=/usr/share/sgml/OpenSP"
 
-export DEFAULT_CC="clang"
-export DEFAULT_CXX="clang++ -stdlib=libc++"
-
 make_install_post() {
   for file in nsgmls sgmlnorm spam spcat spent sx
   do

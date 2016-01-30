@@ -8,8 +8,6 @@ export MAKE_JOBS_FLAGS="-j4"
 export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done\n"
                     "cp -rf --remove-destination usr/share/man/man3 /usr/share/man")
 
-export DEFAULT_CC="clang"
-
 configure_pre() {
   autoreconf -fi
 }
