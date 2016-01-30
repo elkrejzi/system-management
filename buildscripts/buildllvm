@@ -201,25 +201,8 @@ EOF
 
   cp -r ../${PKGDIR}/tools/clang/bindings/python/clang ${DEST}/usr/lib/python2.7/site-packages/
 
-  if [ $(basename $0) != "buildllvm-svn" ]
-  then
-    install -dm755 ${DEST}/usr/lib/clang-analyzer
-
-    for _tool in scan-build scan-view
-    do
-      cp -r ../${PKGDIR}/tools/clang/tools/$_tool ${DEST}/usr/lib/clang-analyzer/
-      ln -sf ../lib/clang-analyzer/$_tool/$_tool ${DEST}/usr/bin/
-    done
-
-    ln -sf /usr/bin/clang ${DEST}/usr/lib/clang-analyzer/scan-build/clang
-    mv ${DEST}/usr/lib/clang-analyzer/scan-build/scan-build.1 ${DEST}/usr/share/man/man1
-
-    python -m compileall ${DEST}/usr/lib/clang-analyzer
-    python -O -m compileall ${DEST}/usr/lib/clang-analyzer
-  else
-    python -m compileall ${DEST}/usr/share/scan-view
-    python -O -m compileall ${DEST}/usr/share/scan-view
-  fi
+  python -m compileall ${DEST}/usr/share/scan-view
+  python -O -m compileall ${DEST}/usr/share/scan-view
 
   python -m compileall ${DEST}/usr/lib/python2.7/site-packages/clang
   python -O -m compileall ${DEST}/usr/lib/python2.7/site-packages/clang

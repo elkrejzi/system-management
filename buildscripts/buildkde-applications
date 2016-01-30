@@ -172,6 +172,10 @@ EOF
   buildkile )
     export PKGNAME=kile
     export PKGVER=2.1+78f81fb
+    configure_pre() {
+      mv ../${PKGDIR}/cmake/modules/FindPoppler{,-Qt5}.cmake
+      sed -i "/find_package/s:Poppler:&-Qt5:" ../${PKGDIR}/CMakeLists.txt
+    }
   ;;
   buildkio-extras )
     export PKGNAME=kio-extras
@@ -199,7 +203,7 @@ EOF
   ;;
   buildokular )
     export PKGNAME=okular
-    export PKGVER=15.08.2+0772330
+    export PKGVER=15.08.2+2c6cf86
   ;;
   buildskanlite )
     export PKGNAME=skanlite

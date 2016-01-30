@@ -5,6 +5,9 @@ export PKGVER=2.2.2
 export PKGTAR=${PKGNAME}-${PKGVER}.src.tar.gz
 export PKGURL="https://downloads.sourceforge.net/fceultra/${PKGTAR}"
 
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
 configure_override() {
   true
 }

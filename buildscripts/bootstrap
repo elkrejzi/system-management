@@ -191,17 +191,20 @@ $(dirname $0)/buildlibical
 $(dirname $0)/buildlibusb
 $(dirname $0)/buildlibusb-compat
 $(dirname $0)/buildman-pages
-$(dirname $0)/buildmariadb
 $(dirname $0)/buildnasm
 $(dirname $0)/buildpciutils
-$(dirname $0)/buildpostgresql 1
 $(dirname $0)/buildscons
 $(dirname $0)/buildswig
+$(dirname $0)/buildtk
 $(dirname $0)/buildunixODBC
 $(dirname $0)/buildusbutils
 $(dirname $0)/buildwayland
 $(dirname $0)/buildwayland-protocols
+$(dirname $0)/buildyaml
 $(dirname $0)/buildyasm
+$(dirname $0)/buildruby
+$(dirname $0)/buildmariadb
+$(dirname $0)/buildpostgresql 1
 $(dirname $0)/buildcyrus-sasl 1
 $(dirname $0)/buildopenldap
 $(dirname $0)/buildkrb5
@@ -232,8 +235,6 @@ $(dirname $0)/buildbluez
 $(dirname $0)/buildgit
 $(dirname $0)/buildhttpd
 $(dirname $0)/buildserf
-$(dirname $0)/buildtk
-$(dirname $0)/buildyaml
 
 pushd /binary/python/Python-2.[0-9]*
   pkg_remove
@@ -247,9 +248,8 @@ popd
 
 $(dirname $0)/buildpython3
 
-$(dirname $0)/buildruby
 $(dirname $0)/buildsubversion
-$(dirname $0)/buildllvm-svn
+$(dirname $0)/buildllvm
 $(dirname $0)/buildintel-ucode
 $(dirname $0)/buildlsb-release
 $(dirname $0)/buildfuse

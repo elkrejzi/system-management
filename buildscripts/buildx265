@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
 export PKGNAME=x265
-export PKGVER=1.8
+export PKGVER=1.9
 export PKGTAR=${PKGNAME}_${PKGVER}.tar.gz
-export PKGDIR=${PKGNAME}_11047
+export PKGDIR=${PKGNAME}_${PKGVER}
 export PKGBUILD=${PKGDIR}/build/linux
 export PKGURL="https://bitbucket.org/multicoreware/x265/downloads/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}

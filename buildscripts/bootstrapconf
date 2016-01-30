@@ -1,5 +1,5 @@
 
-systemctl disable avahi-{daemon,dnsconfd} cups-browsed dnsmasq httpd krb5-{kadmind,kdc,kpropd} libvirt{d,-guests} ModemManager mysqld NetworkManager{,-wait-online} nmbd org.cups.cupsd php-fpm postfix postgresql radvd saslauthd slapd smbd svnserve thermald winbindd wpa_supplicant git-daemon.socket saned.socket
+systemctl disable avahi-{daemon,dnsconfd} cups-browsed httpd krb5-{kadmind,kdc,kpropd} ModemManager mysqld NetworkManager{,-wait-online} nmbd org.cups.cupsd php-fpm postfix postgresql saslauthd slapd smbd svnserve thermald winbindd wpa_supplicant git-daemon.socket saned.socket
 
 systemctl mask wpa_supplicant
 systemctl enable systemd-{networkd,timesyncd}
@@ -243,6 +243,7 @@ cat > /etc/iptables.block << "EOF"
 43.229.53.25
 43.229.53.24
 59.45.79.36
+59.45.79.55
 EOF
 
 sed -i 's#;date.timezone =#date.timezone = "Europe/Sarajevo"#' /etc/php/php.ini

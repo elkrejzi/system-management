@@ -35,6 +35,7 @@ build_all() {
   $(dirname $0)/buildkwayland-integration $1
   $(dirname $0)/buildkwrited $1
   $(dirname $0)/buildmilou $1
+  $(dirname $0)/buildplasma-integration $1
   $(dirname $0)/buildplasma-nm $1
   $(dirname $0)/buildplasma-pa $1
   $(dirname $0)/buildplasma-workspace-wallpapers $1
@@ -119,6 +120,7 @@ plasmas=(
   kwayland-integration
   kwrited
   milou
+  plasma-integration
   plasma-nm
   plasma-pa
   plasma-workspace-wallpapers

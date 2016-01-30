@@ -5,12 +5,14 @@ pkg_remove() {
   find * -type d | sort -r | while read file ; do rmdir --ignore-fail-on-non-empty -v "/$file" ; done
 }
 
+export PKG_AUTO_INSTALL=1
+
 $(dirname $0)/buildfceux
 $(dirname $0)/buildpcsxr
 $(dirname $0)/buildyoutube-dl
 $(dirname $0)/buildextra-cmake-modules
-$(dirname $0)/buildkde-frameworks
-$(dirname $0)/buildplasma
+$(dirname $0)/buildkde-frameworks-git
+$(dirname $0)/buildplasma-git
 $(dirname $0)/buildbaloo-widgets
 $(dirname $0)/buildkio-extras
 $(dirname $0)/buildlibkdcraw

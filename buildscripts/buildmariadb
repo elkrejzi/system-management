@@ -1,13 +1,14 @@
 #!/bin/bash -e
 
 export PKGNAME=mariadb
-export PKGVER=10.1.10
+export PKGVER=10.1.11
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://downloads.mariadb.org/interstitial/${PKGNAME}-${PKGVER}/source/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export USER_CFLAGS="-fPIC -fno-strict-aliasing -DBIG_JOINS=1"
-export USER_CXXFLAGS="-fPIC -fno-strict-aliasing -DBIG_JOINS=1"
+export USER_CXXFLAGS="-fPIC -fno-strict-aliasing -DBIG_JOINS=1 -felide-constructors -fno-rtti"
+
 export CMAKE_FLAGS=(-DSYSCONFDIR=/etc/mysql
                     -DMYSQL_DATADIR=/var/lib/mysql
                     -DMYSQL_UNIX_ADDR=/run/mysqld/mysqld.sock
@@ -24,13 +25,19 @@ export CMAKE_FLAGS=(-DSYSCONFDIR=/etc/mysql
                     -DDEFAULT_CHARSET=utf8
                     -DDEFAULT_COLLATION=utf8_general_ci
                     -DENABLED_LOCAL_INFILE=ON
-                    -DWITH_TOKUDB_STORAGE_ENGINE=OFF
                     -DWITH_EXTRA_CHARSETS=complex
                     -DWITH_EMBEDDED_SERVER=ON
                     -DWITH_PCRE=system
                     -DWITH_READLINE=ON
                     -DWITH_SSL=system
                     -DWITH_ZLIB=system)
+
+export DEFAULT_CC="clang"
+export DEFAULT_CXX="clang++ -stdlib=libc++"
+
+configure_pre() {
+  rm -rf ../${PKGDIR}/storage/tokudb
+}
 
 make_install_post() {
   rm -rf ${DEST}/usr/data ${DEST}/usr/mysql-test ${DEST}/usr/sql-bench
