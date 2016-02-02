@@ -65,8 +65,7 @@ configure_pre() {
       -Ddisable_nacl=1
       -Ddisable_pnacl=1
       -Ddisable_sse2=1
-      -Ddisable_glibc=1
-      -Dno_gc_sections=1)
+      -Ddisable_glibc=1)
 
   find third_party/icu -type f \! -regex '.*\.\(gyp\|gypi\|isolate\)' -delete
   touch chrome/test/data/webui/i18n_process_css_test.html

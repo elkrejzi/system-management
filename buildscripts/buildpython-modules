@@ -2,6 +2,19 @@
 
 case $(basename $0) in
 
+  buildcython )
+    export PKGNAME=Cython
+    export PKGVER=0.23.4
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://cython.org/release/${PKGTAR}"
+    export DEST=/binary/python/cython-${PKGVER}
+    make_install_post() {
+      for file in ${DEST}/usr/bin/*
+      do
+        mv ${file} ${file}3
+      done
+    }
+  ;;
   buildpython-alabaster )
     export PKGNAME=alabaster
     export PKGVER=0.7.7
@@ -197,6 +210,7 @@ case $(basename $0) in
     if [ $1 == 1 ]
     then
       $(dirname $0)/buildpython-setuptools
+      $(dirname $0)/buildcython
       $(dirname $0)/buildpython-alabaster
       $(dirname $0)/buildpython-beaker
       $(dirname $0)/buildpython-cssselect

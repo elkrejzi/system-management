@@ -9,7 +9,8 @@ export MAKE_JOBS_FLAGS="-j4"
 export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
 
 configure_pre() {
-  sed -i "s:-fopenmp:&=libgomp:g;s:-lstdc++::g" configure
+  #sed -i "s:-fopenmp:&=libgomp:g;s:-lstdc++::g" configure
+  sed -i "s:-lstdc++::g" configure
 }
 
 . $(dirname $0)/master.sh

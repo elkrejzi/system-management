@@ -1,0 +1,56 @@
+#!/bin/bash -e
+
+export PKGNAME=brltty
+export PKGVER=5.3.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://mielke.cc/brltty/archive/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
+export KEEP_STATIC=1
+export USER_CFLAGS="-I/usr/include/speech-dispatcher"
+
+export CONFIGURE_FLAGS=(--disable-java-bindings
+                        --disable-lisp-bindings
+                        --disable-ocaml-bindings
+                        --disable-tcl-bindings
+                        --with-espeak=/usr
+                        --with-speechd=/usr)
+
+export MAKE_INSTALL_FLAGS="INSTALL_ROOT=\${DEST}"
+export PYTHON=/usr/bin/python3
+export CYTHON=/usr/bin/cython3
+
+make_install_post() {
+  rm -rf ${DEST}/usr/lib/*.a ${DEST}/var/run
+
+  install -m644 Documents/brltty.conf ${DEST}/etc/brltty.conf
+  install -dm755 ${DEST}/lib/systemd/system
+
+cat > ${DEST}/lib/systemd/system/brltty.service << "EOF"
+[Unit]
+Description=Braille Device Support
+Documentation=man:brltty(1)
+RequiresMountsFor=/var/lib/brltty
+DefaultDependencies=no
+Before=sysinit.target
+
+[Service]
+Type=notify
+ExecStart=/bin/brltty --no-daemon
+TimeoutStartSec=5
+TimeoutStopSec=10
+Restart=always
+RestartSec=30 
+Nice=-10
+OOMScoreAdjust=-900
+ProtectHome=read-only
+ProtectSystem=full 
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=sysinit.target
+EOF
+
+}
+
+. $(dirname $0)/master.sh

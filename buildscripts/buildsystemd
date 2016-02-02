@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=systemd
-export PKGVER=228+e5b5f51
+export PKGVER=228+14ddf42
 export MAKE_JOBS_FLAGS="-j4"
 export DEBUG_BUILD=1
 export KEEP_EMPTY_DIRS=1
@@ -150,15 +150,18 @@ systemd-hwdb update
 
 setfacl -nm g:adm:rx,d:g:adm:rx /var/log/journal/
 
-if [ -e /sys/fs/cgroup/systemd ]; then
+if [ -e /sys/fs/cgroup/systemd ]
+then
    systemctl --system daemon-reexec
 fi
 
-if [ ! -e /etc/rc.local ]; then
+if [ ! -e /etc/rc.local ]
+then
    mv -f /etc/rc.local.default /etc/rc.local
 fi
 
-if [ ! -e /etc/machine-id ]; then
+if [ ! -e /etc/machine-id ]
+then
    systemd-machine-id-setup
 fi
 

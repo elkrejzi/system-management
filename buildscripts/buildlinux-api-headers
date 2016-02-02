@@ -2,7 +2,7 @@
 
 export PKGNAME=linux-api-headers
 export PKGVER=4.4
-export PATCHVER=
+export PATCHVER=4.4.1
 export COMMON_URL="https://cdn.kernel.org/pub/linux/kernel/v4.x"
 export PKGTAR=linux-${PKGVER}.tar.xz
 export PKGURL="${COMMON_URL}/${PKGTAR}"

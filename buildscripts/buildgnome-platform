@@ -52,7 +52,7 @@ case $(basename $0) in
   ;;
   buildgeocode-glib )
     export PKGNAME=geocode-glib
-    export PKGVER=3.18.0
+    export PKGVER=3.18.1
   ;;
   buildgjs )
     export PKGNAME=gjs

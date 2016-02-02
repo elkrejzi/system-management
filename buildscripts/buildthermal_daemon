@@ -6,10 +6,10 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/01org/thermal_daemon/archive/v${PKGVER}.tar.gz"
 export MAKE_JOBS_FLAGS="-j4"
 
-configure_pre() {
-  sed -i "s:fopenmp:&=libgomp:g" Makefile.am
-  autoreconf -fi
-}
+#configure_pre() {
+#  sed -i "s:fopenmp:&=libgomp:g" Makefile.am
+#  autoreconf -fi
+#}
 
 make_install_post() {
   rm -rf ${DEST}/etc/init

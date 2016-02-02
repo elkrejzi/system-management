@@ -9,6 +9,9 @@ tar xf ${SROOT}/binutils-${BINUTILS_VER}.tar.bz2
 {
 
   time {
+  pushd binutils-${BINUTILS_VER}
+    patch -Np1 -i ${PROOT}/binutils-fixes.patch
+  popd
   mkdir -v binutils-build
   pushd binutils-build
     CC=$LFS_TGT-gcc        \

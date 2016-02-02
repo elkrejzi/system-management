@@ -8,12 +8,12 @@ proj=(
   libcxx
   libcxxabi
   libunwind
-  openmp
 )
 
 cmake_shared=(
   -DCMAKE_INSTALL_PREFIX=/tools
   -DCMAKE_BUILD_TYPE=Release
+  -DCLANG_DEFAULT_OPENMP_RUNTIME=libgomp
   -DCLANG_ENABLE_ARCMT=OFF
   -DCLANG_ENABLE_STATIC_ANALYZER=OFF
   -DCLANG_INCLUDE_TESTS=OFF

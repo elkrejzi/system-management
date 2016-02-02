@@ -8,6 +8,7 @@ export PKGDIR=src
 export PKGBUILD=build
 export MAKE_JOBS_FLAGS="-j4"
 export DEBUG_BUILD=1
+export PATCHES_LIST=("binutils-fixes.patch")
 export MAKE_FLAGS="tooldir=/usr"
 export MAKE_INSTALL_FLAGS="tooldir=/usr"
 export DEFAULT_CC="gcc"
