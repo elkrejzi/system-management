@@ -10,12 +10,4 @@ export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--disable-gtk --disable-libpng)
 export CONFIGURE_FLAGS_32=(--disable-gtk --disable-libpng)
 
-#configure_pre() {
-#  sed -i "s:fopenmp:&=libgomp:g" configure
-#}
-
-#configure_pre_32() {
-#  sed -i "s:fopenmp:&=libgomp:g" configure
-#}
-
 . $(dirname $0)/master.sh

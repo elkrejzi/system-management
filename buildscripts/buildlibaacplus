@@ -6,6 +6,7 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://tipok.org.ua/downloads/media/aac+/libaacplus/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
+export USER_CFLAGS="-std=gnu89"
 
 configure_pre() {
   autoreconf -fi

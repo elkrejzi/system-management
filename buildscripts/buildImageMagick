@@ -17,10 +17,6 @@ export CONFIGURE_FLAGS=(--enable-hdri
                         --with-gs-font-dir=/usr/share/ghostscript/fonts
                         --with-perl-options=INSTALLDIRS=vendor)
 
-#configure_pre() {
-#  sed -i "s:fopenmp:&=libgomp:g" configure
-#}
-
 make_install_post() {
   rm -rf ${DEST}/usr/lib/*.la
 }

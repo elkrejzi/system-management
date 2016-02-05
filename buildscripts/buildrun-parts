@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=run-parts
-export PKGVER=4.6
+export PKGVER=4.7
 export PKGTAR=debianutils_${PKGVER}.tar.xz
 export PKGDIR=debianutils-${PKGVER}
 export PKGURL="http://http.debian.net/debian/pool/main/d/debianutils/${PKGTAR}"

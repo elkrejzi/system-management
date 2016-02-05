@@ -7,12 +7,4 @@ export PKGURL="https://ftp.gnu.org/gnu/gettext/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 
-#configure_pre() {
-#  sed -i "s:fopenmp:&=libgomp:g" gettext-tools/configure
-#}
-
-#configure_pre_32() {
-#  sed -i "s:fopenmp:&=libgomp:g" gettext-tools/configure
-#}
-
 . $(dirname $0)/master.sh

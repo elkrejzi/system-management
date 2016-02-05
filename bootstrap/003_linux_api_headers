@@ -12,7 +12,7 @@ tar xf ${SROOT}/linux-${LINUX_VER}.tar.xz
   pushd linux-${LINUX_VER}
     if [ ! -z "${LINUX_PATCH_VER}" ]
     then
-      xz -cd ${SROOT}/patch-${LINUX_PATCH_VER}.xz | patch -Np1 -i - && exit 0
+      xz -cd ${SROOT}/patch-${LINUX_PATCH_VER}.xz | patch -Np1 -i -
     fi
     make mrproper
     make INSTALL_HDR_PATH=dest headers_install

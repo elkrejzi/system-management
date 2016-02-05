@@ -16,6 +16,8 @@ configure_override() {
   echo "${CC}" > src/c-client/CCTYPE
   echo "${CFLAGS} -fPIC -DCHUNKSIZE=65536" > src/c-client/CFLAGS
 
+  sed -i "/safe_flock/d" src/osdep/unix/os_lnx.h
+
 /bin/echo -e '
 ldbs:  an
 \t$(BUILD) BUILDTYPE=lnps IP=$(IP6) \
@@ -39,7 +41,7 @@ lnps:  # Linux Pluggable Authentication modules (c-client as shared lib)
 }
 
 make_override() {
-  yes "y" | make ldbs VERSION=${VER}
+  yes "y" | make ldbs VERSION=${PKGVER}
 }
 
 make_install_override() {

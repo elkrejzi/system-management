@@ -1,0 +1,17 @@
+#!/bin/bash -e
+
+export LFS=/mnt/lfs
+
+# install -dm755 ${LFS}/media/ntfs ${LFS}/sources
+
+mount --bind /dev ${LFS}/dev
+mount --bind /dev/pts ${LFS}/dev/pts
+
+mount -t proc none ${LFS}/proc
+mount -t sysfs none ${LFS}/sys
+
+mount -t tmpfs none ${LFS}/run
+mount -t tmpfs none ${LFS}/tmp
+
+# mount --bind /media/ntfs ${LFS}/media/ntfs
+# mount --bind /home/armin/src ${LFS}/sources
