@@ -255,7 +255,7 @@ case $(basename $0) in
   ;;
   buildlibwnck )
     export PKGNAME=libwnck
-    export PKGVER=3.14.0
+    export PKGVER=3.14.1
   ;;
   buildmutter )
     export PKGNAME=mutter

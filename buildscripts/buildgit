@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=git
-export PKGVER=2.7.0
+export PKGVER=2.7.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://www.kernel.org/pub/software/scm/git/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

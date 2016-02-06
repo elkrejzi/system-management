@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=chromium
-export PKGVER=48.0.2564.97
+export PKGVER=48.0.2564.103
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://commondatastorage.googleapis.com/chromium-browser-official/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
