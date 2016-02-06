@@ -167,10 +167,10 @@ $(dirname $0)/buildspeech-dispatcher
 $(dirname $0)/buildbrltty
 $(dirname $0)/buildlibassuan
 $(dirname $0)/buildlibksba
+$(dirname $0)/buildnpth
 $(dirname $0)/buildpkcs11-helper
 $(dirname $0)/buildpth
 $(dirname $0)/buildgnupg
-$(dirname $0)/builddirmngr
 $(dirname $0)/buildgcr
 $(dirname $0)/buildgpgme
 $(dirname $0)/buildopenssh

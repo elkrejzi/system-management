@@ -93,7 +93,7 @@ case $(basename $0) in
   ;;
   buildgnome-keyring )
     export PKGNAME=gnome-keyring
-    export PKGVER=3.16.0
+    export PKGVER=3.18.3
     export POSTINST_TRIGGER=("setcap cap_ipc_lock=ep /usr/bin/gnome-keyring-daemon")
     export CONFIGURE_FLAGS=(--with-pam-dir=/lib/security)
   ;;

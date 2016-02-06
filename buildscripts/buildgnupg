@@ -1,12 +1,11 @@
 #!/bin/bash -e
 
 export PKGNAME=gnupg
-export PKGVER=2.0.29
+export PKGVER=2.1.11
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="ftp://ftp.gnupg.org/gcrypt/gnupg/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export CONFIGURE_FLAGS=(--enable-gpgtar --enable-symcryptrun --enable-standard-socket)
-export DEFAULT_CC="gcc"
+export CONFIGURE_FLAGS=(--enable-gpgtar --enable-symcryptrun)
 
 make_install_post() {
   rm -rf ${DEST}/usr/share/gnupg/com-certs.pem
