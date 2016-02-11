@@ -46,7 +46,7 @@ $(dirname $0)/buildkdepim-runtime
 $(dirname $0)/buildkdepim
 $(dirname $0)/buildchromium
 $(dirname $0)/buildchromium-pepper-flash
-#$(dirname $0)/buildlibreoffice
+$(dirname $0)/buildlibreoffice
 $(dirname $0)/buildwine
 $(dirname $0)/buildtexlive
 

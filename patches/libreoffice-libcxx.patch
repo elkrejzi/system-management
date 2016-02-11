@@ -1,0 +1,154 @@
+--- a/bridges/source/cpp_uno/gcc3_linux_x86-64/share.hxx	2016-01-27 01:58:25.000000000 +0100
++++ b/bridges/source/cpp_uno/gcc3_linux_x86-64/share.hxx	2016-02-11 17:57:20.707071634 +0100
+@@ -36,12 +36,118 @@
+ 
+ namespace __cxxabiv1
+ {
++#ifdef _LIBCPPABI_VERSION
++
++#ifndef LIBCXXABI_ARM_EHABI
++#define LIBCXXABI_ARM_EHABI 0
++#endif
++
++    // libunwind/include/unwind.h
++    typedef enum {
++        _URC_NO_REASON = 0,
++        _URC_OK = 0,
++        _URC_FOREIGN_EXCEPTION_CAUGHT = 1,
++        _URC_FATAL_PHASE2_ERROR = 2,
++        _URC_FATAL_PHASE1_ERROR = 3,
++        _URC_NORMAL_STOP = 4,
++        _URC_END_OF_STACK = 5,
++        _URC_HANDLER_FOUND = 6,
++        _URC_INSTALL_CONTEXT = 7,
++        _URC_CONTINUE_UNWIND = 8,
++    } _Unwind_Reason_Code;
++
++    struct _Unwind_Exception {
++        uint64_t exception_class;
++        void (*exception_cleanup)(_Unwind_Reason_Code reason,
++                                  _Unwind_Exception *exc);
++        uintptr_t private_1; // non-zero means forced unwind
++        uintptr_t private_2; // holds sp that phase1 found for phase2 to use
++#ifndef __LP64__
++        // The gcc implementation of _Unwind_Exception used attribute mode on the
++        // above fields which had the side effect of causing this whole struct to
++        // round up to 32 bytes in size. To be more explicit, we add pad fields
++        // added for binary compatibility.
++        uint32_t reserved[3];
++#endif
++    };
++
++    // libcxxabi/src/cxa_exception.hpp
++    struct __cxa_exception {
++#if defined(__LP64__) || LIBCXXABI_ARM_EHABI
++        // This is a new field to support C++ 0x exception_ptr.
++        // For binary compatibility it is at the start of this
++        // struct which is prepended to the object thrown in
++        // __cxa_allocate_exception.
++        size_t referenceCount;
++#endif
++
++        //  Manage the exception object itself.
++        std::type_info *exceptionType;
++        void (*exceptionDestructor)(void *);
++        std::unexpected_handler unexpectedHandler;
++        std::terminate_handler  terminateHandler;
++
++        __cxa_exception *nextException;
++
++        int handlerCount;
++
++#if LIBCXXABI_ARM_EHABI
++        __cxa_exception* nextPropagatingException;
++        int propagationCount;
++#else
++        int handlerSwitchValue;
++        const unsigned char *actionRecord;
++        const unsigned char *languageSpecificData;
++        void *catchTemp;
++        void *adjustedPtr;
++#endif
++
++#if !defined(__LP64__) && !LIBCXXABI_ARM_EHABI
++        // This is a new field to support C++ 0x exception_ptr.
++        // For binary compatibility it is placed where the compiler
++        // previously adding padded to 64-bit align unwindHeader.
++        size_t referenceCount;
++#endif
++
++        _Unwind_Exception unwindHeader;
++    };
++
++    struct __cxa_eh_globals {
++        __cxa_exception *   caughtExceptions;
++        unsigned int        uncaughtExceptions;
++#if LIBCXXABI_ARM_EHABI
++        __cxa_exception* propagatingExceptions;
++#endif
++    };
++
++extern "C" __cxa_eh_globals * __cxa_get_globals      ();
++
++#endif // _LIBCPPABI_VERSION
++
+     struct __class_type_info : public std::type_info
+     {
+         explicit __class_type_info( const char *__n ) : type_info( __n ) { }
+         virtual ~__class_type_info();
+     };
+ 
++    struct __base_class_type_info
++    {
++        const __class_type_info* __base_type;
++#ifdef _GLIBCXX_LLP64
++        long long __offset_flags;
++#else
++        long __offset_flags;
++#endif
++
++        enum __offset_flags_masks
++        {
++          __virtual_mask = 0x1,
++          __public_mask = 0x2,
++          __hwm_bit = 2,
++          __offset_shift = 8
++        };
++    };
++
+     struct __si_class_type_info : public __class_type_info
+     {
+         explicit __si_class_type_info( const char *__n, const __class_type_info *__b ) :
+@@ -50,10 +156,32 @@
+         const __class_type_info *__base_type;
+     };
+ 
++    struct __vmi_class_type_info : public __class_type_info
++    {
++        explicit __vmi_class_type_info(const char* __n, int ___flags) :
++            __class_type_info(__n), __flags(___flags), __base_count(0) { }
++        virtual ~__vmi_class_type_info();
++
++        unsigned int __flags;
++        unsigned int __base_count;
++        __base_class_type_info __base_info[1];
++
++        enum __flags_masks
++        {
++	        __non_diamond_repeat_mask = 0x1,
++	        __diamond_shaped_mask = 0x2,
++	        __flags_unknown_mask = 0x10
++        };
++
++    };
++
++#ifndef _LIBCPPABI_VERSION
+ extern "C" void *__cxa_allocate_exception( std::size_t thrown_size ) _NOEXCEPT;
+ 
+ extern "C" _LIBCPP_NORETURN void __cxa_throw(
+     void *thrown_exception, std::type_info *tinfo, void (*dest) (void *) );
++#endif
++
+ }
+ 
+ #else
