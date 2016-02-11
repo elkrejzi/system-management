@@ -116,9 +116,9 @@ case $(basename $0) in
   ;;
   buildliborcus )
     export PKGNAME=liborcus
-    export PKGVER=0.7.1
+    export PKGVER=0.9.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://kohei.us/files/ixion/src/${PKGTAR}"
+    export PKGURL="http://kohei.us/files/orcus/src/${PKGTAR}"
     export CONFIGURE_FLAGS=(--disable-werror)
   ;;
   buildlibpagemaker )

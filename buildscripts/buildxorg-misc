@@ -38,11 +38,12 @@ case $(basename $0) in
   ;;
   buildxorg-server )
     export PKGNAME=xorg-server
-    export PKGVER=1.18.0
+    export PKGVER=1.18.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://xorg.freedesktop.org/releases/individual/xserver/${PKGTAR}"
     export DEBUG_BUILD=1
     export KEEP_EMPTY_DIRS=1
+    export PATCHES_LIST=("xserver-fixes.patch")
     export CONFIGURE_FLAGS=(--disable-install-setuid
                             --enable-dri2
                             --enable-dri3

@@ -10,8 +10,10 @@ export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export PATH_TO_SOURCE="../../source"
 export CMAKE_BUILD=1
+export MULTILIB_BUILD=1
+export CMAKE_FLAGS_32=(-DLIB_INSTALL_DIR=/usr/lib32)
 
-make_install_post() {
+post_install_config() {
   find ${DEST} -name "*.a" -delete
 }
 

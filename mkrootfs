@@ -134,7 +134,7 @@ shadow: files
 
 publickey: files
 
-hosts: files dns myhostname
+hosts: files resolve myhostname
 networks: files
 
 protocols: files

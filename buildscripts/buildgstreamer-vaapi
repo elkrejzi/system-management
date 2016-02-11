@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=gstreamer-vaapi
+export PKGVER=0.7.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
+export PKGURL="https://www.freedesktop.org/software/vaapi/releases/gstreamer-vaapi/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS=(--disable-builtin-libvpx)
+export CONFIGURE_FLAGS_32=(--disable-builtin-libvpx)
+
+. $(dirname $0)/master.sh

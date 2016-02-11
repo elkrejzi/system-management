@@ -10,6 +10,7 @@ export PATCHES_LIST=("readline-fixes.patch")
 export PATCHES_LIST_32=("readline-fixes.patch")
 export MAKE_FLAGS="SHLIB_LIBS=-lncurses"
 export MAKE_FLAGS_32="SHLIB_LIBS=-lncurses"
+export MAKE_INSTALL_FLAGS_32="SHLIB_LIBS=-lncurses"
 
 post_install_config() {
   install -dm755 ${DEST}/etc ${DEST}/lib

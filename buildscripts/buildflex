@@ -5,6 +5,7 @@ export PKGVER=2.6.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://downloads.sourceforge.net/flex/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
 export KEEP_STATIC=1
 
 make_install_post() {

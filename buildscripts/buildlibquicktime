@@ -6,9 +6,17 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://downloads.sourceforge.net/libquicktime/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
-export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done\n"
-                    "cp -rf --remove-destination usr/bin/libquicktime_config /usr/bin")
+export MULTILIB_BUILD=1
+export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done\n"
+                    "cp -rf --remove-destination usr/bin/libquicktime_config /usr/bin"
+                    "cp -rf --remove-destination usr/bin/libquicktime_config-32 /usr/bin")
 export PATCHES_LIST=("libquicktime-fixes.patch")
+export PATCHES_LIST_32=("libquicktime-fixes.patch")
 export CONFIGURE_FLAGS=(--enable-gpl --with-libdv --without-doxygen)
+export CONFIGURE_FLAGS_32=(${CONFIGURE_FLAGS[@]} --disable-libswscale --without-avcodec)
+
+make_install_post_32() {
+  mv dest/usr/bin/libquicktime_config ${DEST}/usr/bin/libquicktime_config-32
+}
 
 . $(dirname $0)/master.sh

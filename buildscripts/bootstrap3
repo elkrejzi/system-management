@@ -110,6 +110,7 @@ $(dirname $0)/buildgst-plugins-good
 $(dirname $0)/buildgst-plugins-bad
 $(dirname $0)/buildgst-plugins-ugly
 $(dirname $0)/buildgst-libav
+$(dirname $0)/buildgstreamer-vaapi
 $(dirname $0)/buildcppunit
 $(dirname $0)/buildglm
 $(dirname $0)/buildmdds

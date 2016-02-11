@@ -7,5 +7,11 @@ export PKGURL="https://game-music-emu.googlecode.com/files/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
+export MULTILIB_BUILD=1
+export CMAKE_FLAGS_32=(-DLIB_SUFFIX=32)
+
+configure_pre_32() {
+  sed -i "s#lib/pkgconfig#lib32/pkgconfig#g" ../${PKGDIR}/gme/CMakeLists.txt
+}
 
 . $(dirname $0)/master.sh

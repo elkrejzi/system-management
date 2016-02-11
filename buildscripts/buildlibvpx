@@ -6,6 +6,7 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://storage.googleapis.com/downloads.webmproject.org/releases/webm/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
 
 configure_override() {
   ./configure --prefix=/usr    \
@@ -13,6 +14,16 @@ configure_override() {
               --enable-experimental \
               --enable-spatial-svc  \
               --disable-static
+}
+
+configure_override_32() {
+  ./configure --prefix=/usr         \
+              --libdir=/usr/lib32   \
+              --enable-shared       \
+              --enable-experimental \
+              --enable-spatial-svc  \
+              --disable-static      \
+              --target=x86-linux-gcc
 }
 
 . $(dirname $0)/master.sh

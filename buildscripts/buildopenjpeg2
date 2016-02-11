@@ -6,6 +6,8 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://downloads.sourceforge.net/openjpeg.mirror/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
-export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
+export MULTILIB_BUILD=1
+export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done")
+export CMAKE_FLAGS_32=(-DOPENJPEG_INSTALL_LIB_DIR=/usr/lib32)
 
 . $(dirname $0)/master.sh

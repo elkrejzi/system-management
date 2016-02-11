@@ -292,19 +292,6 @@ printf '[ -x /usr/bin/glib-compile-schemas ] && echo "Processing triggers for gl
 
   fi
 
-  if [ -e ${DEST}/usr/lib/gio/modules ]
-  then
-
-    if [ ${SPACE_ADDED} != 1 ]
-    then
-      printf "\n" >> ${DEST}/INSTALL
-      SPACE_ADDED=1
-    fi
-
-printf '[ -x /usr/bin/gio-querymodules ] && echo "Processing triggers for gio-2.0" && /usr/bin/gio-querymodules /usr/lib/gio/modules\n' >> ${DEST}/INSTALL
-
-  fi
-
   if [ -e ${DEST}/usr/share/mime ]
   then
 

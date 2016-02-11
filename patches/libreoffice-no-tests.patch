@@ -1,5 +1,5 @@
---- a/basebmp/Module_basebmp.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/basebmp/Module_basebmp.mk	2015-12-20 00:29:58.609659547 +0100
+--- a/basebmp/Module_basebmp.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/basebmp/Module_basebmp.mk	2016-02-10 15:09:26.132536257 +0100
 @@ -19,8 +19,4 @@
  ))
  endif
@@ -9,8 +9,8 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/basegfx/Module_basegfx.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/basegfx/Module_basegfx.mk	2015-12-20 00:34:52.806590736 +0100
+--- a/basegfx/Module_basegfx.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/basegfx/Module_basegfx.mk	2016-02-10 15:09:26.132536257 +0100
 @@ -13,8 +13,4 @@
      Library_basegfx \
  ))
@@ -20,8 +20,8 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/basic/Module_basic.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/basic/Module_basic.mk	2015-12-20 00:36:18.293308928 +0100
+--- a/basic/Module_basic.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/basic/Module_basic.mk	2016-02-10 15:09:26.146536508 +0100
 @@ -15,14 +15,6 @@
  	AllLangResTarget_sb \
  ))
@@ -37,8 +37,8 @@
  endif
  
  $(eval $(call gb_Module_add_targets,basic,\
---- a/binaryurp/Module_binaryurp.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/binaryurp/Module_binaryurp.mk	2015-12-20 00:33:10.652534828 +0100
+--- a/binaryurp/Module_binaryurp.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/binaryurp/Module_binaryurp.mk	2016-02-10 15:09:26.146536508 +0100
 @@ -13,9 +13,4 @@
  	Library_binaryurp \
  ))
@@ -49,15 +49,20 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/chart2/Module_chart2.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/chart2/Module_chart2.mk	2015-12-20 00:26:39.925630621 +0100
-@@ -21,20 +21,4 @@
+--- a/chart2/Module_chart2.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/chart2/Module_chart2.mk	2016-02-10 15:11:09.867405575 +0100
+@@ -21,25 +21,4 @@
  	UIConfig_chart2 \
  ))
  
+-$(eval $(call gb_Module_add_check_targets,chart2,\
+-	CppunitTest_chart2_common_functors \
+-))
+-
 -$(eval $(call gb_Module_add_slowcheck_targets,chart2,\
 -    CppunitTest_chart2_export \
 -    CppunitTest_chart2_import \
+-    CppunitTest_chart2_trendcalculators \
 -))
 -
 -ifeq ($(ENABLE_CHART_TESTS),TRUE)
@@ -72,9 +77,9 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/comphelper/Module_comphelper.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/comphelper/Module_comphelper.mk	2015-12-20 00:35:42.109581902 +0100
-@@ -23,13 +23,4 @@
+--- a/comphelper/Module_comphelper.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/comphelper/Module_comphelper.mk	2016-02-10 15:11:44.901039964 +0100
+@@ -23,14 +23,4 @@
      Library_comphelper \
  ))
  
@@ -84,12 +89,13 @@
 -
 -$(eval $(call gb_Module_add_check_targets,comphelper,\
 -    CppunitTest_comphelper_syntaxhighlight_test \
+-    CppunitTest_comphelper_variadictemplates_test \
 -    CppunitTest_comphelper_test \
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/configmgr/Module_configmgr.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/configmgr/Module_configmgr.mk	2015-12-20 00:26:33.231494430 +0100
+--- a/configmgr/Module_configmgr.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/configmgr/Module_configmgr.mk	2016-02-10 15:09:26.158536724 +0100
 @@ -13,12 +13,4 @@
      Library_configmgr \
  ))
@@ -103,9 +109,9 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/connectivity/Module_connectivity.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/connectivity/Module_connectivity.mk	2015-12-20 00:30:59.713894278 +0100
-@@ -119,43 +119,6 @@
+--- a/connectivity/Module_connectivity.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/connectivity/Module_connectivity.mk	2016-02-10 15:09:26.171536957 +0100
+@@ -103,43 +103,6 @@
  	Library_mozbootstrap \
  ))
  
@@ -149,8 +155,8 @@
 -))
  
  # vim: set noet sw=4 ts=4:
---- a/cppcanvas/Module_cppcanvas.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/cppcanvas/Module_cppcanvas.mk	2015-12-20 00:35:35.829455685 +0100
+--- a/cppcanvas/Module_cppcanvas.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/cppcanvas/Module_cppcanvas.mk	2016-02-10 15:09:26.171536957 +0100
 @@ -24,17 +24,4 @@
  	Library_mtfrenderer \
  ))
@@ -169,8 +175,8 @@
 -endif
 -
  # vim: set noet sw=4 ts=4:
---- a/cppu/Module_cppu.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/cppu/Module_cppu.mk	2015-12-20 00:39:28.848133024 +0100
+--- a/cppu/Module_cppu.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/cppu/Module_cppu.mk	2016-02-10 15:09:26.171536957 +0100
 @@ -20,12 +20,4 @@
  	Library_unsafe_uno_uno \
  ))
@@ -184,9 +190,9 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/cppuhelper/Module_cppuhelper.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/cppuhelper/Module_cppuhelper.mk	2015-12-20 00:34:30.909150304 +0100
-@@ -16,10 +16,4 @@
+--- a/cppuhelper/Module_cppuhelper.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/cppuhelper/Module_cppuhelper.mk	2016-02-10 15:12:36.090969376 +0100
+@@ -16,14 +16,4 @@
  	StaticLibrary_findsofficepath \
  ))
  
@@ -194,11 +200,15 @@
 -	CppunitTest_cppuhelper_cppu_ifcontainer \
 -	CppunitTest_cppuhelper_cppu_unourl \
 -))
+-
 -# CppunitTest_cppuhelper_qa_weak depends on module bridges
+-$(eval $(call gb_Module_add_subsequentcheck_targets,cppuhelper,\
+-	CppunitTest_cppuhelper_qa_weak \
+-))
 -
  # vim: set noet sw=4 ts=4:
---- a/dbaccess/Module_dbaccess.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/dbaccess/Module_dbaccess.mk	2015-12-20 00:32:08.924290826 +0100
+--- a/dbaccess/Module_dbaccess.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/dbaccess/Module_dbaccess.mk	2016-02-10 15:09:26.172536975 +0100
 @@ -34,50 +34,6 @@
  	UIConfig_dbtdata \
  ))
@@ -250,9 +260,9 @@
  endif
  
  # vim: set noet sw=4 ts=4:
---- a/desktop/Module_desktop.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/desktop/Module_desktop.mk	2015-12-20 00:39:11.816791513 +0100
-@@ -126,8 +126,4 @@
+--- a/desktop/Module_desktop.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/desktop/Module_desktop.mk	2016-02-10 15:12:49.327210142 +0100
+@@ -126,14 +126,4 @@
  ))
  endif
  
@@ -260,9 +270,15 @@
 -    CppunitTest_desktop_version \
 -))
 -
+-ifeq ($(OS),LINUX)
+-$(eval $(call gb_Module_add_check_targets,desktop, \
+-    CppunitTest_desktop_lib \
+-))
+-endif
+-
  # vim: set ts=4 sw=4 et:
---- a/editeng/Module_editeng.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/editeng/Module_editeng.mk	2015-12-20 00:26:27.184371374 +0100
+--- a/editeng/Module_editeng.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/editeng/Module_editeng.mk	2016-02-10 15:09:26.188537262 +0100
 @@ -28,11 +28,4 @@
  	AllLangResTarget_editeng \
  ))
@@ -275,8 +291,8 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/extensions/Module_extensions.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/extensions/Module_extensions.mk	2015-12-20 00:31:35.413614884 +0100
+--- a/extensions/Module_extensions.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/extensions/Module_extensions.mk	2016-02-10 15:09:26.188537262 +0100
 @@ -61,9 +61,6 @@
  	AllLangResTarget_updchk \
  ))
@@ -296,16 +312,16 @@
 -))
 -
  # vim:set shiftwidth=4 softtabstop=4 noexpandtab:
---- a/filter/Module_filter.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/filter/Module_filter.mk	2015-12-20 00:27:22.507496189 +0100
-@@ -78,31 +78,4 @@
+--- a/filter/Module_filter.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/filter/Module_filter.mk	2016-02-10 15:13:08.181553400 +0100
+@@ -57,31 +57,4 @@
  ))
  endif
  
 -$(eval $(call gb_Module_add_check_targets,filter,\
 -    CppunitTest_filter_xslt \
 -    CppunitTest_filter_priority \
--    CppunitTest_filter_utils \
+-    CppunitTest_filter_msfilter \
 -))
 -
 -ifneq ($(DISABLE_CVE_TESTS),TRUE)
@@ -330,20 +346,23 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/forms/Module_forms.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/forms/Module_forms.mk	2015-12-20 00:33:40.669139269 +0100
-@@ -17,9 +17,4 @@
+--- a/forms/Module_forms.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/forms/Module_forms.mk	2016-02-10 15:13:16.555705968 +0100
+@@ -17,12 +17,4 @@
      AllLangResTarget_frm \
  ))
  
 -$(eval $(call gb_Module_add_subsequentcheck_targets,forms,\
--    JunitTest_forms_unoapi \
+-    JunitTest_forms_unoapi_1 \
+-    JunitTest_forms_unoapi_2 \
+-    JunitTest_forms_unoapi_3 \
+-    JunitTest_forms_unoapi_4 \
 -    JunitTest_forms_complex \
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/framework/Module_framework.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/framework/Module_framework.mk	2015-12-20 00:36:01.510971767 +0100
+--- a/framework/Module_framework.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/framework/Module_framework.mk	2016-02-10 15:09:26.189537280 +0100
 @@ -33,11 +33,4 @@
      UIConfig_startmodule \
  ))
@@ -356,8 +375,8 @@
 -endif
 -
  # vim: set noet sw=4 ts=4:
---- a/hwpfilter/Module_hwpfilter.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/hwpfilter/Module_hwpfilter.mk	2015-12-20 00:32:40.812933647 +0100
+--- a/hwpfilter/Module_hwpfilter.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/hwpfilter/Module_hwpfilter.mk	2016-02-10 15:09:26.189537280 +0100
 @@ -13,8 +13,4 @@
      Library_hwp \
  ))
@@ -367,8 +386,8 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/i18nlangtag/Module_i18nlangtag.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/i18nlangtag/Module_i18nlangtag.mk	2015-12-20 00:35:14.597028882 +0100
+--- a/i18nlangtag/Module_i18nlangtag.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/i18nlangtag/Module_i18nlangtag.mk	2016-02-10 15:09:26.190537298 +0100
 @@ -12,8 +12,4 @@
  	Library_i18nlangtag \
  ))
@@ -378,8 +397,8 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/i18npool/Module_i18npool.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/i18npool/Module_i18npool.mk	2015-12-20 00:28:35.833983893 +0100
+--- a/i18npool/Module_i18npool.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/i18npool/Module_i18npool.mk	2016-02-10 15:09:26.190537298 +0100
 @@ -38,11 +38,4 @@
  	Rdb_saxparser \
  ))
@@ -392,8 +411,8 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/io/Module_io.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/io/Module_io.mk	2015-12-20 00:32:46.094040069 +0100
+--- a/io/Module_io.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/io/Module_io.mk	2016-02-10 15:09:26.190537298 +0100
 @@ -13,8 +13,4 @@
      Library_io \
  ))
@@ -403,8 +422,8 @@
 -))
 -
  # vim:set noet sw=4 ts=4:
---- a/javaunohelper/Module_javaunohelper.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/javaunohelper/Module_javaunohelper.mk	2015-12-20 00:28:29.041846229 +0100
+--- a/javaunohelper/Module_javaunohelper.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/javaunohelper/Module_javaunohelper.mk	2016-02-10 15:09:26.190537298 +0100
 @@ -16,10 +16,6 @@
      Jar_juh \
  ))
@@ -416,8 +435,8 @@
  ifneq ($(DISABLE_DYNLOADING),TRUE)
  $(eval $(call gb_Module_add_targets,javaunohelper,\
      Library_juhx \
---- a/jurt/Module_jurt.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/jurt/Module_jurt.mk	2015-12-20 00:39:47.064498246 +0100
+--- a/jurt/Module_jurt.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/jurt/Module_jurt.mk	2016-02-10 15:09:26.191537316 +0100
 @@ -22,19 +22,6 @@
  ))
  endif
@@ -438,21 +457,25 @@
  endif
  
  # vim:set noet sw=4 ts=4:
---- a/libreofficekit/Module_libreofficekit.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/libreofficekit/Module_libreofficekit.mk	2015-12-20 00:34:09.501719594 +0100
-@@ -11,10 +11,6 @@
+--- a/libreofficekit/Module_libreofficekit.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/libreofficekit/Module_libreofficekit.mk	2016-02-10 15:13:29.563943096 +0100
+@@ -11,14 +11,6 @@
  
- ifeq ($(OS),LINUX)
+ ifeq ($(OS), $(filter LINUX %BSD SOLARIS, $(OS)))
  
+-$(eval $(call gb_Module_add_check_targets,libreofficekit, \
+-    CppunitTest_libreofficekit_checkapi \
+-))
+-
 -$(eval $(call gb_Module_add_subsequentcheck_targets,libreofficekit,\
 -    CppunitTest_libreofficekit_tiledrendering \
 -))
 -
- ifneq ($(ENABLE_GTK),)
+ ifneq ($(ENABLE_GTK3),)
  $(eval $(call gb_Module_add_targets,libreofficekit,\
      Library_libreofficekitgtk \
---- a/linguistic/Module_linguistic.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/linguistic/Module_linguistic.mk	2015-12-20 00:28:19.361649980 +0100
+--- a/linguistic/Module_linguistic.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/linguistic/Module_linguistic.mk	2016-02-10 15:09:26.191537316 +0100
 @@ -16,11 +16,4 @@
  #$(eval $(call gb_Module_add_check_targets,linguistic,\
  #))
@@ -465,8 +488,8 @@
 -# JunitTest_linguistic_complex \
 -
  # vim: set noet sw=4 ts=4:
---- a/lotuswordpro/Module_lotuswordpro.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/lotuswordpro/Module_lotuswordpro.mk	2015-12-20 00:38:35.817069485 +0100
+--- a/lotuswordpro/Module_lotuswordpro.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/lotuswordpro/Module_lotuswordpro.mk	2016-02-10 15:09:26.192537334 +0100
 @@ -15,10 +15,6 @@
      Library_lwpft \
  ))
@@ -478,8 +501,8 @@
  endif
  
  # vim: set noet sw=4 ts=4:
---- a/o3tl/Module_o3tl.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/o3tl/Module_o3tl.mk	2015-12-20 00:39:16.480885042 +0100
+--- a/o3tl/Module_o3tl.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/o3tl/Module_o3tl.mk	2016-02-10 15:09:26.228537980 +0100
 @@ -21,8 +21,4 @@
  $(eval $(call gb_Module_add_targets,o3tl,\
  ))
@@ -489,8 +512,8 @@
 -))
 -
  # vim: set noet sw=4:
---- a/odk/Module_odk.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/odk/Module_odk.mk	2015-12-20 00:27:00.146041804 +0100
+--- a/odk/Module_odk.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/odk/Module_odk.mk	2016-02-10 15:09:26.228537980 +0100
 @@ -51,10 +51,4 @@
  ))
  endif
@@ -502,19 +525,21 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/oox/Module_oox.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/oox/Module_oox.mk	2015-12-20 00:34:02.946587679 +0100
-@@ -16,8 +16,4 @@
+--- a/oox/Module_oox.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/oox/Module_oox.mk	2016-02-10 15:14:22.292905845 +0100
+@@ -16,10 +16,4 @@
  	Package_generated \
  ))
  
 -$(eval $(call gb_Module_add_check_targets,oox,\
 -	CppunitTest_oox_tokenmap \
+-	CppunitTest_oox_vba_compression \
+-	CppunitTest_oox_vba_encryption \
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/package/Module_package.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/package/Module_package.mk	2015-12-20 00:32:50.596130785 +0100
+--- a/package/Module_package.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/package/Module_package.mk	2016-02-10 15:09:26.229537998 +0100
 @@ -15,8 +15,4 @@
  	Package_dtd \
  ))
@@ -524,8 +549,8 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/postprocess/Module_postprocess.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/postprocess/Module_postprocess.mk	2015-12-20 00:34:47.285479701 +0100
+--- a/postprocess/Module_postprocess.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/postprocess/Module_postprocess.mk	2016-02-10 15:09:26.229537998 +0100
 @@ -28,8 +28,4 @@
  ))
  endif
@@ -535,9 +560,9 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/pyuno/Module_pyuno.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/pyuno/Module_pyuno.mk	2015-12-20 00:38:30.343959693 +0100
-@@ -62,19 +62,6 @@
+--- a/pyuno/Module_pyuno.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/pyuno/Module_pyuno.mk	2016-02-10 15:14:47.826372891 +0100
+@@ -62,20 +62,6 @@
  
  endif # SYSTEM_PYTHON
  
@@ -550,6 +575,7 @@
 -ifneq (,$(filter PythonTest_pytests,$(MAKECMDGOALS)))
 -$(eval $(call gb_Module_add_targets,pyuno, \
 -    PythonTest_pytests \
+-    PythonTest_pyuno_pytests_testcollections \
 -    PythonTest_pyuno_pytests_insertremovecells \
 -))
 -endif
@@ -557,8 +583,8 @@
  endif # DISABLE_PYTHON
  
  # vim:set noet sw=4 ts=4:
---- a/qadevOOo/Module_qadevOOo.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/qadevOOo/Module_qadevOOo.mk	2015-12-20 00:26:12.693076370 +0100
+--- a/qadevOOo/Module_qadevOOo.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/qadevOOo/Module_qadevOOo.mk	2016-02-10 15:09:26.229537998 +0100
 @@ -15,8 +15,4 @@
  ))
  endif
@@ -568,8 +594,8 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/reportdesign/Module_reportdesign.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/reportdesign/Module_reportdesign.mk	2015-12-20 00:29:17.295823681 +0100
+--- a/reportdesign/Module_reportdesign.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/reportdesign/Module_reportdesign.mk	2016-02-10 15:09:26.254538447 +0100
 @@ -21,10 +21,4 @@
      UIConfig_dbreport \
  ))
@@ -581,8 +607,8 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/ridljar/Module_ridljar.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/ridljar/Module_ridljar.mk	2015-12-20 00:36:10.261147568 +0100
+--- a/ridljar/Module_ridljar.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/ridljar/Module_ridljar.mk	2016-02-10 15:09:26.254538447 +0100
 @@ -16,13 +16,6 @@
      Jar_unoloader \
  ))
@@ -597,66 +623,53 @@
  endif
  
  # vim:set noet sw=4 ts=4:
---- a/sal/Module_sal.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/sal/Module_sal.mk	2015-12-20 00:53:25.879521403 +0100
-@@ -27,55 +27,6 @@
+--- a/sal/Module_sal.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/sal/Module_sal.mk	2016-02-10 15:21:40.645980503 +0100
+@@ -27,42 +27,6 @@
  		Executable_osl_process_child \
  ))
  
 -$(eval $(call gb_Module_add_check_targets,sal,\
--		CppunitTest_sal_osl_process \
--))
--
--$(eval $(call gb_Module_add_check_targets,sal,\
+-	$(if $(filter $(OS),WNT),,CppunitTest_sal_osl_file) \
 -	$(if $(filter TRUE,$(DISABLE_DYNLOADING)),,CppunitTest_Module_DLL) \
+-	$(if $(filter TRUE,$(DISABLE_DYNLOADING)),,CppunitTest_sal_osl_module) \
+-	$(if $(filter-out MSC-120,$(COM)-$(VCVER)),CppunitTest_sal_osl_security) \
 -	CppunitTest_sal_bytesequence \
 -	CppunitTest_sal_osl_condition \
--	$(if $(filter $(OS),WNT),, \
--		CppunitTest_sal_osl_file) \
--	$(if $(filter TRUE,$(DISABLE_DYNLOADING)),,CppunitTest_sal_osl_module) \
+-	CppunitTest_sal_osl_getsystempathfromfileurl \
+-	CppunitTest_sal_osl_mutex \
 -	CppunitTest_sal_osl_old_test_file \
--	$(if $(filter-out MSC-120,$(COM)-$(VCVER)),CppunitTest_sal_osl_security) \
+-	CppunitTest_sal_osl_pipe \
+-	CppunitTest_sal_osl_process \
+-	CppunitTest_sal_osl_profile \
+-	CppunitTest_sal_osl_setthreadname \
 -	CppunitTest_sal_osl_thread \
 -	CppunitTest_sal_rtl_alloc \
--	CppunitTest_sal_rtl_process \
 -	CppunitTest_sal_rtl_bootstrap \
 -	CppunitTest_sal_rtl_cipher \
 -	CppunitTest_sal_rtl_crc32 \
 -	CppunitTest_sal_rtl_digest \
 -	CppunitTest_sal_rtl_doublelock \
 -	CppunitTest_sal_rtl_locale \
+-	CppunitTest_sal_rtl_math \
 -	CppunitTest_sal_rtl_ostringbuffer \
--	CppunitTest_sal_rtl_oustringbuffer \
 -	CppunitTest_sal_rtl_oustring \
+-	CppunitTest_sal_rtl_oustringbuffer \
+-	CppunitTest_sal_rtl_process \
+-	CppunitTest_sal_rtl_ref \
+-	CppunitTest_sal_rtl_strings \
 -	CppunitTest_sal_rtl_textenc \
 -	CppunitTest_sal_rtl_uri \
--	CppunitTest_sal_rtl_strings \
 -	CppunitTest_sal_rtl_uuid \
 -	CppunitTest_sal_tcwf \
 -	CppunitTest_sal_types \
 -))
 -
--# these were added when gbuild'izing
--$(eval $(call gb_Module_add_check_targets,sal,\
--	CppunitTest_sal_osl_mutex \
--	CppunitTest_sal_osl_profile \
--	CppunitTest_sal_osl_setthreadname \
--	CppunitTest_sal_rtl_math \
--))
--
  endif
  
--# CppunitTest_sal_osl_pipe has circular dependency on unotest
--# $(eval $(call gb_Module_add_subsequentcheck_targets,sal,\
--	CppunitTest_sal_osl_pipe \
--))
--
--# error when building test-getsystempathfromfileurl.cxx \
--	CppunitTest_sal_osl_getsystempathfromfileurl \
--
  # vim: set noet sw=4 ts=4:
---- a/salhelper/Module_salhelper.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/salhelper/Module_salhelper.mk	2015-12-20 00:31:42.267753175 +0100
+--- a/salhelper/Module_salhelper.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/salhelper/Module_salhelper.mk	2016-02-10 15:09:26.259538536 +0100
 @@ -14,8 +14,4 @@
  	Library_salhelper \
  ))
@@ -666,8 +679,8 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/sax/Module_sax.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/sax/Module_sax.mk	2015-12-20 00:34:41.095355200 +0100
+--- a/sax/Module_sax.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/sax/Module_sax.mk	2016-02-10 15:09:26.259538536 +0100
 @@ -14,10 +14,4 @@
  	Library_sax \
  ))
@@ -679,67 +692,74 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/sc/Module_sc.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/sc/Module_sc.mk	2015-12-20 00:27:52.610107345 +0100
-@@ -44,56 +44,4 @@
+--- a/sc/Module_sc.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/sc/Module_sc.mk	2016-02-10 15:15:08.640753999 +0100
+@@ -38,63 +38,4 @@
  
  endif
  
 -$(eval $(call gb_Module_add_check_targets,sc,\
+-	Library_scqahelper \
 -	$(if $(and $(filter $(COM),MSC),$(MERGELIBS)),, \
 -		CppunitTest_sc_ucalc) \
--    CppunitTest_sc_filters_test \
--    CppunitTest_sc_rangelst_test \
+-	CppunitTest_sc_filters_test \
+-	CppunitTest_sc_rangelst_test \
+-	CppunitTest_sc_core \
 -))
 -
 -$(eval $(call gb_Module_add_slowcheck_targets,sc, \
--    CppunitTest_sc_condformats \
--    CppunitTest_sc_new_cond_format_api \
--    CppunitTest_sc_subsequent_filters_test \
--    CppunitTest_sc_subsequent_export_test \
--    CppunitTest_sc_bugfix_test \
--    CppunitTest_sc_html_export_test \
--    CppunitTest_sc_opencl_test \
--    CppunitTest_sc_copypaste \
+-	CppunitTest_sc_condformats \
+-	CppunitTest_sc_new_cond_format_api \
+-	CppunitTest_sc_subsequent_filters_test \
+-	CppunitTest_sc_subsequent_export_test \
+-	CppunitTest_sc_bugfix_test \
+-	CppunitTest_sc_html_export_test \
+-	CppunitTest_sc_opencl_test \
+-	CppunitTest_sc_copypaste \
 -))
 -
 -# Disabled to allow the check tinderbox execute the sd tests
 -# CppunitTest_sc_chart_regression_test \
--# FIXME_REMOVE_WHEN_RE_BASE_COMPLETE
--# CppunitTest_sc_annotationshapeobj \
 -
 -$(eval $(call gb_Module_add_subsequentcheck_targets,sc,\
--    JunitTest_sc_complex \
--    JunitTest_sc_unoapi \
--    CppunitTest_sc_outlineobj \
--    CppunitTest_sc_styleloaderobj \
--    CppunitTest_sc_recordchanges \
--    CppunitTest_sc_annotationobj \
--    CppunitTest_sc_annotationsobj \
--    CppunitTest_sc_cellrangeobj \
--    $(if $(filter-out $(OS),IOS), \
--            CppunitTest_sc_databaserangeobj) \
--    CppunitTest_sc_datapilottableobj \
--    CppunitTest_sc_datapilotfieldobj \
--    CppunitTest_sc_macros_test \
--    CppunitTest_sc_namedrangeobj \
--    CppunitTest_sc_namedrangesobj \
--    CppunitTest_sc_tablesheetobj \
--    CppunitTest_sc_tablesheetsobj \
--    CppunitTest_sc_editfieldobj_cell \
--    CppunitTest_sc_editfieldobj_header \
--    CppunitTest_sc_modelobj \
+-	JunitTest_sc_complex \
+-	JunitTest_sc_unoapi_1 \
+-	JunitTest_sc_unoapi_2 \
+-	JunitTest_sc_unoapi_3 \
+-	JunitTest_sc_unoapi_4 \
+-	JunitTest_sc_unoapi_5 \
+-	JunitTest_sc_unoapi_6 \
+-	JunitTest_sc_unoapi_7 \
+-	CppunitTest_sc_annotationshapeobj \
+-	CppunitTest_sc_outlineobj \
+-	CppunitTest_sc_styleloaderobj \
+-	CppunitTest_sc_recordchanges \
+-	CppunitTest_sc_annotationobj \
+-	CppunitTest_sc_annotationsobj \
+-	CppunitTest_sc_cellrangeobj \
+-	$(if $(filter-out $(OS),IOS), \
+-		CppunitTest_sc_databaserangeobj) \
+-	CppunitTest_sc_datapilottableobj \
+-	CppunitTest_sc_datapilotfieldobj \
+-	CppunitTest_sc_macros_test \
+-	CppunitTest_sc_namedrangeobj \
+-	CppunitTest_sc_namedrangesobj \
+-	CppunitTest_sc_tablesheetobj \
+-	CppunitTest_sc_tablesheetsobj \
+-	CppunitTest_sc_editfieldobj_cell \
+-	CppunitTest_sc_editfieldobj_header \
+-	CppunitTest_sc_modelobj \
 -))
 -
 -$(eval $(call gb_Module_add_perfcheck_targets,sc,\
--    CppunitTest_sc_perfobj \
--    CppunitTest_sc_tablesheetobj \
+-	CppunitTest_sc_perfobj \
+-	CppunitTest_sc_tablesheetobj \
 -))
 -
 -
  # vim: set noet sw=4 ts=4:
---- a/sccomp/Module_sccomp.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/sccomp/Module_sccomp.mk	2015-12-20 00:26:19.639217794 +0100
+--- a/sccomp/Module_sccomp.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/sccomp/Module_sccomp.mk	2016-02-10 15:09:26.260538554 +0100
 @@ -27,8 +27,4 @@
  	$(if $(ENABLE_COINMP)$(ENABLE_LPSOLVE), AllLangResTarget_solver) \
  ))
@@ -749,9 +769,9 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/sd/Module_sd.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/sd/Module_sd.mk	2015-12-20 00:32:22.652567611 +0100
-@@ -25,21 +25,4 @@
+--- a/sd/Module_sd.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/sd/Module_sd.mk	2016-02-10 15:15:23.910033787 +0100
+@@ -25,27 +25,4 @@
      UIConfig_simpress \
  ))
  
@@ -762,19 +782,25 @@
 -    CppunitTest_sd_import_tests \
 -    CppunitTest_sd_export_tests \
 -    CppunitTest_sd_filters_test \
+-    CppunitTest_sd_misc_tests \
 -    CppunitTest_sd_html_export_tests \
 -    CppunitTest_sd_tiledrendering \
 -))
 -endif
 -
+-ifeq ($(OS),LINUX)
+-$(eval $(call gb_Module_add_check_targets,sd,\
+-    CppunitTest_sd_svg_export_tests \
+-))
+-endif
 -
 -$(eval $(call gb_Module_add_subsequentcheck_targets,sd,\
 -    JunitTest_sd_unoapi \
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/sdext/Module_sdext.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/sdext/Module_sdext.mk	2015-12-20 00:29:32.112123548 +0100
+--- a/sdext/Module_sdext.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/sdext/Module_sdext.mk	2016-02-10 15:09:26.260538554 +0100
 @@ -26,11 +26,6 @@
      StaticLibrary_pdfimport_s \
  ))
@@ -787,14 +813,15 @@
  endif
  
  # vim:set noet sw=4 ts=4:
---- a/sfx2/Module_sfx2.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/sfx2/Module_sfx2.mk	2015-12-20 00:33:03.101382724 +0100
-@@ -28,17 +28,6 @@
+--- a/sfx2/Module_sfx2.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/sfx2/Module_sfx2.mk	2016-02-10 15:15:40.216332766 +0100
+@@ -28,24 +28,6 @@
      UIConfig_sfx \
  ))
  
 -$(eval $(call gb_Module_add_check_targets,sfx2,\
 -    CppunitTest_sfx2_metadatable \
+-    CppunitTest_sfx2_controlleritem \
 -))
 -
 -ifneq ($(ENABLE_JAVA),)
@@ -804,12 +831,18 @@
 -))
 -endif
 -
+-ifneq ($(DISABLE_PYTHON),TRUE)
+-$(eval $(call gb_Module_add_subsequentcheck_targets,sfx2,\
+-	PythonTest_sfx2_python \
+-))
+-endif
+-
  ifneq (,$(filter LINUX DRAGONFLY OPENBSD FREEBSD NETBSD SOLARIS, $(OS)))
  ifeq ($(ENABLE_SYSTRAY_GTK),TRUE)
  $(eval $(call gb_Module_add_targets,sfx2,\
---- a/shell/Module_shell.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/shell/Module_shell.mk	2015-12-20 01:00:39.208245529 +0100
-@@ -80,9 +80,6 @@
+--- a/shell/Module_shell.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/shell/Module_shell.mk	2016-02-10 15:09:26.283538967 +0100
+@@ -63,9 +63,6 @@
  	WinResTarget_shlxthdl \
  ))
  
@@ -819,8 +852,8 @@
  endif
  
  ifeq ($(BUILD_X64),TRUE)
---- a/smoketest/Module_smoketest.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/smoketest/Module_smoketest.mk	2015-12-20 00:38:54.136436936 +0100
+--- a/smoketest/Module_smoketest.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/smoketest/Module_smoketest.mk	2016-02-10 15:09:26.306539380 +0100
 @@ -32,14 +32,6 @@
  ))
  endif
@@ -836,8 +869,8 @@
  endif
  
  ifneq ($(ENABLE_JAVA),)
---- a/sot/Module_sot.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/sot/Module_sot.mk	2015-12-20 00:33:56.573459414 +0100
+--- a/sot/Module_sot.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/sot/Module_sot.mk	2016-02-10 15:09:26.306539380 +0100
 @@ -23,12 +23,4 @@
      Library_sot \
  ))
@@ -851,8 +884,8 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/starmath/Module_starmath.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/starmath/Module_starmath.mk	2015-12-20 00:28:10.305466332 +0100
+--- a/starmath/Module_starmath.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/starmath/Module_starmath.mk	2016-02-10 15:09:26.306539380 +0100
 @@ -20,13 +20,4 @@
      UIConfig_smath \
  ))
@@ -867,8 +900,8 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/svgio/Module_svgio.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/svgio/Module_svgio.mk	2015-12-20 00:34:36.005252817 +0100
+--- a/svgio/Module_svgio.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/svgio/Module_svgio.mk	2016-02-10 15:09:26.306539380 +0100
 @@ -22,8 +22,4 @@
      Library_svgio \
  ))
@@ -878,30 +911,21 @@
 -))
 -
  # vim: set noet ts=4 sw=4:
---- a/svl/Module_svl.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/svl/Module_svl.mk	2015-12-20 00:22:29.838516072 +0100
-@@ -29,31 +29,6 @@
+--- a/svl/Module_svl.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/svl/Module_svl.mk	2016-02-10 15:15:48.129477924 +0100
+@@ -29,22 +29,6 @@
      AllLangResTarget_svl \
  ))
  
 -$(eval $(call gb_Module_add_check_targets,svl,\
--	CppunitTest_svl_lngmisc \
--	CppunitTest_svl_qa_cppunit \
 -	CppunitTest_svl_inetcontenttype \
--	CppunitTest_svl_items \
 -	CppunitTest_svl_itempool \
+-	CppunitTest_svl_items \
+-	CppunitTest_svl_lngmisc \
 -	CppunitTest_svl_notify \
--))
--
--#TODO: CppunitTest_svl_urihelper depends on ucb, can only be added once svl is
--# in tail build
--#FIXME: fails on MSVC
--
--ifneq ($(OS),WNT)
--$(eval $(call gb_Module_add_subsequentcheck_targets,svl,\
+-	CppunitTest_svl_qa_cppunit \
 -	CppunitTest_svl_urihelper \
 -))
--endif
 -
 -ifneq ($(OOO_JUNIT_JAR),)
 -$(eval $(call gb_Module_add_subsequentcheck_targets,svl,\
@@ -912,8 +936,8 @@
  #todo: dde platform dependent
  #todo: package_inc
  #todo: map file
---- a/svtools/Module_svtools.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/svtools/Module_svtools.mk	2015-12-20 00:34:23.341998071 +0100
+--- a/svtools/Module_svtools.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/svtools/Module_svtools.mk	2016-02-10 15:09:26.307539398 +0100
 @@ -28,11 +28,6 @@
      UIConfig_svt \
  ))
@@ -939,8 +963,8 @@
  #todo: javapatchres
  #todo: jpeg on mac in svtools/util/makefile.mk
  #todo: deliver errtxt.src as ehdl.srs
---- a/svx/Module_svx.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/svx/Module_svx.mk	2015-12-20 00:27:33.689723285 +0100
+--- a/svx/Module_svx.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/svx/Module_svx.mk	2016-02-10 15:09:26.307539398 +0100
 @@ -45,12 +45,6 @@
  ))
  endif
@@ -954,15 +978,16 @@
  #todo: noopt for EnhanceCustomShapesFunctionParser.cxx on Solaris Sparc and MacOSX
  #todo: -DBOOST_SPIRIT_USE_OLD_NAMESPACE only in CustomShapes ?
  #todo: -DUNICODE and -D_UNICODE on WNT for source/dialog
---- a/sw/Module_sw.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/sw/Module_sw.mk	2015-12-20 00:20:45.125354152 +0100
-@@ -45,51 +45,4 @@
+--- a/sw/Module_sw.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/sw/Module_sw.mk	2016-02-10 15:16:05.031788124 +0100
+@@ -45,60 +45,4 @@
  
  endif
  
 -$(eval $(call gb_Module_add_slowcheck_targets,sw,\
 -	$(if $(and $(filter $(COM),MSC),$(MERGELIBS)),, \
 -		CppunitTest_sw_uwriter) \
+-    CppunitTest_sw_docbookexport \
 -    CppunitTest_sw_htmlexport \
 -    CppunitTest_sw_htmlimport \
 -    CppunitTest_sw_macros_test \
@@ -983,10 +1008,15 @@
 -    CppunitTest_sw_odfexport \
 -    CppunitTest_sw_odfimport \
 -    CppunitTest_sw_uiwriter \
--    CppunitTest_sw_tiledrendering \
 -    CppunitTest_sw_mailmerge \
 -    CppunitTest_sw_globalfilter \
 -))
+-
+-ifeq ($(OS),LINUX)
+-$(eval $(call gb_Module_add_slowcheck_targets,sw,\
+-    CppunitTest_sw_tiledrendering \
+-))
+-endif
 -
 -ifneq ($(DISABLE_CVE_TESTS),TRUE)
 -$(eval $(call gb_Module_add_slowcheck_targets,sw,\
@@ -997,7 +1027,10 @@
 -ifneq ($(OOO_JUNIT_JAR),)
 -$(eval $(call gb_Module_add_subsequentcheck_targets,sw,\
 -    JunitTest_sw_complex \
--    JunitTest_sw_unoapi \
+-    JunitTest_sw_unoapi_1 \
+-    JunitTest_sw_unoapi_2 \
+-    JunitTest_sw_unoapi_3 \
+-    JunitTest_sw_unoapi_4 \
 -))
 -endif
 -
@@ -1008,22 +1041,25 @@
 -endif
 -
  # vim: set noet sw=4 ts=4:
---- a/toolkit/Module_toolkit.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/toolkit/Module_toolkit.mk	2015-12-20 00:35:47.157683351 +0100
-@@ -23,11 +23,4 @@
+--- a/toolkit/Module_toolkit.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/toolkit/Module_toolkit.mk	2016-02-10 15:16:12.372922913 +0100
+@@ -23,14 +23,4 @@
      Library_tk \
  ))
  
 -ifneq ($(OOO_JUNIT_JAR),)
 -$(eval $(call gb_Module_add_subsequentcheck_targets,toolkit,\
 -    JunitTest_toolkit_complex \
--    JunitTest_toolkit_unoapi \
+-    JunitTest_toolkit_unoapi_1 \
+-    JunitTest_toolkit_unoapi_2 \
+-    JunitTest_toolkit_unoapi_3 \
+-    JunitTest_toolkit_unoapi_4 \
 -))
 -endif
 -
  # vim: set noet sw=4 ts=4:
---- a/tools/Module_tools.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/tools/Module_tools.mk	2015-12-20 00:22:53.341999425 +0100
+--- a/tools/Module_tools.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/tools/Module_tools.mk	2016-02-10 15:09:26.308539416 +0100
 @@ -30,8 +30,4 @@
      Executable_bestreversemap \
  ))
@@ -1033,8 +1069,8 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/tubes/Module_tubes.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/tubes/Module_tubes.mk	2015-12-20 00:38:09.510541721 +0100
+--- a/tubes/Module_tubes.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/tubes/Module_tubes.mk	2016-02-10 15:09:26.308539416 +0100
 @@ -21,10 +21,6 @@
  	UIConfig_tubes \
  ))
@@ -1046,9 +1082,9 @@
  endif
  
  # vim:set shiftwidth=4 tabstop=4 noexpandtab: */
---- a/ucb/Module_ucb.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/ucb/Module_ucb.mk	2015-12-20 00:32:35.372824010 +0100
-@@ -37,9 +37,4 @@
+--- a/ucb/Module_ucb.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/ucb/Module_ucb.mk	2016-02-10 15:09:26.310539452 +0100
+@@ -31,9 +31,4 @@
  ))
  endif
  
@@ -1058,8 +1094,8 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/unotools/Module_unotools.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/unotools/Module_unotools.mk	2015-12-20 00:36:24.085425277 +0100
+--- a/unotools/Module_unotools.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/unotools/Module_unotools.mk	2016-02-10 15:09:26.311539470 +0100
 @@ -13,11 +13,4 @@
      Library_utl \
  ))
@@ -1072,8 +1108,8 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/unoxml/Module_unoxml.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/unoxml/Module_unoxml.mk	2015-12-20 00:35:09.477925962 +0100
+--- a/unoxml/Module_unoxml.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/unoxml/Module_unoxml.mk	2016-02-10 15:09:26.311539470 +0100
 @@ -24,15 +24,4 @@
      Library_unordf \
  ))
@@ -1090,9 +1126,9 @@
 -endif
 -
  # vim: set noet sw=4 ts=4:
---- a/vcl/Module_vcl.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/vcl/Module_vcl.mk	2015-12-20 00:37:55.703264666 +0100
-@@ -98,27 +98,4 @@
+--- a/vcl/Module_vcl.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/vcl/Module_vcl.mk	2016-02-10 15:11:36.718891674 +0100
+@@ -93,34 +93,4 @@
  ))
  endif
  
@@ -1108,7 +1144,7 @@
 -))
 -
 -
--ifeq ($(GUIBASE),unx)
+-ifeq ($(USING_X11),TRUE)
 -$(eval $(call gb_Module_add_check_targets,vcl,\
 -	CppunitTest_vcl_timer \
 -))
@@ -1119,9 +1155,16 @@
 -	CppunitTest_vcl_timer \
 -))
 -endif
+-
+-# Is any configuration missing?
+-ifeq ($(OS),WNT)
+-$(eval $(call gb_Module_add_check_targets,vcl,\
+-	CppunitTest_vcl_timer \
+-))
+-endif
  # vim: set noet sw=4 ts=4:
---- a/writerfilter/Module_writerfilter.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/writerfilter/Module_writerfilter.mk	2015-12-20 00:19:14.734475067 +0100
+--- a/writerfilter/Module_writerfilter.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/writerfilter/Module_writerfilter.mk	2016-02-10 15:09:26.312539488 +0100
 @@ -14,9 +14,4 @@
      Library_writerfilter \
  ))
@@ -1132,8 +1175,8 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/writerperfect/Module_writerperfect.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/writerperfect/Module_writerperfect.mk	2015-12-20 00:21:31.830320231 +0100
+--- a/writerperfect/Module_writerperfect.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/writerperfect/Module_writerperfect.mk	2016-02-10 15:09:26.313539506 +0100
 @@ -31,16 +31,4 @@
  	UIConfig_writerperfect \
  ))
@@ -1151,8 +1194,8 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/xmloff/Module_xmloff.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/xmloff/Module_xmloff.mk	2015-12-20 00:38:04.175434671 +0100
+--- a/xmloff/Module_xmloff.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/xmloff/Module_xmloff.mk	2016-02-10 15:09:26.313539506 +0100
 @@ -25,13 +25,4 @@
      Package_dtd \
  ))
@@ -1167,8 +1210,8 @@
 -))
 -
  # vim: set noet sw=4 ts=4:
---- a/xmlsecurity/Module_xmlsecurity.mk	2015-12-11 03:29:35.000000000 +0100
-+++ b/xmlsecurity/Module_xmlsecurity.mk	2015-12-20 00:29:51.882523503 +0100
+--- a/xmlsecurity/Module_xmlsecurity.mk	2016-01-27 01:58:25.000000000 +0100
++++ b/xmlsecurity/Module_xmlsecurity.mk	2016-02-10 15:09:26.313539506 +0100
 @@ -22,9 +22,4 @@
  
  #FIXME: ^^^, get nss&libxmlsec building on ios and android

@@ -10,8 +10,7 @@ export MULTILIB_BUILD=1
 export PATCHES_LIST=("libcanberra.patch")
 export PATCHES_LIST_32=("libcanberra.patch")
 export CONFIGURE_FLAGS=(--disable-oss --disable-null)
-export CONFIGURE_FLAGS_32=(--disable-gstreamer
-                           --disable-gtk3
+export CONFIGURE_FLAGS_32=(--disable-gtk3
                            --disable-gtk
                            --disable-oss
                            --disable-null)

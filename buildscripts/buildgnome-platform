@@ -16,6 +16,10 @@ case $(basename $0) in
   builddconf )
     export PKGNAME=dconf
     export PKGVER=0.24.0
+    export POSTINST_TRIGGER=("[ -x /usr/bin/gio-querymodules ] && echo \"Processing triggers for gio-2.0\" && /usr/bin/gio-querymodules /usr/lib/gio/modules")
+    make_install_post() {
+      export SPACE_ADDED=1
+    }
   ;;
   buildevolution-data-server )
     export PKGNAME=evolution-data-server
@@ -64,6 +68,9 @@ case $(basename $0) in
   buildglib-networking )
     export PKGNAME=glib-networking
     export PKGVER=2.46.1
+    export MULTILIB_BUILD=1
+    export POSTINST_TRIGGER=("[ -x /usr/bin/gio-querymodules ] && echo \"Processing triggers for gio-2.0\" && /usr/bin/gio-querymodules /usr/lib/gio/modules"
+                             "[ -x /usr/bin/gio-querymodules-32 ] && echo \"Processing triggers for gio-2.0 (32 bit)\" && /usr/bin/gio-querymodules-32 /usr/lib32/gio/modules")
   ;;
   buildgmime )
     export PKGNAME=gmime
@@ -188,6 +195,10 @@ case $(basename $0) in
   buildgvfs )
     export PKGNAME=gvfs
     export PKGVER=1.26.2
+    export POSTINST_TRIGGER=("[ -x /usr/bin/gio-querymodules ] && echo \"Processing triggers for gio-2.0\" && /usr/bin/gio-querymodules /usr/lib/gio/modules")
+    make_install_post() {
+      export SPACE_ADDED=1
+    }
   ;;
   buildjson-glib )
     export PKGNAME=json-glib
@@ -238,8 +249,11 @@ case $(basename $0) in
   buildlibrsvg )
     export PKGNAME=librsvg
     export PKGVER=2.40.13
+    export MULTILIB_BUILD=1
+    export POSTINST_TRIGGER=("[ -x /usr/bin/gdk-pixbuf-query-loaders ] && echo \"Processing triggers for gdk-pixbuf-2.0\" && /usr/bin/gdk-pixbuf-query-loaders --update-cache"
+                             "[ -x /usr/bin/gdk-pixbuf-query-loaders-32 ] && echo \"Processing triggers for gdk-pixbuf-2.0 (32 bit)\" && /usr/bin/gdk-pixbuf-query-loaders-32 --update-cache")
     export CONFIGURE_FLAGS=(--enable-vala)
-    export POSTINST_TRIGGER=("[ -x /usr/bin/gdk-pixbuf-query-loaders ] && echo \"Processing triggers for gdk-pixbuf-2.0\" && /usr/bin/gdk-pixbuf-query-loaders --update-cache")
+    export CONFIGURE_FLAGS_32=(--disable-introspection)
     make_install_post() {
       export SPACE_ADDED=1
     }
@@ -251,7 +265,9 @@ case $(basename $0) in
   buildlibsoup )
     export PKGNAME=libsoup
     export PKGVER=2.52.2
+    export MULTILIB_BUILD=1
     export CONFIGURE_FLAGS=(--disable-tls-check)
+    export CONFIGURE_FLAGS_32=(--disable-introspection --disable-tls-check --disable-vala)
   ;;
   buildlibwnck )
     export PKGNAME=libwnck

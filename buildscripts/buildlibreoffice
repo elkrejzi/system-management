@@ -1,12 +1,16 @@
 #!/bin/bash -e
 
-export PKGVER=5.0.4.2
+export PKGVER=5.1.0.3
 export SHARED_URL="https://download.documentfoundation.org/libreoffice/src/${PKGVER:0:5}/"
 
 export PKGNAME=libreoffice
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="${SHARED_URL}/${PKGTAR}"
 export PATCHES_LIST=("libreoffice-no-tests.patch")
+
+export DEFAULT_CC="gcc"
+export DEFAULT_CXX="g++"
+export LDFLAGS="-lc++"
 
 post_extract_action() {
   for c in dictionaries help translations
@@ -34,9 +38,6 @@ configure_pre() {
       -i bin/distro-install-desktop-integration
   sed -e "/distro-install-file-lists/d" -i Makefile.in
   chmod +x bin/unpack-sources
-
-  # libetonyek 0.1.4+ issue
-  mv writerperfect/qa/unit/data/impress/libetonyek/{fail,pass}/v6.zip
 }
 
 configure_override() {
@@ -48,13 +49,11 @@ configure_override() {
                --without-java              \
                --disable-coinmp            \
                --disable-collada           \
-               --disable-gconf             \
                --disable-odk               \
                --enable-avahi              \
                --enable-dbus               \
                --enable-gio                \
                --enable-gtk3               \
-               --enable-lockdown           \
                --enable-python=system      \
                --enable-release-build      \
                --enable-vlc                \
@@ -101,7 +100,6 @@ configure_override() {
                --with-system-lpsolve       \
                --with-system-mariadb       \
                --with-system-mdds          \
-               --with-system-mesa-headers  \
                --with-system-mythes        \
                --with-system-neon          \
                --with-system-npapi-headers \
@@ -124,8 +122,8 @@ configure_override() {
 }
 
 make_override() {
-  export DISPLAY=:0
-  eval $(dbus-launch --exit-with-session)
+  #export DISPLAY=:0
+  #eval $(dbus-launch --exit-with-session)
   make build
 }
 

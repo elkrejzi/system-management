@@ -6,11 +6,18 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://liba52.sourceforge.net/files/${PKGNAME}-${PKGVER}.tar.gz"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
-export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
+export MULTILIB_BUILD=1
+export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done")
 export PATCHES_LIST=("a52dec-fixes.patch")
+export PATCHES_LIST_32=("a52dec-fixes.patch")
 export CONFIGURE_FLAGS=(--enable-shared)
+export CONFIGURE_FLAGS_32=(--enable-shared)
 
 configure_pre() {
+  autoreconf -fi
+}
+
+configure_pre_32() {
   autoreconf -fi
 }
 
