@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=systemd
-export PKGVER=228+14ddf42
+export PKGVER=229
 export MAKE_JOBS_FLAGS="-j4"
 export DEBUG_BUILD=1
 export KEEP_EMPTY_DIRS=1
