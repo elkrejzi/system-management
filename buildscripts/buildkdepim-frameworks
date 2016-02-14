@@ -1,41 +1,20 @@
 #!/bin/bash -e
 
 export PKGVER=15.12.1
+export LIBKGAPI_PKGVER=5.1.0
+
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export KEEP_DOC=1
 export USER_CXXFLAGS="-stdlib=libc++"
-
-if [ $(basename $0) == "buildkmime" ]
-then
-  configure_pre() {
-    sed -i "s#stdlib.h#cmath#g" ../${PKGDIR}/src/kmime_dateformatter.cpp
-  }
-fi
-
-if [ $(basename $0) == "buildkdepimlibs" ]
-then
-  configure_pre() {
-    sed -i "s#stdlib.h#cmath#g" ../${PKGDIR}/kioslave/src/nntp/nntp.cpp
-  }
-
-  configure_post() {
-    sed -i 's:^:#include "/usr/include/c++/v1/exception" //:g' akonadi/src/core/std_exception.h
-  }
-fi
-
-if [ $(basename $0) == "buildakonadi-search" ]
-then
-  configure_pre() {
-    sed -i "/akonadisearchdebugdialog.h/i #include <errno.h>" ../${PKGDIR}/debug/akonadisearchdebugdialog.cpp
-  }
-fi
 
 build_all() {
   export PKG_AUTO_INSTALL=1
 
   $(dirname $0)/buildakonadi $1
   $(dirname $0)/buildgpgmepp $1
+  $(dirname $0)/buildgrantleetheme $1
+  $(dirname $0)/buildkdgantt2 $1
   $(dirname $0)/buildkcalcore $1
   $(dirname $0)/buildkcontacts $1
   $(dirname $0)/buildkholidays $1
@@ -50,11 +29,25 @@ build_all() {
   $(dirname $0)/buildkmbox $1
   $(dirname $0)/buildkcalutils $1
   $(dirname $0)/buildktnef $1
+  $(dirname $0)/buildlibkleo $1
   $(dirname $0)/buildkdepimlibs $1
+  $(dirname $0)/buildlibkgapi $1
   $(dirname $0)/buildakonadi-search $1
   $(dirname $0)/buildkalarmcal $1
   $(dirname $0)/buildkmailtransport $1
+  $(dirname $0)/buildlibkdepim $1
   $(dirname $0)/buildakonadi-calendar $1
+  $(dirname $0)/buildmailimporter $1
+  $(dirname $0)/buildpimcommon $1
+  $(dirname $0)/buildkdepim-apps-libs $1
+  $(dirname $0)/buildlibgravatar $1
+  $(dirname $0)/buildlibksieve $1
+  $(dirname $0)/buildcalendarsupport $1
+  $(dirname $0)/buildmessagelib $1
+  $(dirname $0)/buildeventviews $1
+  $(dirname $0)/buildmailcommon $1
+  $(dirname $0)/buildincidenceeditor $1
+  $(dirname $0)/buildkdepim-addons $1
 
   find /binary/kdepim -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
 
@@ -68,6 +61,16 @@ case $(basename $0) in
   buildkdepim-frameworks-git )
     build_all git
   ;;
+  buildkdepim-runtime-git )
+    $(dirname $0)/buildkdepim-runtime git
+
+    exit 0
+  ;;
+  buildkdepim-git )
+    $(dirname $0)/buildkdepim git
+
+    exit 0
+  ;;
 esac
 
 export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
@@ -80,6 +83,8 @@ export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
 kdepims=(
   akonadi
   gpgmepp
+  grantleetheme
+  kdgantt2
   kcalcore
   kcontacts
   kholidays
@@ -94,11 +99,28 @@ kdepims=(
   kmbox
   kcalutils
   ktnef
+  libkleo
   kdepimlibs
+  libkgapi
   akonadi-search
   kalarmcal
   kmailtransport
-  akonadi-calendar )
+  libkdepim
+  akonadi-calendar
+  mailimporter
+  pimcommon
+  kdepim-apps-libs
+  libgravatar
+  libksieve
+  calendarsupport
+  messagelib
+  eventviews
+  mailcommon
+  incidenceeditor
+  kdepim-addons
+  kdepim-runtime
+  kdepim
+ )
 
 if [ -z $1 ]
 then
@@ -113,8 +135,16 @@ do
   case $(basename $0) in
     build${kdepim} )
       export PKGNAME=${kdepim}
-      export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-      export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
+
+      if [ ${PKGNAME} == "libkgapi" ]
+      then
+        export PKGVER=${LIBKGAPI_PKGVER}
+        export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+        export PKGURL="http://download.kde.org/stable/${PKGNAME}/${PKGVER}/src/${PKGTAR}"
+      else
+        export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+        export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
+      fi
       if [ ${BUILD_TYPE} == "git" ]
       then
         export PKGDIR=${kdepim}
@@ -122,6 +152,12 @@ do
     ;;
   esac
 done
+
+if [ ${PKGNAME} == "akonadi" ]
+then
+  export PATCHES_LIST=("akonadi.patch")
+  CMAKE_FLAGS+=(-DCXX_STDLIB=libc++)
+fi
 
 if [ ${BUILD_TYPE} == "git" ]
 then
@@ -140,12 +176,18 @@ then
     if [ ${PKGNAME} == "akonadi" ]
     then
       export PKGVER=$(grep -m 1 AKONADI_VERSION ${PKGNAME}/CMakeLists.txt | cut -d \" -f2)
-    elif [ ${PKGNAME} == "gpgmepp" ]
+    elif [ ${PKGNAME} == "kdepim" ]
     then
-      export PKGVER=$(grep -m 1 KDEPIMLIBS_VERSION ${PKGNAME}/CMakeLists.txt | cut -d \" -f2)
+      export PKGVER=$(grep -m 1 KDEPIM_VERSION_NUMBER ${PKGNAME}/CMakeLists.txt | cut -d \" -f2)
+    elif [ ${PKGNAME} == "kdepim-addons" ]
+    then
+      export PKGVER=$(grep -m 1 KDEPIMADDONS_VERSION_NUMBER ${PKGNAME}/CMakeLists.txt | cut -d \" -f2)
+    elif [ ${PKGNAME} == "kdepim-runtime" ]
+    then
+      export PKGVER=$(grep -m 1 KDEPIM_RUNTIME_VERSION_NUMBER ${PKGNAME}/CMakeLists.txt | cut -d \" -f2)
     elif [ ${PKGNAME} == "kdepimlibs" ]
     then
-      export PKGVER=$(grep -m 1 KDEPIMLIBS_VERSION ${PKGNAME}/akonadi/CMakeLists.txt | cut -d \" -f2)
+      export PKGVER=$(grep -m 1 KDEPIMLIBS_VERSION ${PKGNAME}/akonadi-contact/CMakeLists.txt | cut -d \" -f2)
     else
       export PKGVER=$(grep -m 1 _LIB_VERSION ${PKGNAME}/CMakeLists.txt | cut -d \" -f2)
     fi

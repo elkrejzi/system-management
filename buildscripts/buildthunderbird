@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=thunderbird
-export PKGVER=38.5.1
+export PKGVER=38.6.0
 export PKGTAR=${PKGNAME}-${PKGVER}.source.tar.bz2
 export PKGDIR=comm-esr38
 export PKGURL="https://ftp.mozilla.org/pub/mozilla.org/thunderbird/releases/${PKGVER}/source/${PKGTAR}"
@@ -57,7 +57,7 @@ ac_add_options --disable-gstreamer
 
 ac_add_options --disable-crashreporter
 ac_add_options --disable-debug
-ac_add_options --disable-elfhack
+ac_add_options --disable-elf-hack
 ac_add_options --disable-installer
 ac_add_options --disable-mochitest
 ac_add_options --disable-tests

@@ -15,7 +15,7 @@ case $(basename $0) in
   ;;
   buildeog )
     export PKGNAME=eog
-    export PKGVER=3.18.1
+    export PKGVER=3.18.2
   ;;
   buildepiphany )
     export PKGNAME=epiphany

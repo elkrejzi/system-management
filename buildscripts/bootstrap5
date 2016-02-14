@@ -37,13 +37,12 @@ $(dirname $0)/buildskanlite
 $(dirname $0)/buildsmb4k
 $(dirname $0)/buildspectacle
 $(dirname $0)/buildsystemd-kcm
-$(dirname $0)/buildkdepim-frameworks
-$(dirname $0)/buildlibkgapi
+$(dirname $0)/buildkdepim-frameworks-git
 $(dirname $0)/buildlibkolabxml
 $(dirname $0)/buildlibkolab
 $(dirname $0)/buildprison
-$(dirname $0)/buildkdepim-runtime
-$(dirname $0)/buildkdepim
+$(dirname $0)/buildkdepim-runtime-git
+$(dirname $0)/buildkdepim-git
 $(dirname $0)/buildchromium
 $(dirname $0)/buildchromium-pepper-flash
 $(dirname $0)/buildlibreoffice

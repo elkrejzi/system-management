@@ -168,11 +168,7 @@ EOF
   ;;
   buildkile )
     export PKGNAME=kile
-    export PKGVER=2.1+78f81fb
-    configure_pre() {
-      mv ../${PKGDIR}/cmake/modules/FindPoppler{,-Qt5}.cmake
-      sed -i "/find_package/s:Poppler:&-Qt5:" ../${PKGDIR}/CMakeLists.txt
-    }
+    export PKGVER=2.1+7b238c4
   ;;
   buildkio-extras )
     export PKGNAME=kio-extras

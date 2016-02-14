@@ -170,7 +170,7 @@ EOF
   ;;
   buildclutter-gst )
     export PKGNAME=clutter-gst
-    export PKGVER=3.0.14
+    export PKGVER=3.0.16
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
     unset MULTILIB_BUILD

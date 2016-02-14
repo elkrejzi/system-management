@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=foomatic-db-engine
-export PKGVER=4.0-20150819
+export PKGVER=4.0-20160212
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://www.openprinting.org/download/foomatic/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

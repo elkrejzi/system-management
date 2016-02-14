@@ -93,7 +93,7 @@ case $(basename $0) in
   ;;
   buildpython-pillow )
     export PKGNAME=Pillow
-    export PKGVER=3.1.0
+    export PKGVER=3.1.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/P/Pillow/${PKGTAR}"
     export DEST=/binary/python/python-pillow-${PKGVER}
@@ -154,7 +154,7 @@ case $(basename $0) in
   ;;
   buildpython-setuptools )
     export PKGNAME=setuptools
-    export PKGVER=20.0
+    export PKGVER=20.1.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/s/setuptools/${PKGTAR}"
     export DEST=/binary/python/python-setuptools-${PKGVER}

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=5.18.0
+export PKGVER=5.19.0
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export DEBUG_BUILD=1
@@ -23,7 +23,6 @@ build_all() {
   $(dirname $0)/buildkguiaddons $1
   $(dirname $0)/buildki18n $1
   $(dirname $0)/buildkidletime $1
-  $(dirname $0)/buildkimageformats $1
   $(dirname $0)/buildkitemmodels $1
   $(dirname $0)/buildkitemviews $1
   $(dirname $0)/buildkplotting $1
@@ -39,6 +38,7 @@ build_all() {
   $(dirname $0)/buildkcrash $1
   $(dirname $0)/buildkdoctools $1
   $(dirname $0)/buildkfilemetadata $1
+  $(dirname $0)/buildkimageformats $1
   $(dirname $0)/buildknotifications $1
   $(dirname $0)/buildkpty $1
   $(dirname $0)/buildkunitconversion $1
@@ -136,7 +136,6 @@ frameworks=(
   kguiaddons
   ki18n
   kidletime
-  kimageformats
   kitemmodels
   kitemviews
   kplotting
@@ -152,6 +151,7 @@ frameworks=(
   kcrash
   kdoctools
   kfilemetadata
+  kimageformats
   knotifications
   kpty
   kunitconversion

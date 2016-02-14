@@ -1,13 +1,1 @@
-#!/bin/bash -e
-
-export PKGNAME=libkgapi
-export PKGVER=5.1.0
-export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-export PKGURL="http://download.kde.org/stable/libkgapi/${PKGVER}/src/${PKGTAR}"
-export DEST=/binary/kdepim/${PKGNAME}-${PKGVER}
-export MAKE_JOBS_FLAGS="-j4"
-export CMAKE_BUILD=1
-export CMAKE_FLAGS=(-DLIB_INSTALL_DIR=lib -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules)
-export USER_CXXFLAGS="-stdlib=libc++"
-
-. $(dirname $0)/master.sh
+buildkdepim-frameworks
