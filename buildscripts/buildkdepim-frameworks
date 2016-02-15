@@ -155,7 +155,6 @@ done
 
 if [ ${PKGNAME} == "akonadi" ]
 then
-  export PATCHES_LIST=("akonadi.patch")
   CMAKE_FLAGS+=(-DCXX_STDLIB=libc++)
 fi
 
