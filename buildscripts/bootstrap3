@@ -34,12 +34,15 @@ $(dirname $0)/buildlibraw1394
 $(dirname $0)/buildv4l-utils
 $(dirname $0)/builda52dec
 $(dirname $0)/buildaalib
+$(dirname $0)/buildchromaprint
+$(dirname $0)/builddcadec
 $(dirname $0)/builddirac
 $(dirname $0)/buildfaac
 $(dirname $0)/buildfaad2
 $(dirname $0)/buildfdk-aac
 $(dirname $0)/buildgame-music-emu
 $(dirname $0)/buildid3lib
+$(dirname $0)/buildkvazaar
 $(dirname $0)/buildladspa
 $(dirname $0)/buildlame
 $(dirname $0)/buildlibaacplus
@@ -61,6 +64,7 @@ $(dirname $0)/buildlibdvdcss
 $(dirname $0)/buildlibdvdnav
 $(dirname $0)/buildlibguess
 $(dirname $0)/buildlibiec61883
+$(dirname $0)/buildlibilbc
 $(dirname $0)/buildlibkate
 $(dirname $0)/buildlibmatroska
 $(dirname $0)/buildlibmms
@@ -79,9 +83,11 @@ $(dirname $0)/buildneon
 $(dirname $0)/buildopencore-amr
 $(dirname $0)/buildschroedinger
 $(dirname $0)/buildSDL_image
+$(dirname $0)/buildshine
 $(dirname $0)/buildsoundtouch
 $(dirname $0)/buildtaglib
 $(dirname $0)/buildtwolame
+$(dirname $0)/buildvid.stab
 $(dirname $0)/buildvo-aacenc
 $(dirname $0)/buildvo-amrwbenc
 $(dirname $0)/buildwavpack
@@ -90,13 +96,13 @@ $(dirname $0)/buildx264
 $(dirname $0)/buildx265
 $(dirname $0)/buildxvidcore
 $(dirname $0)/buildzbar
+$(dirname $0)/buildzimg
 $(dirname $0)/buildzvbi
 $(dirname $0)/buildlibcdio-paranoia
 $(dirname $0)/buildffmpeg
 
 $(dirname $0)/buildx264
 
-$(dirname $0)/buildchromaprint
 $(dirname $0)/buildfluidsynth
 $(dirname $0)/buildFreeRDP
 $(dirname $0)/buildlibmusicbrainz

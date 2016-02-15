@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+export PKGNAME=dcadec
+export PKGVER=0.2.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/foo86/dcadec/archive/v${PKGVER}.tar.gz"
+export MAKE_JOBS_FLAGS="-j4"
+
+export CONFIG_SHARED=TRUE
+export PREFIX=/usr
+
+configure_override() {
+  sed -i "/CFLAGS/s#-O3 -ffast-math -g#${CFLAGS}#g" Makefile
+}
+
+make_install_post() {
+  mv ${DEST}/usr/bin/dcadec ${DEST}/usr/bin/dcadec-hd
+}
+
+. $(dirname $0)/master.sh

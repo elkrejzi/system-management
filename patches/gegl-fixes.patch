@@ -1,13 +1,5 @@
-Submitted By:            Igor Živković <contact@igor-zivkovic.from.hr>
-Date:                    2013-10-08
-Initial Package Version: 0.2.0
-Upstream Status:         Fixed
-Origin:                  Gentoo
-Description:             Fixes building against FFmpeg version >= 2.0.0
-
-diff -Naur gegl-0.2.0.orig/operations/external/ff-load.c gegl-0.2.0/operations/external/ff-load.c
---- gegl-0.2.0.orig/operations/external/ff-load.c	2012-04-01 13:17:57.000000000 +0200
-+++ gegl-0.2.0/operations/external/ff-load.c	2013-10-08 12:19:33.472272253 +0200
+--- a/operations/external/ff-load.c	2012-04-01 13:17:57.000000000 +0200
++++ b/operations/external/ff-load.c	2016-02-15 16:52:54.793654667 +0100
 @@ -137,7 +137,7 @@
        if (p->enc)
          avcodec_close (p->enc);
@@ -53,3 +45,12 @@ diff -Naur gegl-0.2.0.orig/operations/external/ff-load.c gegl-0.2.0/operations/e
          {
            g_warning ("error opening codec %s", p->enc->codec->name);
            return;
+@@ -321,7 +321,7 @@
+       p->width = p->enc->width;
+       p->height = p->enc->height;
+       p->frames = 10000000;
+-      p->lavc_frame = avcodec_alloc_frame ();
++      p->lavc_frame = av_frame_alloc ();
+ 
+       if (p->fourcc)
+         g_free (p->fourcc);

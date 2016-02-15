@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+export PKGNAME=zimg
+export PKGVER=2.0.4
+export PKGTAR=${PKGNAME}-release-${PKGVER}.tar.gz
+export PKGDIR=${PKGNAME}-release-${PKGVER}
+export PKGURL="https://github.com/sekrit-twc/zimg/archive/release-${PKGVER}.tar.gz"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_pre() {
+  ./autogen.sh
+}
+
+. $(dirname $0)/master.sh

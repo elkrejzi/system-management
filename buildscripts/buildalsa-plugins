@@ -11,6 +11,7 @@ export CONFIGURE_FLAGS_32=(--disable-avcodec)
 
 configure_pre() {
   sed -i "/speex_preprocess/i#include <stdint.h>" speex/pcm_speex.c
+  sed -i "/audioconvert.h/d" a52/pcm_a52.c
 }
 
 configure_pre_32() {

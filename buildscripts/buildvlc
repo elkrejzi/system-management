@@ -8,15 +8,13 @@ export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export POSTINST_TRIGGER=("/usr/lib/vlc/vlc-cache-gen /usr/lib/vlc/plugins")
 
-export CONFIGURE_FLAGS=(--enable-a52
-                        --enable-aa
-                        --enable-faad
+export CONFIGURE_FLAGS=(--enable-aa
                         --enable-gles1
                         --enable-gles2
-                        --enable-ncurses
-                        --enable-opus
                         --enable-realrtsp
-                        --enable-upnp)
+                        --disable-jack
+                        --disable-libva
+                        --disable-vdpau)
 
 export BUILDCC="clang"
 
