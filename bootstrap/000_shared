@@ -44,7 +44,7 @@ MPFR_VER=3.1.3
 MPC_VER=1.0.3
 GCC_VER=5.3.0
 LINUX_VER=4.1
-LINUX_PATCH_VER=4.1.17
+LINUX_PATCH_VER=4.1.18
 GLIBC_VER=2.22
 TCL_VER=8.6.4
 EXPECT_VER=5.45
@@ -76,7 +76,7 @@ OPENSSL_VER=1.0.2f
 WGET_VER=1.17.1
 NANO_VER=2.5.1
 LIBFFI_VER=3.2.1
-LLVM_VER=3.8.0rc1
+LLVM_VER=3.8.0rc2
 
 if [ ! -z $1 ]
 then
@@ -129,7 +129,9 @@ http://llvm.org/releases/${LLVM_VER}/libcxxabi-${LLVM_VER}.src.tar.xz
 http://llvm.org/releases/${LLVM_VER}/libunwind-${LLVM_VER}.src.tar.xz
 
 https://raw.githubusercontent.com/elkrejzi/system-management/master/patches/binutils-fixes.patch
+https://raw.githubusercontent.com/elkrejzi/system-management/master/patches/gcc-fixes.patch
 https://raw.githubusercontent.com/elkrejzi/system-management/master/patches/gcc-pure64.patch
+https://raw.githubusercontent.com/elkrejzi/system-management/master/patches/glibc-fixes.patch
 https://raw.githubusercontent.com/elkrejzi/system-management/master/patches/glibc-pure64.patch
 https://raw.githubusercontent.com/elkrejzi/system-management/master/patches/libffi.patch
 EOF

@@ -175,6 +175,9 @@ then
     if [ ${PKGNAME} == "akonadi" ]
     then
       export PKGVER=$(grep -m 1 AKONADI_VERSION ${PKGNAME}/CMakeLists.txt | cut -d \" -f2)
+    elif [ ${PKGNAME} == "akonadi-search" ]
+    then
+      export PKGVER=$(grep -m 1 AKONADISEARCH_VERSION ${PKGNAME}/CMakeLists.txt | cut -d \" -f2)
     elif [ ${PKGNAME} == "kdepim" ]
     then
       export PKGVER=$(grep -m 1 KDEPIM_VERSION_NUMBER ${PKGNAME}/CMakeLists.txt | cut -d \" -f2)

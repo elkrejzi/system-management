@@ -1,13 +1,12 @@
 #!/bin/bash -e
 
 export PKGNAME=quassel
-export PKGVER=0.12.2
+export PKGVER=0.12.3
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://quassel-irc.org/pub/${PKGTAR}"
 export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
-export PATCHES_LIST=("quassel-qt55.patch" "quassel-snorenotify.patch")
 export CMAKE_FLAGS=(-DUSE_QT5=ON -DWITH_KDE=ON -DWITH_WEBKIT=OFF)
 
 configure_pre() {
