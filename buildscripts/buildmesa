@@ -109,7 +109,7 @@ export COMMON_FLAGS=(--disable-xvmc
                      --enable-llvm-shared-libs
                      --with-dri-drivers=i965
                      --with-egl-platforms=drm,x11,wayland
-                     --with-gallium-drivers=r600,swrast)
+                     --with-gallium-drivers=radeonsi,swrast)
 
 export CONFIGURE_FLAGS=("${COMMON_FLAGS[@]}")
 export CONFIGURE_FLAGS_32=("${COMMON_FLAGS[@]}"

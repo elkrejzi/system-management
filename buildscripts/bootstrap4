@@ -12,7 +12,7 @@ $(dirname $0)/buildxf86-input-evdev
 $(dirname $0)/buildxf86-input-libinput
 $(dirname $0)/buildxf86-input-synaptics
 $(dirname $0)/buildxf86-input-wacom
-$(dirname $0)/buildxf86-video-ati
+$(dirname $0)/buildxf86-video-amdgpu
 $(dirname $0)/buildxf86-video-intel
 $(dirname $0)/buildmedia-player-info
 $(dirname $0)/buildmobile-broadband-provider-info
@@ -160,7 +160,6 @@ $(dirname $0)/buildnss-mdns
 $(dirname $0)/buildqpdf
 $(dirname $0)/buildtidy
 $(dirname $0)/buildbind
-$(dirname $0)/buildbroadcom-wl
 $(dirname $0)/buildflashplayer
 $(dirname $0)/buildgegl
 $(dirname $0)/buildpostfix

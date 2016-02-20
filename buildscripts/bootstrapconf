@@ -2,7 +2,7 @@
 systemctl disable avahi-{daemon,dnsconfd} cups-browsed httpd krb5-{kadmind,kdc,kpropd} ModemManager mysqld NetworkManager{,-wait-online} nmbd org.cups.cupsd php-fpm postfix postgresql saslauthd slapd smbd svnserve thermald winbindd wpa_supplicant git-daemon.socket saned.socket
 
 systemctl mask wpa_supplicant
-systemctl enable systemd-{networkd,resolved,timesyncd}
+systemctl enable systemd-{networkd,resolved,timesyncd,wpa_supplicant@wlan0}
 
 install -dm755 /media/ntfs /media/other /media/win
 
@@ -12,15 +12,17 @@ cat > /etc/fstab << "EOF"
 #
 # <file system>	<dir>	<type>	<options>	<dump>	<pass>
 
-/dev/sda8 /     ext4 noatime,errors=remount-ro 0 1
-/dev/sda7 /home ext4 noatime                   0 2
-/dev/sda6 none  swap defaults                  0 0
+/dev/sda9 /     ext4 noatime,errors=remount-ro 0 1
+/dev/sda8 /home ext4 noatime                   0 2
+/dev/sda7 none  swap defaults                  0 0
+
+/dev/sda2 /boot vfat defaults,ro               0 0
 
 none /var/tmp tmpfs defaults 0 0
 
-UUID=8E4E2A444E2A2585 /media/win   ntfs defaults 0 0
-UUID=52EE5236EE521319 /media/ntfs  ntfs defaults 0 0
-UUID=2E10C0B527EB6783 /media/other ntfs defaults 0 0
+UUID=2E1EFAE61EFAA5CD /media/win   ntfs defaults 0 0
+UUID=C228EA6328EA5647 /media/ntfs  ntfs defaults 0 0
+UUID=3CB8F34AB8F30166 /media/other ntfs defaults 0 0
 EOF
 
 rm -f /etc/gshadow* /etc/shadow*
@@ -270,10 +272,14 @@ passwd armin
 
 rm -f /etc/group- /etc/gshadow- /etc/passwd- /etc/shadow-
 
-install -dm755 /boot/syslinux
+mount -o remount,rw /boot
 
-install -m644 /media/ntfs/Other/Linux/conf/syslinux/* /boot/syslinux
-install -m644 /usr/lib/syslinux/*.c32 /boot/syslinux
+install -dm755 /boot/EFI/syslinux
+
+install -m644 /media/ntfs/Other/Linux/conf/syslinux/* /boot/EFI/syslinux
+cp -r /usr/lib/syslinux/efi64/* /boot/EFI/syslinux
+
+mount -o remount,ro /boot
 
 cat << "EOF"
 Now run the following from outside the chroot

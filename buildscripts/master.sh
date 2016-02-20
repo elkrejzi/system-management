@@ -33,8 +33,9 @@ then
   export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
 fi
 
-export DEFAULT_CFLAGS="-march=sandybridge -fomit-frame-pointer -Ofast -pipe -fstack-protector-strong"
-export DEFAULT_CXXFLAGS="-march=sandybridge -fomit-frame-pointer -Ofast -pipe -fstack-protector-strong"
+# apparently clang-3.8 doesn't generate valid code with -march=skylake
+export DEFAULT_CFLAGS="-march=broadwell -fomit-frame-pointer -Ofast -pipe -fstack-protector-strong"
+export DEFAULT_CXXFLAGS="-march=broadwell -fomit-frame-pointer -Ofast -pipe -fstack-protector-strong"
 
 export DEFAULT_DEBUG_CFLAGS="-march=sandybridge -g -Ofast -pipe -fstack-protector-strong"
 export DEFAULT_DEBUG_CXXFLAGS="-march=sandybridge -g -Ofast -pipe -fstack-protector-strong"

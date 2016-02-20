@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
 export PKGNAME=linux
-export PKGVER=4.1
-export PATCHVER=4.1.18
+export PKGVER=4.4
+export PATCHVER=4.5-rc4
 export COMMON_URL="https://cdn.kernel.org/pub/linux/kernel/v4.x"
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="${COMMON_URL}/${PKGTAR}"
@@ -62,11 +62,9 @@ make_install_override() {
   # Begin linux
   install -dm755 ${PKGKERNEL}/boot
 
-  install -m644 .config ${PKGKERNEL}/boot/config-${KERNELVERSION}
-  install -m644 System.map ${PKGKERNEL}/boot/System.map-${KERNELVERSION}
-  install -m644 arch/x86/boot/bzImage ${PKGKERNEL}/boot/vmlinuz-${KERNELVERSION}
-
-  ln -sf vmlinuz-${KERNELVERSION} ${PKGKERNEL}/boot/vmlinuz
+  install -m644 .config ${PKGKERNEL}/boot/config
+  install -m644 System.map ${PKGKERNEL}/boot/System.map
+  install -m644 arch/x86/boot/bzImage ${PKGKERNEL}/boot/vmlinuz
 
   make modules_install INSTALL_MOD_PATH=${PKGKERNEL}
 
@@ -138,7 +136,11 @@ generate_install_override() {
 cat > ${PKGKERNEL}/INSTALL << "EOF"
 #!/bin/bash
 
+mount -o remount,rw /boot
+
 for dir in boot lib ; do cp -rf --remove-destination $dir / ; done
+
+mount -o remount,ro /boot
 EOF
 
 cat > ${PKGHEADERS}/INSTALL << "EOF"

@@ -179,6 +179,7 @@ $(dirname $0)/buildcmake 1
 $(dirname $0)/builddbus
 $(dirname $0)/builddbus-glib
 $(dirname $0)/builddbus-python
+$(dirname $0)/buildefivar
 $(dirname $0)/buildfirebird
 $(dirname $0)/buildguile
 $(dirname $0)/buildhtop
@@ -253,6 +254,7 @@ $(dirname $0)/buildlsb-release
 $(dirname $0)/buildfuse
 $(dirname $0)/buildntfs-3g
 $(dirname $0)/buildkernel
+$(dirname $0)/buildefibootmgr
 $(dirname $0)/buildsyslinux
 
 find /binary -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done

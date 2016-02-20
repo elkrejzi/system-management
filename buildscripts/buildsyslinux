@@ -6,24 +6,26 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://www.kernel.org/pub/linux/utils/boot/syslinux/${PKGTAR}"
 export KEEP_INSTALL_DIRS=1
 export NO_OPTIMIZATION=1
-export MAKE_FLAGS="bios"
-export MAKE_INSTALL_FLAGS="INSTALLROOT=\${DEST}/ AUXDIR=/usr/lib/syslinux/ bios install"
+export MAKE_FLAGS="bios efi64"
+export MAKE_INSTALL_FLAGS="bios efi64 INSTALLROOT=\${DEST} AUXDIR=/usr/lib/syslinux MANDIR=/usr/share/man"
 export DEFAULT_CC="gcc"
 
 configure_override() {
-  sed 's|diag libinstaller dos win32 win64 dosutil txt|libinstaller txt|g' -i Makefile
-  sed 's|win32/syslinux.exe win64/syslinux64.exe||g' -i Makefile
-  sed 's|dosutil/*.com dosutil/*.sys||g' -i Makefile
-  sed 's|dos/syslinux.com||g' -i Makefile
-  sed 's|INSTALLSUBDIRS = com32 utils dosutil|INSTALLSUBDIRS = com32 utils|g' -i Makefile
-  sed 's|install -m 644 -c $(INSTALL_DIAG) $(INSTALLROOT)$(DIAGDIR)|# install -m 644 -c $(INSTALL_DIAG) $(INSTALLROOT)$(DIAGDIR)|g' -i Makefile
-  sed 's|-include $(MAKEDIR)/devel.mk||g' -i mk/syslinux.mk
+  sed -i "s#> /dev/null 2>&1##" efi/check-gnu-efi.sh
 
-  sed 's|/usr/man|/usr/share/man|g' -i mk/syslinux.mk
+  truncate --size 0 mk/devel.mk
 }
 
-make_post() {
-  make bios installer
+make_install_post() {
+  rm -rf ${DEST}/usr/lib/syslinux/com32 ${DEST}/usr/lib/syslinux/dosutil
+  rm -rf ${DEST}/usr/lib/syslinux.com
+
+  install -dm755 ${DEST}/usr/lib/syslinux/bios
+
+  mv ${DEST}/usr/lib/syslinux/*.bin ${DEST}/usr/lib/syslinux/bios
+  mv ${DEST}/usr/lib/syslinux/*.c32 ${DEST}/usr/lib/syslinux/bios
+  mv ${DEST}/usr/lib/syslinux/*.0 ${DEST}/usr/lib/syslinux/bios
+  mv ${DEST}/usr/lib/syslinux/memdisk ${DEST}/usr/lib/syslinux/bios
 }
 
 . $(dirname $0)/master.sh

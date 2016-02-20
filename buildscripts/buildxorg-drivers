@@ -62,9 +62,9 @@ EOF
     export CONFIGURE_FLAGS=(--with-udev-rules-dir=/lib/udev/rules.d
                             --with-systemd-unit-dir=/lib/systemd/system)
   ;;
-  buildxf86-video-ati )
-    export PKGNAME=xf86-video-ati
-    export PKGVER=7.6.1
+  buildxf86-video-amdgpu )
+    export PKGNAME=xf86-video-amdgpu
+    export PKGVER=1.0.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://xorg.freedesktop.org/releases/individual/driver/${PKGTAR}"
   ;;
@@ -86,7 +86,7 @@ EOF
     $(dirname $0)/buildxf86-input-libinput
     $(dirname $0)/buildxf86-input-synaptics
     $(dirname $0)/buildxf86-input-wacom
-    $(dirname $0)/buildxf86-video-ati
+    $(dirname $0)/buildxf86-video-amdgpu
     $(dirname $0)/buildxf86-video-intel
 
     find /binary/xorg/drivers -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
