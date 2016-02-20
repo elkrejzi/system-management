@@ -154,7 +154,7 @@ case $(basename $0) in
   ;;
   buildlibwps )
     export PKGNAME=libwps
-    export PKGVER=0.4.2
+    export PKGVER=0.4.3
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://downloads.sourceforge.net/libwps/${PKGTAR}"
   ;;

@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+export PKGNAME=efivar
+export PKGVER=0.23
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://github.com/rhinstaller/efivar/releases/download/${PKGVER}/${PKGTAR}"
+export MAKE_FLAGS="libdir=/usr/lib"
+export MAKE_INSTALL_FLAGS="libdir=/usr/lib"
+export DEFAULT_CC=gcc
+
+configure_override() {
+  true
+}
+
+. $(dirname $0)/master.sh

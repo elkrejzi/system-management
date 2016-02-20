@@ -19,7 +19,7 @@ case $(basename $0) in
   ;;
   buildepiphany )
     export PKGNAME=epiphany
-    export PKGVER=3.18.3
+    export PKGVER=3.18.4
     make_install_post() {
       sed -i "s#multipart/related;##" ${DEST}/usr/share/applications/epiphany.desktop
     }

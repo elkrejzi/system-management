@@ -13,5 +13,7 @@ mount -t sysfs none ${LFS}/sys
 mount -t tmpfs none ${LFS}/run
 mount -t tmpfs none ${LFS}/tmp
 
+mount --bind /boot ${LFS}/boot
+
 # mount --bind /media/ntfs ${LFS}/media/ntfs
 # mount --bind /home/armin/src ${LFS}/sources
