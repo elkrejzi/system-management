@@ -193,7 +193,7 @@ sed -i "s:#hpaio:hpaio:g" /etc/sane.d/dll.conf
 install -dm755 /etc/modprobe.d
 install -dm755 /etc/wpa_supplicant
 
-echo "blacklist wl" > /etc/modprobe.d/local.conf
+echo "blacklist amdgpu" > /etc/modprobe.d/local.conf
 
 install -m600 /media/ntfs/Other/Linux/conf/nm/* /etc/NetworkManager/system-connections
 install -m644 /media/ntfs/Other/Linux/conf/network/* /etc/systemd/network

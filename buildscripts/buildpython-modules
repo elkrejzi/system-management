@@ -147,7 +147,7 @@ case $(basename $0) in
   ;;
   buildpython-reportlab )
     export PKGNAME=reportlab
-    export PKGVER=3.2.0
+    export PKGVER=3.3.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/r/reportlab/${PKGTAR}"
     export DEST=/binary/python/python-reportlab-${PKGVER}

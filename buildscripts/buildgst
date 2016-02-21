@@ -39,6 +39,11 @@ case $(basename $0) in
   buildgstreamer )
     export PKGNAME=gstreamer
   ;;
+  buildgstreamer-vaapi )
+    export PKGNAME=gstreamer-vaapi
+    export PKGVER=1.6.0
+    export MODULE=" VAAPI Plugins"
+  ;;
 esac
 
 export EXTRA_ARGS=(--with-package-name="GStreamer${MODULE} ${PKGVER} BLFS"
