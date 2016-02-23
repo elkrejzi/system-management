@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=webkitgtk
-export PKGVER=2.10.7
+export PKGVER=2.11.90
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://webkitgtk.org/releases/${PKGVER}"
 export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
@@ -11,9 +11,5 @@ export CMAKE_FLAGS=(-DCMAKE_SKIP_RPATH=ON
                     -DPORT=GTK
                     -DLIB_INSTALL_DIR=/usr/lib)
 export USER_CXXFLAGS="-stdlib=libc++"
-
-configure_pre() {
-  sed -i "/pow/s#, 3#, 3.0#g" ../${PKGDIR}/Source/WebCore/rendering/shapes/BoxShape.cpp
-}
 
 . $(dirname $0)/master.sh

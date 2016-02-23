@@ -10,16 +10,16 @@ case $(basename $0) in
   ;;
   buildcheese )
     export PKGNAME=cheese
-    export PKGVER=3.18.1
+    export PKGVER=3.19.90
     export CONFIGURE_FLAGS=(--disable-compile-warnings)
   ;;
   buildeog )
     export PKGNAME=eog
-    export PKGVER=3.18.2
+    export PKGVER=3.19.90
   ;;
   buildepiphany )
     export PKGNAME=epiphany
-    export PKGVER=3.18.4
+    export PKGVER=3.19.90
     make_install_post() {
       sed -i "s#multipart/related;##" ${DEST}/usr/share/applications/epiphany.desktop
     }
@@ -36,12 +36,12 @@ case $(basename $0) in
   ;;
   buildfile-roller )
     export PKGNAME=file-roller
-    export PKGVER=3.16.4
+    export PKGVER=3.19.90
     export CONFIGURE_FLAGS=(--disable-packagekit)
   ;;
   buildgedit )
     export PKGNAME=gedit
-    export PKGVER=3.18.3
+    export PKGVER=3.19.4
   ;;
   buildgnome-calculator )
     export PKGNAME=gnome-calculator
@@ -91,8 +91,9 @@ case $(basename $0) in
   ;;
   buildnautilus )
     export PKGNAME=nautilus
-    export PKGVER=3.18.5
+    export PKGVER=3.19.2
     export CONFIGURE_FLAGS=(--disable-packagekit
+                            --disable-selinux
                             --disable-update-mimedb
                             --disable-tracker)
   ;;
@@ -105,7 +106,7 @@ case $(basename $0) in
   ;;
   buildseahorse )
     export PKGNAME=seahorse
-    export PKGVER=3.18.0
+    export PKGVER=3.19.4
   ;;
   buildvinagre )
     export PKGNAME=vinagre
@@ -124,7 +125,7 @@ case $(basename $0) in
   ;;
   buildyelp )
     export PKGNAME=yelp
-    export PKGVER=3.18.1
+    export PKGVER=3.19.90
   ;;
   buildzenity )
     export PKGNAME=zenity

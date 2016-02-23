@@ -54,6 +54,7 @@ $(dirname $0)/buildlibsigc++
 $(dirname $0)/buildrest
 $(dirname $0)/buildtelepathy-glib
 $(dirname $0)/buildcairomm
+$(dirname $0)/buildcelt051
 $(dirname $0)/buildclutter
 $(dirname $0)/buildcolord-gtk
 $(dirname $0)/buildexempi
@@ -63,8 +64,10 @@ $(dirname $0)/buildgnome-desktop
 $(dirname $0)/buildgnome-menus
 $(dirname $0)/buildgnome-online-accounts
 $(dirname $0)/buildgnome-video-effects
+$(dirname $0)/buildgspell
 $(dirname $0)/buildgtk-vnc
 $(dirname $0)/buildgtksourceview
+$(dirname $0)/buildlibcacard
 $(dirname $0)/buildlibgee
 $(dirname $0)/buildlibgtop
 $(dirname $0)/buildlibgweather
@@ -82,6 +85,7 @@ $(dirname $0)/buildlibwacom
 $(dirname $0)/buildmate-desktop
 $(dirname $0)/buildnetwork-manager-applet
 $(dirname $0)/buildprelink
+$(dirname $0)/buildspice-protocol
 $(dirname $0)/buildt1lib
 $(dirname $0)/buildtelepathy-logger
 $(dirname $0)/buildtelepathy-mission-control
@@ -104,6 +108,8 @@ $(dirname $0)/buildlibgdata
 $(dirname $0)/buildmutter
 $(dirname $0)/buildnautilus
 $(dirname $0)/buildpangomm
+$(dirname $0)/buildspice
+$(dirname $0)/buildspice-gtk
 $(dirname $0)/buildcaribou
 $(dirname $0)/buildcheese
 $(dirname $0)/buildevince

@@ -1,0 +1,185 @@
+diff --git a/backend/src/backend/gen8_context.cpp b/backend/src/backend/gen8_context.cpp
+index 7455bfc..d85e968 100644
+--- a/backend/src/backend/gen8_context.cpp
++++ b/backend/src/backend/gen8_context.cpp
+@@ -1074,8 +1074,8 @@ namespace gbe
+       p->curr.execWidth = 4;
+       p->curr.predicate = GEN_PREDICATE_NONE;
+       p->curr.noMask= 1;
+-      p->MOV(r1, GenRegister::immdf(1.0d));
+-      p->MOV(r0, GenRegister::immdf(0.0d));
++      p->MOV(r1, GenRegister::immdf(1.0));
++      p->MOV(r0, GenRegister::immdf(0.0));
+     } p->pop();
+ 
+     for (int i = 0; i < loopNum; i++) {
+diff --git a/backend/src/llvm/llvm_gen_backend.cpp b/backend/src/llvm/llvm_gen_backend.cpp
+index 1a2bbcd..bbbd537 100644
+--- a/backend/src/llvm/llvm_gen_backend.cpp
++++ b/backend/src/llvm/llvm_gen_backend.cpp
+@@ -3842,7 +3842,7 @@ namespace gbe
+       ctx.WORKGROUP(opcode, (uint32_t)0, getRegister(&I), srcTuple, 1, ir::TYPE_S32);
+     } else if (opcode == ir::WORKGROUP_OP_BROADCAST) {
+       int argNum = CS.arg_size();
+-      ir::Register src[argNum];
++      std::vector<ir::Register> src(argNum);
+       for (int i = 0; i < argNum; i++) {
+         src[i] = this->getRegister(*(AI++));
+       }
+diff --git a/utests/compiler_double_convert.cpp b/utests/compiler_double_convert.cpp
+index 30787d2..510118a 100644
+--- a/utests/compiler_double_convert.cpp
++++ b/utests/compiler_double_convert.cpp
+@@ -30,7 +30,7 @@ void compiler_double_convert_int(void)
+   OCL_MAP_BUFFER(1);
+   OCL_MAP_BUFFER(2);
+   for (int32_t i = 0; i < (int32_t) n; ++i) {
+-    src[i] = ((double*)buf_data[0])[i] = 32.1d * (rand() & 1324135) + 1434342.73209855531d;
++    src[i] = ((double*)buf_data[0])[i] = 32.1 * (rand() & 1324135) + 1434342.73209855531;
+     ((int32_t*)buf_data[1])[i] = 0;
+     ((uint32_t*)buf_data[2])[i] = 0;
+   }
+@@ -86,7 +86,7 @@ void compiler_double_convert_float(void)
+   OCL_MAP_BUFFER(0);
+   OCL_MAP_BUFFER(1);
+   for (int32_t i = 0; i < (int32_t) n; ++i) {
+-    src[i] = ((double*)buf_data[0])[i] = 1332.1d * (rand() & 1324135) - 1434342.73209855531d * (rand() & 135);
++    src[i] = ((double*)buf_data[0])[i] = 1332.1 * (rand() & 1324135) - 1434342.73209855531 * (rand() & 135);
+     ((float*)buf_data[1])[i] = 0;
+   }
+   OCL_UNMAP_BUFFER(0);
+@@ -140,7 +140,7 @@ void compiler_double_convert_short(void)
+   OCL_MAP_BUFFER(1);
+   OCL_MAP_BUFFER(2);
+   for (int32_t i = 0; i < (int32_t) n; ++i) {
+-    src[i] = ((double*)buf_data[0])[i] = 10.3443d * (rand() & 15) + 14.8924323d;
++    src[i] = ((double*)buf_data[0])[i] = 10.3443 * (rand() & 15) + 14.8924323;
+     ((int16_t*)buf_data[1])[i] = 0;
+     ((uint16_t*)buf_data[2])[i] = 0;
+   }
+@@ -201,7 +201,7 @@ void compiler_double_convert_char(void)
+   OCL_MAP_BUFFER(1);
+   OCL_MAP_BUFFER(2);
+   for (int32_t i = 0; i < (int32_t) n; ++i) {
+-    src[i] = ((double*)buf_data[0])[i] = 10.3443d * (rand() & 7) + 2.8924323d;
++    src[i] = ((double*)buf_data[0])[i] = 10.3443 * (rand() & 7) + 2.8924323;
+     ((int8_t*)buf_data[1])[i] = 0;
+     ((uint8_t*)buf_data[2])[i] = 0;
+   }
+@@ -262,7 +262,7 @@ void compiler_double_convert_long(void)
+   OCL_MAP_BUFFER(1);
+   OCL_MAP_BUFFER(2);
+   for (int32_t i = 0; i < (int32_t) n; ++i) {
+-    src[i] = ((double*)buf_data[0])[i] = 10.3443d * (rand() & 7) + 2.8924323d;
++    src[i] = ((double*)buf_data[0])[i] = 10.3443 * (rand() & 7) + 2.8924323;
+     ((int64_t*)buf_data[1])[i] = 0;
+     ((uint64_t*)buf_data[2])[i] = 0;
+   }
+@@ -330,8 +330,8 @@ void compiler_long_convert_double(void)
+   for (int32_t i = 0; i < (int32_t) n; ++i) {
+     src0[i] = ((int64_t*)buf_data[0])[i] = 0xABC8ABACDA00C * (rand() & 7);
+     src1[i] = ((uint64_t*)buf_data[1])[i] = 0xCABC8ABACDA00C * (rand() & 15);
+-    ((double*)buf_data[2])[i] = 0.0d;
+-    ((double*)buf_data[3])[i] = 0.0d;
++    ((double*)buf_data[2])[i] = 0.0;
++    ((double*)buf_data[3])[i] = 0.0;
+   }
+   OCL_UNMAP_BUFFER(0);
+   OCL_UNMAP_BUFFER(1);
+@@ -399,8 +399,8 @@ void compiler_int_convert_double(void)
+   for (int32_t i = 0; i < (int32_t) n; ++i) {
+     src0[i] = ((int32_t*)buf_data[0])[i] = 0xCABC8A0C * (rand() & 7);
+     src1[i] = ((uint32_t*)buf_data[1])[i] = 0xCACDA00C * (rand() & 15);
+-    ((double*)buf_data[2])[i] = 0.0d;
+-    ((double*)buf_data[3])[i] = 0.0d;
++    ((double*)buf_data[2])[i] = 0.0;
++    ((double*)buf_data[3])[i] = 0.0;
+   }
+   OCL_UNMAP_BUFFER(0);
+   OCL_UNMAP_BUFFER(1);
+@@ -468,8 +468,8 @@ void compiler_short_convert_double(void)
+   for (int32_t i = 0; i < (int32_t) n; ++i) {
+     src0[i] = ((int16_t*)buf_data[0])[i] = 0x8A0C * (rand() & 7);
+     src1[i] = ((uint16_t*)buf_data[1])[i] = 0xC00C * (rand() & 15);
+-    ((double*)buf_data[2])[i] = 0.0d;
+-    ((double*)buf_data[3])[i] = 0.0d;
++    ((double*)buf_data[2])[i] = 0.0;
++    ((double*)buf_data[3])[i] = 0.0;
+   }
+   OCL_UNMAP_BUFFER(0);
+   OCL_UNMAP_BUFFER(1);
+@@ -537,8 +537,8 @@ void compiler_char_convert_double(void)
+   for (int32_t i = 0; i < (int32_t) n; ++i) {
+     src0[i] = ((int8_t*)buf_data[0])[i] = 0x8C * (rand() & 7);
+     src1[i] = ((uint8_t*)buf_data[1])[i] = 0xC0 * (rand() & 15);
+-    ((double*)buf_data[2])[i] = 0.0d;
+-    ((double*)buf_data[3])[i] = 0.0d;
++    ((double*)buf_data[2])[i] = 0.0;
++    ((double*)buf_data[3])[i] = 0.0;
+   }
+   OCL_UNMAP_BUFFER(0);
+   OCL_UNMAP_BUFFER(1);
+@@ -596,7 +596,7 @@ void compiler_float_convert_double(void)
+   OCL_MAP_BUFFER(1);
+   for (int32_t i = 0; i < (int32_t) n; ++i) {
+     src[i] = ((float*)buf_data[0])[i] = (float)(0x8C * (rand() & 7)) * 1342.42f;
+-    ((double*)buf_data[1])[i] = 0.0d;
++    ((double*)buf_data[1])[i] = 0.0;
+   }
+   OCL_UNMAP_BUFFER(0);
+   OCL_UNMAP_BUFFER(1);
+diff --git a/utests/compiler_double_div.cpp b/utests/compiler_double_div.cpp
+index 11578cf..f78e238 100644
+--- a/utests/compiler_double_div.cpp
++++ b/utests/compiler_double_div.cpp
+@@ -26,8 +26,8 @@ void compiler_double_div(void)
+   OCL_MAP_BUFFER(2);
+   for (int32_t i = 0; i < (int32_t) n; ++i) {
+     cpu_src0[i] = ((double*)buf_data[0])[i] = ((double)(((i - 5)*1334) * 11105));
+-    cpu_src1[i] = ((double*)buf_data[1])[i] = 499.13542123d*(i + 132.43d + 142.32*i);
+-    ((double*)buf_data[2])[i] = 0.0d;
++    cpu_src1[i] = ((double*)buf_data[1])[i] = 499.13542123*(i + 132.43 + 142.32*i);
++    ((double*)buf_data[2])[i] = 0.0;
+   }
+   OCL_UNMAP_BUFFER(0);
+   OCL_UNMAP_BUFFER(1);
+@@ -42,7 +42,7 @@ void compiler_double_div(void)
+     if (i % 3 != 0)
+       OCL_ASSERT(fabs(((double*)buf_data[2])[i] - cpu_src0[i]/cpu_src1[i]) < 1e-32);
+     else
+-      OCL_ASSERT(((double*)buf_data[2])[i] == 0.0d);
++      OCL_ASSERT(((double*)buf_data[2])[i] == 0.0);
+ 
+     //printf("%d :  %f        ref value: %f\n", i, ((double*)buf_data[2])[i], cpu_src0[i]/cpu_src1[i]);
+   }
+@@ -53,9 +53,9 @@ MAKE_UTEST_FROM_FUNCTION(compiler_double_div);
+ 
+ void compiler_double_div_uniform(void)
+ {
+-  double src0 = 13234.1438786319d;
+-  double src1 = 0.000134123d;
+-  double tmp = 25.128d;
++  double src0 = 13234.1438786319;
++  double src1 = 0.000134123;
++  double tmp = 25.128;
+ 
+   if (!cl_check_double())
+     return;
+diff --git a/utests/utest_math_gen.py b/utests/utest_math_gen.py
+index 424af41..eca6c87 100755
+--- a/utests/utest_math_gen.py
++++ b/utests/utest_math_gen.py
+@@ -349,10 +349,12 @@ static float atan2pi(float y, float x){
+   ldexp_input_type2 = ['int','int2','int4','int8','int16']
+   ldexp_output_type = ['float','float2','float4','float8','float16']
+   ldexp_cpu_func='''
++namespace utest {
+ static float ldexp(float x, int y){
+     return x * exp2(y);
++}
+ } '''
+-  ldexpUtests = func('ldexp','ldexp',[ldexp_input_type1,ldexp_input_type2],ldexp_output_type,[ldexp_input_values1,ldexp_input_values2],'0 * FLT_ULP', ldexp_cpu_func)
++  ldexpUtests = func('ldexp','utest::ldexp',[ldexp_input_type1,ldexp_input_type2],ldexp_output_type,[ldexp_input_values1,ldexp_input_values2],'0 * FLT_ULP', ldexp_cpu_func)
+ 
+   ##### gentype lgamma(gentype x)
+   lgamma_input_values = base_input_values

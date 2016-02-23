@@ -2,13 +2,6 @@
 
 case $(basename $0) in
 
-  buildpython-pyparsing )
-    export PKGNAME=pyparsing
-    export PKGVER=2.0.3
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/p/pyparsing/${PKGTAR}"
-    export DEST=/binary/python/python-pyparsing-${PKGVER}
-  ;;
   buildpython-requests )
     export PKGNAME=requests
     export PKGVER=2.8.1

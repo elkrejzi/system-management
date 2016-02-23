@@ -1,0 +1,18 @@
+#!/bin/bash -e
+
+export PKGNAME=clinfo
+export PKGVER=2.1.16.01.12
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/Oblomov/clinfo/archive/${PKGVER}.tar.gz"
+export USER_CFLAGS="-std=c99"
+
+configure_override() {
+  true
+}
+
+make_install_override() {
+  install -Dm755 clinfo ${DEST}/usr/bin/clinfo
+  install -Dm644 man/clinfo.1 ${DEST}/usr/share/man/man1/clinfo.1
+}
+
+. $(dirname $0)/master.sh

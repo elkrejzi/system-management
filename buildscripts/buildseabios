@@ -1,12 +1,13 @@
 #!/bin/bash -e
 
 export PKGNAME=seabios
-export PKGVER=1.9.0
+export PKGVER=1.9.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://code.coreboot.org/p/seabios/downloads/get/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export NO_OPTIMIZATION=1
 export NO_STRIP=1
+export DEFAULT_CC="gcc"
 
 configure_override() {
   rm -rf binaries

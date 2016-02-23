@@ -8,6 +8,8 @@ export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export KEEP_STATIC=1
 export MULTILIB_BUILD=1
+export PATCHES_LIST=("SDL2-relative-mouse.patch")
+export PATCHES_LIST_32=("SDL2-relative-mouse.patch")
 
 export COMMON_CONFIGURE_FLAGS=(--enable-video-wayland
                                --disable-alsa-shared

@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=ibus
-export PKGVER=1.5.12
+export PKGVER=1.5.13
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/ibus/ibus/releases/download/${PKGVER}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

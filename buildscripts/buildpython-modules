@@ -91,6 +91,13 @@ case $(basename $0) in
     export PKGURL="https://pypi.python.org/packages/source/M/MarkupSafe/${PKGTAR}"
     export DEST=/binary/python/python-markupsafe-${PKGVER}
   ;;
+  buildpython-pyparsing )
+    export PKGNAME=pyparsing
+    export PKGVER=2.1.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/p/pyparsing/${PKGTAR}"
+    export DEST=/binary/python/python-pyparsing-${PKGVER}
+  ;;
   buildpython-pillow )
     export PKGNAME=Pillow
     export PKGVER=3.1.1
@@ -215,6 +222,7 @@ case $(basename $0) in
       $(dirname $0)/buildpython-beaker
       $(dirname $0)/buildpython-cssselect
       $(dirname $0)/buildpython-markupsafe
+      $(dirname $0)/buildpython-pyparsing
       $(dirname $0)/buildpython-pygments
       $(dirname $0)/buildpython-pytz
       $(dirname $0)/buildpython-pyxdg

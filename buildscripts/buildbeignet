@@ -1,0 +1,22 @@
+#!/bin/bash -e
+
+export PKGNAME=beignet
+export PKGVER=1.1.1
+export PKGTAR=${PKGNAME}-${PKGVER}-source.tar.gz
+export PKGDIR=Beignet-${PKGVER}-Source
+export PKGURL="https://01.org/sites/default/files/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export MULTILIB_BUILD=1
+export PATCHES_LIST=("beignet-fixes.patch")
+export PATCHES_LIST_32=("beignet-fixes.patch")
+export CMAKE_FLAGS=(-DLIB_INSTALL_DIR=/usr/lib)
+export CMAKE_FLAGS_32=(-DLIB_INSTALL_DIR=/usr/lib32)
+
+make_install_post() {
+  mv ${DEST}/usr/include/CL/cl_intel.h ${DEST}/usr/include
+  rm -f ${DEST}/usr/include/CL/*
+  mv ${DEST}/usr/include/cl_intel.h ${DEST}/usr/include/CL
+}
+
+. $(dirname $0)/master.sh

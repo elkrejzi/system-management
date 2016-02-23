@@ -10,11 +10,18 @@ export NO_STRIP=1
 export POSTINST_TRIGGER=("getent group kvm > /dev/null || groupadd -g 61 kvm\n"
                          "chmod 4755 /usr/libexec/qemu-bridge-helper")
 
-export CONFIGURE_FLAGS=(--disable-gtk
-                        --enable-linux-aio
+export TARGETS_LIST="i386-softmmu mipsel-softmmu x86_64-softmmu \
+                     i386-linux-user mipsel-linux-user x86_64-linux-user"
+
+export CONFIGURE_FLAGS=(--enable-linux-aio
                         --enable-spice
                         --enable-tpm
-                        --audio-drv-list='pa alsa sdl')
+                        --enable-virglrenderer
+                        --with-gtkabi=3.0
+                        --with-sdlabi=2.0
+                        --audio-drv-list="pa alsa sdl"
+                        --target-list="${TARGETS_LIST}"
+                        --host-cc="clang")
 
 make_install_post() {
   rm -rf ${DEST}/usr/share/qemu/*.aml ${DEST}/usr/share/qemu/bios.bin ${DEST}/var

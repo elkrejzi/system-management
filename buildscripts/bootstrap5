@@ -43,6 +43,13 @@ $(dirname $0)/buildlibkolab
 $(dirname $0)/buildprison
 $(dirname $0)/buildkdepim-runtime-git
 $(dirname $0)/buildkdepim-git
+$(dirname $0)/buildacpica
+$(dirname $0)/buildlibiscsi
+$(dirname $0)/buildusbredir
+$(dirname $0)/buildvde2
+$(dirname $0)/buildvirglrenderer
+$(dirname $0)/buildseabios
+$(dirname $0)/buildqemu
 $(dirname $0)/buildchromium
 $(dirname $0)/buildchromium-pepper-flash
 $(dirname $0)/buildlibreoffice
