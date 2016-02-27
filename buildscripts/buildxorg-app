@@ -130,7 +130,7 @@ case $(basename $0) in
   ;;
   buildxrandr )
     export PKGNAME=xrandr
-    export PKGVER=1.4.3
+    export PKGVER=1.5.0
   ;;
   buildxrdb )
     export PKGNAME=xrdb
