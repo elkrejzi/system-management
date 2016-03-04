@@ -1,12 +1,11 @@
 #!/bin/bash -e
 
 export PKGNAME=chromium
-export PKGVER=48.0.2564.116
+export PKGVER=49.0.2623.75
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://commondatastorage.googleapis.com/chromium-browser-official/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export POSTINST_TRIGGER=("chmod 4755 /usr/lib/chromium/chrome-sandbox")
-export PATCHES_LIST=("chromium-fixes.patch" "chromium-libcxx.patch")
 
 configure_pre() {
   CFLAGS=${CFLAGS/-Ofast/-O3}
@@ -59,6 +58,7 @@ configure_pre() {
       -Duse_gconf=0
       -Duse_gnome_keyring=0
       -Duse_mojo=0
+      -Duse_sysroot=0
       -Dusb_ids_path=/usr/share/misc/usb.ids
       -Dcups=1
       -Ddisable_fatal_linker_warnings=1
@@ -70,7 +70,8 @@ configure_pre() {
   find third_party/icu -type f \! -regex '.*\.\(gyp\|gypi\|isolate\)' -delete
   touch chrome/test/data/webui/i18n_process_css_test.html
 
-  sed -i "s:icu_54:icu:g" components/autofill/core/common/autofill_l10n_util.cc
+  sed -i "/'target_name': 'libvpx'/s/libvpx/&_new/" build/linux/unbundle/libvpx.gyp
+  sed -i "/GCInfo.h/i #include <cstdlib>" third_party/WebKit/Source/platform/heap/GCInfo.cpp
 }
 
 configure_override() {

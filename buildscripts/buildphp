@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=php
-export PKGVER=7.0.3
+export PKGVER=7.0.4
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://www.php.net/distributions/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

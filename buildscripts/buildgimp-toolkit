@@ -67,18 +67,18 @@ case $(basename $0) in
   ;;
   buildpango )
     export PKGNAME=pango
-    export PKGVER=1.38.1
+    export PKGVER=1.39.0
     export DEST=/binary/${PKGNAME}-${PKGVER}
     export CONFIGURE_FLAGS_32=(--disable-introspection)
   ;;
   buildat-spi2-core )
     export PKGNAME=at-spi2-core
-    export PKGVER=2.19.90
+    export PKGVER=2.19.91
     export CONFIGURE_FLAGS_32=(--disable-introspection)
   ;;
   buildat-spi2-atk )
     export PKGNAME=at-spi2-atk
-    export PKGVER=2.19.90
+    export PKGVER=2.19.91
   ;;
   buildgtk2 )
     export PKGNAME=gtk+
@@ -110,7 +110,7 @@ EOF
   ;;
   buildgtk3 )
     export PKGNAME=gtk+
-    export PKGVER=3.19.10
+    export PKGVER=3.19.11
     export CONFIGURE_FLAGS=(--enable-broadway-backend --enable-wayland-backend --enable-x11-backend --enable-man)
     export CONFIGURE_FLAGS_32=("${CONFIGURE_FLAGS[@]}" --disable-cloudprint --disable-introspection --disable-libcanberra)
     export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-query-immodules-3.0 ] && echo \"Processing triggers for gtk-3.0\" && /usr/bin/gtk-query-immodules-3.0 --update-cache"

@@ -15,11 +15,11 @@ case $(basename $0) in
   ;;
   buildeog )
     export PKGNAME=eog
-    export PKGVER=3.19.90
+    export PKGVER=3.19.91
   ;;
   buildepiphany )
     export PKGNAME=epiphany
-    export PKGVER=3.19.90
+    export PKGVER=3.19.91
     make_install_post() {
       sed -i "s#multipart/related;##" ${DEST}/usr/share/applications/epiphany.desktop
     }
@@ -45,7 +45,7 @@ case $(basename $0) in
   ;;
   buildgnome-calculator )
     export PKGNAME=gnome-calculator
-    export PKGVER=3.18.3
+    export PKGVER=3.19.91
   ;;
   buildgnome-color-manager )
     export PKGNAME=gnome-color-manager
@@ -72,12 +72,12 @@ case $(basename $0) in
   ;;
   buildgnome-system-monitor )
     export PKGNAME=gnome-system-monitor
-    export PKGVER=3.18.2
+    export PKGVER=3.19.91
     export CONFIGURE_FLAGS=(--enable-systemd)
   ;;
   buildgnome-terminal )
     export PKGNAME=gnome-terminal
-    export PKGVER=3.18.2
+    export PKGVER=3.19.91
     export CONFIGURE_FLAGS=(--disable-migration)
   ;;
   buildgnome-tweak-tool )
@@ -99,10 +99,13 @@ case $(basename $0) in
   ;;
   buildnetwork-manager-applet )
     export PKGNAME=network-manager-applet
-    export PKGVER=1.1.90
+    export PKGVER=1.1.91
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
     export CONFIGURE_FLAGS=(--disable-migration)
+    configure_pre() {
+      sed -i "s:-Werror::g" configure
+    }
   ;;
   buildseahorse )
     export PKGNAME=seahorse
@@ -125,7 +128,7 @@ case $(basename $0) in
   ;;
   buildyelp )
     export PKGNAME=yelp
-    export PKGVER=3.19.90
+    export PKGVER=3.19.91
   ;;
   buildzenity )
     export PKGNAME=zenity

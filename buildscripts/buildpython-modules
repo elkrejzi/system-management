@@ -161,7 +161,7 @@ case $(basename $0) in
   ;;
   buildpython-setuptools )
     export PKGNAME=setuptools
-    export PKGVER=20.1.1
+    export PKGVER=20.2.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/s/setuptools/${PKGTAR}"
     export DEST=/binary/python/python-setuptools-${PKGVER}
@@ -182,7 +182,7 @@ case $(basename $0) in
   ;;
   buildpython-sphinx )
     export PKGNAME=Sphinx
-    export PKGVER=1.3.5
+    export PKGVER=1.3.6
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/S/Sphinx/${PKGTAR}"
     export DEST=/binary/python/python-sphinx-${PKGVER}

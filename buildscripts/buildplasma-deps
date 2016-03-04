@@ -69,6 +69,7 @@ case $(basename $0) in
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://download.kde.org/stable/qca/${PKGVER}/src/${PKGTAR}"
     export CMAKE_FLAGS=(-DBUILD_TESTS=OFF -DQCA_INSTALL_IN_QT_PREFIX=ON)
+    export PATCHES_LIST=("qca-fixes.patch")
     configure_pre() {
       sed -i "/BSD_SOURCE/d" ../${PKGDIR}/CMakeLists.txt
     }

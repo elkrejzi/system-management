@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=openssl
-export PKGVER=1.0.2f
+export PKGVER=1.0.2g
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://www.openssl.org/source/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
@@ -18,10 +18,10 @@ configure_override() {
               --openssldir=/etc/ssl \
               --libdir=lib \
               shared \
-              zlib \
+              no-ssl3-method \
               enable-ec_nistp_64_gcc_128 \
               linux-x86_64 \
-              "${CFLAGS}"
+              "-Wa,--noexecstack ${CFLAGS}"
 }
 
 configure_override_32() {
@@ -29,9 +29,9 @@ configure_override_32() {
               --openssldir=/etc/ssl \
               --libdir=lib32 \
               shared \
-              zlib \
+              no-ssl3-method \
               "linux-elf" \
-              "${CFLAGS}"
+              "-Wa,--noexecstack ${CFLAGS}"
 }
 
 post_install_config() {

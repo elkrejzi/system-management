@@ -12,9 +12,7 @@ export CONFIGURE_FLAGS=(--enable-aa
                         --enable-gles1
                         --enable-gles2
                         --enable-realrtsp
-                        --disable-jack
-                        --disable-libva
-                        --disable-vdpau)
+                        --disable-jack)
 
 export BUILDCC="clang"
 
