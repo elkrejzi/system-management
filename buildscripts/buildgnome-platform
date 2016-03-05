@@ -95,7 +95,7 @@ case $(basename $0) in
   ;;
   buildgnome-control-center )
     export PKGNAME=gnome-control-center
-    export PKGVER=3.19.90
+    export PKGVER=3.19.91
   ;;
   buildgnome-desktop )
     export PKGNAME=gnome-desktop
@@ -119,7 +119,7 @@ case $(basename $0) in
   ;;
   buildgnome-session )
     export PKGNAME=gnome-session
-    export PKGVER=3.19.4
+    export PKGVER=3.19.91
   ;;
   buildgnome-settings-daemon )
     export PKGNAME=gnome-settings-daemon
@@ -145,7 +145,7 @@ case $(basename $0) in
   ;;
   buildgnome-themes-standard )
     export PKGNAME=gnome-themes-standard
-    export PKGVER=3.18.0
+    export PKGVER=3.19.91
     export MULTILIB_BUILD=1
     export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-update-icon-cache ] && echo \"Processing triggers for hicolor-icon-theme\" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/HighContrast")
     export MAKE_FLAGS_32="-C themes/Adwaita/gtk-2.0 libadwaita.la"

@@ -82,7 +82,7 @@ case $(basename $0) in
   ;;
   buildgtk2 )
     export PKGNAME=gtk+
-    export PKGVER=2.24.29
+    export PKGVER=2.24.30
     export DEST=/binary/${PKGNAME}-${PKGVER}
     export CONFIGURE_FLAGS=(--enable-man)
     export CONFIGURE_FLAGS_32=(--disable-introspection)
