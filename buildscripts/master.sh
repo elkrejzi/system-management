@@ -37,8 +37,8 @@ fi
 export DEFAULT_CFLAGS="-march=broadwell -fomit-frame-pointer -Ofast -pipe -fstack-protector-strong"
 export DEFAULT_CXXFLAGS="-march=broadwell -fomit-frame-pointer -Ofast -pipe -fstack-protector-strong"
 
-export DEFAULT_DEBUG_CFLAGS="-march=sandybridge -g -Ofast -pipe -fstack-protector-strong"
-export DEFAULT_DEBUG_CXXFLAGS="-march=sandybridge -g -Ofast -pipe -fstack-protector-strong"
+export DEFAULT_DEBUG_CFLAGS="-march=broadwell -g -Ofast -pipe -fstack-protector-strong"
+export DEFAULT_DEBUG_CXXFLAGS="-march=broadwell -g -Ofast -pipe -fstack-protector-strong"
 
 if [ -z ${PKGNAME} ] || [ -z ${PKGVER} ]
 then

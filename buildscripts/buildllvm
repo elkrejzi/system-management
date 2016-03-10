@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=llvm
-export PKGVER=3.8.0rc2
+export PKGVER=3.8.0
 
 proj=(
   cfe
@@ -86,8 +86,6 @@ then
 
       export PKG_BUILDING=1
 
-      PKGDIR=${PKGDIR}/tools/lldb patch_apply lldb-avoid-linking-to-libLLVM.patch
-
       cp -a ${PKGDIR} ${PKGDIR}-checkout
     else
       mv ${PKGDIR}-checkout ${PKGDIR}
@@ -118,8 +116,6 @@ else
         prepare_src_common
 
       done
-
-      PKGDIR=${PKGDIR}/tools/lldb patch_apply lldb-avoid-linking-to-libLLVM.patch
     fi
   }
 fi
@@ -195,7 +191,7 @@ EOF
 
   install -m644 ../${PKGDIR}/tools/lldb/docs/lldb.1 ${DEST}/usr/share/man/man1/lldb.1
 
-  cp -r ../${PKGDIR}/tools/clang/bindings/python/clang ${DEST}/usr/lib/python2.7/site-packages/
+  cp -r ../${PKGDIR}/tools/clang/bindings/python/clang ${DEST}/usr/lib/python2.7/site-packages
 
   python -m compileall ${DEST}/usr/share/scan-view
   python -O -m compileall ${DEST}/usr/share/scan-view

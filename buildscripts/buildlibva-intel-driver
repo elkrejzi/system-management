@@ -6,5 +6,6 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://www.freedesktop.org/software/vaapi/releases/libva-intel-driver/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--enable-hybrid-codec)
 
 . $(dirname $0)/master.sh

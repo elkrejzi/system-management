@@ -6,7 +6,7 @@ export MAKE_JOBS_FLAGS="-j4"
 case $(basename $0) in
   buildldb )
     export PKGNAME=ldb
-    export PKGVER=1.1.25
+    export PKGVER=1.1.26
     export CONFIGURE_FLAGS=(--disable-rpath
                             --disable-rpath-install
                             --bundled-libraries=NONE
@@ -18,7 +18,7 @@ case $(basename $0) in
   ;;
   buildtalloc )
     export PKGNAME=talloc
-    export PKGVER=2.1.5
+    export PKGVER=2.1.6
   ;;
   buildtdb )
     export PKGNAME=tdb
@@ -29,7 +29,7 @@ case $(basename $0) in
   ;;
   buildtevent )
     export PKGNAME=tevent
-    export PKGVER=0.9.26
+    export PKGVER=0.9.28
   ;;
 esac
 

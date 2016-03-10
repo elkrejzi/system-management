@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=traceroute
-export PKGVER=2.0.22
+export PKGVER=2.1.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://downloads.sourceforge.net/traceroute/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

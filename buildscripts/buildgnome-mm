@@ -20,7 +20,7 @@ case $(basename $0) in
   ;;
   buildgtkmm3 )
     export PKGNAME=gtkmm
-    export PKGVER=3.18.0
+    export PKGVER=3.19.11
   ;;
   buildlibsigc++ )
     export PKGNAME=libsigc++
@@ -28,7 +28,7 @@ case $(basename $0) in
   ;;
   buildpangomm )
     export PKGNAME=pangomm
-    export PKGVER=2.38.1
+    export PKGVER=2.39.1
   ;;
 esac
 

@@ -1,0 +1,14 @@
+#!/bin/bash -e
+
+export PKGNAME=cmrt
+export PKGVER=1.0.5
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/01org/cmrt/archive/${PKGVER}.tar.gz"
+export MAKE_JOBS_FLAGS="-j4"
+export DEFAULT_CXX="clang++"
+
+configure_pre() {
+  autoreconf -fi
+}
+
+. $(dirname $0)/master.sh

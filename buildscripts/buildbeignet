@@ -8,8 +8,6 @@ export PKGURL="https://01.org/sites/default/files/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export MULTILIB_BUILD=1
-export PATCHES_LIST=("beignet-fixes.patch")
-export PATCHES_LIST_32=("beignet-fixes.patch")
 export CMAKE_FLAGS=(-DLIB_INSTALL_DIR=/usr/lib)
 export CMAKE_FLAGS_32=(-DLIB_INSTALL_DIR=/usr/lib32)
 
