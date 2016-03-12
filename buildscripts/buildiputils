@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=iputils
-export PKGVER=20150815
+export PKGVER=20160308
 export PKGTAR=${PKGNAME}-s${PKGVER}.tar.gz
 export PKGDIR=${PKGNAME}-s${PKGVER}
 export PKGURL="https://github.com/iputils/iputils/archive/s${PKGVER}.tar.gz"

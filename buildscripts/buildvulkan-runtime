@@ -1,0 +1,142 @@
+#!/bin/bash -e
+
+export PKGNAME=vulkan-runtime
+export PKGVER=1.0.5
+export MAKE_JOBS_FLAGS="-j4"
+export DEFAULT_CC="gcc"
+export DEFAULT_CXX="g++"
+
+prepare_src_override() {
+  install -dm755 ${PKGDIR}
+
+  pushd ${PKGDIR}
+
+    export VK_COMPONENTS=(glslang SPIRV-Tools Vulkan-Docs Vulkan-LoaderAndValidationLayers)
+
+    for PKG in ${VK_COMPONENTS[@]} mesa
+    do
+      if [ -d ${PKG} ]
+      then
+        pushd ${PKG}
+          git clean -fdx
+          git fetch origin
+          git reset --hard origin/HEAD
+        popd
+      else
+        if [ ${PKG} == "mesa" ]
+        then
+          git clone git://anongit.freedesktop.org/mesa/mesa
+        else
+          git clone https://github.com/KhronosGroup/${PKG}.git
+        fi
+      fi
+    done
+
+  popd
+
+  if [ -e ${DEST} ] || [ -e ${DEST}-debug ]
+  then
+    if [ ${PKG_BUILDING} != 1 ]
+    then
+      echo "Warning: Old package installation dir exits. Removing."
+      rm -rf ${DEST} ${DEST}-debug
+    fi
+  fi
+
+  export PKG_BUILDING=1
+
+}
+
+run_cmake() {
+  cmake -DCMAKE_INSTALL_PREFIX=/usr      \
+        -DCMAKE_C_FLAGS="${CFLAGS}"      \
+        -DCMAKE_CXX_FLAGS="${CXXFLAGS}"  \
+        -DCMAKE_BUILD_TYPE=Release       \
+        -Wno-dev "${CMAKE_ADD_FLAGS[@]}" \
+        ..
+}
+
+configure_override() {
+  # glslang
+  install -dm755 glslang/build
+  pushd glslang/build
+    run_cmake
+  popd
+
+  # SPIRV-Tools
+  install -dm755 SPIRV-Tools/build
+  pushd SPIRV-Tools/build
+    run_cmake
+  popd
+
+  # Vulkan-LoaderAndValidationLayers
+  install -dm755 Vulkan-LoaderAndValidationLayers/build
+  pushd Vulkan-LoaderAndValidationLayers/build
+    export CMAKE_ADD_FLAGS=(-DCMAKE_INSTALL_SYSCONFDIR=/etc
+                            -DCMAKE_SKIP_RPATH=ON
+                            -DBUILD_WSI_WAYLAND_SUPPORT=ON)
+    run_cmake
+  popd
+
+  # anvil
+  pushd mesa
+    git reset --hard origin/vulkan
+
+    ./autogen.sh --prefix=/usr           \
+                 --sysconfdir=/etc       \
+                 --with-dri-drivers=i965 \
+                 --with-gallium-drivers= \
+                 --with-egl-platforms=x11,drm,wayland
+  popd
+}
+
+make_override() {
+  make -C glslang/build ${MAKE_JOBS_FLAGS}
+  make -C glslang/build install DESTDIR=${PWD}/glslang/build/install
+  pushd glslang/build/install
+    ln -sf usr/* .
+  popd
+
+  make -C SPIRV-Tools/build ${MAKE_JOBS_FLAGS}
+  make -C Vulkan-Docs/doc/specs/vulkan manpages ${MAKE_JOBS_FLAGS}
+  make -C Vulkan-LoaderAndValidationLayers/build ${MAKE_JOBS_FLAGS}
+
+  make -C mesa ${MAKE_JOBS_FLAGS}
+  make -C mesa ${MAKE_JOBS_FLAGS} install DESTDIR=${PWD}/mesa/dest
+}
+
+make_install_override() {
+  make -C SPIRV-Tools/build install DESTDIR=${DEST}
+
+  install -dm755 ${DEST}/etc                \
+                 ${DEST}/usr/bin            \
+                 ${DEST}/usr/include/vulkan \
+                 ${DEST}/usr/lib            \
+                 ${DEST}/usr/share/man/man3
+
+  install -dm755 ${DEST}/usr/share/vulkan/explicit_layer.d \
+                 ${DEST}/usr/share/vulkan/implicit_layer.d
+
+  install -m755 Vulkan-LoaderAndValidationLayers/build/demos/vulkaninfo ${DEST}/usr/bin
+  install -m644 Vulkan-LoaderAndValidationLayers/include/vulkan/*.h ${DEST}/usr/include/vulkan
+  install -m755 Vulkan-LoaderAndValidationLayers/build/layers/*.so ${DEST}/usr/lib
+
+  install -m755 Vulkan-LoaderAndValidationLayers/build/loader/*.so.*.* ${DEST}/usr/lib
+  cp -rf Vulkan-LoaderAndValidationLayers/build/loader/*.so.? ${DEST}/usr/lib
+  cp -rf Vulkan-LoaderAndValidationLayers/build/loader/*.so ${DEST}/usr/lib
+
+  for i in Vulkan-LoaderAndValidationLayers/layers/linux/*.json
+  do 
+        sed 's#./##' $i > ${DEST}/usr/share/vulkan/explicit_layer.d/$(basename $i)
+  done
+
+  install -m644 Vulkan-Docs/src/vulkan/*.h ${DEST}/usr/include/vulkan
+  install -m644 Vulkan-Docs/doc/specs/vulkan/man/*.3 ${DEST}/usr/share/man/man3
+
+  mv ${PWD}/mesa/dest/etc/vulkan ${DEST}/etc
+
+  install -m644 ${PWD}/mesa/dest/usr/include/vulkan/vulkan_intel.h ${DEST}/usr/include/vulkan
+  install -m755 ${PWD}/mesa/dest/usr/lib/libvulkan_intel.so ${DEST}/usr/lib
+}
+
+. $(dirname $0)/master.sh

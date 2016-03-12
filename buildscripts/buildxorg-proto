@@ -71,7 +71,7 @@ case $(basename $0) in
   ;;
   buildvideoproto )
     export PKGNAME=videoproto
-    export PKGVER=2.3.2
+    export PKGVER=2.3.3
   ;;
   buildxcb-proto )
     export PKGNAME=xcb-proto

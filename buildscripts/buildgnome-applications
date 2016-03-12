@@ -91,7 +91,7 @@ case $(basename $0) in
   ;;
   buildnautilus )
     export PKGNAME=nautilus
-    export PKGVER=3.19.2
+    export PKGVER=3.19.91
     export CONFIGURE_FLAGS=(--disable-packagekit
                             --disable-selinux
                             --disable-update-mimedb
