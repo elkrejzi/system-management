@@ -10,7 +10,7 @@ case $(basename $0) in
   ;;
   buildlibdbusmenu-qt )
     export PKGNAME=libdbusmenu-qt
-    export PKGVER=0.9.3+15.10.20150604
+    export PKGVER=0.9.3+16.04.20160218
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://anduin.linuxfromscratch.org/BLFS/other/${PKGTAR}"
     export CMAKE_FLAGS=(-DCMAKE_INSTALL_LIBDIR=lib -DWITH_DOC=OFF)

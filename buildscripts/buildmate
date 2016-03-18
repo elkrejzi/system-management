@@ -5,7 +5,7 @@ export MATE_MAJOR_VER=1.12
 case $(basename $0) in
   buildcaja )
     export PKGNAME=caja
-    export PKGVER=1.12.2
+    export PKGVER=1.12.6
     export CONFIGURE_FLAGS=(--disable-packagekit
                             --disable-update-mimedb
                             --disable-icon-update

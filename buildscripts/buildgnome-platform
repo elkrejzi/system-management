@@ -23,7 +23,7 @@ case $(basename $0) in
   ;;
   buildevolution-data-server )
     export PKGNAME=evolution-data-server
-    export PKGVER=3.19.91
+    export PKGVER=3.19.92
     export CONFIGURE_FLAGS=(--disable-google-auth
                             --disable-uoa
                             --with-krb5=/usr
@@ -36,7 +36,7 @@ case $(basename $0) in
   ;;
   buildgdm )
     export PKGNAME=gdm
-    export PKGVER=3.19.91
+    export PKGVER=3.19.92
     export KEEP_EMPTY_DIRS=1
     export CONFIGURE_FLAGS=(--enable-gdm-xsession --without-plymouth --with-default-pam-config=lfs)
     export POSTINST_TRIGGER=("getent group gdm > /dev/null || groupadd -g 21 gdm"
@@ -95,11 +95,11 @@ case $(basename $0) in
   ;;
   buildgnome-control-center )
     export PKGNAME=gnome-control-center
-    export PKGVER=3.19.91
+    export PKGVER=3.19.92
   ;;
   buildgnome-desktop )
     export PKGNAME=gnome-desktop
-    export PKGVER=3.19.91
+    export PKGVER=3.19.93
     export CONFIGURE_FLAGS=(--with-gnome-distributor=Krejzi)
   ;;
   buildgnome-keyring )
@@ -114,21 +114,21 @@ case $(basename $0) in
   ;;
   buildgnome-online-accounts )
     export PKGNAME=gnome-online-accounts
-    export PKGVER=3.19.90
+    export PKGVER=3.19.92.1
     export CONFIGURE_FLAGS=(--enable-kerberos --disable-compile-warnings)
   ;;
   buildgnome-session )
     export PKGNAME=gnome-session
-    export PKGVER=3.19.91
+    export PKGVER=3.19.92
   ;;
   buildgnome-settings-daemon )
     export PKGNAME=gnome-settings-daemon
-    export PKGVER=3.19.91
+    export PKGVER=3.19.92
     export MAKE_INSTALL_FLAGS="udevrulesdir=/lib/udev/rules.d"
   ;;
   buildgnome-shell )
     export PKGNAME=gnome-shell
-    export PKGVER=3.19.91
+    export PKGVER=3.19.92
     export DEBUG_BUILD=1
     make_install_post() {
       install -dm755 ${DEST}/usr/lib/gnome-shell/mozilla
@@ -139,7 +139,7 @@ case $(basename $0) in
   ;;
   buildgnome-shell-extensions )
     export PKGNAME=gnome-shell-extensions
-    export PKGVER=3.19.91
+    export PKGVER=3.19.92
     export KEEP_STATIC=1
     export NO_STRIP=1
   ;;
@@ -181,13 +181,13 @@ case $(basename $0) in
   ;;
   buildgsettings-desktop-schemas )
     export PKGNAME=gsettings-desktop-schemas
-    export PKGVER=3.19.90
+    export PKGVER=3.19.92
     export KEEP_STATIC=1
     export NO_STRIP=1
   ;;
   buildgspell )
     export PKGNAME=gspell
-    export PKGVER=0.2.4
+    export PKGVER=0.2.6
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
   ;;
@@ -204,7 +204,7 @@ case $(basename $0) in
   ;;
   buildgvfs )
     export PKGNAME=gvfs
-    export PKGVER=1.27.91
+    export PKGVER=1.27.92
     export POSTINST_TRIGGER=("[ -x /usr/bin/gio-querymodules ] && echo \"Processing triggers for gio-2.0\" && /usr/bin/gio-querymodules /usr/lib/gio/modules")
     make_install_post() {
       export SPACE_ADDED=1
@@ -212,7 +212,7 @@ case $(basename $0) in
   ;;
   buildjson-glib )
     export PKGNAME=json-glib
-    export PKGVER=1.0.4
+    export PKGVER=1.1.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
   ;;
@@ -240,7 +240,7 @@ case $(basename $0) in
   ;;
   buildlibgweather )
     export PKGNAME=libgweather
-    export PKGVER=3.19.90
+    export PKGVER=3.19.92
   ;;
   buildlibgxps )
     export PKGNAME=libgxps
@@ -274,7 +274,7 @@ case $(basename $0) in
   ;;
   buildlibsoup )
     export PKGNAME=libsoup
-    export PKGVER=2.53.90
+    export PKGVER=2.53.92
     export MULTILIB_BUILD=1
     export CONFIGURE_FLAGS=(--disable-tls-check)
     export CONFIGURE_FLAGS_32=(--disable-introspection --disable-tls-check --disable-vala)
@@ -285,7 +285,7 @@ case $(basename $0) in
   ;;
   buildmutter )
     export PKGNAME=mutter
-    export PKGVER=3.19.91
+    export PKGVER=3.19.92
     export DEBUG_BUILD=1
     export CONFIGURE_FLAGS=(--enable-compile-warnings=minimum)
   ;;
@@ -301,7 +301,7 @@ case $(basename $0) in
   ;;
   buildvte )
     export PKGNAME=vte
-    export PKGVER=0.43.91
+    export PKGVER=0.43.92
     export CONFIGURE_FLAGS=(--enable-introspection)
     make_install_post() {
       rm -rf ${DEST}/etc

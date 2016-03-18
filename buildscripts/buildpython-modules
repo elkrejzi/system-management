@@ -34,7 +34,7 @@ case $(basename $0) in
   ;;
   buildpython-beaker )
     export PKGNAME=Beaker
-    export PKGVER=1.7.0
+    export PKGVER=1.8.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/B/Beaker/${PKGTAR}"
     export DEST=/binary/python/python-beaker-${PKGVER}
@@ -69,14 +69,14 @@ case $(basename $0) in
   ;;
   buildpython-lxml )
     export PKGNAME=lxml
-    export PKGVER=3.5.0
+    export PKGVER=3.6.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/l/lxml/${PKGTAR}"
     export DEST=/binary/python/python-lxml-${PKGVER}
   ;;
   buildpython-mako )
     export PKGNAME=Mako
-    export PKGVER=1.0.3
+    export PKGVER=1.0.4
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/M/Mako/${PKGTAR}"
     export DEST=/binary/python/python-mako-${PKGVER}
@@ -90,13 +90,6 @@ case $(basename $0) in
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/M/MarkupSafe/${PKGTAR}"
     export DEST=/binary/python/python-markupsafe-${PKGVER}
-  ;;
-  buildpython-pyparsing )
-    export PKGNAME=pyparsing
-    export PKGVER=2.1.0
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/p/pyparsing/${PKGTAR}"
-    export DEST=/binary/python/python-pyparsing-${PKGVER}
   ;;
   buildpython-pillow )
     export PKGNAME=Pillow
@@ -123,7 +116,7 @@ case $(basename $0) in
   ;;
   buildpython-pygments )
     export PKGNAME=Pygments
-    export PKGVER=2.1
+    export PKGVER=2.1.3
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/P/Pygments/${PKGTAR}"
     export DEST=/binary/python/python-pygments-${PKGVER}
@@ -131,9 +124,16 @@ case $(basename $0) in
       mv ${DEST}/usr/bin/pygmentize{,3}
     }
   ;;
+  buildpython-pyparsing )
+    export PKGNAME=pyparsing
+    export PKGVER=2.1.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/p/pyparsing/${PKGTAR}"
+    export DEST=/binary/python/python-pyparsing-${PKGVER}
+  ;;
   buildpython-pytz )
     export PKGNAME=pytz
-    export PKGVER=2015.7
+    export PKGVER=2016.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/p/pytz/${PKGTAR}"
     export DEST=/binary/python/python-pytz-${PKGVER}
@@ -161,7 +161,7 @@ case $(basename $0) in
   ;;
   buildpython-setuptools )
     export PKGNAME=setuptools
-    export PKGVER=20.2.2
+    export PKGVER=20.3
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/s/setuptools/${PKGTAR}"
     export DEST=/binary/python/python-setuptools-${PKGVER}
@@ -284,7 +284,7 @@ fi
 case $(basename $0) in
   buildpython-m2crypto)
     export PKGNAME=M2Crypto
-    export PKGVER=0.22.5
+    export PKGVER=0.23.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/M/M2Crypto/${PKGTAR}"
     export DEST=/binary/python/python-m2crypto-${PKGVER}

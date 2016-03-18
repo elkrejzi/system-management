@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=nasm
-export PKGVER=2.12
+export PKGVER=2.12.01
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://www.nasm.us/pub/nasm/releasebuilds/${PKGVER}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

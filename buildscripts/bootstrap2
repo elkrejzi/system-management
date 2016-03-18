@@ -14,7 +14,7 @@ $(dirname $0)/buildlibva
 $(dirname $0)/buildlibvdpau
 $(dirname $0)/buildopencl-headers
 $(dirname $0)/buildocl-icd
-$(dirname $0)/buildmesa-git
+$(dirname $0)/buildmesa
 $(dirname $0)/buildglu
 $(dirname $0)/buildfreeglut
 $(dirname $0)/buildlibjpeg-turbo
@@ -67,6 +67,7 @@ $(dirname $0)/buildjson-glib
 $(dirname $0)/buildlibxkbcommon
 $(dirname $0)/buildlibevdev
 $(dirname $0)/buildmtdev
+$(dirname $0)/buildlibwacom
 $(dirname $0)/buildlibepoxy
 $(dirname $0)/buildlibinput
 $(dirname $0)/buildlibunwind

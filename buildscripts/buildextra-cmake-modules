@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=extra-cmake-modules
-export PKGVER=5.19.0
+export PKGVER=5.20.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://download.kde.org/stable/frameworks/${PKGVER:0:4}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

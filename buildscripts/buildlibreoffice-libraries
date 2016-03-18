@@ -123,7 +123,7 @@ case $(basename $0) in
   ;;
   buildlibpagemaker )
     export PKGNAME=libpagemaker
-    export PKGVER=0.0.2
+    export PKGVER=0.0.3
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://dev-www.libreoffice.org/src/libpagemaker/${PKGTAR}"
   ;;

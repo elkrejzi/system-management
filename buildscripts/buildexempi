@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=exempi
-export PKGVER=2.2.2
+export PKGVER=2.3.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://libopenraw.freedesktop.org/download/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

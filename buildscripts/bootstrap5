@@ -11,7 +11,7 @@ $(dirname $0)/buildfceux
 $(dirname $0)/buildpcsxr
 $(dirname $0)/buildyoutube-dl
 $(dirname $0)/buildextra-cmake-modules
-$(dirname $0)/buildkde-frameworks-git
+$(dirname $0)/buildkde-frameworks
 $(dirname $0)/buildplasma-git
 $(dirname $0)/buildbaloo-widgets
 $(dirname $0)/buildkio-extras

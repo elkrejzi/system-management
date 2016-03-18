@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libva
-export PKGVER=1.6.2
+export PKGVER=1.7.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://www.freedesktop.org/software/vaapi/releases/libva/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}

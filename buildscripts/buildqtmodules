@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=5.6.0-beta
+export PKGVER=5.6.0
 export MAKE_JOBS_FLAGS="-j4"
 export DEBUG_BUILD=1
 export NO_OPTIMIZATION=1
@@ -23,7 +23,9 @@ case $(basename $0) in
     $(dirname $0)/buildqtlocation
     $(dirname $0)/buildqtmultimedia
     $(dirname $0)/buildqtquickcontrols
+    $(dirname $0)/buildqtquickcontrols2
     $(dirname $0)/buildqtsensors
+    $(dirname $0)/buildqtserialbus
     $(dirname $0)/buildqttools
     $(dirname $0)/buildqtwebchannel
     $(dirname $0)/buildqtwebsockets
@@ -49,7 +51,9 @@ qtmodules=(
   qtlocation
   qtmultimedia
   qtquickcontrols
+  qtquickcontrols2
   qtsensors
+  qtserialbus
   qttools
   qtwebchannel
   qtwebsockets
@@ -65,19 +69,18 @@ do
   esac
 done
 
-export PKGTAR=${PKGNAME}-opensource-src-${PKGVER}.tar.gz
+export PKGTAR=${PKGNAME}-opensource-src-${PKGVER}.tar.xz
 export PKGDIR=${PKGNAME}-opensource-src-${PKGVER}
 
 # stable
-#export PKGURL="http://download.qt.io/official_releases/qt/5.5/${PKGVER}/submodules/${PKGTAR}"
+export PKGURL="http://download.qt.io/official_releases/qt/5.6/${PKGVER}/submodules/${PKGTAR}"
 
 # development
 export PKGURL="https://download.qt.io/development_releases/qt/5.6/${PKGVER}/submodules/${PKGTAR}"
 
 if [ ${PKGNAME} == "qtwebengine" ]
 then
-  export PATCHES_LIST=("qtwebengine-libcxx.patch")
-
+  export PATCHES_LIST=("qtwebengine-nss.patch")
 
   configure_pre() {
     # No debug symbols for this module. Taken from Debian
@@ -101,9 +104,17 @@ then
       tar xf /media/ntfs/Other/Linux/v8.tar.xz
     popd
 
+    sed -i "/linux-clang/a linux-clang-libc++: GYP_CONFIG += clang=1 host_clang=1 clang_use_chrome_plugins=0 make_clang_dir=/usr use_libcpp=1" src/core/config/desktop_linux.pri
     sed -i "/config.h/i #include <cstdlib>" src/3rdparty/chromium/third_party/WebKit/Source/platform/heap/GCInfo.cpp
   }
+elif [ ${PKGNAME} == "qtserialbus" ]
+then
+  configure_pre() {
+    sed -i "/unistd.h/i #include <errno.h>" src/plugins/canbus/socketcan/socketcanbackend.cpp
+  }
 fi
+
+
 
 configure_override() {
   qmake

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=5.5.3
+export PKGVER=5.5.95
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export KEEP_DOC=1
@@ -24,6 +24,7 @@ build_all() {
   $(dirname $0)/buildsystemsettings $1
   $(dirname $0)/buildplasma-workspace $1
   $(dirname $0)/buildbluedevil $1
+  $(dirname $0)/buildkactivitymanagerd $1
   $(dirname $0)/buildkde-gtk-config $1
   $(dirname $0)/buildkhotkeys $1
   $(dirname $0)/buildkmenuedit $1
@@ -109,6 +110,7 @@ plasmas=(
   systemsettings
   plasma-workspace
   bluedevil
+  kactivitymanagerd
   kde-gtk-config
   khotkeys
   kmenuedit

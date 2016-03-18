@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=15.12.2
+export PKGVER=15.12.3
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export KEEP_DOC=1
@@ -13,127 +13,12 @@ export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
                     -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins
                     -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules)
 
-LOGGING_CATEGORIES=(
-  log_accountwizard
-  log_akonadiconsole
-  log_akregator
-  log_archivemailagent
-  log_autostart_kalarm
-  log_blogilo
-  log_calendarsupport
-  log_calendarview
-  log_composereditorng
-  log_contactprintthemeeditor
-  log_contactthemeeditor
-  log_createeventplugin
-  log_createnoteplugin
-  log_createtodoplugin
-  log_followupreminderagent
-  log_gpgme_backend
-  log_grantlee_messageviewerheader
-  log_grantleetheme
-  log_grantleethemeeditor
-  log_gravatar
-  log_headerthemeeditor
-  log_importwizard
-  log_incidenceeditor
-  log_isgdshorturlengineplugin
-  log_kaddressbook
-  log_kaddressbook_plugin
-  log_kalarm
-  log_kdepimdbusinterface
-  log_kdgantt
-  log_kleopatra
-  log_kleo_ui
-  log_kmail
-  log_kmail_plugin
-  log_kmanagersieve
-  log_knotes
-  log_knoteskontactplugin
-  log_koalarmclient
-  log_konsolekalendar
-  log_kontact
-  log_korganizer
-  log_korganizer_kontactplugins_specialdates
-  log_korganizer_picoftheday_plugins
-  log_korganizer_plugin
-  log_ktnefapps
-  log_kwatchgnupg
-  log_ldapclient
-  log_libkdepim
-  log_libkleopatraclientcore
-  log_libksieve
-  log_libsendlater
-  log_mailcommon
-  log_mailfilteragent
-  log_mailimporter
-  log_messagecomposer
-  log_messagecore
-  log_messagelist
-  log_messageviewer
-  log_ms_tnef
-  log_notesagentagent
-  log_noteshared
-  log_pimcommon
-  log_pimsettingexporterconsole
-  log_pimsettingexportercore
-  log_pimsettingexportergui
-  log_sendlateragent
-  log_sieveeditor
-  log_storageservicemanager
-  log_templateparser
-  log_text_calendar
-  log_vcard
-  log_akonadi_serializer_kalarm
-  log_akonadi_serializer_mail
-  log_akonadislave
-  log_birthdays
-  log_imapresource
-  log_kalarmdirresource
-  log_kalarmresource
-  log_kolabresource
-  log_libmaildir
-  log_maildirresource
-  log_maildispatcher
-  log_mboxresource
-  log_mixedmaildir
-  log_newmailnotifier
-  log_pop3resource
-  log_resources_contacts
-  log_akonadiagentserver
-  log_akonadicalendar
-  log_akonadi_contact
-  log_akonadi_indexer_agent
-  log_akonadi_mime
-  log_akonadi_notes
-  log_akonadiplugin_indexer
-  log_akonadi_search_xapian
-  log_akonadiserver
-  log_akonadi_socialutils
-  log_kalarmcal
-  log_kblog
-  log_kcalcore
-  log_kcalutils
-  log_kcontacts
-  log_kidentitymanagement
-  log_kimap
-  log_kldap
-  log_kmbox
-  log_kontactinterface
-  log_ktnef
-  log_ldap
-  log_mailtransport
-  log_pop3
-  log_sieve
-  log_smtp)
-
 case $(basename $0) in
   buildark )
     export PKGNAME=ark
   ;;
   buildbaloo-widgets )
     export PKGNAME=baloo-widgets
-    export DEBUG_BUILD=1
   ;;
   builddolphin )
     export PKGNAME=dolphin
@@ -149,22 +34,6 @@ case $(basename $0) in
   ;;
   buildkdebugsettings )
     export PKGNAME=kdebugsettings
-
-    configure_pre() {
-cat >> ../${PKGDIR}/data/kde.categories << "EOF"
-
-#kdepim
-org.kde.akonadi.ETM akonadi etm (kdepim)
-akonadiagentbase_log akonadiagentbase (kdepim)
-akonadiwidgets_log akonadiwidgets (kdepim)
-EOF
-
-      for f in ${LOGGING_CATEGORIES[@]}
-      do
-        sed -i "/${f}/d" ../${PKGDIR}/data/kde.categories
-        echo "${f} ${f/log_/} (kdepim)" >> ../${PKGDIR}/data/kde.categories
-      done
-    }
   ;;
   buildkile )
     export PKGNAME=kile
@@ -196,11 +65,13 @@ EOF
   ;;
   buildokular )
     export PKGNAME=okular
-    export PKGVER=15.08.2+2c6cf86
+    export PKGVER=15.12.1+df0c412
   ;;
   buildskanlite )
     export PKGNAME=skanlite
-    export PKGVER=1.1+0999e40
+    export PKGVER=2.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="http://download.kde.org/stable/skanlite/${PKGVER}/${PKGTAR}"
   ;;
   buildsmb4k )
     export PKGNAME=smb4k
@@ -212,7 +83,10 @@ EOF
 esac
 
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
 export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
+if [ -z ${PKGURL} ]
+then
+  export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
+fi
 
 . $(dirname $0)/master.sh

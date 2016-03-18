@@ -1,0 +1,278 @@
+--- a/src/dbus/dbus_minimal_p.h	2016-03-03 12:35:22.000000000 +0100
++++ b/src/dbus/dbus_minimal_p.h	2016-03-16 18:29:40.063915783 +0100
+@@ -99,9 +99,11 @@
+ /* dbus-shared.h */
+ #define DBUS_SERVICE_DBUS      "org.freedesktop.DBus"
+ #define DBUS_PATH_DBUS  "/org/freedesktop/DBus"
++#define DBUS_PATH_LOCAL "/org/freedesktop/DBus/Local"
+ #define DBUS_INTERFACE_DBUS           "org.freedesktop.DBus"
+ #define DBUS_INTERFACE_INTROSPECTABLE "org.freedesktop.DBus.Introspectable"
+ #define DBUS_INTERFACE_PROPERTIES     "org.freedesktop.DBus.Properties"
++#define DBUS_INTERFACE_LOCAL "org.freedesktop.DBus.Local"
+ 
+ #define DBUS_NAME_FLAG_ALLOW_REPLACEMENT 0x1 /**< Allow another service to become the primary owner if requested */
+ #define DBUS_NAME_FLAG_REPLACE_EXISTING  0x2 /**< Request to replace the current primary owner */
+--- a/src/dbus/qdbusconnection_p.h	2016-03-03 12:35:22.000000000 +0100
++++ b/src/dbus/qdbusconnection_p.h	2016-03-16 18:29:09.448813948 +0100
+@@ -254,6 +254,7 @@
+                      const QVector<int> &metaTypes, int slotIdx);
+ 
+     SignalHookHash::Iterator removeSignalHookNoLock(SignalHookHash::Iterator it);
++    void disconnectObjectTree(ObjectTreeNode &node);
+ 
+     bool isServiceRegisteredByThread(const QString &serviceName);
+ 
+--- a/src/dbus/qdbusintegrator.cpp	2016-03-03 12:35:22.000000000 +0100
++++ b/src/dbus/qdbusintegrator.cpp	2016-03-16 18:29:40.064915820 +0100
+@@ -481,6 +481,11 @@
+ 
+ void QDBusSpyCallEvent::placeMetaCall(QObject *)
+ {
++    invokeSpyHooks(msg, hooks, hookCount);
++}
++
++inline void QDBusSpyCallEvent::invokeSpyHooks(const QDBusMessage &msg, const Hook *hooks, int hookCount)
++{
+     // call the spy hook list
+     for (int i = 0; i < hookCount; ++i)
+         hooks[i](msg);
+@@ -509,7 +514,12 @@
+ {
+     if (!ref.load())
+         return false;
+-    if (!dispatchEnabled && !QDBusMessagePrivate::isLocal(amsg)) {
++
++    // local message are always delivered, regardless of filtering
++    // or whether the dispatcher is enabled
++    bool isLocal = QDBusMessagePrivate::isLocal(amsg);
++
++    if (!dispatchEnabled && !isLocal) {
+         // queue messages only, we'll handle them later
+         qDBusDebug() << this << "delivery is suspended";
+         pendingMessages << amsg;
+@@ -519,17 +529,35 @@
+     switch (amsg.type()) {
+     case QDBusMessage::SignalMessage:
+         handleSignal(amsg);
++        // Check local disconnected signal from libdbus
++        if (amsg.interface() == QDBusUtil::dbusInterfaceLocal()
++            && amsg.path() == QDBusUtil::dbusPathLocal()
++            && amsg.member() == QDBusUtil::disconnected()
++            && !QDBusMessagePrivate::isLocal(amsg)) {
++            while (!pendingCalls.isEmpty())
++                processFinishedCall(pendingCalls.first());
++        }
+         // if there are any other filters in this DBusConnection,
+         // let them see the signal too
+         return false;
+     case QDBusMessage::MethodCallMessage:
+-        // run it through the spy filters (if any) before the regular processing
++        // run it through the spy filters (if any) before the regular processing:
++        // a) if it's a local message, we're in the caller's thread, so invoke the filter directly
++        // b) if it's an external message, post to the main thread
+         if (Q_UNLIKELY(qDBusSpyHookList.exists()) && qApp) {
+             const QDBusSpyHookList &list = *qDBusSpyHookList;
+-            qDBusDebug() << this << "invoking message spies";
+-            QCoreApplication::postEvent(qApp, new QDBusSpyCallEvent(this, QDBusConnection(this),
+-                                                                    amsg, list.constData(), list.size()));
+-            return true;
++            if (isLocal) {
++                Q_ASSERT(QThread::currentThread() != thread());
++                qDBusDebug() << this << "invoking message spies directly";
++                QDBusSpyCallEvent::invokeSpyHooks(amsg, list.constData(), list.size());
++            } else {
++                qDBusDebug() << this << "invoking message spies via event";
++                QCoreApplication::postEvent(qApp, new QDBusSpyCallEvent(this, QDBusConnection(this),
++                                                                        amsg, list.constData(), list.size()));
++
++                // we'll be called back, so return
++                return true;
++            }
+         }
+ 
+         handleObjectCall(amsg);
+@@ -1030,7 +1058,6 @@
+                  qPrintable(name));
+ 
+     closeConnection();
+-    rootNode.children.clear();  // free resources
+     qDeleteAll(cachedMetaObjects);
+ 
+     if (mode == ClientMode || mode == PeerMode) {
+@@ -1052,6 +1079,20 @@
+     }
+ }
+ 
++void QDBusConnectionPrivate::disconnectObjectTree(QDBusConnectionPrivate::ObjectTreeNode &haystack)
++{
++    QDBusConnectionPrivate::ObjectTreeNode::DataList::Iterator it = haystack.children.begin();
++
++    while (it != haystack.children.end()) {
++        disconnectObjectTree(*it);
++        it++;
++    }
++
++    if (haystack.obj) {
++        haystack.obj->disconnect(this);
++    }
++}
++
+ void QDBusConnectionPrivate::closeConnection()
+ {
+     QDBusWriteLocker locker(CloseConnectionAction, this);
+@@ -1075,6 +1116,19 @@
+     }
+ 
+     qDeleteAll(pendingCalls);
++
++    // clean up all signal hook and object tree, to avoid QObject::destroyed
++    // being activated to dbus daemon thread which already quits.
++    // dbus connection is already closed, so there is nothing we could do be clean
++    // up everything here.
++    SignalHookHash::iterator sit = signalHooks.begin();
++    while (sit != signalHooks.end()) {
++        sit.value().obj->disconnect(this);
++        sit++;
++    }
++
++    disconnectObjectTree(rootNode);
++    rootNode.children.clear();  // free resources
+ }
+ 
+ void QDBusConnectionPrivate::checkThread()
+@@ -1451,9 +1505,9 @@
+     // that means the dispatchLock mutex is locked
+     // must not call out to user code in that case
+     //
+-    // however, if the message is internal, handleMessage was called
+-    // directly and no lock is in place. We can therefore call out to
+-    // user code, if necessary
++    // however, if the message is internal, handleMessage was called directly
++    // (user's thread) and no lock is in place. We can therefore call out to
++    // user code, if necessary.
+     ObjectTreeNode result;
+     int usedLength;
+     QThread *objThread = 0;
+@@ -1492,12 +1546,14 @@
+                                                            usedLength, msg));
+             return;
+         } else if (objThread != QThread::currentThread()) {
+-            // synchronize with other thread
++            // looped-back message, targeting another thread:
++            // synchronize with it
+             postEventToThread(HandleObjectCallPostEventAction, result.obj,
+                               new QDBusActivateObjectEvent(QDBusConnection(this), this, result,
+                                                            usedLength, msg, &sem));
+             semWait = true;
+         } else {
++            // looped-back message, targeting current thread
+             semWait = false;
+         }
+     } // release the lock
+@@ -1767,10 +1823,16 @@
+ 
+     QDBusMessage &msg = call->replyMessage;
+     if (call->pending) {
+-        // decode the message
+-        DBusMessage *reply = q_dbus_pending_call_steal_reply(call->pending);
+-        msg = QDBusMessagePrivate::fromDBusMessage(reply, connection->capabilities);
+-        q_dbus_message_unref(reply);
++        // when processFinishedCall is called and pending call is not completed,
++        // it means we received disconnected signal from libdbus
++        if (q_dbus_pending_call_get_completed(call->pending)) {
++            // decode the message
++            DBusMessage *reply = q_dbus_pending_call_steal_reply(call->pending);
++            msg = QDBusMessagePrivate::fromDBusMessage(reply, connection->capabilities);
++            q_dbus_message_unref(reply);
++        } else {
++            msg = QDBusMessage::createError(QDBusError::Disconnected, QDBusUtil::disconnectedErrorMessage());
++        }
+     }
+     qDBusDebug() << connection << "got message reply:" << msg;
+ 
+@@ -2070,8 +2132,8 @@
+             pcall->pending = pending;
+             q_dbus_pending_call_set_notify(pending, qDBusResultReceived, pcall, 0);
+ 
+-            // DBus won't notify us when a peer disconnects so we need to track these ourselves
+-            if (mode == QDBusConnectionPrivate::PeerMode)
++            // DBus won't notify us when a peer disconnects or server terminates so we need to track these ourselves
++            if (mode == QDBusConnectionPrivate::PeerMode || mode == QDBusConnectionPrivate::ClientMode)
+                 pendingCalls.append(pcall);
+ 
+             return;
+--- a/src/dbus/qdbusintegrator_p.h	2016-03-03 12:35:22.000000000 +0100
++++ b/src/dbus/qdbusintegrator_p.h	2016-03-16 18:28:09.645811511 +0100
+@@ -145,6 +145,7 @@
+     {}
+     ~QDBusSpyCallEvent();
+     void placeMetaCall(QObject *) Q_DECL_OVERRIDE;
++    static inline void invokeSpyHooks(const QDBusMessage &msg, const Hook *hooks, int hookCount);
+ 
+     QDBusConnection conn;   // keeps the refcount in QDBusConnectionPrivate up
+     QDBusMessage msg;
+--- a/src/dbus/qdbusutil_p.h	2016-03-03 12:35:22.000000000 +0100
++++ b/src/dbus/qdbusutil_p.h	2016-03-16 18:29:40.064915820 +0100
+@@ -155,6 +155,8 @@
+     { return QStringLiteral(DBUS_SERVICE_DBUS); }
+     inline QString dbusPath()
+     { return QStringLiteral(DBUS_PATH_DBUS); }
++    inline QString dbusPathLocal()
++    { return QStringLiteral(DBUS_PATH_LOCAL); }
+     inline QString dbusInterface()
+     {
+         // it's the same string, but just be sure
+@@ -165,8 +167,12 @@
+     { return QStringLiteral(DBUS_INTERFACE_PROPERTIES); }
+     inline QString dbusInterfaceIntrospectable()
+     { return QStringLiteral(DBUS_INTERFACE_INTROSPECTABLE); }
++    inline QString dbusInterfaceLocal()
++    { return QStringLiteral(DBUS_INTERFACE_LOCAL); }
+     inline QString nameOwnerChanged()
+     { return QStringLiteral("NameOwnerChanged"); }
++    inline QString disconnected()
++    { return QStringLiteral("Disconnected"); }
+     inline QString disconnectedErrorMessage()
+     { return QStringLiteral("Not connected to D-Bus server"); }
+ }
+--- a/tests/auto/dbus/qdbusconnection/tst_qdbusconnection.cpp	2016-03-03 12:35:22.000000000 +0100
++++ b/tests/auto/dbus/qdbusconnection/tst_qdbusconnection.cpp	2016-03-16 18:29:40.064915820 +0100
+@@ -1218,6 +1218,28 @@
+     QCOMPARE(obj.replyArguments, subPathReply.arguments());
+ }
+ 
++void tst_QDBusConnection::pendingCallWhenDisconnected()
++{
++    QDBusServer *server = new QDBusServer;
++    QDBusConnection con = QDBusConnection::connectToPeer(server->address(), "disconnect");
++    QTestEventLoop::instance().enterLoop(2);
++    QVERIFY(!QTestEventLoop::instance().timeout());
++    QVERIFY(con.isConnected());
++
++    delete server;
++
++    // Make sure we call the method before we know it is disconnected.
++    QVERIFY(con.isConnected());
++    QDBusMessage message = QDBusMessage::createMethodCall("", "/", QString(), "method");
++    QDBusPendingCall reply = con.asyncCall(message);
++
++    QTestEventLoop::instance().enterLoop(2);
++    QVERIFY(!con.isConnected());
++    QVERIFY(reply.isFinished());
++    QVERIFY(reply.isError());
++    QVERIFY(reply.error().type() == QDBusError::Disconnected);
++}
++
+ QString MyObject::path;
+ QString MyObjectWithoutInterface::path;
+ QString MyObjectWithoutInterface::interface;
+--- a/tests/auto/dbus/qdbusconnection/tst_qdbusconnection.h	2016-03-03 12:35:22.000000000 +0100
++++ b/tests/auto/dbus/qdbusconnection/tst_qdbusconnection.h	2016-03-16 18:29:40.064915820 +0100
+@@ -121,6 +121,7 @@
+     void registerVirtualObject();
+     void callVirtualObject();
+     void callVirtualObjectLocal();
++    void pendingCallWhenDisconnected();
+ 
+ public:
+     QString serviceName() const { return "org.qtproject.Qt.Autotests.QDBusConnection"; }

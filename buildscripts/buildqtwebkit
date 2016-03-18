@@ -1,9 +1,10 @@
 #!/bin/bash -e
 
 export PKGNAME=qtwebkit
-export PKGVER=5.6.0-beta
-export PKGTAR=${PKGNAME}-opensource-src-${PKGVER}.tar.gz
+export PKGVER=5.6.0
+export PKGTAR=${PKGNAME}-opensource-src-${PKGVER}.tar.xz
 export PKGDIR=${PKGNAME}-opensource-src-${PKGVER}
+export PKGURL="https://download.qt.io/community_releases/5.6/${PKGVER}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export NO_OPTIMIZATION=1
 export MAKE_INSTALL_FLAGS="INSTALL_ROOT=\${DEST}"
@@ -15,8 +16,6 @@ configure_post() {
 }
 
 configure_override() {
-  syncqt.pl -version 5.6.0 Source/sync.profile
-
   qmake
 }
 

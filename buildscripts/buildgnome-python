@@ -34,7 +34,7 @@ case $(basename $0) in
   ;;
   buildpygobject3 )
     export PKGNAME=pygobject
-    export PKGVER=3.19.91
+    export PKGVER=3.19.92
     export MULTILIB_BUILD=1
     export CONFIGURE_FLAGS=(--with-python=/usr/bin/python3)
     export CONFIGURE_FLAGS_32=(--with-python=/usr/bin/python --libdir=/usr/lib)

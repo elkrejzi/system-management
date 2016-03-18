@@ -1,7 +1,8 @@
 #!/bin/bash -e
 
 export PKGNAME=hostname
-export PKGVER=3.16
+export PKGVER=3.17
+export PKGDIR=${PKGNAME}
 export PKGTAR=${PKGNAME}_${PKGVER}.tar.gz
 export PKGURL="http://http.debian.net/debian/pool/main/h/hostname/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

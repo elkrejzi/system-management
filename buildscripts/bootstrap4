@@ -81,7 +81,6 @@ $(dirname $0)/buildlibspectre
 $(dirname $0)/buildlibunique
 $(dirname $0)/buildlibwnck
 $(dirname $0)/buildlibxklavier
-$(dirname $0)/buildlibwacom
 $(dirname $0)/buildmate-desktop
 $(dirname $0)/buildnetwork-manager-applet
 $(dirname $0)/buildprelink

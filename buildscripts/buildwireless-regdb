@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=wireless-regdb
-export PKGVER=2015.12.14
+export PKGVER=2016.02.08
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://www.kernel.org/pub/software/network/wireless-regdb/${PKGTAR}"
 export NO_STRIP=1

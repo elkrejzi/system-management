@@ -1,10 +1,15 @@
 #!/bin/bash -e
 
 export PKGNAME=simple-scan
-export PKGVER=3.19.1
+export PKGVER=3.19.92
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://launchpad.net/simple-scan/${PKGVER:0:4}/${PKGVER}/+download/${PKGTAR}"
 export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--disable-packagekit)
+
+configure_post() {
+  make clean
+}
 
 . $(dirname $0)/master.sh
