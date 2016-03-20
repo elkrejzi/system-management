@@ -127,15 +127,6 @@ make_post() {
 make_install_post() {
   find ${DEST}/usr/lib -name "*.prl" -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
 
-  if [ -d ${DEST}/usr/bin ]
-  then
-    # Transitional
-    for file in ${DEST}/usr/bin/*
-    do
-      ln -sf $(basename $file) ${DEST}/usr/bin/$(basename $file)-qt5
-    done
-  fi
-
   if [ ${PKGNAME} == "qttools" ]
   then
     install -Dm644 src/assistant/assistant/images/assistant-128.png \

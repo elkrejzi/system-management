@@ -33,12 +33,11 @@ then
   export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
 fi
 
-# apparently clang-3.8 doesn't generate valid code with -march=skylake
-export DEFAULT_CFLAGS="-march=broadwell -fomit-frame-pointer -Ofast -pipe -fstack-protector-strong"
-export DEFAULT_CXXFLAGS="-march=broadwell -fomit-frame-pointer -Ofast -pipe -fstack-protector-strong"
+export DEFAULT_CFLAGS="-march=skylake -mno-avx512f -fomit-frame-pointer -Ofast -pipe -fstack-protector-strong"
+export DEFAULT_CXXFLAGS="-march=skylake -mno-avx512f -fomit-frame-pointer -Ofast -pipe -fstack-protector-strong"
 
-export DEFAULT_DEBUG_CFLAGS="-march=broadwell -g -Ofast -pipe -fstack-protector-strong"
-export DEFAULT_DEBUG_CXXFLAGS="-march=broadwell -g -Ofast -pipe -fstack-protector-strong"
+export DEFAULT_DEBUG_CFLAGS="-march=skylake -mno-avx512f -g -Ofast -pipe -fstack-protector-strong"
+export DEFAULT_DEBUG_CXXFLAGS="-march=skylake -mno-avx512f -g -Ofast -pipe -fstack-protector-strong"
 
 if [ -z ${PKGNAME} ] || [ -z ${PKGVER} ]
 then

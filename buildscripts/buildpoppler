@@ -42,7 +42,7 @@ make_install_post() {
   rm -rf ${DEST}/usr/lib/libpoppler.so
 
   # Use static library to avoid infinite amount of rebuilds every Poppler release.
-  echo "INPUT ( /usr/lib/libpoppler.a -lfontconfig -lfreetype -ljpeg -llcms2 -lopenjpeg -lpng -lpthread -ltiff )" > ${DEST}/usr/lib/libpoppler.so
+  echo "INPUT ( /usr/lib/libpoppler.a -lfontconfig -lfreetype -ljpeg -llcms2 -lopenjpeg -lpng -lpthread -ltiff -lnss3 -lnssutil3 -lsmime3 -lssl3 -lsoftokn3 -lplds4 -lplc4 -lnspr4 )" > ${DEST}/usr/lib/libpoppler.so
 }
 
 . $(dirname $0)/master.sh

@@ -54,12 +54,6 @@ make_install_post() {
       ${DEST}/usr/lib/qt5/mkspecs/modules/qt_lib_bootstrap_private.pri
   find ${DEST}/usr/lib/*.prl -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
   rm -rf ${DEST}/usr/share
-
-  # Transitional
-  for file in ${DEST}/usr/bin/*
-  do
-    ln -sf $(basename $file) ${DEST}/usr/bin/$(basename $file)-qt5
-  done
 }
 
 . $(dirname $0)/master.sh

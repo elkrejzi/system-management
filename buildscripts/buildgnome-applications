@@ -3,7 +3,7 @@
 case $(basename $0) in
   buildaisleriot )
     export PKGNAME=aisleriot
-    export PKGVER=3.18.2
+    export PKGVER=3.20.1
     export CONFIGURE_FLAGS=(--with-platform=gtk-only
                             --with-card-theme-formats=svg,fixed,pysol
                             --with-pysol-card-theme-path=/usr/share/PySolFC)
@@ -77,7 +77,7 @@ case $(basename $0) in
   ;;
   buildgnome-terminal )
     export PKGNAME=gnome-terminal
-    export PKGVER=3.19.92
+    export PKGVER=3.20.0
     export CONFIGURE_FLAGS=(--disable-migration)
   ;;
   buildgnome-tweak-tool )
@@ -86,7 +86,7 @@ case $(basename $0) in
   ;;
   buildgucharmap )
     export PKGNAME=gucharmap
-    export PKGVER=3.18.2
+    export PKGVER=8.0.0
     export CONFIGURE_FLAGS=(--enable-vala)
   ;;
   buildnautilus )
