@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=5.5.95
+export PKGVER=5.6.0
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export KEEP_DOC=1
@@ -57,9 +57,13 @@ case $(basename $0) in
 esac
 
 case $(basename $0) in
-  buildoxygen-fonts )
-    export POSTINST_TRIGGER=("[ -x /usr/bin/fc-cache ] && echo \"Processing triggers for fontconfig\" && /usr/bin/fc-cache /usr/share/fonts/truetype/oxygen")
-    export SPACE_ADDED=1
+  buildplasma-desktop )
+    configure_pre() {
+      sed -i "/QDebug/i #include <cmath>" ../${PKGDIR}/kcms/touchpad/src/backends/x11/synapticstouchpad.cpp
+    }
+    make_install_post() {
+      rm -rf ${DEST}/usr/share/locale/*/LC_MESSAGES/kactivities5.mo
+    }
   ;;
   buildplasma-workspace )
     make_install_post() {

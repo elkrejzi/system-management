@@ -1,13 +1,12 @@
 #!/bin/bash -e
 
 export PKGNAME=webkitgtk
-export PKGVER=2.11.92
+export PKGVER=2.12.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://webkitgtk.org/releases/${PKGVER}"
 export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
-export PATCHES_LIST=("webkitgtk.patch")
 export CMAKE_FLAGS=(-DCMAKE_SKIP_RPATH=ON
                     -DPORT=GTK
                     -DLIB_INSTALL_DIR=/usr/lib)

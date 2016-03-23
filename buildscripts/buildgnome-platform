@@ -3,7 +3,7 @@
 case $(basename $0) in
   buildadwaita-icon-theme )
     export PKGNAME=adwaita-icon-theme
-    export PKGVER=3.19.91
+    export PKGVER=3.20
     export NO_STRIP=1
     export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-update-icon-cache ] && echo \"Processing triggers for adwaita-icon-theme\" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/Adwaita")
   ;;
@@ -15,7 +15,7 @@ case $(basename $0) in
   ;;
   builddconf )
     export PKGNAME=dconf
-    export PKGVER=0.25.1
+    export PKGVER=0.26.0
     export POSTINST_TRIGGER=("[ -x /usr/bin/gio-querymodules ] && echo \"Processing triggers for gio-2.0\" && /usr/bin/gio-querymodules /usr/lib/gio/modules")
     make_install_post() {
       export SPACE_ADDED=1
@@ -23,7 +23,7 @@ case $(basename $0) in
   ;;
   buildevolution-data-server )
     export PKGNAME=evolution-data-server
-    export PKGVER=3.19.92
+    export PKGVER=3.20.0
     export CONFIGURE_FLAGS=(--disable-google-auth
                             --disable-uoa
                             --with-krb5=/usr
@@ -36,7 +36,7 @@ case $(basename $0) in
   ;;
   buildgdm )
     export PKGNAME=gdm
-    export PKGVER=3.19.92
+    export PKGVER=3.20.0
     export KEEP_EMPTY_DIRS=1
     export CONFIGURE_FLAGS=(--enable-gdm-xsession --without-plymouth --with-default-pam-config=lfs)
     export POSTINST_TRIGGER=("getent group gdm > /dev/null || groupadd -g 21 gdm"
@@ -60,7 +60,7 @@ case $(basename $0) in
   ;;
   buildgeocode-glib )
     export PKGNAME=geocode-glib
-    export PKGVER=3.19.90
+    export PKGVER=3.20.0
   ;;
   buildgjs )
     export PKGNAME=gjs
@@ -71,7 +71,7 @@ case $(basename $0) in
   ;;
   buildglib-networking )
     export PKGNAME=glib-networking
-    export PKGVER=2.47.1
+    export PKGVER=2.48.0
     export MULTILIB_BUILD=1
     export POSTINST_TRIGGER=("[ -x /usr/bin/gio-querymodules ] && echo \"Processing triggers for gio-2.0\" && /usr/bin/gio-querymodules /usr/lib/gio/modules"
                              "[ -x /usr/bin/gio-querymodules-32 ] && echo \"Processing triggers for gio-2.0 (32 bit)\" && /usr/bin/gio-querymodules-32 /usr/lib32/gio/modules")
@@ -85,21 +85,21 @@ case $(basename $0) in
   ;;
   buildgnome-backgrounds )
     export PKGNAME=gnome-backgrounds
-    export PKGVER=3.19.90
+    export PKGVER=3.20
     export KEEP_STATIC=1
     export NO_STRIP=1
   ;;
   buildgnome-bluetooth )
     export PKGNAME=gnome-bluetooth
-    export PKGVER=3.18.2
+    export PKGVER=3.18.3
   ;;
   buildgnome-control-center )
     export PKGNAME=gnome-control-center
-    export PKGVER=3.19.92
+    export PKGVER=3.20.0
   ;;
   buildgnome-desktop )
     export PKGNAME=gnome-desktop
-    export PKGVER=3.19.93
+    export PKGVER=3.20.0
     export CONFIGURE_FLAGS=(--with-gnome-distributor=Krejzi)
   ;;
   buildgnome-keyring )
@@ -114,21 +114,21 @@ case $(basename $0) in
   ;;
   buildgnome-online-accounts )
     export PKGNAME=gnome-online-accounts
-    export PKGVER=3.19.92.1
+    export PKGVER=3.20.0
     export CONFIGURE_FLAGS=(--enable-kerberos --disable-compile-warnings)
   ;;
   buildgnome-session )
     export PKGNAME=gnome-session
-    export PKGVER=3.19.92
+    export PKGVER=3.20.0
   ;;
   buildgnome-settings-daemon )
     export PKGNAME=gnome-settings-daemon
-    export PKGVER=3.19.92
+    export PKGVER=3.20.0
     export MAKE_INSTALL_FLAGS="udevrulesdir=/lib/udev/rules.d"
   ;;
   buildgnome-shell )
     export PKGNAME=gnome-shell
-    export PKGVER=3.19.92
+    export PKGVER=3.20.0
     export DEBUG_BUILD=1
     make_install_post() {
       install -dm755 ${DEST}/usr/lib/gnome-shell/mozilla
@@ -139,13 +139,13 @@ case $(basename $0) in
   ;;
   buildgnome-shell-extensions )
     export PKGNAME=gnome-shell-extensions
-    export PKGVER=3.19.92
+    export PKGVER=3.20.0
     export KEEP_STATIC=1
     export NO_STRIP=1
   ;;
   buildgnome-themes-standard )
     export PKGNAME=gnome-themes-standard
-    export PKGVER=3.19.91
+    export PKGVER=3.20
     export MULTILIB_BUILD=1
     export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-update-icon-cache ] && echo \"Processing triggers for hicolor-icon-theme\" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/HighContrast")
     export MAKE_FLAGS_32="-C themes/Adwaita/gtk-2.0 libadwaita.la"
@@ -160,7 +160,7 @@ case $(basename $0) in
   ;;
   buildgnome-user-docs )
     export PKGNAME=gnome-user-docs
-    export PKGVER=3.18.1
+    export PKGVER=3.20.0
     export KEEP_STATIC=1
     export NO_STRIP=1
   ;;
@@ -181,19 +181,19 @@ case $(basename $0) in
   ;;
   buildgsettings-desktop-schemas )
     export PKGNAME=gsettings-desktop-schemas
-    export PKGVER=3.19.92
+    export PKGVER=3.20.0
     export KEEP_STATIC=1
     export NO_STRIP=1
   ;;
   buildgspell )
     export PKGNAME=gspell
-    export PKGVER=0.2.6
+    export PKGVER=1.0.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
   ;;
   buildgtksourceview )
     export PKGNAME=gtksourceview
-    export PKGVER=3.19.5
+    export PKGVER=3.20.0
   ;;
   buildgtk-vnc )
     export PKGNAME=gtk-vnc
@@ -204,7 +204,7 @@ case $(basename $0) in
   ;;
   buildgvfs )
     export PKGNAME=gvfs
-    export PKGVER=1.27.92
+    export PKGVER=1.28.0
     export POSTINST_TRIGGER=("[ -x /usr/bin/gio-querymodules ] && echo \"Processing triggers for gio-2.0\" && /usr/bin/gio-querymodules /usr/lib/gio/modules")
     make_install_post() {
       export SPACE_ADDED=1
@@ -212,7 +212,7 @@ case $(basename $0) in
   ;;
   buildjson-glib )
     export PKGNAME=json-glib
-    export PKGVER=1.1.2
+    export PKGVER=1.2.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
   ;;
@@ -230,7 +230,7 @@ case $(basename $0) in
   ;;
   buildlibgtop )
     export PKGNAME=libgtop
-    export PKGVER=2.33.91
+    export PKGVER=2.34.0
   ;;
   buildlibgudev )
     export PKGNAME=libgudev
@@ -240,7 +240,7 @@ case $(basename $0) in
   ;;
   buildlibgweather )
     export PKGNAME=libgweather
-    export PKGVER=3.19.92
+    export PKGVER=3.20.0
   ;;
   buildlibgxps )
     export PKGNAME=libgxps
@@ -251,7 +251,7 @@ case $(basename $0) in
   ;;
   buildlibpeas )
     export PKGNAME=libpeas
-    export PKGVER=1.17.0
+    export PKGVER=1.18.0
     make_install_post() {
       rm -rf ${DEST}/usr/bin ${DEST}/usr/lib/peas-demo
     }
@@ -274,7 +274,7 @@ case $(basename $0) in
   ;;
   buildlibsoup )
     export PKGNAME=libsoup
-    export PKGVER=2.53.92
+    export PKGVER=2.54.0
     export MULTILIB_BUILD=1
     export CONFIGURE_FLAGS=(--disable-tls-check)
     export CONFIGURE_FLAGS_32=(--disable-introspection --disable-tls-check --disable-vala)
@@ -285,7 +285,7 @@ case $(basename $0) in
   ;;
   buildmutter )
     export PKGNAME=mutter
-    export PKGVER=3.19.92
+    export PKGVER=3.20.0
     export DEBUG_BUILD=1
     export CONFIGURE_FLAGS=(--enable-compile-warnings=minimum)
   ;;
@@ -301,7 +301,7 @@ case $(basename $0) in
   ;;
   buildvte )
     export PKGNAME=vte
-    export PKGVER=0.43.92
+    export PKGVER=0.44.0
     export CONFIGURE_FLAGS=(--enable-introspection)
     make_install_post() {
       rm -rf ${DEST}/etc
@@ -309,13 +309,14 @@ case $(basename $0) in
   ;;
   buildyelp-xsl )
     export PKGNAME=yelp-xsl
-    export PKGVER=3.19.90
+    export PKGVER=3.20.0
     export NO_STRIP=1
   ;;
 esac
 
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
+
 if [ -z ${PKGURL} ]
 then
   export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:4}/${PKGTAR}"

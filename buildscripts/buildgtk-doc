@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=gtk-doc
-export PKGVER=1.24
+export PKGVER=1.25
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://download.gnome.org/sources//libcroco/${PKGVER:0:3}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
