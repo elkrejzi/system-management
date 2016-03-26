@@ -1,0 +1,42 @@
+#!/bin/bash -e
+
+export PKGNAME=fail2ban
+export PKGVER=0.9.4
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/fail2ban/fail2ban/archive/${PKGVER}.tar.gz"
+export KEEP_EMPTY_DIRS=1
+
+configure_override() {
+  true
+}
+
+make_override() {
+  python setup.py build
+}
+
+make_install_override() {
+  python setup.py install --root=${DEST} --optimize=1
+
+  rm -rf ${DEST}/run
+
+  install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants
+  install -dm755 ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d
+  install -dm755 ${DEST}/usr/share/man/man{1,5}
+
+  install -m644 files/fail2ban.service ${DEST}/lib/systemd/system
+  install -m644 files/fail2ban-tmpfiles.conf ${DEST}/usr/lib/tmpfiles.d/fail2ban.conf
+
+  for f in client regex server
+  do
+    install -m644 man/fail2ban-${f}.1 ${DEST}/usr/share/man/man1
+  done
+
+  install -m644 man/fail2ban.1 ${DEST}/usr/share/man/man1
+  install -m644 man/jail.conf.5 ${DEST}/usr/share/man/man5
+
+  ln -sf /lib/systemd/system/fail2ban.service ${DEST}/etc/systemd/system/multi-user.target.wants/fail2ban.service
+
+  sed -i "0,/^bantime/s: 600: 86400:;/^maxretry/s:5:3:;/^backend/s:auto:systemd:" ${DEST}/etc/fail2ban/jail.conf
+}
+
+. $(dirname $0)/master.sh

@@ -171,15 +171,11 @@ $(dirname $0)/buildpostfix
 $(dirname $0)/buildrtkit
 $(dirname $0)/buildsmartmontools
 $(dirname $0)/buildperl-modules 2
-$(dirname $0)/buildpython-m2crypto
-$(dirname $0)/buildpython-notify
-$(dirname $0)/buildpython-pillow
-$(dirname $0)/buildpython-pyyaml
-$(dirname $0)/buildpython-reportlab
-$(dirname $0)/buildpython-unidecode
+$(dirname $0)/buildpython-modules 2
 $(dirname $0)/buildbluefish
 $(dirname $0)/buildcgit
 $(dirname $0)/buildcups-filters
+$(dirname $0)/buildfail2ban
 $(dirname $0)/buildgimp
 $(dirname $0)/buildgparted
 $(dirname $0)/buildinkscape

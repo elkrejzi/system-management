@@ -10,6 +10,7 @@ export USER_CXXFLAGS="-std=c++11"
 configure_pre() {
   sed -i "s#abs(#&(double)#g" src/libavoid/connector.cpp
   sed -i "s#abs(static_cast<int>#abs(static_cast<double>#g" src/ui/tools/flood-tool.cpp
+  sed -i "s#Glib::ScopedPtr<char>#Glib::make_unique_ptr_gfree#g" src/ui/clipboard.cpp
 }
 
 make_install_post() {

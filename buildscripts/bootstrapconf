@@ -2,7 +2,7 @@
 systemctl disable avahi-{daemon,dnsconfd} cups-browsed httpd krb5-{kadmind,kdc,kpropd} ModemManager mysqld NetworkManager{,-wait-online} nmbd org.cups.cupsd php-fpm postfix postgresql saslauthd slapd smbd svnserve thermald winbindd wpa_supplicant git-daemon.socket saned.socket
 
 systemctl mask wpa_supplicant
-systemctl enable systemd-{networkd,resolved,timesyncd,wpa_supplicant@wlan0}
+systemctl enable systemd-{networkd,resolved,timesyncd} wpa_supplicant@wlan0
 
 install -dm755 /media/ntfs /media/other /media/win
 
@@ -243,14 +243,7 @@ done
 exit 0
 EOF
 
-cat > /etc/iptables.block << "EOF"
-43.229.53.61
-193.104.41.54
-43.229.53.25
-43.229.53.24
-59.45.79.36
-59.45.79.55
-EOF
+touch /etc/iptables.block
 
 sed -i 's#;date.timezone =#date.timezone = "Europe/Sarajevo"#' /etc/php/php.ini
 

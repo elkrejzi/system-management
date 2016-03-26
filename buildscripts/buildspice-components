@@ -3,15 +3,15 @@
 case $(basename $0) in
   buildspice-protocol )
     export PKGNAME=spice-protocol
-    export PKGVER=0.12.11
+    export PKGVER=0.12.10
   ;;
   buildspice )
     export PKGNAME=spice
-    export PKGVER=0.13.0
+    export PKGVER=0.12.6
   ;;
   buildspice-gtk )
     export PKGNAME=spice-gtk
-    export PKGVER=0.31
+    export PKGVER=0.30
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://www.spice-space.org/download/gtk/${PKGTAR}"
   ;;

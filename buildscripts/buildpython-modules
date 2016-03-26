@@ -124,6 +124,13 @@ case $(basename $0) in
       mv ${DEST}/usr/bin/pygmentize{,3}
     }
   ;;
+  buildpython-pyinotify )
+    export PKGNAME=pyinotify
+    export PKGVER=0.9.6
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://github.com/seb-m/pyinotify/archive/${PKGVER}.tar.gz"
+    export DEST=/binary/python/python-pyinotify-${PKGVER}
+  ;;
   buildpython-pyparsing )
     export PKGNAME=pyparsing
     export PKGVER=2.1.0
@@ -200,6 +207,13 @@ case $(basename $0) in
     export PKGURL="https://pypi.python.org/packages/source/s/sphinx_rtd_theme/${PKGTAR}"
     export DEST=/binary/python/python-sphinx_rtd_theme-${PKGVER}
   ;;
+  buildpython-systemd )
+    export PKGNAME=python-systemd
+    export PKGVER=231
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://github.com/systemd/python-systemd/archive/v${PKGVER}.tar.gz"
+    export DEST=/binary/python/python-systemd-${PKGVER}
+  ;;
   buildpython-unidecode )
     export PKGNAME=Unidecode
     export PKGVER=0.04.19
@@ -240,8 +254,10 @@ case $(basename $0) in
       $(dirname $0)/buildpython-m2crypto
       $(dirname $0)/buildpython-notify
       $(dirname $0)/buildpython-pillow
+      $(dirname $0)/buildpython-pyinotify
       $(dirname $0)/buildpython-pyyaml
       $(dirname $0)/buildpython-reportlab
+      $(dirname $0)/buildpython-systemd
       $(dirname $0)/buildpython-unidecode
     fi
     exit 0
@@ -284,7 +300,7 @@ fi
 case $(basename $0) in
   buildpython-m2crypto)
     export PKGNAME=M2Crypto
-    export PKGVER=0.23.0
+    export PKGVER=0.24.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/M/M2Crypto/${PKGTAR}"
     export DEST=/binary/python/python-m2crypto-${PKGVER}

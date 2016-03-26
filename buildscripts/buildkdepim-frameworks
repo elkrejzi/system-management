@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=15.12.1
+export PKGVER=16.03.80
 export LIBKGAPI_PKGVER=5.1.0
 
 export MAKE_JOBS_FLAGS="-j4"
@@ -71,6 +71,11 @@ case $(basename $0) in
 
     exit 0
   ;;
+  buildkleopatra-git )
+    $(dirname $0)/buildkleopatra git
+
+    exit 0
+  ;;
 esac
 
 export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
@@ -120,6 +125,7 @@ kdepims=(
   kdepim-addons
   kdepim-runtime
   kdepim
+  kleopatra
  )
 
 if [ -z $1 ]
@@ -143,7 +149,7 @@ do
         export PKGURL="http://download.kde.org/stable/${PKGNAME}/${PKGVER}/src/${PKGTAR}"
       else
         export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-        export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
+        export PKGURL="http://download.kde.org/unstable/applications/${PKGVER}/src/${PKGTAR}"
       fi
       if [ ${BUILD_TYPE} == "git" ]
       then
@@ -190,6 +196,9 @@ then
     elif [ ${PKGNAME} == "kdepimlibs" ]
     then
       export PKGVER=$(grep -m 1 KDEPIMLIBS_VERSION ${PKGNAME}/akonadi-contact/CMakeLists.txt | cut -d \" -f2)
+    elif [ ${PKGNAME} == "kleopatra" ]
+    then
+      export PKGVER=$(grep -m 1 kleopatra_version ${PKGNAME}/CMakeLists.txt | awk '{print $2}' | sed "s:)::g")
     else
       export PKGVER=$(grep -m 1 _LIB_VERSION ${PKGNAME}/CMakeLists.txt | cut -d \" -f2)
     fi
