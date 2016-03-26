@@ -133,8 +133,8 @@ case $(basename $0) in
   ;;
   buildpython-pytz )
     export PKGNAME=pytz
-    export PKGVER=2016.1
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGVER=2016.3
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="https://pypi.python.org/packages/source/p/pytz/${PKGTAR}"
     export DEST=/binary/python/python-pytz-${PKGVER}
   ;;

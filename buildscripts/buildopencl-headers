@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=opencl-headers
-export PKGVER=1.2.20140412
+export PKGVER=1.2.20160105
 export NO_STRIP=1
 
 prepare_src_override() {
@@ -19,10 +19,10 @@ make_override() {
 make_install_override() {
   install -dm755 ${DEST}/usr/include/CL
 
-  for file in cl.h cl.hpp cl_egl.h cl_ext.h cl_gl.h \
+  for file in cl.h cl_egl.h cl_ext.h cl_gl.h \
               cl_gl_ext.h cl_platform.h opencl.h
   do
-    wget http://www.khronos.org/registry/cl/api/1.2/${file} -O ${DEST}/usr/include/CL/${file}
+    wget https://raw.githubusercontent.com/KhronosGroup/OpenCL-Headers/opencl12/${file} -O ${DEST}/usr/include/CL/${file}
   done
 }
 

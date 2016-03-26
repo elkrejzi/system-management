@@ -13,6 +13,7 @@ export USER_CFLAGS="-fno-lto -Wno-unknown-attributes"
 export CONFIGURE_FLAGS=(--disable-efi
                         --disable-firstboot
                         --disable-ldconfig
+                        --disable-libiptc
                         --disable-machined
                         --disable-static
                         --disable-sysusers
