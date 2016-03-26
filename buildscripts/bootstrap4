@@ -20,6 +20,7 @@ $(dirname $0)/buildlibplist
 $(dirname $0)/buildlibusbmuxd
 $(dirname $0)/buildlibimobiledevice
 $(dirname $0)/buildcln
+$(dirname $0)/buildcmrt
 $(dirname $0)/buildfontforge
 $(dirname $0)/buildlibatasmart
 $(dirname $0)/buildlibdmtx
@@ -150,10 +151,13 @@ $(dirname $0)/buildlightdm
 $(dirname $0)/buildlightdm-gtk-greeter
 $(dirname $0)/buildasciidoc
 $(dirname $0)/buildbabl
+$(dirname $0)/buildbeignet
 $(dirname $0)/buildchmlib
+$(dirname $0)/buildclinfo
 $(dirname $0)/buildenscript
 $(dirname $0)/buildexpect
 $(dirname $0)/buildgsl
+$(dirname $0)/buildintel-hybrid-driver
 $(dirname $0)/buildlibc-client
 $(dirname $0)/buildlibmcrypt
 $(dirname $0)/buildlibopenraw
