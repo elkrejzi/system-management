@@ -37,6 +37,12 @@ make_install_override() {
   ln -sf /lib/systemd/system/fail2ban.service ${DEST}/etc/systemd/system/multi-user.target.wants/fail2ban.service
 
   sed -i "0,/^bantime/s: 600: 86400:;/^maxretry/s:5:3:;/^backend/s:auto:systemd:" ${DEST}/etc/fail2ban/jail.conf
+  sed -i "/^banaction = iptables-multiport$/s:iptables-multiport:iptables:" ${DEST}/etc/fail2ban/jail.conf
+
+  # Enable sshd
+  sed -i "/^\[sshd\]/a enabled = true" ${DEST}/etc/fail2ban/jail.conf
+  sed -i "/[sshd]/s:logpath = %(sshd_log)s:#&:" ${DEST}/etc/fail2ban/jail.conf
+  sed -i "/[sshd]/s:backend = %(sshd_backend)s:backend = systemd:" ${DEST}/etc/fail2ban/jail.conf
 }
 
 . $(dirname $0)/master.sh
