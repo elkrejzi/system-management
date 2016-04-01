@@ -4,7 +4,7 @@ case $(basename $0) in
 
   buildcython )
     export PKGNAME=Cython
-    export PKGVER=0.23.4
+    export PKGVER=0.23.5
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="http://cython.org/release/${PKGTAR}"
     export DEST=/binary/python/cython-${PKGVER}
@@ -59,6 +59,13 @@ case $(basename $0) in
         mv ${file} ${file%.py}3.py
       done
     }
+  ;;
+  buildpython-isodate )
+    export PKGNAME=isodate
+    export PKGVER=0.5.4
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/i/isodate/${PKGTAR}"
+    export DEST=/binary/python/python-isodate-${PKGVER}
   ;;
   buildpython-jinja2 )
     export PKGNAME=Jinja2
@@ -159,6 +166,13 @@ case $(basename $0) in
     export PKGURL="http://pyyaml.org/download/pyyaml/${PKGTAR}"
     export DEST=/binary/python/python-pyyaml-${PKGVER}
   ;;
+  buildpython-rdflib )
+    export PKGNAME=rdflib
+    export PKGVER=4.2.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/r/rdflib/${PKGTAR}"
+    export DEST=/binary/python/python-rdflib-${PKGVER}
+  ;;
   buildpython-reportlab )
     export PKGNAME=reportlab
     export PKGVER=3.3.0
@@ -168,7 +182,7 @@ case $(basename $0) in
   ;;
   buildpython-setuptools )
     export PKGNAME=setuptools
-    export PKGVER=20.3
+    export PKGVER=20.6.7
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/s/setuptools/${PKGTAR}"
     export DEST=/binary/python/python-setuptools-${PKGVER}
@@ -235,6 +249,7 @@ case $(basename $0) in
       $(dirname $0)/buildpython-alabaster
       $(dirname $0)/buildpython-beaker
       $(dirname $0)/buildpython-cssselect
+      $(dirname $0)/buildpython-isodate
       $(dirname $0)/buildpython-markupsafe
       $(dirname $0)/buildpython-pyparsing
       $(dirname $0)/buildpython-pygments
@@ -247,6 +262,7 @@ case $(basename $0) in
       $(dirname $0)/buildpython-jinja2
       $(dirname $0)/buildpython-lxml
       $(dirname $0)/buildpython-mako
+      $(dirname $0)/buildpython-rdflib
       $(dirname $0)/buildpython-sphinx
       $(dirname $0)/buildpython-sphinx_rtd_theme
     elif [ $1 == 2 ]

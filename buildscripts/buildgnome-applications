@@ -13,6 +13,10 @@ case $(basename $0) in
     export PKGVER=3.20.0
     export CONFIGURE_FLAGS=(--disable-compile-warnings)
   ;;
+  builddconf-editor )
+    export PKGNAME=dconf-editor
+    export PKGVER=3.20.0
+  ;;
   buildeog )
     export PKGNAME=eog
     export PKGVER=3.20.0
@@ -41,10 +45,18 @@ case $(basename $0) in
   ;;
   buildgedit )
     export PKGNAME=gedit
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildgnome-calculator )
     export PKGNAME=gnome-calculator
+    export PKGVER=3.20.0
+  ;;
+  buildgnome-calendar )
+    export PKGNAME=gnome-calendar
+    export PKGVER=3.20.0
+  ;;
+  buildgnome-clocks )
+    export PKGNAME=gnome-clocks
     export PKGVER=3.20.0
   ;;
   buildgnome-color-manager )
@@ -52,12 +64,24 @@ case $(basename $0) in
     export PKGVER=3.20.0
     export CONFIGURE_FLAGS=(--disable-packagekit)
   ;;
+  buildgnome-contacts )
+    export PKGNAME=gnome-contacts
+    export PKGVER=3.19.91
+  ;;
   buildgnome-disk-utility )
     export PKGNAME=gnome-disk-utility
     export PKGVER=3.20.0
   ;;
+  buildgnome-documents )
+    export PKGNAME=gnome-documents
+    export PKGVER=3.20.0
+  ;;
   buildgnome-logs )
     export PKGNAME=gnome-logs
+    export PKGVER=3.20.0
+  ;;
+  buildgnome-maps )
+    export PKGNAME=gnome-maps
     export PKGVER=3.20.0
   ;;
   buildgnome-nettool )
@@ -65,6 +89,10 @@ case $(basename $0) in
     export PKGVER=3.8.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
+  ;;
+  buildgnome-photos )
+    export PKGNAME=gnome-photos
+    export PKGVER=3.20.0
   ;;
   buildgnome-power-manager )
     export PKGNAME=gnome-power-manager
@@ -80,8 +108,16 @@ case $(basename $0) in
     export PKGVER=3.20.0
     export CONFIGURE_FLAGS=(--disable-migration)
   ;;
+  buildgnome-todo )
+    export PKGNAME=gnome-todo
+    export PKGVER=3.20.0
+  ;;
   buildgnome-tweak-tool )
     export PKGNAME=gnome-tweak-tool
+    export PKGVER=3.20.0
+  ;;
+  buildgnome-weather )
+    export PKGNAME=gnome-weather
     export PKGVER=3.20.0
   ;;
   buildgucharmap )
@@ -99,13 +135,17 @@ case $(basename $0) in
   ;;
   buildnetwork-manager-applet )
     export PKGNAME=network-manager-applet
-    export PKGVER=1.1.91
+    export PKGVER=1.1.92
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
     export CONFIGURE_FLAGS=(--disable-migration)
     configure_pre() {
       sed -i "s:-Werror::g" configure
     }
+  ;;
+  buildpolari )
+    export PKGNAME=polari
+    export PKGVER=3.20.0
   ;;
   buildseahorse )
     export PKGNAME=seahorse

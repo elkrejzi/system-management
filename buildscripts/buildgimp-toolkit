@@ -56,7 +56,7 @@ case $(basename $0) in
   ;;
   buildclutter-gtk )
     export PKGNAME=clutter-gtk
-    export PKGVER=1.6.6
+    export PKGVER=1.8.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
     unset MULTILIB_BUILD
@@ -138,17 +138,11 @@ EOF
   ;;
   buildgtk3 )
     export PKGNAME=gtk+
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
     export CONFIGURE_FLAGS=(--enable-broadway-backend --enable-wayland-backend --enable-x11-backend --enable-man)
     export CONFIGURE_FLAGS_32=("${CONFIGURE_FLAGS[@]}" --disable-cloudprint --disable-introspection --disable-libcanberra)
     export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-query-immodules-3.0 ] && echo \"Processing triggers for gtk-3.0\" && /usr/bin/gtk-query-immodules-3.0 --update-cache"
                              "[ -x /usr/bin/gtk-query-immodules-3.0-32 ] && echo \"Processing triggers for gtk-3.0 (32 bit)\" && /usr/bin/gtk-query-immodules-3.0-32 --update-cache")
-    configure_post() {
-      sed -i "/SRC_SUBDIRS/s# demos tests testsuite examples# tests#" Makefile
-    }
-    configure_post_32() {
-      sed -i "/SRC_SUBDIRS/s# demos tests testsuite examples# tests#" Makefile
-    }
     make_install_post() {
       rm -f ${DEST}/usr/share/man/man1/gtk3-*
 

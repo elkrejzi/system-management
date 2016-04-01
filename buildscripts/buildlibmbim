@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libmbim
-export PKGVER=1.12.2
+export PKGVER=1.12.4
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://www.freedesktop.org/software/libmbim/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

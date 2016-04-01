@@ -3,6 +3,7 @@
 export BAEKMUK_VER=2.2
 export CANTARELL_VER=0.0.24
 export CM_UNICODE_VER=0.7.0
+export COREFONTS_VER=20020815
 export DEJAVU_VER=2.35
 export FREEFONT_VER=20120503
 export GENTIUMBASIC_VER=110
@@ -115,6 +116,41 @@ EOF
     # End cm-unicode
 
   ;;
+
+  buildfonts-corefonts )
+
+    # Begin corefonts
+
+    export DEST=/binary/fonts/fonts-corefonts-${COREFONTS_VER}
+
+    checkdest
+
+    install -dm755 ${DEST}/usr/share/fonts/truetype/corefonts
+
+    pushd ${DEST}/usr/share/fonts/truetype/corefonts
+
+      for f in andale arial arialb comic courie georgi impact times trebuch verdan webdin
+      do
+        wget https://downloads.sourceforge.net/corefonts/${f}32.exe -O - | bsdtar xf -
+      done
+      rm -f *.DLL *.EXE *.exe *.inf *.TXT
+
+    popd
+
+cat > ${DEST}/INSTALL << "EOF"
+#!/bin/bash
+
+cp -rf --remove-destination usr /
+
+[ -x /usr/bin/fc-cache ] && echo "Processing triggers for fontconfig" && /usr/bin/fc-cache /usr/share/fonts/truetype/corefonts
+EOF
+
+    chmod 755 ${DEST}/INSTALL
+
+    # End corefonts
+
+  ;;
+
   buildfonts-dejavu )
 
     # Begin dejavu
@@ -462,6 +498,7 @@ EOF
     $(dirname $0)/buildfonts-baekmuk
     $(dirname $0)/buildfonts-cantarell
     $(dirname $0)/buildfonts-cm-unicode
+    $(dirname $0)/buildfonts-corefonts
     $(dirname $0)/buildfonts-dejavu
     $(dirname $0)/buildfonts-freefont
     $(dirname $0)/buildfonts-gentiumbasic

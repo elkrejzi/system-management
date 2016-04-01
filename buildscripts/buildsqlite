@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
 export PKGNAME=sqlite
-export PKGVER=3.11.1
-export PKGDLVER=3110100
+export PKGVER=3.12.0
+export PKGDLVER=3120000
 export PKGTAR=${PKGNAME}-autoconf-${PKGDLVER}.tar.gz
 export PKGDIR=${PKGNAME}-autoconf-${PKGDLVER}
 export PKGURL="http://sqlite.org/2016/${PKGTAR}"
@@ -10,11 +10,15 @@ export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 
 export USER_CFLAGS="-DSQLITE_ENABLE_FTS3=1            \
+                    -DSQLITE_ENABLE_FTS5=1            \
                     -DSQLITE_ENABLE_COLUMN_METADATA=1 \
                     -DSQLITE_ENABLE_UNLOCK_NOTIFY=1   \
                     -DSQLITE_ENABLE_DBSTAT_VTAB=1     \
                     -DSQLITE_ENABLE_FTS3_TOKENIZER=1  \
                     -DSQLITE_SECURE_DELETE=1"
+
+export CONFIGURE_FLAGS=(--enable-fts5)
+export CONFIGURE_FLAGS_32=(--enable-fts5)
 
 configure_pre() {
   export CFLAGS=${CFLAGS/-Ofast/-O3}

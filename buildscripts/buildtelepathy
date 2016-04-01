@@ -7,6 +7,11 @@ case $(basename $0) in
     export CONFIGURE_FLAGS=(--enable-vala-bindings)
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
   ;;
+  buildtelepathy-idle )
+    export PKGNAME=telepathy-idle
+    export PKGVER=0.2.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+  ;;
   buildtelepathy-logger )
     export PKGNAME=telepathy-logger
     export PKGVER=0.8.2
