@@ -1,0 +1,24 @@
+#!/bin/bash -e
+
+export PKGNAME=udev
+export PKGVER=182
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://www.kernel.org/pub/linux/utils/kernel/hotplug/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS=(--disable-gudev --disable-keymap)
+export CONFIGURE_FLAGS_32=(--disable-gudev --disable-keymap)
+
+make_override() {
+  make libudev.la ${ADDITIONAL_MAKE_FLAGS}
+}
+
+make_install_override() {
+  make lib_LTLIBRARIES="libudev.la" install-libLTLIBRARIES ${ADDITIONAL_MAKE_INSTALL_FLAGS}
+}
+
+post_install_config() {
+  rm -rf ${DEST}/usr/lib*/*.so
+}
+
+. $(dirname $0)/master.sh

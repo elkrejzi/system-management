@@ -321,7 +321,7 @@ case $(basename $0) in
   ;;
   buildlibrsvg )
     export PKGNAME=librsvg
-    export PKGVER=2.40.13
+    export PKGVER=2.40.15
     export MULTILIB_BUILD=1
     export POSTINST_TRIGGER=("[ -x /usr/bin/gdk-pixbuf-query-loaders ] && echo \"Processing triggers for gdk-pixbuf-2.0\" && /usr/bin/gdk-pixbuf-query-loaders --update-cache"
                              "[ -x /usr/bin/gdk-pixbuf-query-loaders-32 ] && echo \"Processing triggers for gdk-pixbuf-2.0 (32 bit)\" && /usr/bin/gdk-pixbuf-query-loaders-32 --update-cache")

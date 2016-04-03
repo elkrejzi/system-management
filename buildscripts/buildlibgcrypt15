@@ -1,0 +1,36 @@
+#!/bin/bash -e
+
+export PKGNAME=libgcrypt
+export PKGVER=1.5.5
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="ftp://ftp.gnupg.org/gcrypt/libgcrypt/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS=(--disable-padlock-support)
+export CONFIGURE_FLAGS_32=(--disable-padlock-support)
+export DEFAULT_CC="gcc"
+export DEFAULT_CXX="g++"
+export DEFAULT_CC_M32="gcc -m32"
+export DEFAULT_CXX_M32="g++ -m32"
+
+configure_pre_32() {
+  sed 's:path="amd64":path="i586 i386":' -i mpi/config.links
+}
+
+make_override() {
+  for lib in cipher compat mpi random
+  do
+    make -C ${lib} lib${lib}.la ${ADDITIONAL_MAKE_FLAGS}
+  done
+  make -C src libgcrypt.la ${ADDITIONAL_MAKE_FLAGS}
+}
+
+make_install_override() {
+  make -C src lib_LTLIBRARIES="libgcrypt.la" install-libLTLIBRARIES ${ADDITIONAL_MAKE_INSTALL_FLAGS}
+}
+
+post_install_config() {
+  rm -rf ${DEST}/usr/lib*/*.so
+}
+
+. $(dirname $0)/master.sh

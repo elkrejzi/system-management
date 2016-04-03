@@ -261,6 +261,19 @@ $(dirname $0)/buildxfsprogs
 $(dirname $0)/buildjdk
 $(dirname $0)/buildchromium
 $(dirname $0)/buildchromium-pepper-flash
+$(dirname $0)/buildsteam
+$(dirname $0)/buildGConf
+$(dirname $0)/buildgnutls28
+$(dirname $0)/buildlibgcrypt15
+$(dirname $0)/buildbuildlibjpeg-turbo6
+$(dirname $0)/buildlibpng12
+$(dirname $0)/buildudev
+$(dirname $0)/buildlibdbusmenu
+$(dirname $0)/buildlibdbusmenu-gtk2
+$(dirname $0)/buildlibindicator
+$(dirname $0)/buildlibindicator-gtk2
+$(dirname $0)/buildlibappindicator
+$(dirname $0)/buildlibappindicator-gtk2
 
 find /binary -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
 

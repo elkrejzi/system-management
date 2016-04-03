@@ -1,0 +1,68 @@
+--- a/bindings/Makefile.am	2012-07-11 19:28:34.415113869 +0200
++++ b/bindings/Makefile.am	2016-04-02 15:27:38.699608559 +0200
+@@ -3,7 +3,6 @@
+ 	vala
+ else
+ SUBDIRS =		\
+-	python		\
+ 	vala
+ endif
+ 
+--- a/bindings/Makefile.in	2012-07-11 19:29:07.035114644 +0200
++++ b/bindings/Makefile.in	2016-04-02 15:28:30.916697025 +0200
+@@ -93,7 +93,7 @@
+ 	distdir
+ ETAGS = etags
+ CTAGS = ctags
+-DIST_SUBDIRS = python vala mono
++DIST_SUBDIRS = vala mono
+ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+ am__relativize = \
+   dir0=`pwd`; \
+@@ -301,7 +301,7 @@
+ top_build_prefix = @top_build_prefix@
+ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+-@USE_GTK3_FALSE@SUBDIRS = python vala $(am__append_1)
++@USE_GTK3_FALSE@SUBDIRS = vala $(am__append_1)
+ @USE_GTK3_TRUE@SUBDIRS = vala $(am__append_1)
+ all: all-recursive
+ 
+--- a/configure	2012-07-11 19:29:06.223114624 +0200
++++ b/configure	2016-04-02 15:27:38.702608679 +0200
+@@ -13904,17 +13904,7 @@
+ CPPFLAGS="$CPPFLAGS $PYTHON_INCLUDES"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+-#include <Python.h>
+ _ACEOF
+-if ac_fn_c_try_cpp "$LINENO"; then :
+-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: found" >&5
+-$as_echo "found" >&6; }
+-
+-else
+-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: not found" >&5
+-$as_echo "not found" >&6; }
+-as_fn_error $? "could not find Python headers" "$LINENO" 5
+-fi
+ rm -f conftest.err conftest.i conftest.$ac_ext
+ CPPFLAGS="$save_CPPFLAGS"
+ 
+@@ -14358,7 +14348,7 @@
+ # Files
+ ###########################
+ 
+-ac_config_files="$ac_config_files Makefile src/Makefile src/appindicator-0.1.pc src/appindicator3-0.1.pc bindings/Makefile bindings/python/Makefile bindings/python/appindicator.override bindings/vala/Makefile bindings/vala/examples/Makefile tests/Makefile example/Makefile docs/Makefile docs/reference/Makefile docs/reference/version.xml docs/reference/libappindicator-docs.sgml"
++ac_config_files="$ac_config_files Makefile src/Makefile src/appindicator-0.1.pc src/appindicator3-0.1.pc bindings/Makefile bindings/vala/Makefile bindings/vala/examples/Makefile tests/Makefile example/Makefile docs/Makefile docs/reference/Makefile docs/reference/version.xml docs/reference/libappindicator-docs.sgml"
+ 
+ 
+ if test "x$has_mono" = "xtrue" ; then
+@@ -15437,8 +15427,6 @@
+     "src/appindicator-0.1.pc") CONFIG_FILES="$CONFIG_FILES src/appindicator-0.1.pc" ;;
+     "src/appindicator3-0.1.pc") CONFIG_FILES="$CONFIG_FILES src/appindicator3-0.1.pc" ;;
+     "bindings/Makefile") CONFIG_FILES="$CONFIG_FILES bindings/Makefile" ;;
+-    "bindings/python/Makefile") CONFIG_FILES="$CONFIG_FILES bindings/python/Makefile" ;;
+-    "bindings/python/appindicator.override") CONFIG_FILES="$CONFIG_FILES bindings/python/appindicator.override" ;;
+     "bindings/vala/Makefile") CONFIG_FILES="$CONFIG_FILES bindings/vala/Makefile" ;;
+     "bindings/vala/examples/Makefile") CONFIG_FILES="$CONFIG_FILES bindings/vala/examples/Makefile" ;;
+     "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;

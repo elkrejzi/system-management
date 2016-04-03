@@ -1,0 +1,25 @@
+#!/bin/bash -e
+
+export PKGNAME=gnutls
+export PKGVER=3.3.19
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="ftp://ftp.gnutls.org/gcrypt/gnutls/v${PKGVER:0:3}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS=(--enable-local-libopts --disable-guile)
+export CONFIGURE_FLAGS_32=(--enable-local-libopts --disable-guile --disable-hardware-acceleration)
+
+make_override() {
+  make -C gl libgnu.la ${ADDITIONAL_MAKE_FLAGS}
+  make -C lib ${ADDITIONAL_MAKE_FLAGS}
+}
+
+make_install_override() {
+  make -C lib lib_LTLIBRARIES="libgnutls.la" install-libLTLIBRARIES ${ADDITIONAL_MAKE_INSTALL_FLAGS}
+}
+
+post_install_config() {
+  rm -rf ${DEST}/usr/lib*/*.so
+}
+
+. $(dirname $0)/master.sh

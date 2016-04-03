@@ -1,0 +1,26 @@
+#!/bin/bash -e
+
+export PKGNAME=libdbusmenu
+export PKGVER=16.04.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export DEST=/binary/${PKGNAME}-gtk2-${PKGVER}
+export PKGURL="https://launchpad.net/libdbusmenu/${PKGVER:0:5}/${PKGVER}/+download/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS=(--disable-dumper --disable-tests --with-gtk=2)
+export CONFIGURE_FLAGS_32=(--disable-dumper
+                           --disable-introspection
+                           --disable-tests
+                           --disable-vala
+                           --with-gtk=2)
+
+export HAVE_VALGRIND_TRUE='#'
+export HAVE_VALGRIND_FALSE=''
+
+make_install_override() {
+  make -C libdbusmenu-glib install ${ADDITIONAL_MAKE_INSTALL_FLAGS}
+  make -C libdbusmenu-gtk install ${ADDITIONAL_MAKE_INSTALL_FLAGS}
+  make -C libdbusmenu-glib uninstall ${ADDITIONAL_MAKE_INSTALL_FLAGS}
+}
+
+. $(dirname $0)/master.sh

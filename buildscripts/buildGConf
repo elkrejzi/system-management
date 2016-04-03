@@ -1,0 +1,26 @@
+#!/bin/bash -e
+
+export PKGNAME=GConf
+export PKGVER=3.2.6
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
+export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS=(--disable-orbit)
+export CONFIGURE_FLAGS_32=(--disable-orbit)
+
+make_override() {
+  make -C gconf gconfmarshal.c gconfmarshal.h
+  make -C gconf libgconf-2.la ${ADDITIONAL_MAKE_FLAGS}
+}
+
+make_install_override() {
+  make -C gconf lib_LTLIBRARIES="libgconf-2.la" install-libLTLIBRARIES ${ADDITIONAL_MAKE_INSTALL_FLAGS}
+}
+
+post_install_config() {
+  rm -rf ${DEST}/usr/lib*/*.so
+}
+
+. $(dirname $0)/master.sh

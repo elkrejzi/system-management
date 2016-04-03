@@ -1,0 +1,27 @@
+#!/bin/bash -e
+
+export PKGNAME=libappindicator
+export PKGVER=12.10.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export DEST=/binary/${PKGNAME}-gtk2-${PKGVER}
+export PKGURL="https://launchpad.net/libappindicator/${PKGVER:0:5}/${PKGVER}/+download/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export PATCHES_LIST=("libappindicator-no-python.patch")
+export PATCHES_LIST_32=("libappindicator-no-python.patch")
+export CONFIGURE_FLAGS=(--with-gtk=2)
+export CONFIGURE_FLAGS_32=(--disable-introspection --disable-vala --with-gtk=2)
+
+configure_pre() {
+  sed -i 's/-Werror/-Wno-deprecated-declarations/' src/Makefile.in
+}
+
+configure_pre_32() {
+  sed -i 's/-Werror/-Wno-deprecated-declarations/' src/Makefile.in
+}
+
+post_install_config() {
+  rm -rf ${DEST}/usr/share/gtk-doc
+}
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,22 @@
+#!/bin/bash -e
+
+export PKGNAME=libappindicator
+export PKGVER=12.10.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://launchpad.net/libappindicator/${PKGVER:0:5}/${PKGVER}/+download/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export PATCHES_LIST=("libappindicator-no-python.patch")
+export PATCHES_LIST_32=("libappindicator-no-python.patch")
+export CONFIGURE_FLAGS=(--with-gtk=3)
+export CONFIGURE_FLAGS_32=(--disable-introspection --disable-vala --with-gtk=3)
+
+configure_pre() {
+  sed -i 's/-Werror/-Wno-deprecated-declarations/' src/Makefile.in
+}
+
+configure_pre_32() {
+  sed -i 's/-Werror/-Wno-deprecated-declarations/' src/Makefile.in
+}
+
+. $(dirname $0)/master.sh

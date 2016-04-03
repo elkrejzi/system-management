@@ -6,11 +6,39 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://download.gnome.org/sources/NetworkManager/${PKGVER:0:3}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1
+export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--enable-doc \
                         --with-session-tracking=systemd
                         --with-suspend-resume=systemd
                         --with-pppd-plugin-dir=/usr/lib/pppd/2.4.7
-                        --with-systemdsystemunitdir=/lib/systemd/system)
+                        --with-systemdsystemunitdir=/lib/systemd/system
+                        --with-udev-dir=/lib/udev)
+
+export CONFIGURE_FLAGS_32=(--disable-introspection)
+
+make_override() {
+  if [ ${MULTILIB} == 1 ]
+  then
+    for d in introspection libnm-core libnm libnm-util libnm-glib
+    do
+      make -C ${d} ${MAKE_JOBS_FLAGS}
+    done
+  else
+    make ${MAKE_JOBS_FLAGS}
+  fi
+}
+
+make_install_override() {
+  if [ ${MULTILIB} == 1 ]
+  then
+    for d in libnm libnm-util libnm-glib
+    do
+      make -C ${d} install ${ADDITIONAL_MAKE_INSTALL_FLAGS}
+    done
+  else
+    make install ${ADDITIONAL_MAKE_INSTALL_FLAGS}
+  fi
+}
 
 make_install_post() {
   rm -rf ${DEST}/lib/systemd/system/network-online.target.wants ${DEST}/var/run

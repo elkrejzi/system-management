@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=giflib
-export PKGVER=5.1.3
+export PKGVER=5.1.4
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://downloads.sourceforge.net/giflib/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
