@@ -112,6 +112,7 @@ $(dirname $0)/buildvcdimager
 $(dirname $0)/buildmjpegtools
 $(dirname $0)/buildmpv
 $(dirname $0)/buildvlc
+$(dirname $0)/buildvulkan-runtime
 $(dirname $0)/buildgst-plugins-good
 $(dirname $0)/buildgst-plugins-bad
 $(dirname $0)/buildgst-plugins-ugly

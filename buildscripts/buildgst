@@ -13,8 +13,7 @@ case $(basename $0) in
   buildgst-plugins-bad )
     export PKGNAME=gst-plugins-bad
     export MODULE=" Bad Plugins"
-    export CONFIGURE_ADD=(--disable-vulkan)
-    export CONFIGURE_ADD_32=(--build=i686-unknown-linux-gnu --disable-chromaprint --disable-qt --disable-teletextdec --disable-vulkan --disable-zbar)
+    export CONFIGURE_ADD_32=(--build=i686-unknown-linux-gnu --disable-chromaprint --disable-qt --disable-teletextdec --disable-zbar)
     configure_pre() {
       sed -i "s:openjpeg-2.0:openjpeg-2.1:g" configure ext/openjpeg/gstopenjpeg.h
       sed -i "/user_data (/ s/mstream/&, NULL/" ext/openjpeg/gstopenjpegdec.c ext/openjpeg/gstopenjpegenc.c
@@ -49,7 +48,7 @@ esac
 export EXTRA_ARGS=(--with-package-name="GStreamer${MODULE} ${PKGVER} BLFS"
                    --with-package-origin="http://www.linuxfromscratch.org/blfs/view/systemd/")
 
-export CONFIGURE_FLAGS=(--libexecdir=/usr/lib "${EXTRA_ARGS[@]}" "${CONFIGURE_ADD[@]}")
+export CONFIGURE_FLAGS=(--libexecdir=/usr/lib "${EXTRA_ARGS[@]}")
 export CONFIGURE_FLAGS_32=(--libexecdir=/usr/lib32
                            --disable-examples
                            --disable-introspection
