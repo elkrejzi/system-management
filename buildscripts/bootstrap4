@@ -51,6 +51,7 @@ $(dirname $0)/buildcogl
 $(dirname $0)/buildgeocode-glib
 $(dirname $0)/buildgmime
 $(dirname $0)/buildlibsigc++
+$(dirname $0)/buildraptor2
 $(dirname $0)/buildrest
 $(dirname $0)/buildtelepathy-glib
 $(dirname $0)/buildbabl
@@ -167,7 +168,6 @@ $(dirname $0)/buildgrilo-plugins
 $(dirname $0)/buildgvfs
 $(dirname $0)/buildpolari
 $(dirname $0)/buildseahorse
-$(dirname $0)/buildsimple-scan
 $(dirname $0)/buildvinagre
 $(dirname $0)/buildvino
 $(dirname $0)/buildxdg-user-dirs

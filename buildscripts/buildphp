@@ -70,7 +70,6 @@ export CONFIGURE_FLAGS=(--sysconfdir=/etc/php
                         --with-pspell=shared
                         --with-readline
                         --enable-shmop=shared
-                        --with-snmp=shared
                         --enable-soap=shared
                         --enable-sockets=shared
                         --enable-sysvmsg=shared

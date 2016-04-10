@@ -1,0 +1,47 @@
+#!/bin/bash -e
+
+export PKGNAME=libreoffice
+export PKGVER=5.1.2
+export PKGDIR=${PKGNAME}
+export NO_STRIP=1
+
+prepare_src_override() {
+  install -dm755 ${PKGDIR}
+
+  pushd ${PKGDIR}
+
+    wget -c http://download.documentfoundation.org/libreoffice/stable/${PKGVER}/deb/x86_64/LibreOffice_${PKGVER}_Linux_x86-64_deb.tar.gz
+    wget -c http://download.documentfoundation.org/libreoffice/stable/${PKGVER}/deb/x86_64/LibreOffice_${PKGVER}_Linux_x86-64_deb_langpack_bs.tar.gz
+    wget -c http://download.documentfoundation.org/libreoffice/stable/${PKGVER}/deb/x86_64/LibreOffice_${PKGVER}_Linux_x86-64_deb_langpack_hr.tar.gz
+
+    for f in *.tar.gz
+    do
+      tar --wildcards -xf ${f} "*/DEBS/" --strip-components=2
+    done
+
+    rm -rf *-kde-integration* *-onlineupdate*
+
+  popd
+}
+
+configure_override() {
+  true
+}
+
+make_override() {
+  for f in *.deb
+  do
+    ar x ${f}
+    tar -xf data.tar.gz
+  done
+
+  rm -rf usr/lib usr/share/icons/gnome usr/share/icons/locolor
+}
+
+make_install_override() {
+  install -dm755 ${DEST}
+
+  mv opt usr ${DEST}
+}
+
+. $(dirname $0)/master.sh

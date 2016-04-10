@@ -13,23 +13,15 @@ export POSTINST_TRIGGER=("getent group colord > /dev/null || groupadd -g 71 colo
                          "chown -R colord:colord /var/lib/colord")
 
 export COMMON_CONFIGURE_FLAGS=(--with-daemon-user=colord
-                               --disable-bash-completion 
-                               --disable-argyllcms-sensor)
+                               --disable-argyllcms-sensor
+                               --disable-bash-completion
+                               --disable-sane)
 
-if [ -z $1 ]
-then
-  export ADDITIONAL_CONFIGURE_FLAGS=(--enable-sane)
-fi
-
-export CONFIGURE_FLAGS=("${COMMON_CONFIGURE_FLAGS[@]}"
-                        "${ADDITIONAL_CONFIGURE_FLAGS[@]}"
-                        --enable-vala)
-
+export CONFIGURE_FLAGS=("${COMMON_CONFIGURE_FLAGS[@]}" --enable-vala)
 export CONFIGURE_FLAGS_32=("${COMMON_CONFIGURE_FLAGS[@]}"
                            --disable-gusb
                            --disable-introspection
                            --disable-polkit
-                           --disable-sane
                            --disable-vala)
 
 . $(dirname $0)/master.sh

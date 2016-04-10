@@ -118,56 +118,6 @@ $(dirname $0)/buildgst-plugins-bad
 $(dirname $0)/buildgst-plugins-ugly
 $(dirname $0)/buildgst-libav
 $(dirname $0)/buildgstreamer-vaapi
-$(dirname $0)/buildcppunit
-$(dirname $0)/buildglm
-$(dirname $0)/buildmdds
-$(dirname $0)/buildmdds1
-$(dirname $0)/buildnpapi-sdk
-$(dirname $0)/buildraptor2
-$(dirname $0)/buildclucene-core
-$(dirname $0)/buildglew
-$(dirname $0)/buildhdf5
-$(dirname $0)/buildlibieee1284
-$(dirname $0)/buildlibrevenge
-$(dirname $0)/buildnet-snmp
-$(dirname $0)/buildrasqal
-$(dirname $0)/buildlibixion
-$(dirname $0)/buildliblangtag
-$(dirname $0)/buildlibwpd
-$(dirname $0)/buildlibabw
-$(dirname $0)/buildlibcdr
-$(dirname $0)/buildlibcmis
-$(dirname $0)/buildlibe-book
-$(dirname $0)/buildlibetonyek
-$(dirname $0)/buildlibexttextcat
-$(dirname $0)/buildlibfreehand
-$(dirname $0)/buildlibgltf
-$(dirname $0)/buildlibmspub
-$(dirname $0)/buildlibmwaw
-$(dirname $0)/buildlibodfgen
-$(dirname $0)/buildliborcus
-$(dirname $0)/buildlibpagemaker
-$(dirname $0)/buildlibvisio
-$(dirname $0)/buildlibwpg
-$(dirname $0)/buildlibwps
-$(dirname $0)/buildlpsolve
-$(dirname $0)/buildmythes
-$(dirname $0)/buildredland
-$(dirname $0)/buildsane-backends
-$(dirname $0)/buildvigra
-
-pushd /binary
-  tar xf colord-[0-9]*.tar.xz
-  rm -f colord-[0-9]*.tar.xz
-popd
-
-pushd /binary/colord-[0-9]*
-  pkg_remove
-popd
-
-$(dirname $0)/buildcolord
-
-$(dirname $0)/buildre2c
 $(dirname $0)/buildlibassuan
 $(dirname $0)/buildlibksba
 $(dirname $0)/buildnpth

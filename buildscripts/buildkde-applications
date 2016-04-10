@@ -60,18 +60,9 @@ case $(basename $0) in
   buildlibkipi )
     export PKGNAME=libkipi
   ;;
-  buildlibksane )
-    export PKGNAME=libksane
-  ;;
   buildokular )
     export PKGNAME=okular
     export PKGVER=15.12.1+df0c412
-  ;;
-  buildskanlite )
-    export PKGNAME=skanlite
-    export PKGVER=2.0
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/skanlite/${PKGVER}/${PKGTAR}"
   ;;
   buildsmb4k )
     export PKGNAME=smb4k

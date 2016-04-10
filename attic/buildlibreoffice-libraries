@@ -181,14 +181,6 @@ case $(basename $0) in
     export PKGURL="https://downloads.sourceforge.net/hunspell/${PKGTAR}"
     unset INSTALL_CMD
   ;;
-  buildraptor2 )
-    export PKGNAME=raptor2
-    export PKGVER=2.0.15
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="http://download.librdf.org/source/${PKGTAR}"
-    export CONFIGURE_FLAGS=(--with-icu-config=/usr/bin/icu-config)
-    unset INSTALL_CMD
-  ;;
   buildrasqal )
     export PKGNAME=rasqal
     export PKGVER=0.9.33
@@ -209,7 +201,6 @@ case $(basename $0) in
     $(dirname $0)/buildcppunit
     $(dirname $0)/buildglm
     $(dirname $0)/buildmdds
-    $(dirname $0)/buildraptor2
     $(dirname $0)/buildlibrevenge
     $(dirname $0)/buildrasqal
     $(dirname $0)/buildlibixion

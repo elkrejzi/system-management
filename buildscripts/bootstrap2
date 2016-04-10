@@ -34,7 +34,7 @@ $(dirname $0)/buildlibdaemon
 $(dirname $0)/buildlibgusb
 $(dirname $0)/buildmozjs17
 $(dirname $0)/buildpolkit
-$(dirname $0)/buildcolord 1
+$(dirname $0)/buildcolord
 $(dirname $0)/buildavahi 1
 $(dirname $0)/buildcups
 $(dirname $0)/buildcairo
