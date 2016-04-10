@@ -13,6 +13,8 @@ case $(basename $0) in
   buildgst-plugins-bad )
     export PKGNAME=gst-plugins-bad
     export MODULE=" Bad Plugins"
+    export PATCHES_LIST=("gst-plugins-bad-vk-fixes.patch")
+    export PATCHES_LIST_32=("gst-plugins-bad-vk-fixes.patch")
     export CONFIGURE_ADD_32=(--build=i686-unknown-linux-gnu --disable-chromaprint --disable-qt --disable-teletextdec --disable-zbar)
     configure_pre() {
       sed -i "s:openjpeg-2.0:openjpeg-2.1:g" configure ext/openjpeg/gstopenjpeg.h

@@ -21,7 +21,6 @@ $(dirname $0)/buildlibusbmuxd
 $(dirname $0)/buildlibimobiledevice
 $(dirname $0)/buildcln
 $(dirname $0)/buildcmrt
-$(dirname $0)/buildfontforge
 $(dirname $0)/buildlibatasmart
 $(dirname $0)/buildlibdmtx
 $(dirname $0)/buildlibzip
@@ -196,7 +195,7 @@ $(dirname $0)/buildlibvdpau-va-gl
 $(dirname $0)/buildmhash
 $(dirname $0)/buildnss-mdns
 $(dirname $0)/buildqpdf
-$(dirname $0)/buildtidy
+$(dirname $0)/buildtidy-html5
 $(dirname $0)/buildbind
 $(dirname $0)/buildflashplayer
 $(dirname $0)/buildgegl
@@ -219,9 +218,6 @@ $(dirname $0)/buildwireshark
 $(dirname $0)/buildxscreensaver
 $(dirname $0)/buildwireless-regdb
 $(dirname $0)/buildcrda
-$(dirname $0)/buildfoomatic-db-engine
-$(dirname $0)/buildfoomatic-db
-$(dirname $0)/buildhplip
 $(dirname $0)/buildlibnfsidmap
 $(dirname $0)/buildlibtirpc
 $(dirname $0)/buildnfs-utils
@@ -259,8 +255,8 @@ $(dirname $0)/buildvalgrind
 $(dirname $0)/buildwhois
 $(dirname $0)/buildxfsprogs
 $(dirname $0)/buildjdk
-$(dirname $0)/buildchromium
-$(dirname $0)/buildchromium-pepper-flash
+$(dirname $0)/buildgoogle-chrome
+$(dirname $0)/buildwine
 $(dirname $0)/buildsteam
 $(dirname $0)/buildGConf
 $(dirname $0)/buildgnutls28

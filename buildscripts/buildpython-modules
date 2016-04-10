@@ -2,19 +2,6 @@
 
 case $(basename $0) in
 
-  buildcython )
-    export PKGNAME=Cython
-    export PKGVER=0.23.5
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="http://cython.org/release/${PKGTAR}"
-    export DEST=/binary/python/cython-${PKGVER}
-    make_install_post() {
-      for file in ${DEST}/usr/bin/*
-      do
-        mv ${file} ${file}3
-      done
-    }
-  ;;
   buildpython-alabaster )
     export PKGNAME=alabaster
     export PKGVER=0.7.7
@@ -98,29 +85,6 @@ case $(basename $0) in
     export PKGURL="https://pypi.python.org/packages/source/M/MarkupSafe/${PKGTAR}"
     export DEST=/binary/python/python-markupsafe-${PKGVER}
   ;;
-  buildpython-pillow )
-    export PKGNAME=Pillow
-    export PKGVER=3.1.1
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/P/Pillow/${PKGTAR}"
-    export DEST=/binary/python/python-pillow-${PKGVER}
-    make_install_post() {
-      for file in ${DEST}/usr/bin/*.py
-      do
-        mv ${file} ${file%.py}3
-      done
-      install -dm755 ${DEST}/usr/include/python$(pkg-config --modversion python3)m
-      cp -rf libImaging/*.h ${DEST}/usr/include/python$(pkg-config --modversion python3)m
-    }
-    make_install_post_32() {
-      for file in ${DEST}/usr/bin/*.py
-      do
-        mv ${file} ${file%.py}
-      done
-      install -dm755 ${DEST}/usr/include/python$(pkg-config --modversion python2)
-      cp -rf libImaging/*.h ${DEST}/usr/include/python$(pkg-config --modversion python2)
-    }
-  ;;
   buildpython-pygments )
     export PKGNAME=Pygments
     export PKGVER=2.1.3
@@ -173,13 +137,6 @@ case $(basename $0) in
     export PKGURL="https://pypi.python.org/packages/source/r/rdflib/${PKGTAR}"
     export DEST=/binary/python/python-rdflib-${PKGVER}
   ;;
-  buildpython-reportlab )
-    export PKGNAME=reportlab
-    export PKGVER=3.3.0
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/r/reportlab/${PKGTAR}"
-    export DEST=/binary/python/python-reportlab-${PKGVER}
-  ;;
   buildpython-setuptools )
     export PKGNAME=setuptools
     export PKGVER=20.6.7
@@ -228,13 +185,6 @@ case $(basename $0) in
     export PKGURL="https://github.com/systemd/python-systemd/archive/v${PKGVER}.tar.gz"
     export DEST=/binary/python/python-systemd-${PKGVER}
   ;;
-  buildpython-unidecode )
-    export PKGNAME=Unidecode
-    export PKGVER=0.04.19
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/U/Unidecode/${PKGTAR}"
-    export DEST=/binary/python/python-unidecode-${PKGVER}
-  ;;
   buildpython-modules )
     if [ -z $1 ]
     then
@@ -245,7 +195,6 @@ case $(basename $0) in
     if [ $1 == 1 ]
     then
       $(dirname $0)/buildpython-setuptools
-      $(dirname $0)/buildcython
       $(dirname $0)/buildpython-alabaster
       $(dirname $0)/buildpython-beaker
       $(dirname $0)/buildpython-cssselect
@@ -268,50 +217,43 @@ case $(basename $0) in
     elif [ $1 == 2 ]
     then
       $(dirname $0)/buildpython-m2crypto
-      $(dirname $0)/buildpython-notify
-      $(dirname $0)/buildpython-pillow
       $(dirname $0)/buildpython-pyinotify
       $(dirname $0)/buildpython-pyyaml
-      $(dirname $0)/buildpython-reportlab
       $(dirname $0)/buildpython-systemd
-      $(dirname $0)/buildpython-unidecode
     fi
     exit 0
   ;;
 
 esac
 
-if [ $(basename $0) != "buildpython-notify" ]
+export NO_OPTIMIZATION=1
+
+if [ $(basename $0) == "buildpython-m2crypto" ]
 then
-  export NO_OPTIMIZATION=1
-
-  if [ $(basename $0) == "buildpython-m2crypto" ]
-  then
-    export PYTHON=python
-  else
-    export PYTHON=python3
-  fi
-
-  configure_override() {
-    true
-  }
-  make_override() {
-    if [ ${MULTILIB} == 0 ]
-    then
-      ${PYTHON} setup.py build ${EXTRA_CFG}
-    else
-      python setup.py build ${EXTRA_CFG}
-    fi
-  }
-  make_install_override() {
-    if [ ${MULTILIB} == 0 ]
-    then
-      ${PYTHON} setup.py install --root=${DEST} --optimize=1
-    else
-      python setup.py install --root=${DEST} --optimize=1
-    fi
-  }
+  export PYTHON=python
+else
+  export PYTHON=python3
 fi
+
+configure_override() {
+  true
+}
+make_override() {
+  if [ ${MULTILIB} == 0 ]
+  then
+    ${PYTHON} setup.py build ${EXTRA_CFG}
+  else
+    python setup.py build ${EXTRA_CFG}
+  fi
+}
+make_install_override() {
+  if [ ${MULTILIB} == 0 ]
+  then
+    ${PYTHON} setup.py install --root=${DEST} --optimize=1
+  else
+    python setup.py install --root=${DEST} --optimize=1
+  fi
+}
 
 case $(basename $0) in
   buildpython-m2crypto)
@@ -320,21 +262,6 @@ case $(basename $0) in
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/M/M2Crypto/${PKGTAR}"
     export DEST=/binary/python/python-m2crypto-${PKGVER}
-  ;;
-  buildpython-notify)
-    export PKGNAME=notify-python
-    export PKGVER=0.1.1
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
-    export PKGURL="http://www.galago-project.org/files/releases/source/notify-python/${PKGTAR}"
-    export DEST=/binary/python/python-notify-${PKGVER}
-    export PATCHES_LIST=("notify-python-fixes.patch")
-    make_post() {
-      touch src/pynotify.override
-      make clean
-    }
-    make_install_post() {
-      rm -rf ${DEST}/usr/share
-    }
   ;;
   *)
     export MULTILIB_BUILD=1

@@ -190,8 +190,6 @@ sed -i "s:#background=:background=/media/ntfs/Docs/Slike/dark_game_scene-hd.jpg:
 
 sed -i "/root ALL/a  armin ALL=(ALL) NOPASSWD: ALL" /etc/sudoers
 
-sed -i "s:#hpaio:hpaio:g" /etc/sane.d/dll.conf
-
 install -dm755 /etc/adobe
 install -dm755 /etc/modprobe.d
 install -dm755 /etc/wpa_supplicant

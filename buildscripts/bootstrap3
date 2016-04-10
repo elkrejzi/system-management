@@ -167,12 +167,7 @@ popd
 
 $(dirname $0)/buildcolord
 
-$(dirname $0)/builddotconf
-$(dirname $0)/buildespeak
 $(dirname $0)/buildre2c
-$(dirname $0)/buildninja
-$(dirname $0)/buildspeech-dispatcher
-$(dirname $0)/buildbrltty
 $(dirname $0)/buildlibassuan
 $(dirname $0)/buildlibksba
 $(dirname $0)/buildnpth

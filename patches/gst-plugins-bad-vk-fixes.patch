@@ -1,0 +1,379 @@
+--- a/ext/vulkan/vkdevice.c	2016-03-12 11:41:42.000000000 +0100
++++ b/ext/vulkan/vkdevice.c	2016-04-09 12:06:27.755350180 +0200
+@@ -28,7 +28,7 @@
+ #include <string.h>
+ 
+ static const char *device_validation_layers[] = {
+-  "VK_LAYER_LUNARG_threading",
++  "VK_LAYER_GOOGLE_threading",
+   "VK_LAYER_LUNARG_mem_tracker",
+   "VK_LAYER_LUNARG_object_tracker",
+   "VK_LAYER_LUNARG_draw_state",
+@@ -159,10 +159,10 @@
+   uint32_t device_extension_count = 0;
+   VkExtensionProperties *device_extensions = NULL;
+   uint32_t enabled_layer_count = 0;
++  gchar **enabled_layers;
+   uint32_t device_layer_count = 0;
+   VkLayerProperties *device_layers;
+   gboolean have_swapchain_ext;
+-  gboolean validation_found;
+   VkPhysicalDevice gpu;
+   VkResult err;
+   guint i;
+@@ -197,26 +197,20 @@
+     goto error;
+   }
+ 
+-  validation_found =
+-      _check_for_all_layers (G_N_ELEMENTS (device_validation_layers),
+-      device_validation_layers, device_layer_count, device_layers);
++  _check_for_all_layers (G_N_ELEMENTS (device_validation_layers),
++      device_validation_layers, device_layer_count, device_layers,
++      &enabled_layer_count, &enabled_layers);
+   g_free (device_layers);
+   device_layers = NULL;
+-  if (!validation_found) {
+-    g_error ("vkEnumerateDeviceLayerProperties failed to find"
+-        "a required validation layer.\n\n"
+-        "Please look at the Getting Started guide for additional "
+-        "information.\nvkCreateDevice Failure");
+-    goto error;
+-  }
+-  enabled_layer_count = G_N_ELEMENTS (device_validation_layers);
+ 
+   err =
+       vkEnumerateDeviceExtensionProperties (gpu, NULL,
+       &device_extension_count, NULL);
+   if (gst_vulkan_error_to_g_error (err, error,
+-          "vkEnumerateDeviceExtensionProperties") < 0)
++          "vkEnumerateDeviceExtensionProperties") < 0) {
++    g_strfreev (enabled_layers);
+     goto error;
++  }
+   GST_DEBUG_OBJECT (device, "Found %u extensions", device_extension_count);
+ 
+   have_swapchain_ext = 0;
+@@ -227,6 +221,7 @@
+       &device_extension_count, device_extensions);
+   if (gst_vulkan_error_to_g_error (err, error,
+           "vkEnumerateDeviceExtensionProperties") < 0) {
++    g_strfreev (enabled_layers);
+     g_free (device_extensions);
+     goto error;
+   }
+@@ -243,12 +238,12 @@
+     g_assert (enabled_extension_count < 64);
+   }
+   if (!have_swapchain_ext) {
+-    g_error ("vkEnumerateDeviceExtensionProperties failed to find the \""
+-        VK_KHR_SWAPCHAIN_EXTENSION_NAME
+-        "\" extension.\n\nDo you have a compatible "
+-        "Vulkan installable client driver (ICD) installed?\nPlease "
+-        "look at the Getting Started guide for additional "
+-        "information.\nvkCreateInstance Failure");
++    g_set_error_literal (error, GST_VULKAN_ERROR,
++        VK_ERROR_EXTENSION_NOT_PRESENT,
++        "Failed to find required extension, \"" VK_KHR_SWAPCHAIN_EXTENSION_NAME
++        "\"");
++    g_strfreev (enabled_layers);
++    goto error;
+   }
+   g_free (device_extensions);
+ 
+@@ -273,6 +268,7 @@
+   if (i >= device->n_queue_families) {
+     g_set_error (error, GST_VULKAN_ERROR, VK_ERROR_INITIALIZATION_FAILED,
+         "Failed to find a compatible queue family");
++    g_strfreev (enabled_layers);
+     goto error;
+   }
+   device->queue_family_id = i;
+@@ -294,16 +290,19 @@
+     device_info.queueCreateInfoCount = 1;
+     device_info.pQueueCreateInfos = &queue_info;
+     device_info.enabledLayerCount = enabled_layer_count;
+-    device_info.ppEnabledLayerNames =
+-        (const char *const *) device_validation_layers;
++    device_info.ppEnabledLayerNames = (const char *const *) enabled_layers;
+     device_info.enabledExtensionCount = enabled_extension_count;
+     device_info.ppEnabledExtensionNames = (const char *const *) extension_names;
+     device_info.pEnabledFeatures = NULL;
+ 
+     err = vkCreateDevice (gpu, &device_info, NULL, &device->device);
+-    if (gst_vulkan_error_to_g_error (err, error, "vkCreateDevice") < 0)
++    if (gst_vulkan_error_to_g_error (err, error, "vkCreateDevice") < 0) {
++      g_strfreev (enabled_layers);
+       goto error;
++    }
+   }
++  g_strfreev (enabled_layers);
++
+   {
+     VkCommandPoolCreateInfo cmd_pool_info = { 0, };
+ 
+--- a/ext/vulkan/vkimagememory.c	2016-03-12 11:41:42.000000000 +0100
++++ b/ext/vulkan/vkimagememory.c	2016-04-09 12:06:42.072819112 +0200
+@@ -442,6 +442,8 @@
+   barrier->srcAccessMask = _access_flags_from_layout (vk_mem->image_layout);
+   barrier->oldLayout = vk_mem->image_layout;
+   barrier->newLayout = image_layout;
++  barrier->srcQueueFamilyIndex = 0;
++  barrier->dstQueueFamilyIndex = 0;
+   barrier->image = vk_mem->image;
+   GST_VK_IMAGE_SUBRESOURCE_RANGE (barrier->subresourceRange,
+       VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1);
+--- a/ext/vulkan/vkinstance.c	2016-03-24 09:12:50.000000000 +0100
++++ b/ext/vulkan/vkinstance.c	2016-04-09 12:06:27.755350180 +0200
+@@ -30,7 +30,7 @@
+ #define APP_SHORT_NAME "GStreamer"
+ 
+ static const char *instance_validation_layers[] = {
+-  "VK_LAYER_LUNARG_threading",
++  "VK_LAYER_GOOGLE_threading",
+   "VK_LAYER_LUNARG_mem_tracker",
+   "VK_LAYER_LUNARG_object_tracker",
+   "VK_LAYER_LUNARG_draw_state",
+@@ -174,7 +174,7 @@
+   uint32_t enabled_extension_count = 0;
+   uint32_t instance_layer_count = 0;
+   uint32_t enabled_layer_count = 0;
+-  gboolean validation_found;
++  gchar **enabled_layers;
+   VkResult err;
+ 
+   GST_OBJECT_LOCK (instance);
+@@ -200,23 +200,18 @@
+   }
+ 
+   /* TODO: allow outside selection */
+-  validation_found =
+-      _check_for_all_layers (G_N_ELEMENTS (instance_validation_layers),
+-      instance_validation_layers, instance_layer_count, instance_layers);
+-  if (!validation_found) {
+-    g_error ("vkEnumerateInstanceLayerProperties failed to find"
+-        " required validation layer.\n\n"
+-        "Please look at the Getting Started guide for additional "
+-        "information.\nvkCreateInstance Failure");
+-  }
+-  enabled_layer_count = G_N_ELEMENTS (instance_validation_layers);
++  _check_for_all_layers (G_N_ELEMENTS (instance_validation_layers),
++      instance_validation_layers, instance_layer_count, instance_layers,
++      &enabled_layer_count, &enabled_layers);
++
++  g_free (instance_layers);
+ 
+   err =
+       vkEnumerateInstanceExtensionProperties (NULL, &instance_extension_count,
+       NULL);
+   if (gst_vulkan_error_to_g_error (err, error,
+           "vkEnumerateInstanceExtensionProperties") < 0) {
+-    g_free (instance_layers);
++    g_strfreev (enabled_layers);
+     goto error;
+   }
+   GST_DEBUG_OBJECT (instance, "Found %u extensions", instance_extension_count);
+@@ -229,7 +224,7 @@
+       instance_extensions);
+   if (gst_vulkan_error_to_g_error (err, error,
+           "vkEnumerateInstanceExtensionProperties") < 0) {
+-    g_free (instance_layers);
++    g_strfreev (enabled_layers);
+     g_free (instance_extensions);
+     goto error;
+   }
+@@ -275,7 +270,7 @@
+       g_set_error (error, GST_VULKAN_ERROR, VK_ERROR_INITIALIZATION_FAILED,
+           "vkEnumerateInstanceExtensionProperties failed to find the required "
+           "\"" VK_KHR_SURFACE_EXTENSION_NAME "\" extension");
+-      g_free (instance_layers);
++      g_strfreev (enabled_layers);
+       g_free (instance_extensions);
+       goto error;
+     }
+@@ -283,7 +278,7 @@
+       g_set_error (error, GST_VULKAN_ERROR, VK_ERROR_INITIALIZATION_FAILED,
+           "vkEnumerateInstanceExtensionProperties failed to find the required "
+           "\"%s\" window system extension", winsys_ext_name);
+-      g_free (instance_layers);
++      g_strfreev (enabled_layers);
+       g_free (instance_extensions);
+       goto error;
+     }
+@@ -305,21 +300,20 @@
+     inst_info.pNext = NULL;
+     inst_info.pApplicationInfo = &app;
+     inst_info.enabledLayerCount = enabled_layer_count;
+-    inst_info.ppEnabledLayerNames =
+-        (const char *const *) instance_validation_layers;
++    inst_info.ppEnabledLayerNames = (const char *const *) enabled_layers;
+     inst_info.enabledExtensionCount = enabled_extension_count;
+     inst_info.ppEnabledExtensionNames = (const char *const *) extension_names;
+ 
+     err = vkCreateInstance (&inst_info, NULL, &instance->instance);
+     if (gst_vulkan_error_to_g_error (err, error, "vkCreateInstance") < 0) {
+-      g_free (instance_layers);
++      g_strfreev (enabled_layers);
+       g_free (instance_extensions);
+       goto error;
+     }
+   }
+ 
+-  g_free (instance_layers);
+   g_free (instance_extensions);
++  g_strfreev (enabled_layers);
+ 
+   err =
+       vkEnumeratePhysicalDevices (instance->instance,
+--- a/ext/vulkan/vkswapper.c	2016-03-12 11:41:42.000000000 +0100
++++ b/ext/vulkan/vkswapper.c	2016-04-09 12:07:04.225559483 +0200
+@@ -93,12 +93,16 @@
+   switch (format) {
+       /* double check endianess */
+     case VK_FORMAT_R8G8B8A8_UNORM:
++    case VK_FORMAT_R8G8B8A8_SRGB:
+       return GST_VIDEO_FORMAT_RGBA;
+     case VK_FORMAT_R8G8B8_UNORM:
++    case VK_FORMAT_R8G8B8_SRGB:
+       return GST_VIDEO_FORMAT_RGB;
+     case VK_FORMAT_B8G8R8A8_UNORM:
++    case VK_FORMAT_B8G8R8A8_SRGB:
+       return GST_VIDEO_FORMAT_BGRA;
+     case VK_FORMAT_B8G8R8_UNORM:
++    case VK_FORMAT_B8G8R8_SRGB:
+       return GST_VIDEO_FORMAT_BGR;
+     default:
+       return GST_VIDEO_FORMAT_UNKNOWN;
+@@ -106,17 +110,33 @@
+ }
+ 
+ static VkFormat
+-_vk_format_from_video_format (GstVideoFormat v_format)
++_vk_format_from_video_info (GstVideoInfo * v_info)
+ {
+-  switch (v_format) {
++  switch (GST_VIDEO_INFO_FORMAT (v_info)) {
+     case GST_VIDEO_FORMAT_RGBA:
+-      return VK_FORMAT_R8G8B8A8_UNORM;
++      if (GST_VIDEO_INFO_COLORIMETRY (v_info).transfer ==
++          GST_VIDEO_TRANSFER_SRGB)
++        return VK_FORMAT_R8G8B8A8_SRGB;
++      else
++        return VK_FORMAT_R8G8B8A8_UNORM;
+     case GST_VIDEO_FORMAT_RGB:
+-      return VK_FORMAT_R8G8B8_UNORM;
++      if (GST_VIDEO_INFO_COLORIMETRY (v_info).transfer ==
++          GST_VIDEO_TRANSFER_SRGB)
++        return VK_FORMAT_R8G8B8_SRGB;
++      else
++        return VK_FORMAT_R8G8B8_UNORM;
+     case GST_VIDEO_FORMAT_BGRA:
+-      return VK_FORMAT_B8G8R8A8_UNORM;
++      if (GST_VIDEO_INFO_COLORIMETRY (v_info).transfer ==
++          GST_VIDEO_TRANSFER_SRGB)
++        return VK_FORMAT_B8G8R8A8_SRGB;
++      else
++        return VK_FORMAT_B8G8R8A8_UNORM;
+     case GST_VIDEO_FORMAT_BGR:
+-      return VK_FORMAT_B8G8R8_UNORM;
++      if (GST_VIDEO_INFO_COLORIMETRY (v_info).transfer ==
++          GST_VIDEO_TRANSFER_SRGB)
++        return VK_FORMAT_B8G8R8_SRGB;
++      else
++        return VK_FORMAT_B8G8R8_UNORM;
+     default:
+       return VK_FORMAT_UNDEFINED;
+   }
+@@ -531,11 +551,13 @@
+ 
+   {
+     VkSubmitInfo submit_info = { 0, };
++    VkPipelineStageFlags stages = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+ 
+     submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+     submit_info.pNext = NULL;
+     submit_info.waitSemaphoreCount = 0;
+     submit_info.pWaitSemaphores = NULL;
++    submit_info.pWaitDstStageMask = &stages;
+     submit_info.commandBufferCount = 1;
+     submit_info.pCommandBuffers = &cmd;
+     submit_info.signalSemaphoreCount = 0;
+@@ -629,8 +651,7 @@
+     preTransform = swapper->surf_props.currentTransform;
+   }
+ 
+-  format =
+-      _vk_format_from_video_format (GST_VIDEO_INFO_FORMAT (&swapper->v_info));
++  format = _vk_format_from_video_info (&swapper->v_info);
+   color_space = _vk_color_space_from_video_info (&swapper->v_info);
+ 
+   if ((swapper->surf_props.supportedCompositeAlpha &
+@@ -930,11 +951,13 @@
+ 
+   {
+     VkSubmitInfo submit_info = { 0, };
++    VkPipelineStageFlags stages = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+ 
+     submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+     submit_info.pNext = NULL;
+     submit_info.waitSemaphoreCount = 1;
+     submit_info.pWaitSemaphores = &semaphore;
++    submit_info.pWaitDstStageMask = &stages;
+     submit_info.commandBufferCount = 1;
+     submit_info.pCommandBuffers = &cmd_data.cmd;
+     submit_info.signalSemaphoreCount = 0;
+--- a/ext/vulkan/vkutils.c	2016-03-12 11:41:42.000000000 +0100
++++ b/ext/vulkan/vkutils.c	2016-04-09 12:06:14.802932854 +0200
+@@ -29,22 +29,34 @@
+ 
+ gboolean
+ _check_for_all_layers (uint32_t check_count, const char **check_names,
+-    uint32_t layer_count, VkLayerProperties * layers)
++    uint32_t layer_count, VkLayerProperties * layers,
++    guint32 * supported_layers_count, gchar *** supported_layers)
+ {
+-  uint32_t i, j;
++  uint32_t i, j, k;
++
++  if (check_count <= 0 || layer_count <= 0) {
++    GST_WARNING ("no layers requested or supported");
++    return FALSE;
++  }
++
++  *supported_layers = g_new0 (gchar *, check_count + 1);
++  k = 0;
+ 
+   for (i = 0; i < check_count; i++) {
+     gboolean found = FALSE;
+     for (j = 0; j < layer_count; j++) {
+       if (g_strcmp0 (check_names[i], layers[j].layerName) == 0) {
++        GST_TRACE ("found layer: %s", check_names[i]);
+         found = TRUE;
++        (*supported_layers)[k++] = g_strdup (check_names[i]);
+       }
+     }
+-    if (!found) {
+-      GST_ERROR ("Cannot find layer: %s", check_names[i]);
+-      return FALSE;
+-    }
++    if (!found)
++      GST_WARNING ("Cannot find layer: %s", check_names[i]);
+   }
++
++  *supported_layers_count = g_strv_length (*supported_layers);
++
+   return TRUE;
+ }
+ 
+--- a/ext/vulkan/vkutils_private.h	2016-03-12 11:41:42.000000000 +0100
++++ b/ext/vulkan/vkutils_private.h	2016-04-09 12:06:14.802932854 +0200
+@@ -26,7 +26,8 @@
+ G_BEGIN_DECLS
+ 
+ gboolean _check_for_all_layers (uint32_t check_count, const char ** check_names,
+-    uint32_t layer_count, VkLayerProperties * layers);
++    uint32_t layer_count, VkLayerProperties * layers, guint32 * enabled_layer_count,
++    gchar *** enabled_layers);
+ 
+ G_END_DECLS
+ 

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=5.20.0
+export PKGVER=5.21.0
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export DEBUG_BUILD=1
@@ -65,7 +65,7 @@ build_all() {
   $(dirname $0)/buildknotifyconfig $1
   $(dirname $0)/buildkparts $1
   $(dirname $0)/buildkxmlrpcclient $1
-  #$(dirname $0)/buildkactivities-stats $1
+  $(dirname $0)/buildkactivities-stats $1
   $(dirname $0)/buildkcmutils $1
   $(dirname $0)/buildkded $1
   $(dirname $0)/buildkdewebkit $1

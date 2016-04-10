@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=NetworkManager
-export PKGVER=1.1.92
+export PKGVER=1.1.93
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://download.gnome.org/sources/NetworkManager/${PKGVER:0:3}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

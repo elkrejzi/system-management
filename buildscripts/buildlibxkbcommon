@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libxkbcommon
-export PKGVER=0.6.0
+export PKGVER=0.6.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://xkbcommon.org/download/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

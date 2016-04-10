@@ -2,6 +2,49 @@
 
 case $(basename $0) in
 
+  buildcython )
+    export PKGNAME=Cython
+    export PKGVER=0.24
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://cython.org/release/${PKGTAR}"
+    export DEST=/binary/python/cython-${PKGVER}
+    make_install_post() {
+      for file in ${DEST}/usr/bin/*
+      do
+        mv ${file} ${file}3
+      done
+    }
+  ;;
+  buildpython-pillow )
+    export PKGNAME=Pillow
+    export PKGVER=3.2.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/P/Pillow/${PKGTAR}"
+    export DEST=/binary/python/python-pillow-${PKGVER}
+    make_install_post() {
+      for file in ${DEST}/usr/bin/*.py
+      do
+        mv ${file} ${file%.py}3
+      done
+      install -dm755 ${DEST}/usr/include/python$(pkg-config --modversion python3)m
+      cp -rf libImaging/*.h ${DEST}/usr/include/python$(pkg-config --modversion python3)m
+    }
+    make_install_post_32() {
+      for file in ${DEST}/usr/bin/*.py
+      do
+        mv ${file} ${file%.py}
+      done
+      install -dm755 ${DEST}/usr/include/python$(pkg-config --modversion python2)
+      cp -rf libImaging/*.h ${DEST}/usr/include/python$(pkg-config --modversion python2)
+    }
+  ;;
+  buildpython-reportlab )
+    export PKGNAME=reportlab
+    export PKGVER=3.3.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/r/reportlab/${PKGTAR}"
+    export DEST=/binary/python/python-reportlab-${PKGVER}
+  ;;
   buildpython-requests )
     export PKGNAME=requests
     export PKGVER=2.8.1
@@ -9,37 +52,49 @@ case $(basename $0) in
     export PKGURL="https://pypi.python.org/packages/source/r/requests/${PKGTAR}"
     export DEST=/binary/python/python-requests-${PKGVER}
   ;;
+  buildpython-unidecode )
+    export PKGNAME=Unidecode
+    export PKGVER=0.04.19
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/U/Unidecode/${PKGTAR}"
+    export DEST=/binary/python/python-unidecode-${PKGVER}
+  ;;
 
 esac
 
-export NO_OPTIMIZATION=1
 
-if [ $(basename $0) == "buildpython-ipaddr" ]
+if [ $(basename $0) != "buildpython-notify" ]
 then
-  export PYTHON=python
-else
-  export PYTHON=python3
-fi
+  export NO_OPTIMIZATION=1
 
-configure_override() {
-  true
-}
-make_override() {
-  if [ ${MULTILIB} == 0 ]
+  if [ $(basename $0) == "buildpython-m2crypto" ] ||
+     [ $(basename $0) == "buildpython-ipaddr" ]
   then
-    ${PYTHON} setup.py build ${EXTRA_CFG}
+    export PYTHON=python
   else
-    python setup.py build ${EXTRA_CFG}
+    export PYTHON=python3
   fi
-}
-make_install_override() {
-  if [ ${MULTILIB} == 0 ]
-  then
-    ${PYTHON} setup.py install --root=${DEST} --optimize=1
-  else
-    python setup.py install --root=${DEST} --optimize=1
-  fi
-}
+
+  configure_override() {
+    true
+  }
+  make_override() {
+    if [ ${MULTILIB} == 0 ]
+    then
+      ${PYTHON} setup.py build ${EXTRA_CFG}
+    else
+      python setup.py build ${EXTRA_CFG}
+    fi
+  }
+  make_install_override() {
+    if [ ${MULTILIB} == 0 ]
+    then
+      ${PYTHON} setup.py install --root=${DEST} --optimize=1
+    else
+      python setup.py install --root=${DEST} --optimize=1
+    fi
+  }
+fi
 
 case $(basename $0) in
   buildpython-ipaddr)
@@ -48,6 +103,21 @@ case $(basename $0) in
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/i/ipaddr/${PKGTAR}"
     export DEST=/binary/python/python-ipaddr-${PKGVER}
+  ;;
+  buildpython-notify)
+    export PKGNAME=notify-python
+    export PKGVER=0.1.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="http://www.galago-project.org/files/releases/source/notify-python/${PKGTAR}"
+    export DEST=/binary/python/python-notify-${PKGVER}
+    export PATCHES_LIST=("notify-python-fixes.patch")
+    make_post() {
+      touch src/pynotify.override
+      make clean
+    }
+    make_install_post() {
+      rm -rf ${DEST}/usr/share
+    }
   ;;
   *)
     export MULTILIB_BUILD=1

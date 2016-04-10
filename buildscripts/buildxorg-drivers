@@ -9,7 +9,7 @@ case $(basename $0) in
   ;;
   buildxf86-input-libinput )
     export PKGNAME=xf86-input-libinput
-    export PKGVER=0.17.0
+    export PKGVER=0.18.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://xorg.freedesktop.org/releases/individual/driver/${PKGTAR}"
     make_install_post() {
@@ -64,7 +64,7 @@ EOF
   ;;
   buildxf86-video-amdgpu )
     export PKGNAME=xf86-video-amdgpu
-    export PKGVER=1.0.1
+    export PKGVER=1.1.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://xorg.freedesktop.org/releases/individual/driver/${PKGTAR}"
   ;;

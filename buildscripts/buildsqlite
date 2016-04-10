@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
 export PKGNAME=sqlite
-export PKGVER=3.12.0
-export PKGDLVER=3120000
+export PKGVER=3.12.1
+export PKGDLVER=3120100
 export PKGTAR=${PKGNAME}-autoconf-${PKGDLVER}.tar.gz
 export PKGDIR=${PKGNAME}-autoconf-${PKGDLVER}
 export PKGURL="http://sqlite.org/2016/${PKGTAR}"

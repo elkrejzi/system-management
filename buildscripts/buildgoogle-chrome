@@ -1,0 +1,53 @@
+#!/bin/bash -e
+
+export PKGNAME=google-chrome
+export PKGVER=undecided
+export PKGDIR=${PKGNAME}
+export NO_STRIP=1
+
+prepare_src_override() {
+  install -dm755 ${PKGDIR}
+
+  pushd ${PKGDIR}
+
+  # Fetch
+  wget -c https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+
+  # Unpack
+  ar x google-chrome-stable_current_amd64.deb
+  tar -xzf control.tar.gz
+  tar -xJf data.tar.xz
+
+  export PKGVER=$(grep Version control | awk '{print $2}' | cut -d \- -f 1)
+  export DEST=$(echo ${DEST} | sed "s|undecided|${PKGVER}|")
+
+  popd
+}
+
+configure_override() {
+  true
+}
+
+make_override() {
+  true
+}
+
+make_install_override() {
+  rm -rf opt/google/chrome/cron
+  rm -rf opt/google/chrome/product_logo_32.xpm
+  rm -rf opt/google/chrome/xdg-*
+
+  for s in 16 22 24 32 48 64 128 256
+  do
+    install -Dm644 opt/google/chrome/product_logo_${s}.png ${DEST}/usr/share/icons/hicolor/${s}x${s}/apps/google-chrome.png
+    rm -rf opt/google/chrome/product_logo_${s}.png
+  done
+
+  mv usr/bin ${DEST}/usr
+  mv usr/share/{applications,gnome-control-center,man} ${DEST}/usr/share
+  mv opt ${DEST}
+
+  ln -sf google-chrome-stable ${DEST}/usr/bin/google-chrome
+}
+
+. $(dirname $0)/master.sh

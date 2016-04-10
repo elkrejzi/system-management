@@ -5,6 +5,7 @@ export PKGVER=45.0.1
 export PKGTAR=${PKGNAME}-${PKGVER}.source.tar.xz
 export PKGURL="https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/${PKGVER}/source/${PKGTAR}"
 export NO_OPTIMIZATION=1
+export PATCHES_LIST=("firefox-gtk3-fixes.patch")
 
 configure_override() {
   sed -i "s:-\$(MOZ_APP_VERSION)::g" config/baseconfig.mk

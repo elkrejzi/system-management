@@ -23,7 +23,7 @@ case $(basename $0) in
   ;;
   buildepiphany )
     export PKGNAME=epiphany
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
     make_install_post() {
       sed -i "s#multipart/related;##" ${DEST}/usr/share/applications/epiphany.desktop
     }
@@ -70,7 +70,7 @@ case $(basename $0) in
   ;;
   buildgnome-disk-utility )
     export PKGNAME=gnome-disk-utility
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildgnome-documents )
     export PKGNAME=gnome-documents
@@ -135,7 +135,7 @@ case $(basename $0) in
   ;;
   buildnetwork-manager-applet )
     export PKGNAME=network-manager-applet
-    export PKGVER=1.1.92
+    export PKGVER=1.1.93
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
     export CONFIGURE_FLAGS=(--disable-migration)

@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=fontforge
-export PKGVER=20150824
+export PKGVER=20160404
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/fontforge/fontforge/releases/download/${PKGVER}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

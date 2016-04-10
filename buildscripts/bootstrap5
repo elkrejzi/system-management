@@ -54,7 +54,6 @@ $(dirname $0)/buildvirglrenderer
 $(dirname $0)/buildseabios
 $(dirname $0)/buildqemu
 $(dirname $0)/buildlibreoffice
-$(dirname $0)/buildwine
 $(dirname $0)/buildtexlive
 
 pushd /binary

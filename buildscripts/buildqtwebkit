@@ -16,8 +16,6 @@ configure_post() {
 }
 
 configure_override() {
-  syncqt.pl -version 5.6.0 Source/sync.profile
-
   qmake
 }
 
