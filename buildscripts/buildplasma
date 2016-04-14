@@ -91,7 +91,7 @@ then
   export CMAKE_FLAGS=(-DCMAKE_INSTALL_LIBDIR=/lib -DCMAKE_INSTALL_LIBEXECDIR=/usr/lib/libexec)
 else
   export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
-                      -DLIB_INSTALL_DIR=lib
+                      -DKDE_INSTALL_LIBDIR=lib
                       -DBUILD_TESTING=OFF
                       -DQML_INSTALL_DIR=lib/qt5/qml
                       -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins

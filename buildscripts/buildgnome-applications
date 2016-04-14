@@ -10,7 +10,7 @@ case $(basename $0) in
   ;;
   buildcheese )
     export PKGNAME=cheese
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
     export CONFIGURE_FLAGS=(--disable-compile-warnings)
   ;;
   builddconf-editor )
@@ -19,7 +19,7 @@ case $(basename $0) in
   ;;
   buildeog )
     export PKGNAME=eog
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildepiphany )
     export PKGNAME=epiphany
@@ -40,7 +40,7 @@ case $(basename $0) in
   ;;
   buildfile-roller )
     export PKGNAME=file-roller
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
     export CONFIGURE_FLAGS=(--disable-packagekit)
   ;;
   buildgedit )
@@ -53,7 +53,7 @@ case $(basename $0) in
   ;;
   buildgnome-calendar )
     export PKGNAME=gnome-calendar
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildgnome-clocks )
     export PKGNAME=gnome-clocks
@@ -78,11 +78,11 @@ case $(basename $0) in
   ;;
   buildgnome-logs )
     export PKGNAME=gnome-logs
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildgnome-maps )
     export PKGNAME=gnome-maps
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildgnome-nettool )
     export PKGNAME=gnome-nettool
@@ -92,7 +92,7 @@ case $(basename $0) in
   ;;
   buildgnome-photos )
     export PKGNAME=gnome-photos
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildgnome-power-manager )
     export PKGNAME=gnome-power-manager
@@ -100,12 +100,12 @@ case $(basename $0) in
   ;;
   buildgnome-system-monitor )
     export PKGNAME=gnome-system-monitor
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
     export CONFIGURE_FLAGS=(--enable-systemd)
   ;;
   buildgnome-terminal )
     export PKGNAME=gnome-terminal
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
     export CONFIGURE_FLAGS=(--disable-migration)
   ;;
   buildgnome-todo )
@@ -153,12 +153,12 @@ case $(basename $0) in
   ;;
   buildvinagre )
     export PKGNAME=vinagre
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
     export CONFIGURE_FLAGS=(--disable-compile-warnings)
   ;;
   buildvino )
     export PKGNAME=vino
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildxdg-user-dirs-gtk )
     export PKGNAME=xdg-user-dirs-gtk
@@ -168,7 +168,7 @@ case $(basename $0) in
   ;;
   buildyelp )
     export PKGNAME=yelp
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildzenity )
     export PKGNAME=zenity

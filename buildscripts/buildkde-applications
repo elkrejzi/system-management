@@ -7,7 +7,7 @@ export KEEP_DOC=1
 export USER_CXXFLAGS="-stdlib=libc++"
 
 export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
-                    -DLIB_INSTALL_DIR=lib
+                    -DKDE_INSTALL_LIBDIR=lib
                     -DBUILD_TESTING=OFF
                     -DQML_INSTALL_DIR=lib/qt5/qml
                     -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins

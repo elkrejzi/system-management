@@ -8,4 +8,9 @@ export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1
 export CONFIGURE_FLAGS=(--with-lcms=lcms2)
 
+configure_pre() {
+  sed -i "/gegl/s/2/3/" configure.ac
+  autoreconf -fi
+}
+
 . $(dirname $0)/master.sh

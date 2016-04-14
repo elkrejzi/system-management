@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libtasn1
-export PKGVER=4.7
+export PKGVER=4.8
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://ftp.gnu.org/gnu/libtasn1/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

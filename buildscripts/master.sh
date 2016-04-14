@@ -34,11 +34,11 @@ then
 fi
 
 # -march=skylake -mno-avx512f works with clang, but not gcc - grrrr
-export DEFAULT_CFLAGS="-march=broadwell -fomit-frame-pointer -Ofast -pipe -fstack-protector-strong"
-export DEFAULT_CXXFLAGS="-march=broadwell -fomit-frame-pointer -Ofast -pipe -fstack-protector-strong"
+export DEFAULT_CFLAGS="-march=skylake -mno-avx512f -fomit-frame-pointer -Ofast -pipe -fstack-protector-strong"
+export DEFAULT_CXXFLAGS="-march=skylake -mno-avx512f -fomit-frame-pointer -Ofast -pipe -fstack-protector-strong"
 
-export DEFAULT_DEBUG_CFLAGS="-march=broadwell -g -Ofast -pipe -fstack-protector-strong"
-export DEFAULT_DEBUG_CXXFLAGS="-march=broadwell -g -Ofast -pipe -fstack-protector-strong"
+export DEFAULT_DEBUG_CFLAGS="-march=skylake -mno-avx512f -g -Ofast -pipe -fstack-protector-strong"
+export DEFAULT_DEBUG_CXXFLAGS="-march=skylake -mno-avx512f -g -Ofast -pipe -fstack-protector-strong"
 
 if [ -z ${PKGNAME} ] || [ -z ${PKGVER} ]
 then

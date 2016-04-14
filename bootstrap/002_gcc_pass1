@@ -52,13 +52,15 @@ tar xf ${SROOT}/gcc-${GCC_VER}.tar.bz2
         --disable-decimal-float                        \
         --disable-threads                              \
         --disable-libatomic                            \
+        --disable-libcc1                               \
+        --disable-libcilkrts                           \
         --disable-libgomp                              \
         --disable-libitm                               \
+        --disable-libmpx                               \
         --disable-libquadmath                          \
         --disable-libsanitizer                         \
         --disable-libssp                               \
         --disable-libvtv                               \
-        --disable-libcilkrts                           \
         --disable-libstdc++-v3                         \
         --enable-multilib                              \
         --enable-languages=c,c++

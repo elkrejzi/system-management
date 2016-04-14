@@ -23,7 +23,7 @@ case $(basename $0) in
   ;;
   buildevolution-data-server )
     export PKGNAME=evolution-data-server
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
     export CONFIGURE_FLAGS=(--disable-google-auth
                             --disable-uoa
                             --with-krb5=/usr
@@ -65,7 +65,7 @@ case $(basename $0) in
   ;;
   buildgeocode-glib )
     export PKGNAME=geocode-glib
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildgexiv2 )
     export PKGNAME=gexiv2
@@ -84,6 +84,8 @@ case $(basename $0) in
   buildgjs )
     export PKGNAME=gjs
     export PKGVER=1.45.3
+    export DEFAULT_CC="gcc"
+    export DEFAULT_CXX="g++"
     make_install_post() {
       rm -rf ${DEST}/usr/libexec
     }
@@ -114,11 +116,11 @@ case $(basename $0) in
   ;;
   buildgnome-control-center )
     export PKGNAME=gnome-control-center
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildgnome-desktop )
     export PKGNAME=gnome-desktop
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
     export CONFIGURE_FLAGS=(--with-gnome-distributor=Krejzi)
   ;;
   buildgnome-keyring )
@@ -133,7 +135,7 @@ case $(basename $0) in
   ;;
   buildgnome-online-accounts )
     export PKGNAME=gnome-online-accounts
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
     export CONFIGURE_FLAGS=(--enable-kerberos --disable-compile-warnings)
   ;;
   buildgnome-online-miners )
@@ -142,17 +144,20 @@ case $(basename $0) in
   ;;
   buildgnome-session )
     export PKGNAME=gnome-session
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildgnome-settings-daemon )
     export PKGNAME=gnome-settings-daemon
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
     export MAKE_INSTALL_FLAGS="udevrulesdir=/lib/udev/rules.d"
   ;;
   buildgnome-shell )
     export PKGNAME=gnome-shell
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
     export DEBUG_BUILD=1
+    export PATCHES_LIST=("gnome-shell-fixes.patch")
+    export DEFAULT_CC="gcc"
+    export DEFAULT_CXX="g++"
     make_install_post() {
       install -dm755 ${DEST}/usr/lib/gnome-shell/mozilla
 
@@ -183,7 +188,7 @@ case $(basename $0) in
   ;;
   buildgnome-user-docs )
     export PKGNAME=gnome-user-docs
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
     export KEEP_STATIC=1
     export NO_STRIP=1
   ;;
@@ -229,7 +234,7 @@ case $(basename $0) in
   ;;
   buildgspell )
     export PKGNAME=gspell
-    export PKGVER=1.0.0
+    export PKGVER=1.0.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
   ;;
@@ -246,7 +251,7 @@ case $(basename $0) in
   ;;
   buildgvfs )
     export PKGNAME=gvfs
-    export PKGVER=1.28.0
+    export PKGVER=1.28.1
     export POSTINST_TRIGGER=("[ -x /usr/bin/gio-querymodules ] && echo \"Processing triggers for gio-2.0\" && /usr/bin/gio-querymodules /usr/lib/gio/modules")
     make_install_post() {
       export SPACE_ADDED=1
@@ -354,7 +359,7 @@ case $(basename $0) in
   ;;
   buildmutter )
     export PKGNAME=mutter
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
     export DEBUG_BUILD=1
     export CONFIGURE_FLAGS=(--enable-compile-warnings=minimum)
   ;;
@@ -377,7 +382,7 @@ case $(basename $0) in
   ;;
   buildvte )
     export PKGNAME=vte
-    export PKGVER=0.44.0
+    export PKGVER=0.44.1
     export CONFIGURE_FLAGS=(--enable-introspection)
     make_install_post() {
       rm -rf ${DEST}/etc
@@ -385,7 +390,7 @@ case $(basename $0) in
   ;;
   buildyelp-xsl )
     export PKGNAME=yelp-xsl
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
     export NO_STRIP=1
   ;;
 esac

@@ -110,7 +110,7 @@ $(dirname $0)/buildatkmm
 $(dirname $0)/buildcaja
 $(dirname $0)/buildclutter-gst
 $(dirname $0)/buildclutter-gtk
-$(dirname $0)/buildgegl3
+$(dirname $0)/buildgegl
 $(dirname $0)/buildgfbgraph
 $(dirname $0)/buildgnome-backgrounds
 $(dirname $0)/buildgnome-bluetooth
@@ -198,7 +198,6 @@ $(dirname $0)/buildqpdf
 $(dirname $0)/buildtidy-html5
 $(dirname $0)/buildbind
 $(dirname $0)/buildflashplayer
-$(dirname $0)/buildgegl
 $(dirname $0)/buildpostfix
 $(dirname $0)/buildrtkit
 $(dirname $0)/buildsmartmontools

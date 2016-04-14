@@ -1,7 +1,7 @@
 diff -Naur a/gcc/config/i386/linux64.h b/gcc/config/i386/linux64.h
---- a/gcc/config/i386/linux64.h	2013-01-10 21:38:27.000000000 +0100
-+++ b/gcc/config/i386/linux64.h	2013-07-17 12:06:23.569463460 +0200
-@@ -27,6 +27,6 @@
+--- a/gcc/config/i386/linux64.h	2016-01-04 15:30:50.000000000 +0100
++++ b/gcc/config/i386/linux64.h	2016-04-11 15:24:08.740281248 +0200
+@@ -27,8 +27,8 @@
  #define GNU_USER_LINK_EMULATION64 "elf_x86_64"
  #define GNU_USER_LINK_EMULATIONX32 "elf32_x86_64"
  
@@ -10,9 +10,11 @@ diff -Naur a/gcc/config/i386/linux64.h b/gcc/config/i386/linux64.h
 +#define GLIBC_DYNAMIC_LINKER32 "/lib32/ld-linux.so.2"
 +#define GLIBC_DYNAMIC_LINKER64 "/lib/ld-linux-x86-64.so.2"
  #define GLIBC_DYNAMIC_LINKERX32 "/libx32/ld-linux-x32.so.2"
+ 
+ #undef MUSL_DYNAMIC_LINKER32
 diff -Naur a/gcc/config/i386/t-linux64 b/gcc/config/i386/t-linux64
---- a/gcc/config/i386/t-linux64	2013-01-10 21:38:27.000000000 +0100
-+++ b/gcc/config/i386/t-linux64	2013-07-17 12:08:33.588298553 +0200
+--- a/gcc/config/i386/t-linux64	2016-01-04 15:30:50.000000000 +0100
++++ b/gcc/config/i386/t-linux64	2016-04-11 15:24:08.740281248 +0200
 @@ -33,6 +33,6 @@
  comma=,
  MULTILIB_OPTIONS    = $(subst $(comma),/,$(TM_MULTILIB_CONFIG))

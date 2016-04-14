@@ -2,14 +2,14 @@
 
 export PKGNAME=linux
 export PKGVER=4.5
-export PATCHVER=
+export PATCHVER=4.5.1
 export COMMON_URL="https://cdn.kernel.org/pub/linux/kernel/v4.x"
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="${COMMON_URL}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export NO_OPTIMIZATION=1
 export NO_STRIP=1
-export PATCHES_LIST=("linux-march-native.patch" "sound.patch")
+export PATCHES_LIST=("linux-march-native.patch")
 export DEFAULT_CC="gcc"
 
 post_extract_action() {

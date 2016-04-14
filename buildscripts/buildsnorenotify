@@ -7,7 +7,7 @@ export PKGURL="http://download.kde.org/stable/snorenotify/${PKGVER}/src/${PKGTAR
 export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
-export CMAKE_FLAGS=(-DLIB_INSTALL_DIR=lib
+export CMAKE_FLAGS=(-DKDE_INSTALL_LIBDIR=lib
                     -DBUILD_TESTING=OFF
                     -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins
                     -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules)

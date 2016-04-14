@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=samba
-export PKGVER=4.4.0
+export PKGVER=4.4.2
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://www.samba.org/ftp/samba/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

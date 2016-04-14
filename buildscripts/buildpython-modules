@@ -11,7 +11,7 @@ case $(basename $0) in
   ;;
   buildpython-babel )
     export PKGNAME=Babel
-    export PKGVER=2.2.0
+    export PKGVER=2.3.3
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/B/Babel/${PKGTAR}"
     export DEST=/binary/python/python-babel-${PKGVER}
@@ -139,7 +139,7 @@ case $(basename $0) in
   ;;
   buildpython-setuptools )
     export PKGNAME=setuptools
-    export PKGVER=20.6.7
+    export PKGVER=20.7.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/s/setuptools/${PKGTAR}"
     export DEST=/binary/python/python-setuptools-${PKGVER}
@@ -160,7 +160,7 @@ case $(basename $0) in
   ;;
   buildpython-sphinx )
     export PKGNAME=Sphinx
-    export PKGVER=1.3.6
+    export PKGVER=1.4.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/S/Sphinx/${PKGTAR}"
     export DEST=/binary/python/python-sphinx-${PKGVER}

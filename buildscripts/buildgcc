@@ -1,14 +1,17 @@
 #!/bin/bash -e
 
 export PKGNAME=gcc
-export PKGVER=5.3.0
+export PKGVER=6-20160410
+#export PKGVER=5.3.0
+export GCCVER="6.0.0 20160410"
+#export GCCVER=${PKGVER}
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://mirror.checkdomain.de/gnu/gcc/${PKGNAME}-${PKGVER}/${PKGNAME}-${PKGVER}.tar.bz2"
 export MAKE_JOBS_FLAGS="-j4"
 export PKGDIR=src
 export PKGBUILD=build
 export DEBUG_BUILD=1
-export PATCHES_LIST=("gcc-fixes.patch" "gcc-pure64.patch")
+export PATCHES_LIST=("gcc-pure64.patch")
 export DEFAULT_CC="gcc"
 export DEFAULT_CXX="g++"
 
@@ -60,7 +63,7 @@ configure_override() {
                    --enable-shared \
                    --enable-threads=posix \
                    --with-linker-hash-style=gnu \
-                   --with-pkgversion="Krejzi ${PKGVER}" \
+                   --with-pkgversion="Krejzi ${GCCVER}" \
                    --with-system-zlib
 }
 

@@ -8,7 +8,7 @@ export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
-                    -DLIB_INSTALL_DIR=lib
+                    -DKDE_INSTALL_LIBDIR=lib
                     -DBUILD_TESTING=OFF
                     -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins)
 

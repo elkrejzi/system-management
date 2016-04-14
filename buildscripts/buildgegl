@@ -1,15 +1,9 @@
 #!/bin/bash -e
 
 export PKGNAME=gegl
-export PKGVER=0.2.0
+export PKGVER=0.3.6
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://download.gimp.org/pub/gegl/${PKGVER:0:3}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export PATCHES_LIST=("gegl-fixes.patch")
-export MAKE_FLAGS="LC_ALL=en_US"
-
-configure_pre() {
-  sed -i "s:UF_long:SuiteSparse_long:g" operations/external/matting-levin.c
-}
 
 . $(dirname $0)/master.sh

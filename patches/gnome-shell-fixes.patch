@@ -1,0 +1,25 @@
+--- a/js/ui/modalDialog.js	2016-04-06 22:37:49.000000000 +0200
++++ b/js/ui/modalDialog.js	2016-04-14 11:24:05.475652341 +0200
+@@ -259,7 +259,7 @@
+         if (this.state == State.OPENED || this.state == State.OPENING)
+             return true;
+ 
+-        if (!this.pushModal({ timestamp: timestamp }))
++        if (!this.pushModal(timestamp))
+             return false;
+ 
+         this._fadeOpen(onPrimary);
+@@ -318,8 +318,11 @@
+     pushModal: function (timestamp) {
+         if (this._hasModal)
+             return true;
+-        if (!Main.pushModal(this._group, { timestamp: timestamp,
+-                                           actionMode: this._actionMode }))
++
++        let params = { actionMode: this._actionMode };
++        if (timestamp)
++            params['timestamp'] = timestamp;
++        if (!Main.pushModal(this._group, params))
+             return false;
+ 
+         this._hasModal = true;
