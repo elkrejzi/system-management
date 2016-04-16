@@ -1,8 +1,7 @@
 
-systemctl disable avahi-{daemon,dnsconfd} cups-browsed httpd krb5-{kadmind,kdc,kpropd} ModemManager mysqld NetworkManager{,-wait-online} nmbd org.cups.cupsd php-fpm postfix postgresql saslauthd slapd smbd svnserve thermald winbindd wpa_supplicant git-daemon.socket saned.socket
+systemctl disable avahi-{daemon,dnsconfd} cups-browsed httpd krb5-{kadmind,kdc,kpropd} mysqld nmbd org.cups.cupsd php-fpm postfix postgresql saslauthd slapd smbd svnserve thermald winbindd git-daemon.socket
 
-systemctl mask wpa_supplicant
-systemctl enable systemd-{networkd,resolved,timesyncd} wpa_supplicant@wlan0
+systemctl enable systemd-timesyncd
 
 install -dm755 /media/ntfs /media/other /media/win
 

@@ -1,9 +1,10 @@
 #!/bin/bash -e
 
 export PKGNAME=vulkan-runtime
-export PKGVER=1.0.8
+export PKGVER=1.0.10
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
+
 export DEFAULT_CC="gcc"
 export DEFAULT_CXX="g++"
 export DEFAULT_CC_M32="gcc -m32"
@@ -16,7 +17,7 @@ prepare_src_override() {
 
     pushd ${PKGDIR}
       export VK_COMPONENTS=(glslang SPIRV-Tools Vulkan-Docs Vulkan-LoaderAndValidationLayers)
-      for PKG in ${VK_COMPONENTS[@]} mesa
+      for PKG in ${VK_COMPONENTS[@]}
       do
         if [ -d ${PKG} ]
         then
@@ -26,12 +27,7 @@ prepare_src_override() {
             git reset --hard origin/HEAD
           popd
         else
-          if [ ${PKG} == "mesa" ]
-          then
-            git clone git://anongit.freedesktop.org/mesa/mesa
-          else
-            git clone https://github.com/KhronosGroup/${PKG}.git
-          fi
+          git clone https://github.com/KhronosGroup/${PKG}.git
         fi
       done
     popd
@@ -89,20 +85,8 @@ configure_common() {
   pushd Vulkan-LoaderAndValidationLayers/build
     export CMAKE_ADD_FLAGS=(-DCMAKE_INSTALL_SYSCONFDIR=/etc
                             -DCMAKE_SKIP_RPATH=ON
-                            -DBUILD_WSI_WAYLAND_SUPPORT=ON)
+                            -DBUILD_TESTS=OFF)
     run_cmake
-  popd
-
-  # anvil
-  pushd mesa
-    git reset --hard origin/vulkan
-
-    ./autogen.sh --prefix=/usr           \
-                 --sysconfdir=/etc       \
-                 --with-dri-drivers=i965 \
-                 --with-gallium-drivers= \
-                 --with-egl-platforms=x11,drm,wayland \
-                 "${ANVIL_FLAGS_EXTRA[@]}"
   popd
 }
 
@@ -111,8 +95,6 @@ configure_override() {
 }
 
 configure_override_32() {
-  export ANVIL_FLAGS_EXTRA=(--build=i686-pc-linux-gnu --host=i686-pc-linux-gnu)
-
   configure_common
 }
 
@@ -124,9 +106,6 @@ make_override() {
   fi
 
   make -C Vulkan-LoaderAndValidationLayers/build ${MAKE_JOBS_FLAGS}
-
-  make -C mesa ${MAKE_JOBS_FLAGS}
-  make -C mesa ${MAKE_JOBS_FLAGS} install DESTDIR=${PWD}/mesa/dest
 }
 
 make_install_override() {
@@ -170,15 +149,7 @@ make_install_override() {
 
     install -m644 Vulkan-Docs/src/vulkan/*.h ${DEST}/usr/include/vulkan
     install -m644 Vulkan-Docs/out/1.0/man/3/*.3 ${DEST}/usr/share/man/man3
-
-    mv ${PWD}/mesa/dest/etc/vulkan ${DEST}/etc
-
-    install -m644 ${PWD}/mesa/dest/usr/include/vulkan/vulkan_intel.h ${DEST}/usr/include/vulkan
-  else
-    sed "s:/lib/:/lib32/:g" ${DEST}/etc/vulkan/icd.d/intel_icd.json > ${DEST}/etc/vulkan/icd.d/intel_icd32.json
   fi
-
-  install -m755 ${PWD}/mesa/dest/usr/lib/libvulkan_intel.so ${DEST}/usr/${LIB}
 }
 
 . $(dirname $0)/master.sh

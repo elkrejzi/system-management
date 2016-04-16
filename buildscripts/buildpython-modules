@@ -47,6 +47,13 @@ case $(basename $0) in
       done
     }
   ;;
+  buildpython-imagesize )
+    export PKGNAME=imagesize
+    export PKGVER=0.7.0
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://pypi.python.org/packages/source/i/imagesize/${PKGTAR}"
+    export DEST=/binary/python/python-imagesize-${PKGVER}
+  ;;
   buildpython-isodate )
     export PKGNAME=isodate
     export PKGVER=0.5.4
@@ -139,7 +146,7 @@ case $(basename $0) in
   ;;
   buildpython-setuptools )
     export PKGNAME=setuptools
-    export PKGVER=20.7.0
+    export PKGVER=20.9.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/s/setuptools/${PKGTAR}"
     export DEST=/binary/python/python-setuptools-${PKGVER}
@@ -198,6 +205,7 @@ case $(basename $0) in
       $(dirname $0)/buildpython-alabaster
       $(dirname $0)/buildpython-beaker
       $(dirname $0)/buildpython-cssselect
+      $(dirname $0)/buildpython-imagesize
       $(dirname $0)/buildpython-isodate
       $(dirname $0)/buildpython-markupsafe
       $(dirname $0)/buildpython-pyparsing

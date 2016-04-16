@@ -1,16 +1,15 @@
-diff -Naur a/setup.py b/setup.py
---- a/setup.py	2014-06-30 04:05:48.000000000 +0200
-+++ b/setup.py	2014-07-13 20:53:42.785228801 +0200
-@@ -883,7 +883,7 @@
+--- a/setup.py	2015-12-05 20:47:20.000000000 +0100
++++ b/setup.py	2016-04-16 21:57:49.749811759 +0200
+@@ -885,7 +885,7 @@
          # a release.  Most open source OSes come with one or more
          # versions of BerkeleyDB already installed.
  
 -        max_db_ver = (5, 3)
-+        max_db_ver = (6, 1)
++        max_db_ver = (6, 2)
          min_db_ver = (4, 3)
          db_setup_debug = False   # verbose debug prints from this script?
  
-@@ -905,7 +905,11 @@
+@@ -907,7 +907,11 @@
              return True
  
          def gen_db_minor_ver_nums(major):

@@ -88,6 +88,9 @@ make_post_32() {
 
 make_install_post() {
   make -C xdemos install DESTDIR=${DEST}
+
+  rm -rf ${DEST}/usr/include/vulkan/vk_platform.h
+  rm -rf ${DEST}/usr/include/vulkan/vulkan.h
 }
 
 make_install_post_32() {
@@ -109,7 +112,8 @@ export COMMON_FLAGS=(--disable-xvmc
                      --enable-llvm-shared-libs
                      --with-dri-drivers=i965
                      --with-egl-platforms=drm,x11,wayland
-                     --with-gallium-drivers=radeonsi,swrast)
+                     --with-gallium-drivers=radeonsi,swrast
+                     --with-vulkan-drivers=intel)
 
 export CONFIGURE_FLAGS=("${COMMON_FLAGS[@]}")
 export CONFIGURE_FLAGS_32=("${COMMON_FLAGS[@]}"

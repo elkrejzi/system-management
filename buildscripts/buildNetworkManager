@@ -55,7 +55,6 @@ d /run/NetworkManager 755 root root -
 EOF
 
   ln -sf /lib/systemd/system/NetworkManager.service ${DEST}/etc/systemd/system/multi-user.target.wants/NetworkManager.service
-  ln -sf /lib/systemd/system/NetworkManager-wait-online.service ${DEST}/etc/systemd/system/multi-user.target.wants/NetworkManager-wait-online.service
   ln -sf /lib/systemd/system/NetworkManager.service ${DEST}/etc/systemd/system/dbus-org.freedesktop.NetworkManager.service
   ln -sf /lib/systemd/system/NetworkManager-dispatcher.service ${DEST}/etc/systemd/system/dbus-org.freedesktop.nm-dispatcher.service
 }

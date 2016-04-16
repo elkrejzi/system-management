@@ -91,7 +91,7 @@ case $(basename $0) in
     export DEST=/binary/${PKGNAME}-${PKGVER}
     export KEEP_EMPTY_DIRS=1
     export PATCHES_LIST=("glib-compile-schemas-quiet.patch")
-    export CONFIGURE_FLAGS=(--with-pcre=system)
+    export CONFIGURE_FLAGS=(--with-pcre=system --with-python=/usr/bin/python3)
     export CONFIGURE_FLAGS_32=(--with-pcre=system)
     make_install_post() {
       rm -rf ${DEST}/usr/share/gdb
@@ -106,6 +106,7 @@ case $(basename $0) in
   buildgobject-introspection )
     export PKGNAME=gobject-introspection
     export PKGVER=1.48.0
+    export PYTHON=python3
     unset MULTILIB_BUILD
   ;;
   buildgtk2 )

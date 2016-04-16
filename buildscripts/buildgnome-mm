@@ -20,7 +20,7 @@ case $(basename $0) in
   ;;
   buildgtkmm3 )
     export PKGNAME=gtkmm
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildlibsigc++ )
     export PKGNAME=libsigc++

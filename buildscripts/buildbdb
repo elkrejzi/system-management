@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=db
-export PKGVER=6.1.26
+export PKGVER=6.2.23
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://download.oracle.com/berkeley-db/${PKGTAR}"
 export PKGBUILD=${PKGNAME}-${PKGVER}/build_unix
