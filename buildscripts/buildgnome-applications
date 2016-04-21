@@ -135,7 +135,7 @@ case $(basename $0) in
   ;;
   buildnetwork-manager-applet )
     export PKGNAME=network-manager-applet
-    export PKGVER=1.1.93
+    export PKGVER=1.2.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
     export CONFIGURE_FLAGS=(--disable-migration)

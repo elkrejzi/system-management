@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=file
-export PKGVER=5.25
+export PKGVER=5.26
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="ftp://ftp.astron.com/pub/file/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

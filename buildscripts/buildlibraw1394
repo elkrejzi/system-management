@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libraw1394
-export PKGVER=2.1.1
+export PKGVER=2.1.2
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://www.kernel.org/pub/linux/libs/ieee1394/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}

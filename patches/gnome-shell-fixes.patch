@@ -1,5 +1,5 @@
 --- a/js/ui/modalDialog.js	2016-04-06 22:37:49.000000000 +0200
-+++ b/js/ui/modalDialog.js	2016-04-14 11:24:05.475652341 +0200
++++ b/js/ui/modalDialog.js	2016-04-21 18:25:23.037649134 +0200
 @@ -259,7 +259,7 @@
          if (this.state == State.OPENED || this.state == State.OPENING)
              return true;
@@ -23,3 +23,196 @@
              return false;
  
          this._hasModal = true;
+--- a/js/ui/workspaceThumbnail.js	2016-04-06 22:37:49.000000000 +0200
++++ b/js/ui/workspaceThumbnail.js	2016-04-21 18:26:25.765356770 +0200
+@@ -45,11 +45,11 @@
+         this.primaryActor = primaryActor;
+     },
+ 
+-    vfunc_get_preferred_width: function(forHeight) {
++    vfunc_get_preferred_width: function(container, forHeight) {
+         return this.primaryActor.get_preferred_width(forHeight);
+     },
+ 
+-    vfunc_get_preferred_height: function(forWidth) {
++    vfunc_get_preferred_height: function(container, forWidth) {
+         return this.primaryActor.get_preferred_height(forWidth);
+     },
+ });
+--- a/src/st/st-private.c	2016-04-06 22:37:59.000000000 +0200
++++ b/src/st/st-private.c	2016-04-21 18:25:45.544546463 +0200
+@@ -347,6 +347,7 @@
+ {
+   ClutterBackend *backend = clutter_get_default_backend ();
+   CoglContext *ctx = clutter_backend_get_cogl_context (backend);
++  CoglError *error = NULL;
+ 
+   static CoglPipeline *shadow_pipeline_template = NULL;
+ 
+@@ -377,7 +378,13 @@
+                                                          COGL_PIXEL_FORMAT_A_8,
+                                                          rowstride_out,
+                                                          pixels_out,
+-                                                         NULL));
++                                                         &error));
++
++  if (error)
++    {
++      g_warning ("Failed to allocate texture: %s", error->message);
++      cogl_error_free (error);
++    }
+ 
+   g_free (pixels_out);
+ 
+@@ -395,7 +402,10 @@
+ 
+   pipeline = cogl_pipeline_copy (shadow_pipeline_template);
+   cogl_pipeline_set_layer_texture (pipeline, 0, texture);
+-  cogl_object_unref (texture);
++
++  if (texture)
++    cogl_object_unref (texture);
++
+   return pipeline;
+ }
+ 
+--- a/src/st/st-texture-cache.c	2016-03-03 15:51:22.000000000 +0100
++++ b/src/st/st-texture-cache.c	2016-04-21 18:25:45.544546463 +0200
+@@ -461,14 +461,24 @@
+ {
+   ClutterBackend *backend = clutter_get_default_backend ();
+   CoglContext *ctx = clutter_backend_get_cogl_context (backend);
++  CoglError *error = NULL;
++  CoglTexture2D *texture;
+ 
+-  return COGL_TEXTURE (cogl_texture_2d_new_from_data (ctx,
+-                                                      gdk_pixbuf_get_width (pixbuf),
+-                                                      gdk_pixbuf_get_height (pixbuf),
+-                                                      gdk_pixbuf_get_has_alpha (pixbuf) ? COGL_PIXEL_FORMAT_RGBA_8888 : COGL_PIXEL_FORMAT_RGB_888,
+-                                                      gdk_pixbuf_get_rowstride (pixbuf),
+-                                                      gdk_pixbuf_get_pixels (pixbuf),
+-                                                      NULL));
++  texture = cogl_texture_2d_new_from_data (ctx,
++                                           gdk_pixbuf_get_width (pixbuf),
++                                           gdk_pixbuf_get_height (pixbuf),
++                                           gdk_pixbuf_get_has_alpha (pixbuf) ? COGL_PIXEL_FORMAT_RGBA_8888 : COGL_PIXEL_FORMAT_RGB_888,
++                                           gdk_pixbuf_get_rowstride (pixbuf),
++                                           gdk_pixbuf_get_pixels (pixbuf),
++                                           &error);
++
++  if (error)
++    {
++      g_warning ("Failed to allocate texture: %s", error->message);
++      cogl_error_free (error);
++    }
++
++  return texture ? COGL_TEXTURE (texture) : NULL;
+ }
+ 
+ static cairo_surface_t *
+@@ -632,6 +642,8 @@
+       (cairo_image_surface_get_format (surface) == CAIRO_FORMAT_ARGB32 ||
+        cairo_image_surface_get_format (surface) == CAIRO_FORMAT_RGB24))
+     {
++      CoglError *error = NULL;
++
+       texdata = COGL_TEXTURE (cogl_texture_2d_new_from_data (ctx,
+                                                              cairo_image_surface_get_width (surface),
+                                                              cairo_image_surface_get_height (surface),
+@@ -639,9 +651,18 @@
+                                                              COGL_PIXEL_FORMAT_BGRA_8888 : COGL_PIXEL_FORMAT_BGR_888,
+                                                              cairo_image_surface_get_stride (surface),
+                                                              cairo_image_surface_get_data (surface),
+-                                                             NULL));
+-      clutter_texture_set_cogl_texture (bind->texture, texdata);
+-      cogl_object_unref (texdata);
++                                                             &error));
++
++      if (texdata)
++        {
++          clutter_texture_set_cogl_texture (bind->texture, texdata);
++          cogl_object_unref (texdata);
++        }
++      else if (error)
++        {
++          g_warning ("Failed to allocate texture: %s", error->message);
++          cogl_error_free (error);
++        }
+ 
+       clutter_actor_set_opacity (CLUTTER_ACTOR (bind->texture), 255);
+     }
+--- a/src/st/st-theme-node-drawing.c	2016-04-06 22:37:49.000000000 +0200
++++ b/src/st/st-theme-node-drawing.c	2016-04-21 18:26:05.263407933 +0200
+@@ -71,6 +71,7 @@
+ {
+   ClutterBackend *backend = clutter_get_default_backend ();
+   CoglContext *ctx = clutter_backend_get_cogl_context (backend);
++  CoglError *error = NULL;
+   CoglHandle texture;
+   cairo_t *cr;
+   cairo_surface_t *surface;
+@@ -172,9 +173,15 @@
+                                                          CLUTTER_CAIRO_FORMAT_ARGB32,
+                                                          rowstride,
+                                                          data,
+-                                                         NULL));
++                                                         &error));
++
++  if (error)
++    {
++      g_warning ("Failed to allocate texture: %s", error->message);
++      cogl_error_free (error);
++    }
++
+   g_free (data);
+-  g_assert (texture != COGL_INVALID_HANDLE);
+ 
+   return texture;
+ }
+@@ -347,7 +354,7 @@
+                              float           height,
+                              StCorner        corner_id)
+ {
+-  CoglHandle texture, material;
++  CoglHandle texture, material = COGL_INVALID_HANDLE;
+   char *key;
+   StTextureCache *cache;
+   StCornerSpec corner;
+@@ -396,8 +403,12 @@
+ 
+   key = corner_to_string (&corner);
+   texture = st_texture_cache_load (cache, key, ST_TEXTURE_CACHE_POLICY_NONE, load_corner, &corner, NULL);
+-  material = _st_create_texture_pipeline (texture);
+-  cogl_handle_unref (texture);
++
++  if (texture)
++    {
++      material = _st_create_texture_pipeline (texture);
++      cogl_handle_unref (texture);
++    }
+ 
+   g_free (key);
+ 
+@@ -958,6 +969,7 @@
+ {
+   ClutterBackend *backend = clutter_get_default_backend ();
+   CoglContext *ctx = clutter_backend_get_cogl_context (backend);
++  CoglError *error = NULL;
+   StBorderImage *border_image;
+   CoglHandle texture;
+   guint radius[4];
+@@ -1277,7 +1289,13 @@
+                                                          CLUTTER_CAIRO_FORMAT_ARGB32,
+                                                          rowstride,
+                                                          data,
+-                                                         NULL));
++                                                         &error));
++
++  if (error)
++    {
++      g_warning ("Failed to allocate texture: %s", error->message);
++      cogl_error_free (error);
++    }
+ 
+   cairo_destroy (cr);
+   cairo_surface_destroy (surface);

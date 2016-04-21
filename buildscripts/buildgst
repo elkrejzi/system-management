@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=1.8.0
+export PKGVER=1.8.1
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 

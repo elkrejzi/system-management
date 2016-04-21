@@ -3,7 +3,7 @@
 case $(basename $0) in
   buildgrantlee )
     export PKGNAME=grantlee
-    export PKGVER=5.0.0
+    export PKGVER=5.1.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="http://downloads.grantlee.org/${PKGTAR}"
     export CMAKE_FLAGS=(-DBUILD_TESTS=OFF)
@@ -17,44 +17,33 @@ case $(basename $0) in
   ;;
   buildphonon )
     export PKGNAME=phonon
-    export PKGVER=4.8.3
+    export PKGVER=4.9.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/phonon/${PKGVER}/src/${PKGTAR}"
-    export PATCHES_LIST=("phonon-fixes.patch")
+    export PKGURL="http://download.kde.org/stable/phonon/${PKGVER}/${PKGTAR}"
     export CMAKE_FLAGS=(-DCMAKE_INSTALL_LIBDIR=lib
                         -DCMAKE_SKIP_RPATH=ON
                         -DPHONON_BUILD_PHONON4QT5=ON
-                        -D__KDE_HAVE_GCC_VISIBILITY=NO
                         -DPHONON_INSTALL_QT_EXTENSIONS_INTO_SYSTEM_QT=ON)
-    configure_pre() {
-      sed -i "s:BSD_SOURCE:DEFAULT_SOURCE:g" ../${PKGDIR}/cmake/FindPhononInternal.cmake
-      sed -i 's|#include <QtCore/QtGlobal>|#define QT_NO_VERSION_TAGGING 1\n &|'  ../${PKGDIR}/cmake/FindPhononInternal.cmake
-    }
   ;;
   buildphonon-backend-gstreamer )
     export PKGNAME=phonon-backend-gstreamer
-    export PKGVER=4.8.2
+    export PKGVER=4.9.0
+    export PKGDIR=phonon-gstreamer-${PKGVER}
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/phonon/phonon-backend-gstreamer/${PKGVER}/src/${PKGTAR}"
-    export USER_CFLAGS="$(pkg-config --cflags gstreamer-1.0)"
-    export USER_CXXFLAGS="$(pkg-config --cflags gstreamer-1.0) -stdlib=libc++"
+    export PKGURL="http://download.kde.org/stable/phonon/phonon-backend-gstreamer/${PKGVER}/${PKGTAR}"
     export CMAKE_FLAGS=(-DCMAKE_INSTALL_LIBDIR=lib
                         -DCMAKE_SKIP_RPATH=ON
-                        -DPHONON_BUILD_PHONON4QT5=ON
-                        -D__KDE_HAVE_GCC_VISIBILITY=NO)
+                        -DPHONON_BUILD_PHONON4QT5=ON)
   ;;
   buildphonon-backend-vlc )
     export PKGNAME=phonon-backend-vlc
-    export PKGVER=0.8.2
+    export PKGVER=0.9.0
+    export PKGDIR=phonon-vlc-${PKGVER}
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://download.kde.org/stable/phonon/phonon-backend-vlc/${PKGVER}/src/${PKGTAR}"
+    export PKGURL="http://download.kde.org/stable/phonon/phonon-backend-vlc/${PKGVER}/${PKGTAR}"
     export CMAKE_FLAGS=(-DCMAKE_INSTALL_LIBDIR=lib
                         -DCMAKE_SKIP_RPATH=ON
-                        -DPHONON_BUILD_PHONON4QT5=ON
-                        -D__KDE_HAVE_GCC_VISIBILITY=NO)
-    configure_pre() {
-      sed -i "/fourcc.h/i #include <vlc/plugins/vlc_common.h>" ../${PKGDIR}/src/video/videomemorystream.h
-    }
+                        -DPHONON_BUILD_PHONON4QT5=ON)
   ;;
   buildpolkit-qt-1 )
     export PKGNAME=polkit-qt-1
@@ -79,10 +68,6 @@ esac
 export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
-
-if [ -z ${USER_CXXFLAGS} ]
-then
-  export USER_CXXFLAGS="-stdlib=libc++"
-fi
+export USER_CXXFLAGS="-stdlib=libc++"
 
 . $(dirname $0)/master.sh

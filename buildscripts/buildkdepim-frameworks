@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=16.03.80
+export PKGVER=16.04.0
 export LIBKGAPI_PKGVER=5.1.0
 
 export MAKE_JOBS_FLAGS="-j4"
@@ -149,7 +149,7 @@ do
         export PKGURL="http://download.kde.org/stable/${PKGNAME}/${PKGVER}/src/${PKGTAR}"
       else
         export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-        export PKGURL="http://download.kde.org/unstable/applications/${PKGVER}/src/${PKGTAR}"
+        export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
       fi
       if [ ${BUILD_TYPE} == "git" ]
       then

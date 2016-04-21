@@ -41,7 +41,7 @@ case $(basename $0) in
   ;;
   buildgdm )
     export PKGNAME=gdm
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
     export KEEP_EMPTY_DIRS=1
     export CONFIGURE_FLAGS=(--enable-gdm-xsession --without-plymouth --with-default-pam-config=lfs)
     export POSTINST_TRIGGER=("getent group gdm > /dev/null || groupadd -g 21 gdm"
@@ -365,7 +365,7 @@ case $(basename $0) in
   ;;
   buildrest )
     export PKGNAME=rest
-    export PKGVER=0.7.93
+    export PKGVER=0.8.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
   ;;
