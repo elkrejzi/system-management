@@ -8,8 +8,7 @@ export MAKE_JOBS_FLAGS="-j4"
 export DEFAULT_CC="gcc"
 
 configure_pre() {
-  export CFLAGS=${CFLAGS/-Ofast/-O3}
-  export CFLAGS=${CFLAGS/-march=broadwell/}
+  export CFLAGS=${CFLAGS/-march=skylake -mno-avx512f/}
 }
 
 make_install_post() {

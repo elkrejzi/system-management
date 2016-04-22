@@ -10,12 +10,4 @@ export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--enable-custom-modes)
 export CONFIGURE_FLAGS_32=(--enable-custom-modes)
 
-configure_pre() {
-  export CFLAGS=${CFLAGS/-Ofast/-O3}
-}
-
-configure_pre_32() {
-  export CFLAGS=${CFLAGS/-Ofast/-O3}
-}
-
 . $(dirname $0)/master.sh

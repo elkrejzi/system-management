@@ -10,15 +10,13 @@ export PATCHES_LIST=("nss-standalone.patch")
 export PATCHES_LIST_32=("nss-standalone.patch")
 
 configure_override() {
-  export XCFLAGS=${CFLAGS/-Ofast/-O2}
+  export XCFLAGS=${CFLAGS}
   unset CFLAGS
-  export CXXFLAGS=${CFLAGS/-Ofast/-O2}
 }
 
 configure_override_32() {
-  export XCFLAGS=${CFLAGS/-Ofast/-O2}
+  export XCFLAGS=${CFLAGS}
   unset CFLAGS
-  export CXXFLAGS=${CFLAGS/-Ofast/-O2}
 }
 
 make_override() {

@@ -79,8 +79,7 @@ done
 pushd llvm
   if [ ! -z $1 ]
   then
-    LLVM_VER=$(grep "PACKAGE_VERSION=" configure | cut -d \' -f 2)$(svn info | grep "Revision:" | awk '{print $2}')
-    export LLVM_VER=${LLVM_VER/svn/.svn}
+    export LLVM_VER=$(grep LLVM_VERSION CMakeLists.txt | grep -o [0-9] | tr "\n" ".")"svn"$(svnversion)
   fi
 
   sed -i "s:CLANG_HAVE_LIBXML 1:CLANG_HAVE_LIBXML 0:g" tools/clang/CMakeLists.txt

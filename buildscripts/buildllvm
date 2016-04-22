@@ -65,8 +65,7 @@ then
       done
 
       pushd ${PKGDIR}
-        PKGVER=$(grep "PACKAGE_VERSION=" configure | cut -d \' -f 2)$(svn info | grep "Revision:" | awk '{print $2}')
-        export PKGVER=${PKGVER/svn/.svn}
+        export PKGVER=$(grep LLVM_VERSION CMakeLists.txt | grep -o [0-9] | tr "\n" ".")"svn"$(svnversion)
       popd
 
       if [ -z ${DEST_SET} ]

@@ -24,7 +24,6 @@ export CONFIGURE_FLAGS=("${ADDITIONAL_CFG_FLAGS[@]}"
 
 configure_pre() {
   sed -e "s@DEFAULT_PGSOCKET_DIR  \"/tmp\"@DEFAULT_PGSOCKET_DIR  \"/run/postgresql\"@" -i src/include/pg_config_manual.h
-  export CFLAGS=${CFLAGS/-Ofast/-O3}
 }
 
 make_install_post() {

@@ -20,14 +20,6 @@ export USER_CFLAGS="-DSQLITE_ENABLE_FTS3=1            \
 export CONFIGURE_FLAGS=(--enable-fts5)
 export CONFIGURE_FLAGS_32=(--enable-fts5)
 
-configure_pre() {
-  export CFLAGS=${CFLAGS/-Ofast/-O3}
-}
-
-configure_pre_32() {
-  export CFLAGS=${CFLAGS/-Ofast/-O3}
-}
-
 make_install_post() {
   pushd tea
 

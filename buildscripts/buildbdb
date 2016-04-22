@@ -19,8 +19,4 @@ export CONFIGURE_FLAGS=(--enable-compat185
 export DEFAULT_CC="gcc"
 export DEFAULT_CXX="g++"
 
-configure_pre() {
-  export CFLAGS=${CFLAGS/-Ofast/-O3}
-}
-
 . $(dirname $0)/master.sh
