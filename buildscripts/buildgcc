@@ -3,7 +3,7 @@
 export PKGNAME=gcc
 export PKGVER=6-20160421
 #export PKGVER=5.3.0
-export GCCVER="6.0.0 20160421"
+export GCCVER="6.0.1 20160421"
 #export GCCVER=${PKGVER}
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://mirror.checkdomain.de/gnu/gcc/${PKGNAME}-${PKGVER}/${PKGNAME}-${PKGVER}.tar.bz2"

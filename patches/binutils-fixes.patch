@@ -1,6 +1,67 @@
+--- a/bfd/archive.c	2016-01-25 09:51:06.000000000 +0100
++++ b/bfd/archive.c	2016-04-23 00:55:57.889420127 +0200
+@@ -802,7 +802,7 @@
+ 	     Note that last_file->origin can be odd in the case of
+ 	     BSD-4.4-style element with a long odd size.  */
+ 	  filestart += filestart % 2;
+-	  if (filestart <= last_file->proxy_origin)
++	  if (filestart < last_file->proxy_origin)
+ 	    {
+ 	      /* Prevent looping.  See PR19256.  */
+ 	      bfd_set_error (bfd_error_malformed_archive);
+--- a/bfd/coff-alpha.c	2016-01-25 09:51:06.000000000 +0100
++++ b/bfd/coff-alpha.c	2016-04-23 00:55:57.889420127 +0200
+@@ -2208,7 +2208,7 @@
+ 	 BSD-4.4-style element with a long odd size.  */
+       filestart = last_file->proxy_origin + size;
+       filestart += filestart % 2;
+-      if (filestart <= last_file->proxy_origin)
++      if (filestart < last_file->proxy_origin)
+ 	{
+ 	  /* Prevent looping.  See PR19256.  */
+ 	  bfd_set_error (bfd_error_malformed_archive);
+--- a/bfd/dwarf2.c	2016-01-25 09:51:06.000000000 +0100
++++ b/bfd/dwarf2.c	2016-04-23 00:56:51.473131334 +0200
+@@ -3706,8 +3706,10 @@
+ 	   fail more quickly.  */
+ 	return FALSE;
+ 
++      /* Set BFD_DECOMPRESS to decompress debug sections.  */
+       if ((debug_bfd = bfd_openr (debug_filename, NULL)) == NULL
+-	  || ! bfd_check_format (debug_bfd, bfd_object)
++	  || !(debug_bfd->flags |= BFD_DECOMPRESS,
++	       bfd_check_format (debug_bfd, bfd_object))
+ 	  || (msec = find_debug_info (debug_bfd,
+ 				      debug_sections, NULL)) == NULL
+ 	  || !bfd_generic_link_read_symbols (debug_bfd))
 --- a/bfd/elf32-i386.c	2016-01-25 09:51:06.000000000 +0100
-+++ b/bfd/elf32-i386.c	2016-02-16 14:47:00.724974874 +0100
-@@ -4016,10 +4016,12 @@
++++ b/bfd/elf32-i386.c	2016-04-23 00:59:29.981223101 +0200
+@@ -1830,7 +1830,8 @@
+ 	       && (sec->flags & SEC_ALLOC) != 0
+ 	       && (r_type != R_386_PC32
+ 		   || (h != NULL
+-		       && (! SYMBOLIC_BIND (info, h)
++		       && (! (bfd_link_pie (info)
++			      || SYMBOLIC_BIND (info, h))
+ 			   || h->root.type == bfd_link_hash_defweak
+ 			   || !h->def_regular))))
+ 	      || (ELIMINATE_COPY_RELOCS
+@@ -2490,12 +2491,14 @@
+ 	}
+       else
+ 	{
++	  eh->plt_got.offset = (bfd_vma) -1;
+ 	  h->plt.offset = (bfd_vma) -1;
+ 	  h->needs_plt = 0;
+ 	}
+     }
+   else
+     {
++      eh->plt_got.offset = (bfd_vma) -1;
+       h->plt.offset = (bfd_vma) -1;
+       h->needs_plt = 0;
+     }
+@@ -4016,10 +4019,12 @@
  
  	  /* It is relative to .got.plt section.  */
  	  if (h->got.offset != (bfd_vma) -1)
@@ -15,9 +76,80 @@
  	  else
  	    /* Use GOTPLT entry.  */
  	    relocation = (h->plt.offset / plt_entry_size - 1 + 3) * 4;
+@@ -4285,8 +4290,8 @@
+ 	      else if (h != NULL
+ 		       && h->dynindx != -1
+ 		       && (r_type == R_386_PC32
+-			   || !bfd_link_pic (info)
+-			   || !SYMBOLIC_BIND (info, h)
++			   || !(bfd_link_executable (info)
++				|| SYMBOLIC_BIND (info, h))
+ 			   || !h->def_regular))
+ 		outrel.r_info = ELF32_R_INFO (h->dynindx, r_type);
+ 	      else
+@@ -5355,19 +5360,23 @@
+   bfd *abfd = info->output_bfd;
+   const struct elf_backend_data *bed = get_elf_backend_data (abfd);
+   struct elf_link_hash_table *htab = elf_hash_table (info);
+-  unsigned long r_symndx = ELF32_R_SYM (rela->r_info);
+-  Elf_Internal_Sym sym;
+ 
+-  if (htab->dynsym == NULL
+-      || !bed->s->swap_symbol_in (abfd,
+-				  (htab->dynsym->contents
+-				   + r_symndx * sizeof (Elf32_External_Sym)),
+-				  0, &sym))
+-    abort ();
++  if (htab->dynsym != NULL
++      && htab->dynsym->contents != NULL)
++    {
++      /* Check relocation against STT_GNU_IFUNC symbol if there are
++         dynamic symbols.  */
++      unsigned long r_symndx = ELF32_R_SYM (rela->r_info);
++      Elf_Internal_Sym sym;
++      if (!bed->s->swap_symbol_in (abfd,
++				   (htab->dynsym->contents
++				    + r_symndx * sizeof (Elf32_External_Sym)),
++				   0, &sym))
++	abort ();
+ 
+-  /* Check relocation against STT_GNU_IFUNC symbol.  */
+-  if (ELF32_ST_TYPE (sym.st_info) == STT_GNU_IFUNC)
+-    return reloc_class_ifunc;
++      if (ELF32_ST_TYPE (sym.st_info) == STT_GNU_IFUNC)
++	return reloc_class_ifunc;
++    }
+ 
+   switch (ELF32_R_TYPE (rela->r_info))
+     {
 --- a/bfd/elf64-x86-64.c	2016-01-25 09:51:06.000000000 +0100
-+++ b/bfd/elf64-x86-64.c	2016-02-16 14:45:48.379450511 +0100
-@@ -3190,35 +3190,43 @@
++++ b/bfd/elf64-x86-64.c	2016-04-23 00:59:29.982223114 +0200
+@@ -2029,7 +2029,8 @@
+ 	       && (sec->flags & SEC_ALLOC) != 0
+ 	       && (! IS_X86_64_PCREL_TYPE (r_type)
+ 		   || (h != NULL
+-		       && (! SYMBOLIC_BIND (info, h)
++		       && (! (bfd_link_pie (info)
++			      || SYMBOLIC_BIND (info, h))
+ 			   || h->root.type == bfd_link_hash_defweak
+ 			   || !h->def_regular))))
+ 	      || (ELIMINATE_COPY_RELOCS
+@@ -2723,12 +2724,14 @@
+ 	}
+       else
+ 	{
++	  eh->plt_got.offset = (bfd_vma) -1;
+ 	  h->plt.offset = (bfd_vma) -1;
+ 	  h->needs_plt = 0;
+ 	}
+     }
+   else
+     {
++      eh->plt_got.offset = (bfd_vma) -1;
+       h->plt.offset = (bfd_vma) -1;
+       h->needs_plt = 0;
+     }
+@@ -3190,35 +3193,43 @@
  	}
        else
  	{
@@ -32,23 +164,25 @@
 -	  for (asect = sec->output_section;
 -	       asect != NULL && asect != tsec->output_section;
 -	       asect = asect->next)
-+	     SEC and TSEC.  We store the estimated distances in the
-+	     compressed_size field of the output section, which is only
-+	     used to decompress the compressed input section.  */
-+	  if (sec->output_section->compressed_size == 0)
- 	    {
+-	    {
 -	      asection *i;
 -	      for (i = asect->output_section->map_head.s;
 -		   i != NULL;
 -		   i = i->map_head.s)
+-		{
+-		  size = align_power (size, i->alignment_power);
+-		  size += i->size;
++	     SEC and TSEC.  We store the estimated distances in the
++	     compressed_size field of the output section, which is only
++	     used to decompress the compressed input section.  */
++	  if (sec->output_section->compressed_size == 0)
++	    {
 +	      asection *asect;
 +	      bfd_size_type size = 0;
 +	      for (asect = link_info->output_bfd->sections;
 +		   asect != NULL;
 +		   asect = asect->next)
- 		{
--		  size = align_power (size, i->alignment_power);
--		  size += i->size;
++		{
 +		  asection *i;
 +		  for (i = asect->map_head.s;
 +		       i != NULL;
@@ -76,8 +210,127 @@
  	      > 0xffffffff)
  	    continue;
  	}
+@@ -4631,8 +4642,8 @@
+ 	      else if (h != NULL
+ 		       && h->dynindx != -1
+ 		       && (IS_X86_64_PCREL_TYPE (r_type)
+-			   || ! bfd_link_pic (info)
+-			   || ! SYMBOLIC_BIND (info, h)
++			   || !(bfd_link_executable (info)
++				|| SYMBOLIC_BIND (info, h))
+ 			   || ! h->def_regular))
+ 		{
+ 		  outrel.r_info = htab->r_info (h->dynindx, r_type);
+@@ -5728,19 +5739,23 @@
+   bfd *abfd = info->output_bfd;
+   const struct elf_backend_data *bed = get_elf_backend_data (abfd);
+   struct elf_x86_64_link_hash_table *htab = elf_x86_64_hash_table (info);
+-  unsigned long r_symndx = htab->r_sym (rela->r_info);
+-  Elf_Internal_Sym sym;
+ 
+-  if (htab->elf.dynsym == NULL
+-      || !bed->s->swap_symbol_in (abfd,
+-				  (htab->elf.dynsym->contents
+-				   + r_symndx * bed->s->sizeof_sym),
+-				  0, &sym))
+-    abort ();
++  if (htab->elf.dynsym != NULL
++      && htab->elf.dynsym->contents != NULL)
++    {
++      /* Check relocation against STT_GNU_IFUNC symbol if there are
++         dynamic symbols.  */
++      unsigned long r_symndx = htab->r_sym (rela->r_info);
++      Elf_Internal_Sym sym;
++      if (!bed->s->swap_symbol_in (abfd,
++				   (htab->elf.dynsym->contents
++				    + r_symndx * bed->s->sizeof_sym),
++				   0, &sym))
++	abort ();
+ 
+-  /* Check relocation against STT_GNU_IFUNC symbol.  */
+-  if (ELF_ST_TYPE (sym.st_info) == STT_GNU_IFUNC)
+-    return reloc_class_ifunc;
++      if (ELF_ST_TYPE (sym.st_info) == STT_GNU_IFUNC)
++	return reloc_class_ifunc;
++    }
+ 
+   switch ((int) ELF32_R_TYPE (rela->r_info))
+     {
+--- a/bfd/elflink.c	2016-01-25 09:51:06.000000000 +0100
++++ b/bfd/elflink.c	2016-04-23 00:56:14.199636857 +0200
+@@ -555,6 +555,19 @@
+   if (h == NULL)
+     return provide;
+ 
++  if (h->versioned == unknown)
++    {
++      /* Set versioned if symbol version is unknown.  */
++      char *version = strrchr (name, ELF_VER_CHR);
++      if (version)
++	{
++	  if (version > name && version[-1] != ELF_VER_CHR)
++	    h->versioned = versioned_hidden;
++	  else
++	    h->versioned = versioned;
++	}
++    }
++
+   switch (h->root.type)
+     {
+     case bfd_link_hash_defined:
+@@ -1472,13 +1485,16 @@
+      represent variables; this can cause confusion in principle, but
+      any such confusion would seem to indicate an erroneous program or
+      shared library.  We also permit a common symbol in a regular
+-     object to override a weak symbol in a shared object.  */
++     object to override a weak symbol in a shared object.  A common
++     symbol in executable also overrides a symbol in a shared object.  */
+ 
+   if (newdyn
+       && newdef
+       && (olddef
+ 	  || (h->root.type == bfd_link_hash_common
+-	      && (newweak || newfunc))))
++	      && (newweak
++		  || newfunc
++		  || (!olddyn && bfd_link_executable (info))))))
+     {
+       *override = TRUE;
+       newdef = FALSE;
+@@ -4562,8 +4578,10 @@
+ 		break;
+ 	      }
+ 
+-	  /* Don't add DT_NEEDED for references from the dummy bfd.  */
++	  /* Don't add DT_NEEDED for references from the dummy bfd nor
++	     for unmatched symbol.  */
+ 	  if (!add_needed
++	      && matched
+ 	      && definition
+ 	      && ((dynsym
+ 		   && h->ref_regular_nonweak
+--- a/binutils/Makefile.am	2015-11-13 09:27:40.000000000 +0100
++++ b/binutils/Makefile.am	2016-04-23 00:56:51.473131334 +0200
+@@ -192,6 +192,7 @@
+ 	EXPECT=$(EXPECT); export EXPECT; \
+ 	runtest=$(RUNTEST); \
+ 	if $(SHELL) -c "$$runtest --version" > /dev/null 2>&1; then \
++	  CC="$(CC)" CC_FOR_BUILD="$(CC_FOR_BUILD)" \
+ 	  CC_FOR_TARGET="$(CC_FOR_TARGET)" CFLAGS_FOR_TARGET="$(CFLAGS)" \
+ 		$$runtest --tool $(DEJATOOL) --srcdir $${srcdir}/testsuite \
+ 			$(RUNTESTFLAGS); \
+--- a/binutils/Makefile.in	2015-11-13 09:27:40.000000000 +0100
++++ b/binutils/Makefile.in	2016-04-23 00:56:51.474131347 +0200
+@@ -1290,6 +1290,7 @@
+ 	EXPECT=$(EXPECT); export EXPECT; \
+ 	runtest=$(RUNTEST); \
+ 	if $(SHELL) -c "$$runtest --version" > /dev/null 2>&1; then \
++	  CC="$(CC)" CC_FOR_BUILD="$(CC_FOR_BUILD)" \
+ 	  CC_FOR_TARGET="$(CC_FOR_TARGET)" CFLAGS_FOR_TARGET="$(CFLAGS)" \
+ 		$$runtest --tool $(DEJATOOL) --srcdir $${srcdir}/testsuite \
+ 			$(RUNTESTFLAGS); \
 --- a/gas/config/tc-i386.c	2016-01-25 09:51:06.000000000 +0100
-+++ b/gas/config/tc-i386.c	2016-02-16 14:46:28.557300128 +0100
++++ b/gas/config/tc-i386.c	2016-04-23 00:59:29.984223140 +0200
 @@ -552,6 +552,10 @@
     specified explicitly.  */
  static int omit_lock_prefix = 0;
@@ -89,7 +342,28 @@
  static enum check_kind
    {
      check_none = 0,
-@@ -7241,9 +7245,14 @@
+@@ -1871,6 +1875,9 @@
+   if (r->reg_flags & RegRex)
+     nr += 8;
+ 
++  if (r->reg_flags & RegVRex)
++    nr += 16;
++
+   return nr;
+ }
+ 
+@@ -4557,7 +4564,9 @@
+ 	    && i.op[op].disps->X_op == O_constant)
+ 	  {
+ 	    offsetT value = i.op[op].disps->X_add_number;
+-	    int vec_disp8_ok = fits_in_vec_disp8 (value);
++	    int vec_disp8_ok
++	      = (i.disp_encoding != disp_encoding_32bit
++		 && fits_in_vec_disp8 (value));
+ 	    if (t->operand_types [op].bitfield.vec_disp8)
+ 	      {
+ 		if (vec_disp8_ok)
+@@ -7241,9 +7250,14 @@
  	      /* Check for "call/jmp *mem", "mov mem, %reg",
  		 "test %reg, mem" and "binop mem, %reg" where binop
  		 is one of adc, add, and, cmp, or, sbb, sub, xor
@@ -107,7 +381,7 @@
  		  && ((i.operands == 1
  		       && i.tm.base_opcode == 0xff
  		       && (i.rm.reg == 2 || i.rm.reg == 4))
-@@ -9616,6 +9625,7 @@
+@@ -9616,6 +9630,7 @@
  #define OPTION_MSHARED (OPTION_MD_BASE + 21)
  #define OPTION_MAMD64 (OPTION_MD_BASE + 22)
  #define OPTION_MINTEL64 (OPTION_MD_BASE + 23)
@@ -115,7 +389,7 @@
  
  struct option md_longopts[] =
  {
-@@ -9647,6 +9657,7 @@
+@@ -9647,6 +9662,7 @@
    {"mbig-obj", no_argument, NULL, OPTION_MBIG_OBJ},
  #endif
    {"momit-lock-prefix", required_argument, NULL, OPTION_OMIT_LOCK_PREFIX},
@@ -123,7 +397,7 @@
    {"mevexrcig", required_argument, NULL, OPTION_MEVEXRCIG},
    {"mamd64", no_argument, NULL, OPTION_MAMD64},
    {"mintel64", no_argument, NULL, OPTION_MINTEL64},
-@@ -9966,6 +9977,15 @@
+@@ -9966,6 +9982,15 @@
          as_fatal (_("invalid -momit-lock-prefix= option: `%s'"), arg);
        break;
  
@@ -139,7 +413,7 @@
      case OPTION_MAMD64:
        cpu_arch_flags.bitfield.cpuamd64 = 1;
        cpu_arch_flags.bitfield.cpuintel64 = 0;
-@@ -10146,6 +10166,9 @@
+@@ -10146,6 +10171,9 @@
    -momit-lock-prefix=[no|yes]\n\
                            strip all lock prefixes\n"));
    fprintf (stream, _("\
@@ -150,7 +424,7 @@
    fprintf (stream, _("\
    -mintel64               accept only Intel64 ISA\n"));
 --- a/gas/config.in	2015-11-13 09:27:41.000000000 +0100
-+++ b/gas/config.in	2016-02-16 14:46:28.556300107 +0100
++++ b/gas/config.in	2016-04-23 00:59:29.984223140 +0200
 @@ -39,6 +39,9 @@
  /* Define if you want compressed debug sections by default. */
  #undef DEFAULT_FLAG_COMPRESS_DEBUG
@@ -162,7 +436,7 @@
  #undef EMULATIONS
  
 --- a/gas/configure	2016-01-25 09:54:08.000000000 +0100
-+++ b/gas/configure	2016-02-16 14:46:28.560300191 +0100
++++ b/gas/configure	2016-04-23 00:59:29.986223166 +0200
 @@ -765,6 +765,7 @@
  enable_targets
  enable_checking
@@ -253,7 +527,7 @@
  $as_echo "#define DEFAULT_FLAG_COMPRESS_DEBUG 1" >>confdefs.h
  
 --- a/gas/configure.ac	2016-01-25 09:51:06.000000000 +0100
-+++ b/gas/configure.ac	2016-02-16 14:46:28.560300191 +0100
++++ b/gas/configure.ac	2016-04-23 00:59:29.986223166 +0200
 @@ -77,6 +77,17 @@
    *)   ac_default_compressed_debug_sections=unset ;;
  esac])dnl
@@ -307,7 +581,7 @@
  fi
  
 --- a/ld/configure	2016-01-25 09:54:11.000000000 +0100
-+++ b/ld/configure	2016-02-16 14:43:18.377200561 +0100
++++ b/ld/configure	2016-04-23 00:59:29.989223206 +0200
 @@ -17134,7 +17134,7 @@
    fi
  done
@@ -318,7 +592,7 @@
  $as_echo "#define DEFAULT_FLAG_COMPRESS_DEBUG 1" >>confdefs.h
  
 --- a/ld/configure.ac	2015-11-13 09:27:42.000000000 +0100
-+++ b/ld/configure.ac	2016-02-16 14:43:18.377200561 +0100
++++ b/ld/configure.ac	2016-04-23 00:59:29.989223206 +0200
 @@ -384,7 +384,7 @@
    fi
  done
@@ -328,8 +602,183 @@
    AC_DEFINE(DEFAULT_FLAG_COMPRESS_DEBUG, 1, [Define if you want compressed debug sections by default.])
  fi
  
+--- a/ld/emultempl/elf32.em	2015-11-13 09:27:42.000000000 +0100
++++ b/ld/emultempl/elf32.em	2016-04-23 00:55:32.628084006 +0200
+@@ -1946,25 +1946,32 @@
+       return os;
+     }
+ 
++  flags = s->flags;
++  if (!bfd_link_relocatable (&link_info))
++    {
++      nexts = s;
++      while ((nexts = bfd_get_next_section_by_name (nexts->owner, nexts))
++	     != NULL)
++	if (nexts->output_section == NULL
++	    && (nexts->flags & SEC_EXCLUDE) == 0
++	    && ((nexts->flags ^ flags) & (SEC_LOAD | SEC_ALLOC)) == 0
++	    && (nexts->owner->flags & DYNAMIC) == 0
++	    && nexts->owner->usrdata != NULL
++	    && !(((lang_input_statement_type *) nexts->owner->usrdata)
++		 ->flags.just_syms)
++	    && _bfd_elf_match_sections_by_type (nexts->owner, nexts,
++						s->owner, s))
++	  flags = (((flags ^ SEC_READONLY)
++		    | (nexts->flags ^ SEC_READONLY))
++		   ^ SEC_READONLY);
++    }
++
+   /* Decide which segment the section should go in based on the
+      section name and section flags.  We put loadable .note sections
+      right after the .interp section, so that the PT_NOTE segment is
+      stored right after the program headers where the OS can read it
+      in the first page.  */
+ 
+-  flags = s->flags;
+-  nexts = s;
+-  while ((nexts = bfd_get_next_section_by_name (nexts->owner, nexts)) != NULL)
+-    if (nexts->output_section == NULL
+-	&& (nexts->flags & SEC_EXCLUDE) == 0
+-	&& ((nexts->flags ^ flags) & (SEC_LOAD | SEC_ALLOC)) == 0
+-	&& (nexts->owner->flags & DYNAMIC) == 0
+-	&& nexts->owner->usrdata != NULL
+-	&& !(((lang_input_statement_type *) nexts->owner->usrdata)
+-	     ->flags.just_syms)
+-	&& _bfd_elf_match_sections_by_type (nexts->owner, nexts, s->owner, s))
+-      flags = (((flags ^ SEC_READONLY) | (nexts->flags ^ SEC_READONLY))
+-	       ^ SEC_READONLY);
+   place = NULL;
+   if ((flags & (SEC_ALLOC | SEC_DEBUGGING)) == 0)
+     place = &hold[orphan_nonalloc];
+--- a/ld/emultempl/mmo.em	2015-11-13 09:27:42.000000000 +0100
++++ b/ld/emultempl/mmo.em	2016-04-23 00:55:32.629084019 +0200
+@@ -107,22 +107,28 @@
+       return os;
+     }
+ 
++  flags = s->flags;
++  if (!bfd_link_relocatable (&link_info))
++    {
++      nexts = s;
++      while ((nexts = bfd_get_next_section_by_name (nexts->owner, nexts))
++	     != NULL)
++	if (nexts->output_section == NULL
++	    && (nexts->flags & SEC_EXCLUDE) == 0
++	    && ((nexts->flags ^ flags) & (SEC_LOAD | SEC_ALLOC)) == 0
++	    && (nexts->owner->flags & DYNAMIC) == 0
++	    && nexts->owner->usrdata != NULL
++	    && !(((lang_input_statement_type *) nexts->owner->usrdata)
++		 ->flags.just_syms))
++	  flags = (((flags ^ SEC_READONLY) | (nexts->flags ^ SEC_READONLY))
++		   ^ SEC_READONLY);
++    }
++
+   /* Check for matching section type flags for sections we care about.
+      A section without contents can have SEC_LOAD == 0, but we still
+      want it attached to a sane section so the symbols appear as
+      expected.  */
+-  flags = s->flags;
+-  nexts = s;
+-  while ((nexts = bfd_get_next_section_by_name (nexts->owner, nexts)) != NULL)
+-    if (nexts->output_section == NULL
+-	&& (nexts->flags & SEC_EXCLUDE) == 0
+-	&& ((nexts->flags ^ flags) & (SEC_LOAD | SEC_ALLOC)) == 0
+-	&& (nexts->owner->flags & DYNAMIC) == 0
+-	&& nexts->owner->usrdata != NULL
+-	&& !(((lang_input_statement_type *) nexts->owner->usrdata)
+-	     ->flags.just_syms))
+-      flags = (((flags ^ SEC_READONLY) | (nexts->flags ^ SEC_READONLY))
+-	       ^ SEC_READONLY);
++
+   if ((flags & (SEC_ALLOC | SEC_READONLY)) != SEC_READONLY)
+     for (i = 0; i < sizeof (holds) / sizeof (holds[0]); i++)
+       if ((flags & holds[i].nonzero_flags) != 0)
+--- a/ld/emultempl/pe.em	2015-11-13 09:27:42.000000000 +0100
++++ b/ld/emultempl/pe.em	2016-04-23 00:55:32.629084019 +0200
+@@ -2225,21 +2225,27 @@
+ 	  orphan_init_done = 1;
+ 	}
+ 
++      flags = s->flags;
++      if (!bfd_link_relocatable (&link_info))
++	{
++	  nexts = s;
++	  while ((nexts = bfd_get_next_section_by_name (nexts->owner,
++							nexts)))
++	    if (nexts->output_section == NULL
++		&& (nexts->flags & SEC_EXCLUDE) == 0
++		&& ((nexts->flags ^ flags) & (SEC_LOAD | SEC_ALLOC)) == 0
++		&& (nexts->owner->flags & DYNAMIC) == 0
++		&& nexts->owner->usrdata != NULL
++		&& !(((lang_input_statement_type *) nexts->owner->usrdata)
++		     ->flags.just_syms))
++	      flags = (((flags ^ SEC_READONLY)
++			| (nexts->flags ^ SEC_READONLY))
++		       ^ SEC_READONLY);
++	}
++
+       /* Try to put the new output section in a reasonable place based
+ 	 on the section name and section flags.  */
+ 
+-      flags = s->flags;
+-      nexts = s;
+-      while ((nexts = bfd_get_next_section_by_name (nexts->owner, nexts)))
+-	if (nexts->output_section == NULL
+-	    && (nexts->flags & SEC_EXCLUDE) == 0
+-	    && ((nexts->flags ^ flags) & (SEC_LOAD | SEC_ALLOC)) == 0
+-	    && (nexts->owner->flags & DYNAMIC) == 0
+-	    && nexts->owner->usrdata != NULL
+-	    && !(((lang_input_statement_type *) nexts->owner->usrdata)
+-		 ->flags.just_syms))
+-	  flags = (((flags ^ SEC_READONLY) | (nexts->flags ^ SEC_READONLY))
+-		   ^ SEC_READONLY);
+       place = NULL;
+       if ((flags & SEC_ALLOC) == 0)
+ 	;
+--- a/ld/emultempl/pep.em	2015-11-13 09:27:42.000000000 +0100
++++ b/ld/emultempl/pep.em	2016-04-23 00:55:32.629084019 +0200
+@@ -1996,21 +1996,27 @@
+ 	  orphan_init_done = 1;
+ 	}
+ 
++      flags = s->flags;
++      if (!bfd_link_relocatable (&link_info))
++	{
++	  nexts = s;
++	  while ((nexts = bfd_get_next_section_by_name (nexts->owner,
++							nexts)))
++	    if (nexts->output_section == NULL
++		&& (nexts->flags & SEC_EXCLUDE) == 0
++		&& ((nexts->flags ^ flags) & (SEC_LOAD | SEC_ALLOC)) == 0
++		&& (nexts->owner->flags & DYNAMIC) == 0
++		&& nexts->owner->usrdata != NULL
++		&& !(((lang_input_statement_type *) nexts->owner->usrdata)
++		     ->flags.just_syms))
++	      flags = (((flags ^ SEC_READONLY)
++			| (nexts->flags ^ SEC_READONLY))
++		       ^ SEC_READONLY);
++	}
++
+       /* Try to put the new output section in a reasonable place based
+ 	 on the section name and section flags.  */
+ 
+-      flags = s->flags;
+-      nexts = s;
+-      while ((nexts = bfd_get_next_section_by_name (nexts->owner, nexts)))
+-	if (nexts->output_section == NULL
+-	    && (nexts->flags & SEC_EXCLUDE) == 0
+-	    && ((nexts->flags ^ flags) & (SEC_LOAD | SEC_ALLOC)) == 0
+-	    && (nexts->owner->flags & DYNAMIC) == 0
+-	    && nexts->owner->usrdata != NULL
+-	    && !(((lang_input_statement_type *) nexts->owner->usrdata)
+-		 ->flags.just_syms))
+-	  flags = (((flags ^ SEC_READONLY) | (nexts->flags ^ SEC_READONLY))
+-		   ^ SEC_READONLY);
+       place = NULL;
+       if ((flags & SEC_ALLOC) == 0)
+ 	;
 --- a/ld/lexsup.c	2015-11-13 09:27:42.000000000 +0100
-+++ b/ld/lexsup.c	2016-02-16 14:47:32.165629964 +0100
++++ b/ld/lexsup.c	2016-04-23 00:59:29.990223219 +0200
 @@ -1586,15 +1586,14 @@
    /* We may have -Bsymbolic, -Bsymbolic-functions, --dynamic-list-data,
       --dynamic-list-cpp-new, --dynamic-list-cpp-typeinfo and
@@ -361,7 +810,7 @@
        break;
      }
 --- a/opcodes/i386-dis.c	2016-01-25 09:51:06.000000000 +0100
-+++ b/opcodes/i386-dis.c	2016-02-16 14:48:03.213272848 +0100
++++ b/opcodes/i386-dis.c	2016-04-23 00:59:29.991223232 +0200
 @@ -13644,7 +13644,7 @@
      if (op_index[i] != -1 && op_riprel[i])
        {

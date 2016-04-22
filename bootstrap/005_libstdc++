@@ -18,7 +18,7 @@ tar xf ${SROOT}/gcc-${GCC_VER}.tar.bz2
         --disable-nls               \
         --disable-libstdcxx-threads \
         --disable-libstdcxx-pch     \
-        --with-gxx-include-dir=/tools/$LFS_TGT/include/c++/6.0.0 # ${GCC_VER}
+        --with-gxx-include-dir=/tools/$LFS_TGT/include/c++/$(cat ../gcc-${GCC_VER}/gcc/BASE-VER)
     make
     make install
   popd
