@@ -1,8 +1,9 @@
 #!/bin/bash -e
 
 export PKGNAME=virglrenderer
-export PKGVER=0.4.1
+export PKGVER=0.5.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://www.freedesktop.org/software/virgl/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
 . $(dirname $0)/master.sh

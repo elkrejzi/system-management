@@ -11,7 +11,7 @@ case $(basename $0) in
   ;;
   buildpython-babel )
     export PKGNAME=Babel
-    export PKGVER=2.3.3
+    export PKGVER=2.3.4
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/B/Babel/${PKGTAR}"
     export DEST=/binary/python/python-babel-${PKGVER}
@@ -49,7 +49,7 @@ case $(basename $0) in
   ;;
   buildpython-imagesize )
     export PKGNAME=imagesize
-    export PKGVER=0.7.0
+    export PKGVER=0.7.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/i/imagesize/${PKGTAR}"
     export DEST=/binary/python/python-imagesize-${PKGVER}
@@ -111,14 +111,14 @@ case $(basename $0) in
   ;;
   buildpython-pyparsing )
     export PKGNAME=pyparsing
-    export PKGVER=2.1.0
+    export PKGVER=2.1.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/p/pyparsing/${PKGTAR}"
     export DEST=/binary/python/python-pyparsing-${PKGVER}
   ;;
   buildpython-pytz )
     export PKGNAME=pytz
-    export PKGVER=2016.3
+    export PKGVER=2016.4
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="https://pypi.python.org/packages/source/p/pytz/${PKGTAR}"
     export DEST=/binary/python/python-pytz-${PKGVER}

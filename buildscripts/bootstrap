@@ -180,13 +180,13 @@ $(dirname $0)/builddbus
 $(dirname $0)/builddbus-glib
 $(dirname $0)/builddbus-python
 $(dirname $0)/buildefivar
-$(dirname $0)/buildfirebird
 $(dirname $0)/buildguile
 $(dirname $0)/buildhtop
 $(dirname $0)/buildiana-etc
 $(dirname $0)/buildlibedit
 $(dirname $0)/buildlibgnome-keyring
 $(dirname $0)/buildlibical
+$(dirname $0)/buildlibtommath
 $(dirname $0)/buildlibusb
 $(dirname $0)/buildlibusb-compat
 $(dirname $0)/buildman-pages
@@ -202,6 +202,7 @@ $(dirname $0)/buildwayland-protocols
 $(dirname $0)/buildyaml
 $(dirname $0)/buildyasm
 $(dirname $0)/buildruby
+$(dirname $0)/buildfirebird
 $(dirname $0)/buildmariadb
 $(dirname $0)/buildpostgresql 1
 $(dirname $0)/buildcyrus-sasl 1

@@ -53,11 +53,11 @@ fi
 
 for project in llvm ${proj[@]}
 do
-  if [ ! -d llvm ]
+  if [ ! -d ${project} ]
   then
-    if [ -e $HOME/git/${project}.tar.xz ]
+    if [ -e $HOME/src/git/${project}.tar.xz ]
     then
-      tar xf $HOME/git/${project}.tar.xz
+      tar xf $HOME/src/git/${project}.tar.xz
       pushd ${project}
         svn up
       popd

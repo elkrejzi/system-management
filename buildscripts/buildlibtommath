@@ -1,0 +1,18 @@
+#!/bin/bash -e
+
+export PKGNAME=libtommath
+export PKGVER=1.0
+export PKGTAR=ltm-${PKGVER}.tar.xz
+export PKGURL="https://github.com/libtom/libtommath/releases/download/v${PKGVER}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MAKE_INSTALL_FLAGS="-f makefile.shared"
+
+configure_override() {
+  export CFLAGS="${CFLAGS} -I${PWD}"
+}
+
+make_override() {
+  true
+}
+
+. $(dirname $0)/master.sh

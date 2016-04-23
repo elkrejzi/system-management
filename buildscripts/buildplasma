@@ -17,7 +17,6 @@ build_all() {
   $(dirname $0)/buildbreeze $1
   $(dirname $0)/buildbreeze-gtk $1
   $(dirname $0)/buildkscreenlocker $1
-  $(dirname $0)/buildkhelpcenter $1
   $(dirname $0)/buildkinfocenter $1
   $(dirname $0)/buildksysguard $1
   $(dirname $0)/buildkwin $1
@@ -107,7 +106,6 @@ plasmas=(
   breeze
   breeze-gtk
   kscreenlocker
-  khelpcenter
   kinfocenter
   ksysguard
   kwin

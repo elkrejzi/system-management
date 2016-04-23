@@ -1,35 +1,40 @@
 #!/bin/bash -e
 
 export PKGNAME=firebird
-export PKGVER=2.5.5.26952
+export PKGVER=3.0.0.32483
 export PKGTAR=Firebird-${PKGVER}-0.tar.bz2
 export PKGDIR=Firebird-${PKGVER}-0
 export PKGURL="https://downloads.sourceforge.net/firebird/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
 
-export CONFIGURE_FLAGS=(--with-system-icu
-                        --without-fbudf
-                        --without-fbsbin
-                        --without-fbconf
+export CONFIGURE_FLAGS=(--without-fbconf
                         --without-fbdoc
+                        --without-fbglock
+                        --without-fbhelp
+                        --without-fbintl
+                        --without-fblog
+                        --without-fbmisc
+                        --without-fbplugins
                         --without-fbsample
                         --without-fbsample-db
-                        --without-fbintl
-                        --without-fbmisc
-                        --without-fbhelp
+                        --without-fbsbin
                         --without-fbsecure-db
-                        --without-fblog
-                        --without-fbglock
-                        --without-fbplugins
-                        --with-fbmsg=/usr/share/firebird)
+                        --without-fbudf
+                        --with-fbmsg=/usr/share/firebird
+                        --with-system-editline)
+
+configure_pre() {
+  sed -i "s#{SHRLIB_EXT}.2#{SHRLIB_EXT}.3#g" builds/posix/make.defaults
+}
 
 make_install_override() {
   install -dm755 ${DEST}/usr/bin ${DEST}/usr/share/firebird
 
-  cp -rf gen/firebird/{lib,include} ${DEST}/usr
-  rm -rf ${DEST}/usr/lib/libedit.a
+  cp -rf gen/Release/firebird/{lib,include} ${DEST}/usr
+  rm -rf ${DEST}/usr/lib/libib_util.so
 
-  install -m644 gen/firebird/*.msg ${DEST}/usr/share/firebird
-  install -m755 gen/firebird/bin/fb_config ${DEST}/usr/bin
+  install -m644 gen/Release/firebird/*.msg ${DEST}/usr/share/firebird
+  install -m755 gen/Release/firebird/bin/fb_config ${DEST}/usr/bin
 }
 
 . $(dirname $0)/master.sh

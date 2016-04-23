@@ -28,6 +28,7 @@ $(dirname $0)/buildgwenview
 $(dirname $0)/buildkate
 $(dirname $0)/buildkcalc
 $(dirname $0)/buildkdebugsettings
+$(dirname $0)/buildkhelpcenter
 $(dirname $0)/buildkid3
 $(dirname $0)/buildkile
 $(dirname $0)/buildkonsole

@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=wavpack
-export PKGVER=4.75.2
+export PKGVER=4.80.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://www.wavpack.com/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}

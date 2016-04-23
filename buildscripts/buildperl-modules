@@ -32,7 +32,7 @@ case $(basename $0) in
   ;;
   buildperl-io-socket-ssl )
     export PKGNAME=IO-Socket-SSL
-    export PKGVER=2.024
+    export PKGVER=2.027
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="http://search.cpan.org/CPAN/authors/id/S/SU/SULLR/${PKGTAR}"
     export DEST=/binary/perl/perl-io-socket-ssl-${PKGVER}
@@ -47,7 +47,7 @@ case $(basename $0) in
   ;;
   buildperl-net-ssleay )
     export PKGNAME=Net-SSLeay
-    export PKGVER=1.72
+    export PKGVER=1.74
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="http://search.cpan.org/CPAN/authors/id/M/MI/MIKEM/${PKGTAR}"
     export DEST=/binary/perl/perl-net-ssleay-${PKGVER}

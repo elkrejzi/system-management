@@ -35,6 +35,9 @@ case $(basename $0) in
   buildkdebugsettings )
     export PKGNAME=kdebugsettings
   ;;
+  buildkhelpcenter )
+    export PKGNAME=khelpcenter
+  ;;
   buildkile )
     export PKGNAME=kile
     export PKGVER=2.1+7b238c4

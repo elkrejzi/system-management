@@ -22,7 +22,7 @@ case $(basename $0) in
   ;;
   buildtdb )
     export PKGNAME=tdb
-    export PKGVER=1.3.8
+    export PKGVER=1.3.9
     export MULTILIB_BUILD=1
     export CONFIGURE_FLAGS_32=(--disable-python)
     export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done")
