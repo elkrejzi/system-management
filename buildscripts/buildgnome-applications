@@ -114,7 +114,7 @@ case $(basename $0) in
   ;;
   buildgnome-tweak-tool )
     export PKGNAME=gnome-tweak-tool
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildgnome-weather )
     export PKGNAME=gnome-weather

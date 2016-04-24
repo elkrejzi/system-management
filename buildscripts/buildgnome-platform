@@ -240,7 +240,7 @@ case $(basename $0) in
   ;;
   buildgtksourceview )
     export PKGNAME=gtksourceview
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
   ;;
   buildgtk-vnc )
     export PKGNAME=gtk-vnc
