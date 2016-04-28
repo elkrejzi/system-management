@@ -110,7 +110,7 @@ case $(basename $0) in
   ;;
   buildgnome-todo )
     export PKGNAME=gnome-todo
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildgnome-tweak-tool )
     export PKGNAME=gnome-tweak-tool
@@ -127,7 +127,7 @@ case $(basename $0) in
   ;;
   buildnautilus )
     export PKGNAME=nautilus
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
     export CONFIGURE_FLAGS=(--disable-packagekit
                             --disable-selinux
                             --disable-update-mimedb

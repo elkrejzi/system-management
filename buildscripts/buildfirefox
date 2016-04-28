@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=firefox
-export PKGVER=45.0.2
+export PKGVER=46.0
 export PKGTAR=${PKGNAME}-${PKGVER}.source.tar.xz
 export PKGURL="https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/${PKGVER}/source/${PKGTAR}"
 export NO_OPTIMIZATION=1
@@ -13,7 +13,6 @@ configure_override() {
 cat > mozconfig << "EOF"
 ac_add_options --enable-application=browser
 ac_add_options --prefix=/usr
-ac_add_options --libdir=/usr/lib
 ac_add_options --enable-release
 ac_add_options --enable-gold
 ac_add_options --enable-pie
@@ -37,7 +36,6 @@ ac_add_options --enable-system-sqlite
 ac_add_options --enable-install-strip
 ac_add_options --enable-strip
 
-ac_add_options --enable-default-toolkit=cairo-gtk3
 ac_add_options --enable-gio
 ac_add_options --enable-official-branding
 ac_add_options --enable-pulseaudio
@@ -52,7 +50,6 @@ ac_add_options --disable-gstreamer
 
 ac_add_options --disable-crashreporter
 ac_add_options --disable-debug
-ac_add_options --disable-elf-hack
 ac_add_options --disable-installer
 ac_add_options --disable-mochitest
 ac_add_options --disable-tests

@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=subversion
-export PKGVER=1.9.3
+export PKGVER=1.9.4
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://archive.apache.org/dist/subversion/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

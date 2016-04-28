@@ -2,7 +2,7 @@
 
 . $(dirname $0)/000_shared
 
-rm -rf gcc-${GCC_VER} gcc-build ${LOGDIR}/gcc-pass2-${GCC_VER}.log
+rm -rf gcc-${GCC_VER} ${LOGDIR}/gcc-pass2-${GCC_VER}.log
 
 tar xf ${SROOT}/gcc-${GCC_VER}.tar.bz2
 
@@ -14,11 +14,11 @@ tar xf ${SROOT}/gcc-${GCC_VER}.tar.bz2
       `dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/include-fixed/limits.h
 
     tar -xf ${SROOT}/mpfr-${MPFR_VER}.tar.xz
-    mv -v mpfr-${MPFR_VER} mpfr
+    mv mpfr-${MPFR_VER} mpfr
     tar -xf ${SROOT}/gmp-${GMP_VER}.tar.xz
-    mv -v gmp-${GMP_VER%a} gmp
+    mv gmp-${GMP_VER%a} gmp
     tar -xf ${SROOT}/mpc-${MPC_VER}.tar.gz
-    mv -v mpc-${MPC_VER} mpc
+    mv mpc-${MPC_VER} mpc
 
     patch -Np1 -i ${PROOT}/gcc-pure64.patch
 
@@ -28,7 +28,7 @@ tar xf ${SROOT}/gcc-${GCC_VER}.tar.bz2
     for file in \
      $(find gcc/config -name linux64.h -o -name linux.h -o -name sysv4.h)
     do
-      cp -uv $file{,.orig}
+      cp -u $file{,.orig}
       sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tools&@g' \
           -e 's@/usr@/tools@g' $file.orig > $file
       echo '
@@ -39,13 +39,13 @@ tar xf ${SROOT}/gcc-${GCC_VER}.tar.bz2
       touch $file.orig
     done
   popd
-  mkdir -v gcc-build
-  pushd gcc-build
+  mkdir gcc-${GCC_VER}/build
+  pushd gcc-${GCC_VER}/build
     CC=$LFS_TGT-gcc                                    \
     CXX=$LFS_TGT-g++                                   \
     AR=$LFS_TGT-ar                                     \
     RANLIB=$LFS_TGT-ranlib                             \
-    ../gcc-${GCC_VER}/configure                        \
+    ../configure                                       \
         --prefix=/tools                                \
         --with-local-prefix=/tools                     \
         --with-native-system-header-dir=/tools/include \
@@ -56,7 +56,7 @@ tar xf ${SROOT}/gcc-${GCC_VER}.tar.bz2
         --disable-libgomp
     make
     make install
-    ln -sv gcc /tools/bin/cc
+    ln -s gcc /tools/bin/cc
   popd
   }
 

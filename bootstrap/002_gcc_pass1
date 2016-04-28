@@ -2,7 +2,7 @@
 
 . $(dirname $0)/000_shared
 
-rm -rf gcc-${GCC_VER} gcc-build ${LOGDIR}/gcc-pass1-${GCC_VER}.log
+rm -rf gcc-${GCC_VER} ${LOGDIR}/gcc-pass1-${GCC_VER}.log
 
 tar xf ${SROOT}/gcc-${GCC_VER}.tar.bz2
 
@@ -11,11 +11,11 @@ tar xf ${SROOT}/gcc-${GCC_VER}.tar.bz2
   time {
   pushd gcc-${GCC_VER}
     tar -xf ${SROOT}/mpfr-${MPFR_VER}.tar.xz
-    mv -v mpfr-${MPFR_VER} mpfr
+    mv mpfr-${MPFR_VER} mpfr
     tar -xf ${SROOT}/gmp-${GMP_VER}.tar.xz
-    mv -v gmp-${GMP_VER%a} gmp
+    mv gmp-${GMP_VER%a} gmp
     tar -xf ${SROOT}/mpc-${MPC_VER}.tar.gz
-    mv -v mpc-${MPC_VER} mpc
+    mv mpc-${MPC_VER} mpc
 
     patch -Np1 -i ${PROOT}/gcc-pure64.patch
 
@@ -25,7 +25,7 @@ tar xf ${SROOT}/gcc-${GCC_VER}.tar.bz2
     for file in \
      $(find gcc/config -name linux64.h -o -name linux.h -o -name sysv4.h)
     do
-      cp -uv $file{,.orig}
+      cp -u $file{,.orig}
       sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tools&@g' \
           -e 's@/usr@/tools@g' $file.orig > $file
       echo '
@@ -36,9 +36,9 @@ tar xf ${SROOT}/gcc-${GCC_VER}.tar.bz2
       touch $file.orig
     done
   popd
-  mkdir -v gcc-build
-  pushd gcc-build
-    ../gcc-${GCC_VER}/configure                        \
+  mkdir gcc-${GCC_VER}/build
+  pushd gcc-${GCC_VER}/build
+    ../configure                                       \
         --target=$LFS_TGT                              \
         --prefix=/tools                                \
         --with-glibc-version=2.11                      \
@@ -52,16 +52,12 @@ tar xf ${SROOT}/gcc-${GCC_VER}.tar.bz2
         --disable-decimal-float                        \
         --disable-threads                              \
         --disable-libatomic                            \
-        --disable-libcc1                               \
-        --disable-libcilkrts                           \
         --disable-libgomp                              \
-        --disable-libitm                               \
         --disable-libmpx                               \
         --disable-libquadmath                          \
-        --disable-libsanitizer                         \
         --disable-libssp                               \
         --disable-libvtv                               \
-        --disable-libstdc++-v3                         \
+        --disable-libstdcxx                            \
         --enable-multilib                              \
         --enable-languages=c,c++
     make

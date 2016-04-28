@@ -2,27 +2,26 @@
 
 . $(dirname $0)/000_shared
 
-rm -rf binutils-${BINUTILS_VER} binutils-build ${LOGDIR}/binutils-pass1-${BINUTILS_VER}.log
+rm -rf binutils-${BINUTILS_VER} ${LOGDIR}/binutils-pass1-${BINUTILS_VER}.log
 
 tar xf ${SROOT}/binutils-${BINUTILS_VER}.tar.bz2
 
 {
 
   time {
-  mkdir -v binutils-build
-  pushd binutils-build
-    ../binutils-${BINUTILS_VER}/configure \
-        --prefix=/tools     \
-        --with-sysroot=$LFS \
-        --target=$LFS_TGT   \
-        --disable-nls       \
-        --disable-werror    \
-        --enable-multilib   \
-        --with-lib-path=/tools/lib32:/tools/lib
+  mkdir binutils-${BINUTILS_VER}/binutils-build
+  pushd binutils-${BINUTILS_VER}/binutils-build
+    ../configure --prefix=/tools     \
+                 --with-sysroot=$LFS \
+                 --target=$LFS_TGT   \
+                 --disable-nls       \
+                 --disable-werror    \
+                 --enable-multilib   \
+                 --with-lib-path=/tools/lib32:/tools/lib
     make
     make install
-    mkdir -v /tools/lib
-    ln -sv lib /tools/lib64
+    mkdir /tools/lib
+    ln -s lib /tools/lib64
   popd
   }
 

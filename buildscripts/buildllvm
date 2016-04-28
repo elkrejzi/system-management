@@ -207,7 +207,7 @@ make_install_post_32() {
 
   mv dest/usr/bin/llvm-config ${DEST}/usr/bin/llvm-config32
   mv dest/usr/include/llvm/Config/llvm-config.h ${DEST}/usr/include/llvm/Config/llvm-config-32.h
-  mv dest/usr/lib/* ${DEST}/usr/lib32/
+  #mv dest/usr/lib/* ${DEST}/usr/lib32/
 
   install -dm755 ${DEST}/usr/lib32/bfd-plugins
   ln -sf ../LLVMgold.so ${DEST}/usr/lib32/bfd-plugins/LLVMgold.so
