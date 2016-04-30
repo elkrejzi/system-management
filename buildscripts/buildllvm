@@ -171,8 +171,9 @@ configure_pre_32() {
 make_install_post() {
   rm -f ${DEST}/usr/lib/libgomp.so
 
-  install -dm755 ${DEST}/usr/lib/bfd-plugins
-  ln -sf ../LLVMgold.so ${DEST}/usr/lib/bfd-plugins/LLVMgold.so
+  # Broken: https://llvm.org/bugs/show_bug.cgi?id=27590
+  #install -dm755 ${DEST}/usr/lib/bfd-plugins
+  #ln -sf ../LLVMgold.so ${DEST}/usr/lib/bfd-plugins/LLVMgold.so
 
   mv ${DEST}/usr/include/llvm/Config/llvm-config.h ${DEST}/usr/include/llvm/Config/llvm-config-64.h
 
@@ -209,8 +210,8 @@ make_install_post_32() {
   mv dest/usr/include/llvm/Config/llvm-config.h ${DEST}/usr/include/llvm/Config/llvm-config-32.h
   #mv dest/usr/lib/* ${DEST}/usr/lib32/
 
-  install -dm755 ${DEST}/usr/lib32/bfd-plugins
-  ln -sf ../LLVMgold.so ${DEST}/usr/lib32/bfd-plugins/LLVMgold.so
+  #install -dm755 ${DEST}/usr/lib32/bfd-plugins
+  #ln -sf ../LLVMgold.so ${DEST}/usr/lib32/bfd-plugins/LLVMgold.so
 }
 
 post_install_config() {
