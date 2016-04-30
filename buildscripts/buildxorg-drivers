@@ -3,7 +3,7 @@
 case $(basename $0) in
   buildxf86-input-evdev )
     export PKGNAME=xf86-input-evdev
-    export PKGVER=2.10.1
+    export PKGVER=2.10.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://xorg.freedesktop.org/releases/individual/driver/${PKGTAR}"
   ;;
@@ -50,7 +50,7 @@ EOF
   ;;
   buildxf86-input-synaptics )
     export PKGNAME=xf86-input-synaptics
-    export PKGVER=1.8.99
+    export PKGVER=1.8.99.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://xorg.freedesktop.org/releases/individual/driver/${PKGTAR}"
   ;;

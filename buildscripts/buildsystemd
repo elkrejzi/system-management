@@ -6,8 +6,6 @@ export MAKE_JOBS_FLAGS="-j4"
 export DEBUG_BUILD=1
 export KEEP_EMPTY_DIRS=1
 export MULTILIB_BUILD=1
-export PATCHES_LIST=("systemd-compat.patch")
-export PATCHES_LIST_32=("systemd-compat.patch")
 export USER_CFLAGS="-fno-lto -Wno-unknown-attributes"
 
 export CONFIGURE_FLAGS=(--disable-efi

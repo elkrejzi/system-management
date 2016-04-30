@@ -12,6 +12,7 @@ export CONFIGURE_FLAGS=(--with-systemdsystemunitdir=/lib/systemd/system)
 
 configure_pre() {
   autoreconf -fi
+  sed -i "s:libsystemd-daemon:libsystemd:g" configure
 }
 
 make_install_post() {

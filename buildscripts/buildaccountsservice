@@ -9,6 +9,10 @@ export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1
 export CONFIGURE_FLAGS=(--enable-admin-group=adm)
 
+configure_pre() {
+  sed -i "s:libsystemd-login:libsystemd:g" configure
+}
+
 make_install_post() {
   install -dm755 ${DEST}/etc/systemd/system/graphical.target.wants
 

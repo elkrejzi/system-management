@@ -50,6 +50,9 @@ case $(basename $0) in
   ;;
   buildksystemlog )
     export PKGNAME=ksystemlog
+    configure_pre() {
+      sed -i "s:libsystemd-journal:libsystemd:g" ../${PKGDIR}/cmake/FindJournald.cmake
+    }
   ;;
   buildkwalletmanager )
     export PKGNAME=kwalletmanager

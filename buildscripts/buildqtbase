@@ -17,6 +17,8 @@ export PATCHES_LIST=("qtbase.patch")
 export MAKE_INSTALL_FLAGS="INSTALL_ROOT=\${DEST}"
 
 configure_override() {
+  sed -i "s:libsystemd-journal:libsystemd:g" config.tests/unix/journald/journald.pro src/corelib/global/global.pri
+
   ./configure -prefix         /usr               \
               -sysconfdir     /etc/xdg           \
               -headerdir      /usr/include/qt5   \
