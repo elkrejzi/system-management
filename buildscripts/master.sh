@@ -18,7 +18,7 @@ fi
 # Default C++ compiler used to build 64 bit packages
 if [ -z "${DEFAULT_CXX}" ]
 then
-  export DEFAULT_CXX="clang++ -stdlib=libc++"
+  export DEFAULT_CXX="clang++"
 fi
 
 # Default C compiler used to build 32 bit packages
@@ -30,7 +30,7 @@ fi
 # Default C++ compiler used to build 32 bit packages
 if [ -z "${DEFAULT_CXX_M32}" ]
 then
-  export DEFAULT_CXX_M32="clang++ -m32 -stdlib=libc++"
+  export DEFAULT_CXX_M32="clang++ -m32"
 fi
 
 # -march=skylake -mno-avx512f works with clang, but not gcc - grrrr

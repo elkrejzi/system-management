@@ -8,6 +8,7 @@ export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export MULTILIB_BUILD=1
-export CMAKE_FLAGS_32=(-DLIB_SUFFIX=32)
+export CMAKE_FLAGS=(-DBUILD_SHARED_LIBS=ON)
+export CMAKE_FLAGS_32=(-DBUILD_SHARED_LIBS=ON -DLIB_SUFFIX=32)
 
 . $(dirname $0)/master.sh

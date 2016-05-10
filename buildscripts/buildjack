@@ -7,6 +7,7 @@ export PKGURL="https://dl.dropboxusercontent.com/u/28869550/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
+export USER_CXXFLAGS="-Wno-narrowing"
 
 export DEFAULT_CC="gcc"
 export DEFAULT_CXX="g++"

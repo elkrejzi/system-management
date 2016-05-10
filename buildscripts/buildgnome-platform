@@ -23,7 +23,7 @@ case $(basename $0) in
   ;;
   buildevolution-data-server )
     export PKGNAME=evolution-data-server
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
     export CONFIGURE_FLAGS=(--disable-google-auth
                             --disable-uoa
                             --with-krb5=/usr
@@ -92,7 +92,7 @@ case $(basename $0) in
   ;;
   buildglib-networking )
     export PKGNAME=glib-networking
-    export PKGVER=2.48.1
+    export PKGVER=2.48.2
     export MULTILIB_BUILD=1
     export POSTINST_TRIGGER=("[ -x /usr/bin/gio-querymodules ] && echo \"Processing triggers for gio-2.0\" && /usr/bin/gio-querymodules /usr/lib/gio/modules"
                              "[ -x /usr/bin/gio-querymodules-32 ] && echo \"Processing triggers for gio-2.0 (32 bit)\" && /usr/bin/gio-querymodules-32 /usr/lib32/gio/modules")
@@ -120,7 +120,7 @@ case $(basename $0) in
   ;;
   buildgnome-desktop )
     export PKGNAME=gnome-desktop
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
     export CONFIGURE_FLAGS=(--with-gnome-distributor=Krejzi)
   ;;
   buildgnome-keyring )
@@ -188,7 +188,7 @@ case $(basename $0) in
   ;;
   buildgnome-user-docs )
     export PKGNAME=gnome-user-docs
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
     export KEEP_STATIC=1
     export NO_STRIP=1
   ;;
@@ -240,7 +240,7 @@ case $(basename $0) in
   ;;
   buildgtksourceview )
     export PKGNAME=gtksourceview
-    export PKGVER=3.20.2
+    export PKGVER=3.20.3
   ;;
   buildgtk-vnc )
     export PKGNAME=gtk-vnc
@@ -251,7 +251,7 @@ case $(basename $0) in
   ;;
   buildgvfs )
     export PKGNAME=gvfs
-    export PKGVER=1.28.1
+    export PKGVER=1.28.2
     export POSTINST_TRIGGER=("[ -x /usr/bin/gio-querymodules ] && echo \"Processing triggers for gio-2.0\" && /usr/bin/gio-querymodules /usr/lib/gio/modules")
     make_install_post() {
       export SPACE_ADDED=1
@@ -301,7 +301,7 @@ case $(basename $0) in
   ;;
   buildlibgweather )
     export PKGNAME=libgweather
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildlibgxps )
     export PKGNAME=libgxps

@@ -8,8 +8,16 @@ export PKGURL="https://01.org/sites/default/files/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export MULTILIB_BUILD=1
-export CMAKE_FLAGS=(-DLIB_INSTALL_DIR=/usr/lib)
-export CMAKE_FLAGS_32=(-DLIB_INSTALL_DIR=/usr/lib32)
+export CMAKE_FLAGS=(-DLIB_INSTALL_DIR=/usr/lib -DBUILD_EXAMPLES=OFF)
+export CMAKE_FLAGS_32=(-DLIB_INSTALL_DIR=/usr/lib32 -DBUILD_EXAMPLES=OFF)
+
+configure_pre() {
+  sed -i "/ADD_SUBDIRECTORY(utests)/d" ../${PKGDIR}/CMakeLists.txt
+}
+
+configure_pre_32() {
+  sed -i "/ADD_SUBDIRECTORY(utests)/d" ../${PKGDIR}/CMakeLists.txt
+}
 
 make_install_post() {
   mv ${DEST}/usr/include/CL/cl_intel.h ${DEST}/usr/include

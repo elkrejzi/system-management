@@ -10,7 +10,6 @@ export PKG_AUTO_INSTALL=1
 $(dirname $0)/buildfceux
 $(dirname $0)/buildpcsxr
 $(dirname $0)/buildyoutube-dl
-$(dirname $0)/buildextra-cmake-modules
 $(dirname $0)/buildkde-frameworks
 $(dirname $0)/buildplasma
 $(dirname $0)/buildadwaita-qt
@@ -53,6 +52,7 @@ $(dirname $0)/buildvirglrenderer
 $(dirname $0)/buildseabios
 $(dirname $0)/buildqemu
 $(dirname $0)/buildlibreoffice-upstream
+$(dirname $0)/buildwine
 $(dirname $0)/buildtexlive
 
 pushd /binary
@@ -74,7 +74,7 @@ $(dirname $0)/builddblatex
 
 find /binary -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
 
-find /binary -type d -name "*-[0-9]*" ! -path "*/etc/*" ! -path "*/usr/*" | while read dir
+find /binary -type d -name "*-[0-9]*" ! -path "*/etc/*" ! -path "*/opt/*" ! -path "*/usr/*" | while read dir
 do
   P=$(basename ${dir})
   D=$(dirname ${dir})

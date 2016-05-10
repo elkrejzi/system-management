@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=openssl
-export PKGVER=1.0.2g
+export PKGVER=1.0.2h
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://www.openssl.org/source/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

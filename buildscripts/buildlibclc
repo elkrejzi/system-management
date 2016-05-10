@@ -7,8 +7,6 @@ export NO_STRIP=1
 
 configure_override() {
   ./configure.py --prefix=/usr
-
-  sed -i "s#clang++#& -stdlib=libc++#g" Makefile
 }
 
 . $(dirname $0)/master.sh

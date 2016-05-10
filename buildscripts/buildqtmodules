@@ -104,7 +104,7 @@ then
       tar xf /media/ntfs/Other/Linux/v8.tar.xz
     popd
 
-    sed -i "/linux-clang/a linux-clang-libc++: GYP_CONFIG += clang=1 host_clang=1 clang_use_chrome_plugins=0 make_clang_dir=/usr use_libcpp=1" src/core/config/desktop_linux.pri
+    sed -i "/linux-clang/a linux-clang-libc++: GYP_CONFIG += clang=1 host_clang=1 clang_use_chrome_plugins=0 make_clang_dir=/usr use_libcpp=1 werror=" src/core/config/desktop_linux.pri
     sed -i "/config.h/i #include <cstdlib>" src/3rdparty/chromium/third_party/WebKit/Source/platform/heap/GCInfo.cpp
   }
 elif [ ${PKGNAME} == "qtserialbus" ]

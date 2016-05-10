@@ -8,6 +8,5 @@ export DEST=/binary/kdepim/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export CMAKE_FLAGS=(-DBUILD_TESTS=OFF -DCMAKE_SKIP_RPATH=ON)
-export USER_CXXFLAGS="-stdlib=libc++"
 
 . $(dirname $0)/master.sh

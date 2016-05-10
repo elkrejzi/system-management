@@ -9,7 +9,7 @@ export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--enable-xpdf-headers)
 export CONFIGURE_FLAGS_32=(--libdir=/usr/lib --enable-static)
 export DEFAULT_CC_M32="clang"
-export DEFAULT_CXX_M32="clang++ -stdlib=libc++"
+export DEFAULT_CXX_M32="clang++"
 
 configure_pre_32() {
   unset PKG_CONFIG_PATH

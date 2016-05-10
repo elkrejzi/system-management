@@ -194,7 +194,8 @@ install -dm755 /etc/modprobe.d
 install -dm755 /etc/wpa_supplicant
 
 echo "EnableLinuxHWVideoDecode=1" > /etc/adobe/mms.cfg
-echo "blacklist amdgpu" > /etc/modprobe.d/local.conf
+
+printf "blacklist amdgpu\noptions amdgpu runpm=0\n" > /etc/modprobe.d/local.conf
 
 install -m600 /media/ntfs/Other/Linux/conf/nm/* /etc/NetworkManager/system-connections
 install -m644 /media/ntfs/Other/Linux/conf/network/* /etc/systemd/network
@@ -235,8 +236,7 @@ EOF
 
 sed -i 's#;date.timezone =#date.timezone = "Europe/Sarajevo"#' /etc/php/php.ini
 
-sed -i "s:#ProcessSizeMax=2G:ProcessSizeMax=4G:;s:#ExternalSizeMax=2G:ExternalSizeMax=4G:;s:#JournalSizeMax=767M:JournalSizeMax=1G:" /etc/systemd/coredump.conf
-sed -i "s:#HandleLidSwitch=suspend:HandleLidSwitch=ignore:g;s:#KillUserProcesses=no:KillUserProcesses=yes:g" /etc/systemd/logind.conf
+sed -i "s:#HandleLidSwitch=suspend:HandleLidSwitch=ignore:g" /etc/systemd/logind.conf
 sed -i "s:#DefaultTimeoutStopSec=90s:DefaultTimeoutStopSec=30s:g" /etc/systemd/system.conf
 
 install -dm755 /lib/firmware

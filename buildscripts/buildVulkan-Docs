@@ -1,0 +1,24 @@
+#!/bin/bash -e
+
+export PKGNAME=Vulkan-Docs
+export PKGVER=1.0.12
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGDIR=Vulkan-Docs-1.0-core-wsi-20160429
+export PKGURL="https://github.com/KhronosGroup/Vulkan-Docs/archive/v1.0-core+wsi-20160429.tar.gz"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_override() {
+  true
+}
+
+make_override() {
+  make -C doc/specs/vulkan manpages ${MAKE_JOBS_FLAGS}
+}
+
+make_install_override() {
+  install -dm755 ${DEST}/usr/include/vulkan ${DEST}/usr/share/man/man3
+  install -m644 src/vulkan/*.h ${DEST}/usr/include/vulkan
+  install -m644 out/1.0/man/3/*.3 ${DEST}/usr/share/man/man3
+}
+
+. $(dirname $0)/master.sh

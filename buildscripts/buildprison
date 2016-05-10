@@ -8,6 +8,5 @@ export CMAKE_BUILD=1
 export CMAKE_FLAGS=(-DKDE_INSTALL_LIBDIR=lib
                     -DBUILD_TESTING=OFF
                     -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules)
-export USER_CXXFLAGS="-stdlib=libc++"
 
 . $(dirname $0)/master.sh

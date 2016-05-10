@@ -5,7 +5,6 @@ export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export DEBUG_BUILD=1
 export KEEP_DOC=1
-export USER_CXXFLAGS="-stdlib=libc++"
 
 build_all() {
   export PKG_AUTO_INSTALL=1

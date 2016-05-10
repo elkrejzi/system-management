@@ -10,7 +10,7 @@ proj=(
   libcxx
   libcxxabi
   libunwind
-  lld
+  #lld Broken: https://llvm.org/bugs/show_bug.cgi?id=27590
   lldb
   openmp
   polly
@@ -123,13 +123,13 @@ export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export MULTILIB_BUILD=1
 
-export SHARED_FLAGS=(-DCLANG_DEFAULT_OPENMP_RUNTIME=libgomp
+export SHARED_FLAGS=(-DCLANG_DEFAULT_CXX_STDLIB=libc++
+                     -DCLANG_DEFAULT_OPENMP_RUNTIME=libgomp
                      -DCLANG_INCLUDE_TESTS=OFF
                      -DCOMPILER_RT_INCLUDE_TESTS=OFF
                      -DLLVM_BUILD_LLVM_DYLIB=ON
                      -DLLVM_ENABLE_DOXYGEN=OFF
                      -DLLVM_ENABLE_FFI=ON
-                     -DLLVM_ENABLE_LIBCXX=ON
                      -DLLVM_ENABLE_LIBCXXABI=ON
                      -DLLVM_ENABLE_RTTI=ON
                      -DLLVM_INCLUDE_EXAMPLES=OFF
@@ -171,9 +171,8 @@ configure_pre_32() {
 make_install_post() {
   rm -f ${DEST}/usr/lib/libgomp.so
 
-  # Broken: https://llvm.org/bugs/show_bug.cgi?id=27590
-  #install -dm755 ${DEST}/usr/lib/bfd-plugins
-  #ln -sf ../LLVMgold.so ${DEST}/usr/lib/bfd-plugins/LLVMgold.so
+  install -dm755 ${DEST}/usr/lib/bfd-plugins
+  ln -sf ../LLVMgold.so ${DEST}/usr/lib/bfd-plugins/LLVMgold.so
 
   mv ${DEST}/usr/include/llvm/Config/llvm-config.h ${DEST}/usr/include/llvm/Config/llvm-config-64.h
 
@@ -208,10 +207,9 @@ make_install_post_32() {
 
   mv dest/usr/bin/llvm-config ${DEST}/usr/bin/llvm-config32
   mv dest/usr/include/llvm/Config/llvm-config.h ${DEST}/usr/include/llvm/Config/llvm-config-32.h
-  #mv dest/usr/lib/* ${DEST}/usr/lib32/
 
-  #install -dm755 ${DEST}/usr/lib32/bfd-plugins
-  #ln -sf ../LLVMgold.so ${DEST}/usr/lib32/bfd-plugins/LLVMgold.so
+  install -dm755 ${DEST}/usr/lib32/bfd-plugins
+  ln -sf ../LLVMgold.so ${DEST}/usr/lib32/bfd-plugins/LLVMgold.so
 }
 
 post_install_config() {

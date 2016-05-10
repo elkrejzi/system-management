@@ -14,6 +14,7 @@ $(dirname $0)/buildxf86-input-synaptics
 $(dirname $0)/buildxf86-input-wacom
 $(dirname $0)/buildxf86-video-amdgpu
 $(dirname $0)/buildxf86-video-intel
+$(dirname $0)/buildextra-cmake-modules
 $(dirname $0)/buildmedia-player-info
 $(dirname $0)/buildmobile-broadband-provider-info
 $(dirname $0)/buildlibplist
@@ -178,7 +179,6 @@ $(dirname $0)/buildgnome-terminal
 $(dirname $0)/buildgnome-user-docs
 $(dirname $0)/buildlightdm
 $(dirname $0)/buildlightdm-gtk-greeter
-$(dirname $0)/buildasciidoc
 $(dirname $0)/buildbeignet
 $(dirname $0)/buildchmlib
 $(dirname $0)/buildclinfo
@@ -255,12 +255,11 @@ $(dirname $0)/buildwhois
 $(dirname $0)/buildxfsprogs
 $(dirname $0)/buildjdk
 $(dirname $0)/buildgoogle-chrome
-$(dirname $0)/buildwine
 $(dirname $0)/buildsteam
 $(dirname $0)/buildGConf
 $(dirname $0)/buildgnutls28
 $(dirname $0)/buildlibgcrypt15
-$(dirname $0)/buildbuildlibjpeg-turbo6
+$(dirname $0)/buildlibjpeg-turbo6
 $(dirname $0)/buildlibpng12
 $(dirname $0)/buildudev
 $(dirname $0)/buildlibdbusmenu

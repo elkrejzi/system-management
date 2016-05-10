@@ -122,6 +122,7 @@ $(dirname $0)/builddocbook-dsssl
 $(dirname $0)/buildOpenSP
 $(dirname $0)/buildopenjade
 $(dirname $0)/builddocbook-utils
+$(dirname $0)/buildasciidoc
 $(dirname $0)/buildgtk-doc
 $(dirname $0)/buildglib2
 $(dirname $0)/buildlibcroco

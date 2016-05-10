@@ -4,7 +4,6 @@ export PKGVER=16.04.0
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export KEEP_DOC=1
-export USER_CXXFLAGS="-stdlib=libc++"
 
 export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
                     -DKDE_INSTALL_LIBDIR=lib

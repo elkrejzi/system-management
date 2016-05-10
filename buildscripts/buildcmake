@@ -11,8 +11,6 @@ then
   export CONFIGURE_FLAGS_EXTRA=(--qt-gui --qt-qmake=/usr/bin/qmake)
 fi
 
-export USER_CXXFLAGS="-stdlib=libc++"
-
 configure_override() {
   ./bootstrap --prefix=/usr             \
               --parallel=4              \

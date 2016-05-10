@@ -12,6 +12,7 @@ export DEFAULT_CC="gcc"
 
 configure_override() {
   sed -i "s:-O2 -fpic:${CFLAGS} -fpic:g" Makefile
+  sed -i "s:-Werror ::g" Makefile
 
   unset CFLAGS
 }

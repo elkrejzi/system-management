@@ -3,27 +3,27 @@
 case $(basename $0) in
   buildaisleriot )
     export PKGNAME=aisleriot
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
     export CONFIGURE_FLAGS=(--with-platform=gtk-only
                             --with-card-theme-formats=svg,fixed,pysol
                             --with-pysol-card-theme-path=/usr/share/PySolFC)
   ;;
   buildcheese )
     export PKGNAME=cheese
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
     export CONFIGURE_FLAGS=(--disable-compile-warnings)
   ;;
   builddconf-editor )
     export PKGNAME=dconf-editor
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
   ;;
   buildeog )
     export PKGNAME=eog
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
   ;;
   buildepiphany )
     export PKGNAME=epiphany
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
     make_install_post() {
       sed -i "s#multipart/related;##" ${DEST}/usr/share/applications/epiphany.desktop
     }
@@ -40,24 +40,24 @@ case $(basename $0) in
   ;;
   buildfile-roller )
     export PKGNAME=file-roller
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
     export CONFIGURE_FLAGS=(--disable-packagekit)
   ;;
   buildgedit )
     export PKGNAME=gedit
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
   ;;
   buildgnome-calculator )
     export PKGNAME=gnome-calculator
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildgnome-calendar )
     export PKGNAME=gnome-calendar
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
   ;;
   buildgnome-clocks )
     export PKGNAME=gnome-clocks
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildgnome-color-manager )
     export PKGNAME=gnome-color-manager
@@ -70,7 +70,7 @@ case $(basename $0) in
   ;;
   buildgnome-disk-utility )
     export PKGNAME=gnome-disk-utility
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
   ;;
   buildgnome-documents )
     export PKGNAME=gnome-documents
@@ -105,12 +105,12 @@ case $(basename $0) in
   ;;
   buildgnome-terminal )
     export PKGNAME=gnome-terminal
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
     export CONFIGURE_FLAGS=(--disable-migration)
   ;;
   buildgnome-todo )
     export PKGNAME=gnome-todo
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
   ;;
   buildgnome-tweak-tool )
     export PKGNAME=gnome-tweak-tool
@@ -118,11 +118,11 @@ case $(basename $0) in
   ;;
   buildgnome-weather )
     export PKGNAME=gnome-weather
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildgucharmap )
     export PKGNAME=gucharmap
-    export PKGVER=8.0.0
+    export PKGVER=8.0.1
     export CONFIGURE_FLAGS=(--enable-vala)
   ;;
   buildnautilus )
@@ -145,7 +145,7 @@ case $(basename $0) in
   ;;
   buildpolari )
     export PKGNAME=polari
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildseahorse )
     export PKGNAME=seahorse
@@ -153,12 +153,12 @@ case $(basename $0) in
   ;;
   buildvinagre )
     export PKGNAME=vinagre
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
     export CONFIGURE_FLAGS=(--disable-compile-warnings)
   ;;
   buildvino )
     export PKGNAME=vino
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
   ;;
   buildxdg-user-dirs-gtk )
     export PKGNAME=xdg-user-dirs-gtk

@@ -1,10 +1,10 @@
 #!/bin/bash -e
 
 export PKGNAME=LVM2
-export PKGVER=2.02.152
+export PKGVER=2.02.153
 export PKGTAR=${PKGNAME}.${PKGVER}.tgz
 export PKGDIR=${PKGNAME}.${PKGVER}
-export PKGURL="ftp://sources.redhat.com/pub/lvm2/${PKGTAR}"
+export PKGURL="ftp://sources.redhat.com/pub/lvm2/releases/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
 configure_override() {
