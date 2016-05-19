@@ -153,9 +153,8 @@ case $(basename $0) in
   ;;
   buildgnome-shell )
     export PKGNAME=gnome-shell
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
     export DEBUG_BUILD=1
-    export PATCHES_LIST=("gnome-shell-fixes.patch")
     export DEFAULT_CC="gcc"
     export DEFAULT_CXX="g++"
     make_install_post() {
@@ -167,13 +166,13 @@ case $(basename $0) in
   ;;
   buildgnome-shell-extensions )
     export PKGNAME=gnome-shell-extensions
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
     export KEEP_STATIC=1
     export NO_STRIP=1
   ;;
   buildgnome-themes-standard )
     export PKGNAME=gnome-themes-standard
-    export PKGVER=3.20
+    export PKGVER=3.20.2
     export MULTILIB_BUILD=1
     export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-update-icon-cache ] && echo \"Processing triggers for hicolor-icon-theme\" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/HighContrast")
     export MAKE_FLAGS_32="-C themes/Adwaita/gtk-2.0 libadwaita.la"
@@ -359,7 +358,7 @@ case $(basename $0) in
   ;;
   buildmutter )
     export PKGNAME=mutter
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
     export DEBUG_BUILD=1
     export CONFIGURE_FLAGS=(--enable-compile-warnings=minimum)
   ;;
@@ -382,7 +381,7 @@ case $(basename $0) in
   ;;
   buildvte )
     export PKGNAME=vte
-    export PKGVER=0.44.1
+    export PKGVER=0.44.2
     export CONFIGURE_FLAGS=(--enable-introspection)
     make_install_post() {
       rm -rf ${DEST}/etc

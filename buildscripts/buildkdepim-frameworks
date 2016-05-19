@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=16.04.0
+export PKGVER=16.04.1
 export LIBKGAPI_PKGVER=5.1.0
 
 export MAKE_JOBS_FLAGS="-j4"

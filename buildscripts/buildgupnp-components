@@ -1,0 +1,38 @@
+#!/bin/bash -e
+
+case $(basename $0) in
+  buildgssdp )
+    export PKGNAME=gssdp
+    export PKGVER=0.14.15
+  ;;
+  buildgupnp )
+    export PKGNAME=gupnp
+    export PKGVER=0.20.17
+  ;;
+  buildgupnp-av )
+    export PKGNAME=gupnp-av
+    export PKGVER=0.12.8
+  ;;
+  buildgupnp-dlna )
+    export PKGNAME=gupnp-dlna
+    export PKGVER=0.10.4
+  ;;
+  buildgupnp-components )
+    export PKG_AUTO_INSTALL=1
+
+    $(dirname $0)/buildgssdp
+    $(dirname $0)/buildgupnp
+    $(dirname $0)/buildgupnp-av
+    $(dirname $0)/buildgupnp-dlna
+
+    find /binary/gnome/{gupnp,gssdp}* -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
+
+    exit 0
+  ;;
+esac
+
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
+export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:4}/${PKGTAR}"
+
+. $(dirname $0)/master.sh

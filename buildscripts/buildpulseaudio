@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
 export PKGNAME=pulseaudio
-export PKGVER=8.0
-#export SHLIBVER=7.99
-export SHLIBVER=${PKGVER}
+export PKGVER=8.99.1
+export SHLIBVER=8.99
+#export SHLIBVER=${PKGVER}
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://freedesktop.org/software/pulseaudio/releases/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}

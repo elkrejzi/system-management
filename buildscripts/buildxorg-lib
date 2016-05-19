@@ -39,9 +39,11 @@ case $(basename $0) in
   ;;
   buildlibxcb )
     export PKGNAME=libxcb
-    export PKGVER=1.11.1
+    export PKGVER=1.12
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://xorg.freedesktop.org/releases/individual/xcb/${PKGTAR}"
+    export CONFIGURE_FLAGS=(--disable-devel-docs)
+    export CONFIGURE_FLAGS_32=(--disable-devel-docs)
 
     configure_pre() {
       sed -e "s/pthread-stubs//" -i configure.ac
@@ -51,9 +53,6 @@ case $(basename $0) in
       sed -e "s/pthread-stubs//" -i configure.ac
       autoreconf -fi
     }
-
-    export CONFIGURE_FLAGS=(--enable-xinput)
-    export CONFIGURE_FLAGS_32=(--enable-xinput)
   ;;
   buildlibXcomposite )
     export PKGNAME=libXcomposite

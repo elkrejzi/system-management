@@ -75,7 +75,7 @@ case $(basename $0) in
   ;;
   buildxcb-proto )
     export PKGNAME=xcb-proto
-    export PKGVER=1.11
+    export PKGVER=1.12
   ;;
   buildxcmiscproto )
     export PKGNAME=xcmiscproto
@@ -107,7 +107,7 @@ case $(basename $0) in
   ;;
   buildxproto )
     export PKGNAME=xproto
-    export PKGVER=7.0.28
+    export PKGVER=7.0.29
   ;;
   buildxtrans )
     export PKGNAME=xtrans

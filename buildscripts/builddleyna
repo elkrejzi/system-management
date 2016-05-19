@@ -1,0 +1,38 @@
+#!/bin/bash -e
+
+case $(basename $0) in
+  builddleyna-connector-dbus )
+    export PKGNAME=dleyna-connector-dbus
+    export PKGVER=0.2.0
+  ;;
+  builddleyna-core )
+    export PKGNAME=dleyna-core
+    export PKGVER=0.5.0
+  ;;
+  builddleyna-renderer )
+    export PKGNAME=dleyna-renderer
+    export PKGVER=0.5.0
+  ;;
+  builddleyna-server )
+    export PKGNAME=dleyna-server
+    export PKGVER=0.5.0
+  ;;
+  builddleyna )
+    export PKG_AUTO_INSTALL=1
+
+    $(dirname $0)/builddleyna-core
+    $(dirname $0)/builddleyna-connector-dbus
+    $(dirname $0)/builddleyna-renderer
+    $(dirname $0)/builddleyna-server
+
+    find /binary/gnome/dleyna* -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
+
+    exit 0
+  ;;
+esac
+
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
+export PKGURL="https://01.org/sites/default/files/downloads/dleyna/${PKGTAR}"
+
+. $(dirname $0)/master.sh

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=5.6.3
+export PKGVER=5.6.4
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export KEEP_DOC=1
@@ -10,7 +10,6 @@ build_all() {
 
   $(dirname $0)/buildkde-cli-tools $1
   $(dirname $0)/buildkdecoration $1
-  $(dirname $0)/buildkwayland $1
   $(dirname $0)/buildlibkscreen $1
   $(dirname $0)/buildlibksysguard $1
   $(dirname $0)/buildbreeze $1
@@ -99,7 +98,6 @@ fi
 plasmas=(
   kde-cli-tools
   kdecoration
-  kwayland
   libkscreen
   libksysguard
   breeze

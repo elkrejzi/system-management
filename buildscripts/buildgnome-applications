@@ -66,7 +66,7 @@ case $(basename $0) in
   ;;
   buildgnome-contacts )
     export PKGNAME=gnome-contacts
-    export PKGVER=3.19.91
+    export PKGVER=3.20.0
   ;;
   buildgnome-disk-utility )
     export PKGNAME=gnome-disk-utility
@@ -135,17 +135,16 @@ case $(basename $0) in
   ;;
   buildnetwork-manager-applet )
     export PKGNAME=network-manager-applet
-    export PKGVER=1.2.0
+    export PKGVER=1.2.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
-    export CONFIGURE_FLAGS=(--disable-migration)
     configure_pre() {
       sed -i "s:-Werror::g" configure
     }
   ;;
   buildpolari )
     export PKGNAME=polari
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
   ;;
   buildseahorse )
     export PKGNAME=seahorse

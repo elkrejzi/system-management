@@ -35,7 +35,6 @@ $(dirname $0)/buildv4l-utils
 $(dirname $0)/builda52dec
 $(dirname $0)/buildaalib
 $(dirname $0)/buildchromaprint
-$(dirname $0)/builddcadec
 $(dirname $0)/builddirac
 $(dirname $0)/buildfaac
 $(dirname $0)/buildfaad2

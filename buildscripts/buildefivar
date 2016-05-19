@@ -7,7 +7,7 @@ export PKGURL="https://github.com/rhinstaller/efivar/releases/download/${PKGVER}
 export PATCHES_LIST=("efivar-fixes.patch")
 export MAKE_FLAGS="libdir=/usr/lib"
 export MAKE_INSTALL_FLAGS="libdir=/usr/lib"
-export DEFAULT_CC=gcc
+export DEFAULT_CC="gcc"
 
 configure_override() {
   true

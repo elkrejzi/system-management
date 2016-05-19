@@ -1,17 +1,10 @@
 #!/bin/bash -e
 
 export PKGNAME=dosfstools
-export PKGVER=3.0.28
+export PKGVER=4.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://github.com/dosfstools/dosfstools/releases/download/v${PKGVER}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MAKE_FLAGS="PREFIX=/usr SBINDIR=/sbin"
-export MAKE_INSTALL_FLAGS="PREFIX=/usr SBINDIR=/sbin"
-
-configure_override() {
-  sed -i "s:-O2:${CFLAGS}:g" Makefile
-
-  unset CFLAGS
-}
+export CONFIGURE_FLAGS=(--sbindir=/sbin --enable-compat-symlinks)
 
 . $(dirname $0)/master.sh

@@ -5,7 +5,7 @@ export PKGVER=0.12
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://github.com/rhinstaller/efibootmgr/releases/download/efibootmgr-${PKGVER}/${PKGTAR}"
 export MAKE_FLAGS="EXTRA_CFLAGS=\${DEFAULT_CFLAGS}"
-export DEFAULT_CC=gcc
+export DEFAULT_CC="gcc"
 
 configure_override() {
   true

@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=webrtc-audio-processing
-export PKGVER=0.1
+export PKGVER=0.2
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://freedesktop.org/software/pulseaudio/webrtc-audio-processing/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
