@@ -1,48 +1,14 @@
 #!/bin/bash -e
 
 export PKGNAME=poppler
-export PKGVER=0.43.0
+export PKGVER=0.44.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://poppler.freedesktop.org/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--enable-xpdf-headers)
-export CONFIGURE_FLAGS_32=(--libdir=/usr/lib --enable-static)
-export DEFAULT_CC_M32="clang"
-export DEFAULT_CXX_M32="clang++"
-
-configure_pre_32() {
-  unset PKG_CONFIG_PATH
-}
-
-make_override() {
-  if [ ${MULTILIB} == 1 ]
-  then
-    for d in goo fofi splash poppler
-    do
-      make -C ${d} ${MAKE_JOBS_FLAGS}
-    done
-    unset d
-  else
-    make ${ADDITIONAL_MAKE_FLAGS}
-  fi
-}
-
-make_install_override() {
-  if [ ${MULTILIB} == 1 ]
-  then
-    install -m644 poppler/.libs/libpoppler.a ${DEST}/usr/lib
-  else
-    make install ${ADDITIONAL_MAKE_INSTALL_FLAGS}
-  fi
-}
 
 make_install_post() {
   rm -rf ${DEST}/usr/bin/poppler-glib-demo
-  rm -rf ${DEST}/usr/lib/libpoppler.so
-
-  # Use static library to avoid infinite amount of rebuilds every Poppler release.
-  echo "INPUT ( /usr/lib/libpoppler.a -lfontconfig -lfreetype -ljpeg -llcms2 -lopenjpeg -lpng -lpthread -ltiff -lnss3 -lnssutil3 -lsmime3 -lssl3 -lsoftokn3 -lplds4 -lplc4 -lnspr4 -lz )" > ${DEST}/usr/lib/libpoppler.so
 }
 
 . $(dirname $0)/master.sh

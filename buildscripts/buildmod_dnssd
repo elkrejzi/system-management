@@ -1,0 +1,18 @@
+#!/bin/bash -e
+
+export PKGNAME=mod_dnssd
+export PKGVER=0.6
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://0pointer.de/lennart/projects/mod_dnssd/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--disable-lynx)
+
+configure_pre() {
+  sed -i 's/unixd_setup_child/ap_&/' src/mod_dnssd.c
+}
+
+make_install_override() {
+  install -Dm755 src/.libs/mod_dnssd.so ${DEST}/usr/lib/httpd/modules/mod_dnssd.so
+}
+
+. $(dirname $0)/master.sh

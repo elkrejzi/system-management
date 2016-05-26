@@ -161,6 +161,20 @@ Section "InputClass"
 EndSection
 EOF
 
+cat > /etc/X11/xorg.conf.d/90-tigervnc.conf << "EOF"
+Section "Module"
+	Load		"vnc"
+EndSection
+
+Section "Screen"
+	Identifier	"Screen0"
+	DefaultDepth	24
+	Option		"SecurityTypes"		"VncAuth"
+	Option		"UserPasswdVerifier"	"VncAuth"
+	Option		"PasswordFile"		"/home/armin/.vnc/passwd"
+EndSection
+EOF
+
 cat >> /etc/httpd/httpd.conf << "EOF"
 <Proxy fcgi://127.0.0.1:9000>
   ProxySet timeout=600

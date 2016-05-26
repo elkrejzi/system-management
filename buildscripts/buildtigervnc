@@ -1,0 +1,48 @@
+#!/bin/bash -e
+
+export PKGNAME=tigervnc
+export PKGVER=1.6.0
+export XSERVER_VER=1.18.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/TigerVNC/tigervnc/archive/v${PKGVER}.tar.gz"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export PATCHES_LIST=("tigervnc-fixes.patch")
+export CMAKE_FLAGS=(-DBUILD_VIEWER=OFF)
+export DEFAULT_CC="gcc"
+export DEFAULT_CXX="g++"
+
+configure_pre() {
+  install -dm755 unix
+
+  cp -rf ../${PKGDIR}/unix/xserver unix
+
+  wget https://www.x.org/releases/individual/xserver/xorg-server-${XSERVER_VER}.tar.bz2 -O - | bsdtar xf - -C unix/xserver --strip-components=1
+
+  pushd unix/xserver
+    wget https://raw.githubusercontent.com/TigerVNC/tigervnc/master/unix/xserver118.patch -O - | patch -Np1 -i -
+    autoreconf -fi
+  popd
+}
+
+configure_post() {
+  pushd unix/xserver
+    ./configure --prefix=/usr --disable-xorg --disable-xnest --disable-xvfb \
+                --disable-dmx --disable-xwin --disable-xephyr --disable-kdrive \
+                --disable-xwayland --disable-config-hal --disable-config-udev \
+                --disable-unit-tests --disable-devel-docs --disable-dri \
+                --enable-dri2 --enable-dri3 --enable-glx
+  popd
+}
+
+make_post() {
+  pushd unix/xserver
+    make TIGERVNC_SRCDIR=../../../../../${PKGDIR} ${MAKE_JOBS_FLAGS}
+  popd
+}
+
+make_install_post() {
+  make -C unix/xserver/hw/vnc install DESTDIR=${DEST}
+}
+
+. $(dirname $0)/master.sh

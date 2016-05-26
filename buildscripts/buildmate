@@ -5,7 +5,7 @@ export MATE_MAJOR_VER=1.12
 case $(basename $0) in
   buildcaja )
     export PKGNAME=caja
-    export PKGVER=1.14.0
+    export PKGVER=1.14.1
     export CONFIGURE_FLAGS=(--disable-packagekit
                             --disable-update-mimedb
                             --disable-icon-update
@@ -13,7 +13,7 @@ case $(basename $0) in
   ;;
   buildmate-desktop )
     export PKGNAME=mate-desktop
-    export PKGVER=1.14.0
+    export PKGVER=1.14.1
     export CONFIGURE_FLAGS=(--disable-desktop-docs)
   ;;
 esac

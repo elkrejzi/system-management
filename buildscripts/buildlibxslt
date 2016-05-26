@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libxslt
-export PKGVER=1.1.28
+export PKGVER=1.1.29
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://xmlsoft.org/sources/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

@@ -156,6 +156,7 @@ $(dirname $0)/buildgnome-disk-utility
 $(dirname $0)/buildgnome-documents
 $(dirname $0)/buildgnome-logs
 $(dirname $0)/buildgnome-maps
+$(dirname $0)/buildgnome-mpv
 $(dirname $0)/buildgnome-nettool
 $(dirname $0)/buildgnome-online-miners
 $(dirname $0)/buildgnome-photos
@@ -164,6 +165,7 @@ $(dirname $0)/buildgnome-session
 $(dirname $0)/buildgnome-todo
 $(dirname $0)/buildgnome-tweak-tool
 $(dirname $0)/buildgnome-system-monitor
+$(dirname $0)/buildgnome-user-share
 $(dirname $0)/buildgnome-weather
 $(dirname $0)/buildgrilo-plugins
 $(dirname $0)/buildgvfs
@@ -177,9 +179,11 @@ $(dirname $0)/buildgnome-shell
 $(dirname $0)/buildgnome-shell-extensions
 $(dirname $0)/buildgnome-terminal
 $(dirname $0)/buildgnome-user-docs
+$(dirname $0)/buildgupnp-components
+$(dirname $0)/builddleyna
 $(dirname $0)/buildlightdm
 $(dirname $0)/buildlightdm-gtk-greeter
-$(dirname $0)/buildbeignet
+#$(dirname $0)/buildbeignet
 $(dirname $0)/buildchmlib
 $(dirname $0)/buildclinfo
 $(dirname $0)/buildenscript
@@ -193,6 +197,7 @@ $(dirname $0)/buildlibtxc_dxtn
 $(dirname $0)/buildlibva-intel-driver
 $(dirname $0)/buildlibvdpau-va-gl
 $(dirname $0)/buildmhash
+$(dirname $0)/buildmod_dnssd
 $(dirname $0)/buildnss-mdns
 $(dirname $0)/buildqpdf
 $(dirname $0)/buildtidy-html5
@@ -212,6 +217,7 @@ $(dirname $0)/buildgparted
 $(dirname $0)/buildinkscape
 $(dirname $0)/buildphp
 $(dirname $0)/buildsqlitebrowser
+$(dirname $0)/buildtigervnc
 $(dirname $0)/buildtransmission
 $(dirname $0)/buildwireshark
 $(dirname $0)/buildxscreensaver

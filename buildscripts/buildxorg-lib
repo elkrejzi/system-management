@@ -76,7 +76,7 @@ case $(basename $0) in
   ;;
   buildlibXfixes )
     export PKGNAME=libXfixes
-    export PKGVER=5.0.1
+    export PKGVER=5.0.2
   ;;
   buildlibXfont )
     export PKGNAME=libXfont

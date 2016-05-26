@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+export PKGNAME=gnome-mpv
+export PKGVER=0.9
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
+export PKGURL="https://github.com/gnome-mpv/gnome-mpv/releases/download/v${PKGVER}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+. $(dirname $0)/master.sh

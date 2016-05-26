@@ -191,6 +191,11 @@ case $(basename $0) in
     export KEEP_STATIC=1
     export NO_STRIP=1
   ;;
+  buildgnome-user-share )
+    export PKGNAME=gnome-user-share
+    export PKGVER=3.18.1
+    export CONFIGURE_FLAGS=(--with-httpd=/usr/sbin/httpd --with-modules-path=/usr/lib/httpd/modules)
+  ;;
   buildgnome-video-effects )
     export PKGNAME=gnome-video-effects
     export PKGVER=0.4.1
