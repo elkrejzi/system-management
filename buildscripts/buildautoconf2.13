@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+export PKGNAME=autoconf
+export PKGVER=2.13
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://ftp.gnu.org/gnu/autoconf/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--program-suffix=2.13)
+
+configure_pre() {
+  sed -i "/acdatadir/s:autoconf:&2.13:g" Makefile.in
+}
+
+make_install_override() {
+  make install prefix=${DEST}/usr
+
+  rm -rf ${DEST}/usr/info
+}
+
+. $(dirname $0)/master.sh

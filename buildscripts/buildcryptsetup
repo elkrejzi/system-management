@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=cryptsetup
-export PKGVER=1.7.1
+export PKGVER=1.7.2
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://www.kernel.org/pub/linux/utils/cryptsetup/v${PKGVER:0:3}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libkpathsea
-export PKGVER=20150521
+export PKGVER=20160523
 export PKGTAR=texlive-${PKGVER}-source.tar.xz
 export PKGDIR=texlive-${PKGVER}-source
 export PKGBUILD=texlive-${PKGVER}-source/texk/kpathsea

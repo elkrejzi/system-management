@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=mesa
-export PKGVER=11.2.0
+export PKGVER=12.0.0-rc2
 
 if [ $(basename $0) == "buildmesa-git" ]
 then
@@ -60,7 +60,7 @@ then
   }
 else
   export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-  export PKGURL="ftp://ftp.freedesktop.org/pub/mesa/${PKGVER}/${PKGTAR}"
+  export PKGURL="ftp://ftp.freedesktop.org/pub/mesa/${PKGVER%-rc?}/${PKGTAR}"
 fi
 
 export MAKE_JOBS_FLAGS="-j4"
@@ -70,11 +70,15 @@ export PATCHES_LIST=("mesalib-xdemos.patch" "mesa-clang.patch")
 export PATCHES_LIST_32=("mesalib-xdemos.patch" "mesa-clang.patch")
 
 configure_pre() {
-  sed -i 's/LLVM_SO_NAME=.*/LLVM_SO_NAME=LLVM/' configure
+  #sed -i 's/LLVM_SO_NAME=.*/LLVM_SO_NAME=LLVM/' configure
+  sed -i "/pthread-stubs/d" configure.ac
+  autoreconf -fi
 }
 
 configure_pre_32() {
-  sed -i 's/LLVM_SO_NAME=.*/LLVM_SO_NAME=LLVM/' configure
+  #sed -i 's/LLVM_SO_NAME=.*/LLVM_SO_NAME=LLVM/' configure
+  sed -i "/pthread-stubs/d" configure.ac
+  autoreconf -fi
   export LLVM_CONFIG=/usr/bin/llvm-config32
 }
 
@@ -98,7 +102,8 @@ make_install_post_32() {
   install -m755 xdemos/glxgears32 ${DEST}/usr/bin
 }
 
-export COMMON_FLAGS=(--disable-xvmc
+export COMMON_FLAGS=(--disable-valgrind
+                     --disable-xvmc
                      --enable-texture-float
                      --enable-gles1
                      --enable-gles2

@@ -1,5 +1,7 @@
+Re-add support for lbarx, lharx, stbcx. and sthcx. insns back to the E6500 cpu.
+
 --- a/bfd/archive.c	2016-01-25 09:51:06.000000000 +0100
-+++ b/bfd/archive.c	2016-04-23 00:55:57.889420127 +0200
++++ b/bfd/archive.c	2016-06-05 12:51:34.118313534 +0200
 @@ -802,7 +802,7 @@
  	     Note that last_file->origin can be odd in the case of
  	     BSD-4.4-style element with a long odd size.  */
@@ -9,19 +11,8 @@
  	    {
  	      /* Prevent looping.  See PR19256.  */
  	      bfd_set_error (bfd_error_malformed_archive);
---- a/bfd/coff-alpha.c	2016-01-25 09:51:06.000000000 +0100
-+++ b/bfd/coff-alpha.c	2016-04-23 00:55:57.889420127 +0200
-@@ -2208,7 +2208,7 @@
- 	 BSD-4.4-style element with a long odd size.  */
-       filestart = last_file->proxy_origin + size;
-       filestart += filestart % 2;
--      if (filestart <= last_file->proxy_origin)
-+      if (filestart < last_file->proxy_origin)
- 	{
- 	  /* Prevent looping.  See PR19256.  */
- 	  bfd_set_error (bfd_error_malformed_archive);
 --- a/bfd/dwarf2.c	2016-01-25 09:51:06.000000000 +0100
-+++ b/bfd/dwarf2.c	2016-04-23 00:56:51.473131334 +0200
++++ b/bfd/dwarf2.c	2016-06-05 12:51:34.119313560 +0200
 @@ -3706,8 +3706,10 @@
  	   fail more quickly.  */
  	return FALSE;
@@ -35,7 +26,7 @@
  				      debug_sections, NULL)) == NULL
  	  || !bfd_generic_link_read_symbols (debug_bfd))
 --- a/bfd/elf32-i386.c	2016-01-25 09:51:06.000000000 +0100
-+++ b/bfd/elf32-i386.c	2016-04-23 00:59:29.981223101 +0200
++++ b/bfd/elf32-i386.c	2016-06-05 12:53:33.893408887 +0200
 @@ -1830,7 +1830,8 @@
  	       && (sec->flags & SEC_ALLOC) != 0
  	       && (r_type != R_386_PC32
@@ -46,6 +37,15 @@
  			   || h->root.type == bfd_link_hash_defweak
  			   || !h->def_regular))))
  	      || (ELIMINATE_COPY_RELOCS
+@@ -1961,7 +1962,7 @@
+ 	    return FALSE;
+ 	}
+ 
+-      if ((r_type == R_386_GOT32 || r_type == R_386_GOT32X)
++      if (r_type == R_386_GOT32X
+ 	  && (h == NULL || h->type != STT_GNU_IFUNC))
+ 	sec->need_convert_load = 1;
+     }
 @@ -2490,12 +2491,14 @@
  	}
        else
@@ -61,7 +61,76 @@
        h->plt.offset = (bfd_vma) -1;
        h->needs_plt = 0;
      }
-@@ -4016,10 +4019,12 @@
+@@ -2813,14 +2816,16 @@
+       unsigned int nop;
+       bfd_vma nop_offset;
+ 
+-      if (r_type != R_386_GOT32 && r_type != R_386_GOT32X)
++      /* Don't convert R_386_GOT32 since we can't tell if it is applied
++	 to "mov $foo@GOT, %reg" which isn't a load via GOT.  */
++      if (r_type != R_386_GOT32X)
+ 	continue;
+ 
+       roff = irel->r_offset;
+       if (roff < 2)
+ 	continue;
+ 
+-      /* Addend for R_386_GOT32 and R_386_GOT32X relocations must be 0.  */
++      /* Addend for R_386_GOT32X relocation must be 0.  */
+       addend = bfd_get_32 (abfd, contents + roff);
+       if (addend != 0)
+ 	continue;
+@@ -2828,13 +2833,11 @@
+       modrm = bfd_get_8 (abfd, contents + roff - 1);
+       baseless = (modrm & 0xc7) == 0x5;
+ 
+-      if (r_type == R_386_GOT32X
+-	  && baseless
++      if (baseless
+ 	  && bfd_link_pic (link_info))
+ 	{
+ 	  /* For PIC, disallow R_386_GOT32X without a base register
+-	     since we don't know what the GOT base is.   Allow
+-	     R_386_GOT32 for existing object files.  */
++	     since we don't know what the GOT base is.  */
+ 	  const char *name;
+ 
+ 	  if (r_symndx < symtab_hdr->sh_info)
+@@ -2862,12 +2865,6 @@
+       /* It is OK to convert mov to lea.  */
+       if (opcode != 0x8b)
+ 	{
+-	  /* Only convert R_386_GOT32X relocation for call, jmp or
+-	     one of adc, add, and, cmp, or, sbb, sub, test, xor
+-	     instructions.  */
+-	  if (r_type != R_386_GOT32X)
+-	    continue;
+-
+ 	  /* It is OK to convert indirect branch to direct branch.  It
+ 	     is OK to convert adc, add, and, cmp, or, sbb, sub, test,
+ 	     xor only when PIC is false.   */
+@@ -2875,8 +2872,8 @@
+ 	    continue;
+ 	}
+ 
+-      /* Try to convert R_386_GOT32 and R_386_GOT32X.  Get the symbol
+-	 referred to by the reloc.  */
++      /* Try to convert R_386_GOT32X.  Get the symbol referred to by
++         the reloc.  */
+       if (r_symndx < symtab_hdr->sh_info)
+ 	{
+ 	  isym = bfd_sym_from_r_symndx (&htab->sym_cache,
+@@ -2988,8 +2985,7 @@
+ 		{
+ 		  /* Convert "mov foo@GOT(%reg1), %reg2" to
+ 		     "lea foo@GOTOFF(%reg1), %reg2".  */
+-		  if (r_type == R_386_GOT32X
+-		      && (baseless || !bfd_link_pic (link_info)))
++		  if (baseless || !bfd_link_pic (link_info))
+ 		    {
+ 		      r_type = R_386_32;
+ 		      /* For R_386_32, convert
+@@ -4016,10 +4012,12 @@
  
  	  /* It is relative to .got.plt section.  */
  	  if (h->got.offset != (bfd_vma) -1)
@@ -76,7 +145,7 @@
  	  else
  	    /* Use GOTPLT entry.  */
  	    relocation = (h->plt.offset / plt_entry_size - 1 + 3) * 4;
-@@ -4285,8 +4290,8 @@
+@@ -4285,8 +4283,8 @@
  	      else if (h != NULL
  		       && h->dynindx != -1
  		       && (r_type == R_386_PC32
@@ -87,7 +156,7 @@
  			   || !h->def_regular))
  		outrel.r_info = ELF32_R_INFO (h->dynindx, r_type);
  	      else
-@@ -5355,19 +5360,23 @@
+@@ -5355,19 +5353,23 @@
    bfd *abfd = info->output_bfd;
    const struct elf_backend_data *bed = get_elf_backend_data (abfd);
    struct elf_link_hash_table *htab = elf_hash_table (info);
@@ -123,7 +192,7 @@
    switch (ELF32_R_TYPE (rela->r_info))
      {
 --- a/bfd/elf64-x86-64.c	2016-01-25 09:51:06.000000000 +0100
-+++ b/bfd/elf64-x86-64.c	2016-04-23 00:59:29.982223114 +0200
++++ b/bfd/elf64-x86-64.c	2016-06-05 12:53:07.307721688 +0200
 @@ -2029,7 +2029,8 @@
  	       && (sec->flags & SEC_ALLOC) != 0
  	       && (! IS_X86_64_PCREL_TYPE (r_type)
@@ -149,7 +218,19 @@
        h->plt.offset = (bfd_vma) -1;
        h->needs_plt = 0;
      }
-@@ -3190,35 +3193,43 @@
+@@ -3151,6 +3154,11 @@
+ 	    continue;
+ 	}
+ 
++      /* Don't convert GOTPCREL relocation against large section.  */
++      if (elf_section_data (tsec) !=  NULL
++	  && (elf_section_flags (tsec) & SHF_X86_64_LARGE) != 0)
++	continue;
++
+       if (tsec->sec_info_type == SEC_INFO_TYPE_MERGE)
+ 	{
+ 	  /* At this stage in linking, no SEC_MERGE symbol has been
+@@ -3190,35 +3198,46 @@
  	}
        else
  	{
@@ -172,6 +253,7 @@
 -		{
 -		  size = align_power (size, i->alignment_power);
 -		  size += i->size;
+-		}
 +	     SEC and TSEC.  We store the estimated distances in the
 +	     compressed_size field of the output section, which is only
 +	     used to decompress the compressed input section.  */
@@ -182,17 +264,20 @@
 +	      for (asect = link_info->output_bfd->sections;
 +		   asect != NULL;
 +		   asect = asect->next)
-+		{
-+		  asection *i;
-+		  for (i = asect->map_head.s;
-+		       i != NULL;
-+		       i = i->map_head.s)
-+		    {
-+		      size = align_power (size, i->alignment_power);
-+		      size += i->size;
-+		    }
-+		  asect->compressed_size = size;
- 		}
++		/* Skip debug sections since compressed_size is used to
++		   compress debug sections.  */
++		if ((asect->flags & SEC_DEBUGGING) == 0)
++		  {
++		    asection *i;
++		    for (i = asect->map_head.s;
++			 i != NULL;
++			 i = i->map_head.s)
++		      {
++			size = align_power (size, i->alignment_power);
++			size += i->size;
++		      }
++		    asect->compressed_size = size;
++		  }
  	    }
  
  	  /* Don't convert GOTPCREL relocations if TSEC isn't placed
@@ -210,7 +295,7 @@
  	      > 0xffffffff)
  	    continue;
  	}
-@@ -4631,8 +4642,8 @@
+@@ -4631,8 +4650,8 @@
  	      else if (h != NULL
  		       && h->dynindx != -1
  		       && (IS_X86_64_PCREL_TYPE (r_type)
@@ -221,7 +306,7 @@
  			   || ! h->def_regular))
  		{
  		  outrel.r_info = htab->r_info (h->dynindx, r_type);
-@@ -5728,19 +5739,23 @@
+@@ -5728,19 +5747,23 @@
    bfd *abfd = info->output_bfd;
    const struct elf_backend_data *bed = get_elf_backend_data (abfd);
    struct elf_x86_64_link_hash_table *htab = elf_x86_64_hash_table (info);
@@ -257,7 +342,7 @@
    switch ((int) ELF32_R_TYPE (rela->r_info))
      {
 --- a/bfd/elflink.c	2016-01-25 09:51:06.000000000 +0100
-+++ b/bfd/elflink.c	2016-04-23 00:56:14.199636857 +0200
++++ b/bfd/elflink.c	2016-06-05 12:51:34.124313689 +0200
 @@ -555,6 +555,19 @@
    if (h == NULL)
      return provide;
@@ -310,7 +395,7 @@
  	      && ((dynsym
  		   && h->ref_regular_nonweak
 --- a/binutils/Makefile.am	2015-11-13 09:27:40.000000000 +0100
-+++ b/binutils/Makefile.am	2016-04-23 00:56:51.473131334 +0200
++++ b/binutils/Makefile.am	2016-06-05 12:51:34.125313715 +0200
 @@ -192,6 +192,7 @@
  	EXPECT=$(EXPECT); export EXPECT; \
  	runtest=$(RUNTEST); \
@@ -320,7 +405,7 @@
  		$$runtest --tool $(DEJATOOL) --srcdir $${srcdir}/testsuite \
  			$(RUNTESTFLAGS); \
 --- a/binutils/Makefile.in	2015-11-13 09:27:40.000000000 +0100
-+++ b/binutils/Makefile.in	2016-04-23 00:56:51.474131347 +0200
++++ b/binutils/Makefile.in	2016-06-05 12:51:34.125313715 +0200
 @@ -1290,6 +1290,7 @@
  	EXPECT=$(EXPECT); export EXPECT; \
  	runtest=$(RUNTEST); \
@@ -330,7 +415,7 @@
  		$$runtest --tool $(DEJATOOL) --srcdir $${srcdir}/testsuite \
  			$(RUNTESTFLAGS); \
 --- a/gas/config/tc-i386.c	2016-01-25 09:51:06.000000000 +0100
-+++ b/gas/config/tc-i386.c	2016-04-23 00:59:29.984223140 +0200
++++ b/gas/config/tc-i386.c	2016-06-05 12:51:34.126313741 +0200
 @@ -552,6 +552,10 @@
     specified explicitly.  */
  static int omit_lock_prefix = 0;
@@ -424,7 +509,7 @@
    fprintf (stream, _("\
    -mintel64               accept only Intel64 ISA\n"));
 --- a/gas/config.in	2015-11-13 09:27:41.000000000 +0100
-+++ b/gas/config.in	2016-04-23 00:59:29.984223140 +0200
++++ b/gas/config.in	2016-06-05 12:51:34.127313766 +0200
 @@ -39,6 +39,9 @@
  /* Define if you want compressed debug sections by default. */
  #undef DEFAULT_FLAG_COMPRESS_DEBUG
@@ -436,7 +521,7 @@
  #undef EMULATIONS
  
 --- a/gas/configure	2016-01-25 09:54:08.000000000 +0100
-+++ b/gas/configure	2016-04-23 00:59:29.986223166 +0200
++++ b/gas/configure	2016-06-05 12:51:34.129313818 +0200
 @@ -765,6 +765,7 @@
  enable_targets
  enable_checking
@@ -527,7 +612,7 @@
  $as_echo "#define DEFAULT_FLAG_COMPRESS_DEBUG 1" >>confdefs.h
  
 --- a/gas/configure.ac	2016-01-25 09:51:06.000000000 +0100
-+++ b/gas/configure.ac	2016-04-23 00:59:29.986223166 +0200
++++ b/gas/configure.ac	2016-06-05 12:51:34.129313818 +0200
 @@ -77,6 +77,17 @@
    *)   ac_default_compressed_debug_sections=unset ;;
  esac])dnl
@@ -580,8 +665,155 @@
    AC_DEFINE(DEFAULT_FLAG_COMPRESS_DEBUG, 1, [Define if you want compressed debug sections by default.])
  fi
  
+--- a/gold/icf.cc	2015-11-13 09:27:42.000000000 +0100
++++ b/gold/icf.cc	2016-06-05 12:51:57.900928011 +0200
+@@ -213,6 +213,45 @@
+     }
+ }
+ 
++// For SHF_MERGE sections that use REL relocations, the addend is stored in
++// the text section at the relocation offset.  Read  the addend value given
++// the pointer to the addend in the text section and the addend size.
++// Update the addend value if a valid addend is found.
++// Parameters:
++// RELOC_ADDEND_PTR   : Pointer to the addend in the text section.
++// ADDEND_SIZE        : The size of the addend.
++// RELOC_ADDEND_VALUE : Pointer to the addend that is updated.
++
++inline void
++get_rel_addend(const unsigned char* reloc_addend_ptr,
++	       const unsigned int addend_size,
++	       uint64_t* reloc_addend_value)
++{
++  switch (addend_size)
++    {
++    case 0:
++      break;
++    case 1:
++      *reloc_addend_value =
++        read_from_pointer<8>(reloc_addend_ptr);
++      break;
++    case 2:
++      *reloc_addend_value =
++          read_from_pointer<16>(reloc_addend_ptr);
++      break;
++    case 4:
++      *reloc_addend_value =
++        read_from_pointer<32>(reloc_addend_ptr);
++      break;
++    case 8:
++      *reloc_addend_value =
++        read_from_pointer<64>(reloc_addend_ptr);
++      break;
++    default:
++      gold_unreachable();
++    }
++}
++
+ // This returns the buffer containing the section's contents, both
+ // text and relocs.  Relocs are differentiated as those pointing to
+ // sections that could be folded and those that cannot.  Only relocs
+@@ -397,58 +436,36 @@
+                   uint64_t entsize =
+                     (it_v->first)->section_entsize(it_v->second);
+ 		  long long offset = it_a->first;
+-
+-                  unsigned long long addend = it_a->second;
+-                  // Ignoring the addend when it is a negative value.  See the 
+-                  // comments in Merged_symbol_value::Value in object.h.
+-                  if (addend < 0xffffff00)
+-                    offset = offset + addend;
+-
+-		  // For SHT_REL relocation sections, the addend is stored in the
+-		  // text section at the relocation offset.
+-		  uint64_t reloc_addend_value = 0;
++		  // Handle SHT_RELA and SHT_REL addends, only one of these
++		  // addends exists.
++		  // Get the SHT_RELA addend.  For RELA relocations, we have
++		  // the addend from the relocation.
++		  uint64_t reloc_addend_value = it_a->second;
++
++		  // Handle SHT_REL addends.
++		  // For REL relocations, we need to fetch the addend from the
++		  // section contents.
+                   const unsigned char* reloc_addend_ptr =
+ 		    contents + static_cast<unsigned long long>(*it_o);
+-		  switch(*it_addend_size)
+-		    {
+-		      case 0:
+-		        {
+-                          break;
+-                        }
+-                      case 1:
+-                        {
+-                          reloc_addend_value =
+-                            read_from_pointer<8>(reloc_addend_ptr);
+-			  break;
+-                        }
+-                      case 2:
+-                        {
+-                          reloc_addend_value =
+-                            read_from_pointer<16>(reloc_addend_ptr);
+-			  break;
+-                        }
+-                      case 4:
+-                        {
+-                          reloc_addend_value =
+-                            read_from_pointer<32>(reloc_addend_ptr);
+-			  break;
+-                        }
+-                      case 8:
+-                        {
+-                          reloc_addend_value =
+-                            read_from_pointer<64>(reloc_addend_ptr);
+-			  break;
+-                        }
+-		      default:
+-		        gold_unreachable();
+-		    }
+-		  offset = offset + reloc_addend_value;
++
++		  // Update the addend value with the SHT_REL addend if
++		  // available.
++		  get_rel_addend(reloc_addend_ptr, *it_addend_size,
++				 &reloc_addend_value);
++
++		  // Ignore the addend when it is a negative value.  See the
++		  // comments in Merged_symbol_value::value in object.h.
++		  if (reloc_addend_value < 0xffffff00)
++		    offset = offset + reloc_addend_value;
+ 
+                   section_size_type secn_len;
++
+                   const unsigned char* str_contents =
+                   (it_v->first)->section_contents(it_v->second,
+                                                   &secn_len,
+                                                   false) + offset;
++		  gold_assert (offset < (long long) secn_len);
++
+                   if ((secn_flags & elfcpp::SHF_STRINGS) != 0)
+                     {
+                       // String merge section.
+@@ -489,10 +506,14 @@
+                     }
+                   else
+                     {
+-                      // Use the entsize to determine the length.
+-                      buffer.append(reinterpret_cast<const 
++                      // Use the entsize to determine the length to copy.
++		      uint64_t bufsize = entsize;
++		      // If entsize is too big, copy all the remaining bytes.
++		      if ((offset + entsize) > secn_len)
++			bufsize = secn_len - offset;
++                      buffer.append(reinterpret_cast<const
+                                                      char*>(str_contents),
+-                                    entsize);
++                                    bufsize);
+                     }
+ 		  buffer.append("@");
+                 }
 --- a/ld/configure	2016-01-25 09:54:11.000000000 +0100
-+++ b/ld/configure	2016-04-23 00:59:29.989223206 +0200
++++ b/ld/configure	2016-06-05 12:51:34.131313870 +0200
 @@ -17134,7 +17134,7 @@
    fi
  done
@@ -592,7 +824,7 @@
  $as_echo "#define DEFAULT_FLAG_COMPRESS_DEBUG 1" >>confdefs.h
  
 --- a/ld/configure.ac	2015-11-13 09:27:42.000000000 +0100
-+++ b/ld/configure.ac	2016-04-23 00:59:29.989223206 +0200
++++ b/ld/configure.ac	2016-06-05 12:51:34.132313896 +0200
 @@ -384,7 +384,7 @@
    fi
  done
@@ -603,7 +835,7 @@
  fi
  
 --- a/ld/emultempl/elf32.em	2015-11-13 09:27:42.000000000 +0100
-+++ b/ld/emultempl/elf32.em	2016-04-23 00:55:32.628084006 +0200
++++ b/ld/emultempl/elf32.em	2016-06-05 12:51:34.132313896 +0200
 @@ -1946,25 +1946,32 @@
        return os;
      }
@@ -651,7 +883,7 @@
    if ((flags & (SEC_ALLOC | SEC_DEBUGGING)) == 0)
      place = &hold[orphan_nonalloc];
 --- a/ld/emultempl/mmo.em	2015-11-13 09:27:42.000000000 +0100
-+++ b/ld/emultempl/mmo.em	2016-04-23 00:55:32.629084019 +0200
++++ b/ld/emultempl/mmo.em	2016-06-05 12:51:34.132313896 +0200
 @@ -107,22 +107,28 @@
        return os;
      }
@@ -694,7 +926,7 @@
      for (i = 0; i < sizeof (holds) / sizeof (holds[0]); i++)
        if ((flags & holds[i].nonzero_flags) != 0)
 --- a/ld/emultempl/pe.em	2015-11-13 09:27:42.000000000 +0100
-+++ b/ld/emultempl/pe.em	2016-04-23 00:55:32.629084019 +0200
++++ b/ld/emultempl/pe.em	2016-06-05 12:51:34.133313922 +0200
 @@ -2225,21 +2225,27 @@
  	  orphan_init_done = 1;
  	}
@@ -736,7 +968,7 @@
        if ((flags & SEC_ALLOC) == 0)
  	;
 --- a/ld/emultempl/pep.em	2015-11-13 09:27:42.000000000 +0100
-+++ b/ld/emultempl/pep.em	2016-04-23 00:55:32.629084019 +0200
++++ b/ld/emultempl/pep.em	2016-06-05 12:51:34.133313922 +0200
 @@ -1996,21 +1996,27 @@
  	  orphan_init_done = 1;
  	}
@@ -778,7 +1010,7 @@
        if ((flags & SEC_ALLOC) == 0)
  	;
 --- a/ld/lexsup.c	2015-11-13 09:27:42.000000000 +0100
-+++ b/ld/lexsup.c	2016-04-23 00:59:29.990223219 +0200
++++ b/ld/lexsup.c	2016-06-05 12:51:34.133313922 +0200
 @@ -1586,15 +1586,14 @@
    /* We may have -Bsymbolic, -Bsymbolic-functions, --dynamic-list-data,
       --dynamic-list-cpp-new, --dynamic-list-cpp-typeinfo and
@@ -810,7 +1042,7 @@
        break;
      }
 --- a/opcodes/i386-dis.c	2016-01-25 09:51:06.000000000 +0100
-+++ b/opcodes/i386-dis.c	2016-04-23 00:59:29.991223232 +0200
++++ b/opcodes/i386-dis.c	2016-06-05 12:51:34.135313973 +0200
 @@ -13644,7 +13644,7 @@
      if (op_index[i] != -1 && op_riprel[i])
        {

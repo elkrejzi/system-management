@@ -1,17 +1,10 @@
 #!/bin/bash -e
 
 export PKGNAME=json-c
-export PKGVER=0.12
+export PKGVER=0.12.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://s3.amazonaws.com/json-c_releases/releases/${PKGTAR}"
+export MAKE_JOBS_FLAGS=-j4
 export MULTILIB_BUILD=1
-
-configure_post() {
-  find . -name "Makefile" -exec sed -i "s:-Werror ::g" {} \;
-}
-
-configure_post_32() {
-  find . -name "Makefile" -exec sed -i "s:-Werror ::g" {} \;
-}
 
 . $(dirname $0)/master.sh

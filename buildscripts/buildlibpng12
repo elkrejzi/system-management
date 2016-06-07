@@ -12,7 +12,7 @@ make_override() {
 }
 
 make_install_override() {
-  make lib_LTLIBRARIES="libpng.la" install-libLTLIBRARIES ${ADDITIONAL_MAKE_INSTALL_FLAGS}
+  make lib_LTLIBRARIES="libpng.la libpng12.la" install-libLTLIBRARIES ${ADDITIONAL_MAKE_INSTALL_FLAGS}
 }
 
 post_install_config() {

@@ -23,7 +23,7 @@ case $(basename $0) in
   ;;
   buildevolution-data-server )
     export PKGNAME=evolution-data-server
-    export PKGVER=3.20.2
+    export PKGVER=3.20.3
     export CONFIGURE_FLAGS=(--disable-google-auth
                             --disable-uoa
                             --with-krb5=/usr
@@ -291,7 +291,7 @@ case $(basename $0) in
   ;;
   buildlibgsf )
     export PKGNAME=libgsf
-    export PKGVER=1.14.36
+    export PKGVER=1.14.37
   ;;
   buildlibgtop )
     export PKGNAME=libgtop

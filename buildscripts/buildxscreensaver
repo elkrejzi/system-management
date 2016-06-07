@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=xscreensaver
-export PKGVER=5.34
+export PKGVER=5.35
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://www.jwz.org/xscreensaver/${PKGTAR}"
 export DEST=/binary/xorg/${PKGNAME}-${PKGVER}
@@ -19,6 +19,7 @@ cat > ${DEST}/etc/pam.d/xscreensaver << "EOF"
 
 auth     include        system-auth
 -auth    optional       pam_gnome_keyring.so
+-auth    optional       pam_kwallet5.so
 
 account  include        system-account
 password include        system-password

@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=5.6.0
+export PKGVER=5.7.0-rc
 export MAKE_JOBS_FLAGS="-j4"
 export DEBUG_BUILD=1
 export NO_OPTIMIZATION=1
@@ -14,24 +14,29 @@ case $(basename $0) in
     $(dirname $0)/buildqtscript
     $(dirname $0)/buildqtserialport
     $(dirname $0)/buildqtsvg
-    $(dirname $0)/buildqtwayland
     $(dirname $0)/buildqtx11extras
     $(dirname $0)/buildqtxmlpatterns
     $(dirname $0)/buildqtdeclarative
+    $(dirname $0)/buildqtcharts
     $(dirname $0)/buildqtconnectivity
+    $(dirname $0)/buildqtdatavis3d
+    $(dirname $0)/buildqtgamepad
     $(dirname $0)/buildqtgraphicaleffects
     $(dirname $0)/buildqtlocation
     $(dirname $0)/buildqtmultimedia
     $(dirname $0)/buildqtquickcontrols
     $(dirname $0)/buildqtquickcontrols2
+    $(dirname $0)/buildqtscxml
     $(dirname $0)/buildqtsensors
     $(dirname $0)/buildqtserialbus
     $(dirname $0)/buildqttools
+    $(dirname $0)/buildqtvirtualkeyboard
+    $(dirname $0)/buildqtwayland
     $(dirname $0)/buildqtwebchannel
     $(dirname $0)/buildqtwebsockets
     $(dirname $0)/buildqtwebengine
 
-    find /binary -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
+    find /binary/qt* -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
 
     exit 0
   ;;
@@ -42,19 +47,24 @@ qtmodules=(
   qtscript
   qtserialport
   qtsvg
-  qtwayland
   qtx11extras
   qtxmlpatterns
   qtdeclarative
+  qtcharts
   qtconnectivity
+  qtdatavis3d
+  qtgamepad
   qtgraphicaleffects
   qtlocation
   qtmultimedia
   qtquickcontrols
   qtquickcontrols2
+  qtscxml
   qtsensors
   qtserialbus
   qttools
+  qtvirtualkeyboard
+  qtwayland
   qtwebchannel
   qtwebsockets
   qtwebengine
@@ -73,14 +83,14 @@ export PKGTAR=${PKGNAME}-opensource-src-${PKGVER}.tar.xz
 export PKGDIR=${PKGNAME}-opensource-src-${PKGVER}
 
 # stable
-export PKGURL="http://download.qt.io/official_releases/qt/5.6/${PKGVER}/submodules/${PKGTAR}"
+#export PKGURL="http://download.qt.io/official_releases/qt/5.7/${PKGVER}/submodules/${PKGTAR}"
 
 # development
-export PKGURL="https://download.qt.io/development_releases/qt/5.6/${PKGVER}/submodules/${PKGTAR}"
+export PKGURL="https://download.qt.io/development_releases/qt/5.7/${PKGVER}/submodules/${PKGTAR}"
 
 if [ ${PKGNAME} == "qtwebengine" ]
 then
-  export PATCHES_LIST=("qtwebengine-nss.patch")
+#  export PATCHES_LIST=("qtwebengine-nss.patch")
 
   configure_pre() {
     # No debug symbols for this module. Taken from Debian
@@ -89,32 +99,10 @@ then
     echo "WEBENGINE_CONFIG += use_system_icu use_proprietary_codecs" >> .qmake.conf
     unset DEBUG_BUILD
 
-    # git clone https://chromium.googlesource.com/v8/v8
-
-    # pushd v8
-    #   git checkout 71bde166b191f6a459827d9be11424405ba13414
-    # popd
-
-    # patch -Np1 -i /media/ntfs/Other/Linux/patches/chromium-libcxx.patch
-
-    # tar cfJ v8.tar.xz v8
-
-    pushd src/3rdparty/chromium
-      rm -rf v8
-      tar xf /media/ntfs/Other/Linux/v8.tar.xz
-    popd
-
     sed -i "/linux-clang/a linux-clang-libc++: GYP_CONFIG += clang=1 host_clang=1 clang_use_chrome_plugins=0 make_clang_dir=/usr use_libcpp=1 werror=" src/core/config/desktop_linux.pri
-    sed -i "/config.h/i #include <cstdlib>" src/3rdparty/chromium/third_party/WebKit/Source/platform/heap/GCInfo.cpp
-  }
-elif [ ${PKGNAME} == "qtserialbus" ]
-then
-  configure_pre() {
-    sed -i "/unistd.h/i #include <errno.h>" src/plugins/canbus/socketcan/socketcanbackend.cpp
+    sed -i "/GCInfo.h/i #include <cstdlib>" src/3rdparty/chromium/third_party/WebKit/Source/platform/heap/GCInfo.cpp
   }
 fi
-
-
 
 configure_override() {
   qmake

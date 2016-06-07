@@ -11,7 +11,7 @@ export MAKE_JOBS_FLAGS="-j4"
 export PKGDIR=src
 export PKGBUILD=build
 export DEBUG_BUILD=1
-export PATCHES_LIST=("gcc-pure64.patch")
+export PATCHES_LIST=("gcc-fixes.patch" "gcc-pure64.patch")
 export DEFAULT_CC="gcc"
 export DEFAULT_CXX="g++"
 

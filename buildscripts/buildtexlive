@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
 export PKGNAME=texlive
-export PKGVER=20150521
-export TEXMFVER=20150523
+export PKGVER=20160523
+export TEXMFVER=20160523
 export PKGTAR=texlive-${PKGVER}-source.tar.xz
 export TEXMFTAR=texlive-${TEXMFVER}-texmf.tar.xz
 export PKGDIR=texlive-${PKGVER}-source

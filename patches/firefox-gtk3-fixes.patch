@@ -1,6 +1,6 @@
---- a/widget/gtk/gtk3drawing.c	2016-04-22 02:37:27.000000000 +0200
-+++ b/widget/gtk/gtk3drawing.c	2016-04-28 15:25:43.871450336 +0200
-@@ -17,32 +17,79 @@
+--- a/widget/gtk/gtk3drawing.c	2016-06-01 06:11:44.000000000 +0200
++++ b/widget/gtk/gtk3drawing.c	2016-06-07 13:44:57.520139822 +0200
+@@ -17,34 +17,86 @@
  
  #include <math.h>
  
@@ -18,6 +18,11 @@
 +        struct {
 +            GtkStyleContext*  style;
 +        } button;
++
++        struct {
++            GtkStyleContext*  style;
++            GtkStyleContext*  styleBackground;
++        } tooltip;
 +
 +        struct {
 +            GtkStyleContext*  style;
@@ -87,9 +92,12 @@
 -static GtkWidget* gProgressWidget;
 +static MozGtkWidget gProgressBar;
  static GtkWidget* gTabWidget;
- static GtkWidget* gTooltipWidget;
+-static GtkWidget* gTooltipWidget;
++static MozGtkWidget gTooltip;
  static GtkWidget* gMenuBarWidget;
-@@ -78,6 +125,37 @@
+ static GtkWidget* gMenuBarItemWidget;
+ static GtkWidget* gMenuPopupWidget;
+@@ -78,6 +130,37 @@
  #define GTK_STATE_FLAG_CHECKED (1 << 11)
  #endif
  
@@ -127,7 +135,7 @@
  static GtkStateFlags
  GetStateFlagsFromGtkWidgetState(GtkWidgetState* state)
  {
-@@ -97,6 +175,41 @@
+@@ -97,6 +180,41 @@
      return stateFlags;
  }
  
@@ -169,7 +177,7 @@
  /* Because we have such an unconventional way of drawing widgets, signal to the GTK theme engine
     that they are drawing for Mozilla instead of a conventional GTK app so they can do any specific
     things they may want to do. */
-@@ -141,9 +254,16 @@
+@@ -141,9 +259,16 @@
  static gint
  ensure_button_widget()
  {
@@ -189,7 +197,7 @@
      }
      return MOZ_GTK_SUCCESS;
  }
-@@ -195,9 +315,21 @@
+@@ -195,9 +320,21 @@
  static gint
  ensure_checkbox_widget()
  {
@@ -214,7 +222,7 @@
      }
      return MOZ_GTK_SUCCESS;
  }
-@@ -205,9 +337,21 @@
+@@ -205,9 +342,21 @@
  static gint
  ensure_radiobutton_widget()
  {
@@ -239,7 +247,7 @@
      }
      return MOZ_GTK_SUCCESS;
  }
-@@ -215,25 +359,62 @@
+@@ -215,25 +364,62 @@
  static gint
  ensure_scrollbar_widget()
  {
@@ -315,7 +323,7 @@
  }
  
  static gint
-@@ -253,9 +434,19 @@
+@@ -253,9 +439,19 @@
  static gint
  ensure_entry_widget()
  {
@@ -338,7 +346,7 @@
      }
      return MOZ_GTK_SUCCESS;
  }
-@@ -387,9 +578,9 @@
+@@ -387,9 +583,9 @@
          g_object_add_weak_pointer(G_OBJECT(widget),
                                    (gpointer) &gComboBoxEntryButtonWidget);
      } else if (GTK_IS_ENTRY(widget)) {
@@ -350,7 +358,7 @@
      } else
          return;
      gtk_widget_realize(widget);
-@@ -411,7 +602,7 @@
+@@ -411,7 +607,7 @@
  {
      GtkWidget* buttonChild;
  
@@ -359,7 +367,7 @@
              gComboBoxEntryButtonWidget &&
              gComboBoxEntryArrowWidget)
          return MOZ_GTK_SUCCESS;
-@@ -427,9 +618,9 @@
+@@ -427,9 +623,9 @@
                           moz_gtk_get_combo_box_entry_inner_widgets,
                           NULL);
  
@@ -371,7 +379,32 @@
      }
  
      if (gComboBoxEntryButtonWidget) {
-@@ -530,9 +721,21 @@
+@@ -507,12 +703,18 @@
+ static gint
+ ensure_tooltip_widget()
+ {
+-    if (!gTooltipWidget) {
+-        gTooltipWidget = gtk_window_new(GTK_WINDOW_POPUP);
+-        GtkStyleContext* style = gtk_widget_get_style_context(gTooltipWidget);
+-        gtk_style_context_add_class(style, GTK_STYLE_CLASS_TOOLTIP);
+-        gtk_widget_realize(gTooltipWidget);
+-        moz_gtk_set_widget_name(gTooltipWidget);
++    if (!gTooltip.widget) {
++        GtkCssNode path[] = { 
++            { GTK_TYPE_TOOLTIP, "tooltip", NULL, NULL},
++            { GTK_TYPE_TOOLTIP, "tooltip", "background", NULL},
++        };
++
++        gTooltip.widget = gtk_window_new(GTK_WINDOW_POPUP);
++        gtk_widget_realize(gTooltip.widget);
++        moz_gtk_set_widget_name(gTooltip.widget);
++
++        gTooltip.tooltip.style = moz_gtk_style_create(&path[0], NULL);
++        gTooltip.tooltip.styleBackground = moz_gtk_style_create(&path[1], NULL);
+     }
+     return MOZ_GTK_SUCCESS;
+ }
+@@ -530,9 +732,21 @@
  static gint
  ensure_progress_widget()
  {
@@ -396,7 +429,7 @@
      }
      return MOZ_GTK_SUCCESS;
  }
-@@ -638,6 +841,11 @@
+@@ -638,6 +852,11 @@
  ensure_check_menu_item_widget()
  {
      if (!gCheckMenuItemWidget) {
@@ -408,7 +441,7 @@
          ensure_menu_popup_widget();
          gCheckMenuItemWidget = gtk_check_menu_item_new_with_label("M");
          gtk_menu_shell_append(GTK_MENU_SHELL(gMenuPopupWidget),
-@@ -752,7 +960,7 @@
+@@ -752,7 +971,7 @@
  {
      ensure_checkbox_widget();
  
@@ -417,7 +450,7 @@
                            "indicator_size", indicator_size,
                            "indicator_spacing", indicator_spacing,
                            NULL);
-@@ -765,7 +973,7 @@
+@@ -765,7 +984,7 @@
  {
      ensure_radiobutton_widget();
  
@@ -426,24 +459,25 @@
                            "indicator_size", indicator_size,
                            "indicator_spacing", indicator_spacing,
                            NULL);
-@@ -778,13 +986,12 @@
+@@ -778,13 +997,13 @@
  {
      GtkBorder border;
      GtkBorder padding;
 -    GtkStyleContext *style;
-+    GtkStyleContext* style = gEntry.entry.style;
++    GtkStyleContext* style;
  
      ensure_entry_widget();
 -    style = gtk_widget_get_style_context(gEntryWidget);
  
 -    gtk_style_context_get_border(style, 0, &border);
 -    gtk_style_context_get_padding(style, 0, &padding);
++    style = gEntry.entry.style;
 +    gtk_style_context_get_border(style, gtk_style_context_get_state(style), &border);
 +    gtk_style_context_get_padding(style, gtk_style_context_get_state(style), &padding);
      *focus_h_width = border.left + padding.left;
      *focus_v_width = border.top + padding.top;
      return MOZ_GTK_SUCCESS;
-@@ -821,7 +1028,7 @@
+@@ -821,7 +1040,7 @@
      GtkBorder* default_outside_border;
  
      ensure_button_widget();
@@ -452,7 +486,7 @@
                           "default-outside-border", &default_outside_border,
                           NULL);
  
-@@ -844,7 +1051,7 @@
+@@ -844,7 +1063,7 @@
      GtkBorder* default_border;
  
      ensure_button_widget();
@@ -461,7 +495,7 @@
                           "default-border", &default_border,
                           NULL);
  
-@@ -935,7 +1142,7 @@
+@@ -935,7 +1154,7 @@
  
      if (state->focused) {
          GtkBorder border;
@@ -470,7 +504,7 @@
          x += border.left;
          y += border.top;
          width -= (border.left + border.right);
-@@ -956,15 +1163,14 @@
+@@ -956,15 +1175,14 @@
      gint indicator_size, indicator_spacing;
      gint x, y, width, height;
      gint focus_x, focus_y, focus_width, focus_height;
@@ -489,7 +523,7 @@
      }
  
      // XXX we should assert rect->height >= indicator_size too
-@@ -983,11 +1189,9 @@
+@@ -983,11 +1201,9 @@
      focus_width = width + 2 * indicator_spacing;
      focus_height = height + 2 * indicator_spacing;
    
@@ -504,7 +538,7 @@
  
      if (selected)
          state_flags |= checkbox_check_state;
-@@ -995,13 +1199,15 @@
+@@ -995,13 +1211,15 @@
      if (inconsistent)
          state_flags |= GTK_STATE_FLAG_INCONSISTENT;
  
@@ -524,7 +558,7 @@
                              focus_width, focus_height);
          }
      }
-@@ -1010,15 +1216,14 @@
+@@ -1010,15 +1228,14 @@
          * 'indeterminate' type on checkboxes. In GTK, the shadow type
          * must also be changed for the state to be drawn.
          */        
@@ -544,7 +578,7 @@
  
      return MOZ_GTK_SUCCESS;
  }
-@@ -1035,8 +1240,8 @@
+@@ -1035,8 +1252,8 @@
      style = gtk_widget_get_style_context(button);
  
      /* This mirrors gtkbutton's child positioning */
@@ -555,7 +589,7 @@
  
      inner_rect->x = rect->x + border.left + padding.left;
      inner_rect->y = rect->y + padding.top + border.top;
-@@ -1099,9 +1304,9 @@
+@@ -1099,9 +1316,9 @@
      ensure_scrollbar_widget();
  
      if (flags & MOZ_GTK_STEPPER_VERTICAL)
@@ -567,7 +601,7 @@
  
      gtk_widget_set_direction(scrollbar, direction);
  
-@@ -1181,25 +1386,22 @@
+@@ -1181,25 +1398,22 @@
                                 GtkTextDirection direction)
  {
      GtkStyleContext* style;
@@ -601,7 +635,7 @@
  
      gtk_render_background(style, cr, rect->x, rect->y, rect->width, rect->height);
      gtk_render_frame(style, cr, rect->x, rect->y, rect->width, rect->height);
-@@ -1208,7 +1410,6 @@
+@@ -1208,7 +1422,6 @@
          gtk_render_focus(style, cr,
                           rect->x, rect->y, rect->width, rect->height);
      }
@@ -609,7 +643,7 @@
      return MOZ_GTK_SUCCESS;
  }
  
-@@ -1220,24 +1421,20 @@
+@@ -1220,24 +1433,20 @@
  {
      GtkStateFlags state_flags = GetStateFlagsFromGtkWidgetState(state);
      GtkStyleContext* style;
@@ -642,7 +676,7 @@
      gtk_style_context_get_margin (style, state_flags, &margin);
  
      gtk_render_slider(style, cr,
-@@ -1248,8 +1445,6 @@
+@@ -1248,8 +1457,6 @@
                       (widget == MOZ_GTK_SCROLLBAR_THUMB_HORIZONTAL) ?
                       GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL);
  
@@ -651,7 +685,7 @@
      return MOZ_GTK_SUCCESS;
  }
  
-@@ -1260,8 +1455,8 @@
+@@ -1260,8 +1467,8 @@
      GtkStyleContext* style;
  
      ensure_spin_widget();
@@ -662,7 +696,7 @@
      gtk_style_context_save(style);
      gtk_style_context_add_class(style, GTK_STYLE_CLASS_SPINBUTTON);
      gtk_render_background(style, cr, rect->x, rect->y, rect->width, rect->height);
-@@ -1280,11 +1475,10 @@
+@@ -1280,11 +1487,10 @@
      GtkStyleContext* style;
  
      ensure_spin_widget();
@@ -676,7 +710,7 @@
  
      gtk_render_background(style, cr, rect->x, rect->y, rect->width, rect->height);
      gtk_render_frame(style, cr, rect->x, rect->y, rect->width, rect->height);
-@@ -1450,15 +1644,13 @@
+@@ -1450,15 +1656,13 @@
  static gint
  moz_gtk_entry_paint(cairo_t *cr, GdkRectangle* rect,
                      GtkWidgetState* state,
@@ -695,7 +729,7 @@
  
      if (draw_focus_outline_only) {
          // Inflate the given 'rect' with the focus outline size.
-@@ -1478,10 +1670,9 @@
+@@ -1478,10 +1682,9 @@
       * textarea window uses gtk_paint_flat_box when exposed */
  
      /* This gets us a lovely greyish disabledish look */
@@ -707,7 +741,7 @@
    
      /* Now paint the shadow and focus border.
       * We do like in gtk_entry_draw_frame, we first draw the shadow, a tad
-@@ -1531,7 +1722,7 @@
+@@ -1531,7 +1734,7 @@
      style = gtk_widget_get_style_context(gScrolledWindowWidget);
      gtk_style_context_save(style);
      gtk_style_context_add_class(style, GTK_STYLE_CLASS_FRAME);    
@@ -716,7 +750,7 @@
      xthickness = border.left;
      ythickness = border.top;    
  
-@@ -1702,7 +1893,7 @@
+@@ -1702,7 +1905,7 @@
          if (direction == GTK_TEXT_DIR_LTR) {
              GtkBorder padding;
              GtkStateFlags state_flags = GetStateFlagsFromGtkWidgetState(state);
@@ -725,7 +759,7 @@
              arrow_rect.x -= padding.left;
          }
          else
-@@ -1804,29 +1995,27 @@
+@@ -1804,29 +2007,27 @@
                          gboolean isradio, GtkTextDirection direction)
  {
      GtkStateFlags state_flags = GetStateFlagsFromGtkWidgetState(state);
@@ -763,7 +797,7 @@
    
      return MOZ_GTK_SUCCESS;
  }
-@@ -1836,32 +2025,26 @@
+@@ -1836,32 +2037,26 @@
                             GtkWidgetState* state, 
                             gboolean isradio, GtkTextDirection direction)
  {
@@ -805,7 +839,7 @@
  
      return MOZ_GTK_SUCCESS;
  }
-@@ -1922,7 +2105,7 @@
+@@ -1922,7 +2117,7 @@
                            rect->height * (end_fraction - start_fraction));
      } else {
          GtkBorder padding;
@@ -814,7 +848,19 @@
      
          paint_width = padding.left;
          if (paint_width > rect->width)
-@@ -2006,18 +2189,13 @@
+@@ -1945,9 +2140,9 @@
+     GtkStyleContext* style;
+ 
+     ensure_tooltip_widget();
+-    gtk_widget_set_direction(gTooltipWidget, direction);
++    gtk_widget_set_direction(gTooltip.widget, direction);
+ 
+-    style = gtk_widget_get_style_context(gTooltipWidget);
++    style = gTooltip.tooltip.styleBackground;
+     gtk_render_background(style, cr, rect->x, rect->y, rect->width, rect->height);
+     gtk_render_frame(style, cr, rect->x, rect->y, rect->width, rect->height);
+     return MOZ_GTK_SUCCESS;
+@@ -2006,18 +2201,13 @@
  moz_gtk_progressbar_paint(cairo_t *cr, GdkRectangle* rect,
                            GtkTextDirection direction)
  {
@@ -838,7 +884,7 @@
  
      return MOZ_GTK_SUCCESS;
  }
-@@ -2027,15 +2205,8 @@
+@@ -2027,15 +2217,8 @@
                               GtkTextDirection direction,
                               GtkThemeWidgetType widget)
  {
@@ -855,7 +901,7 @@
  
      if (widget == MOZ_GTK_PROGRESS_CHUNK_INDETERMINATE ||
          widget == MOZ_GTK_PROGRESS_CHUNK_VERTICAL_INDETERMINATE) {
-@@ -2074,12 +2245,14 @@
+@@ -2074,12 +2257,14 @@
      // gtk_render_activity was used to render progress chunks on GTK versions
      // before 3.13.7, see bug 1173907.
      if (!gtk_check_version(3, 13, 7)) {
@@ -874,7 +920,7 @@
  
      return MOZ_GTK_SUCCESS;
  }
-@@ -2096,7 +2269,7 @@
+@@ -2096,7 +2281,7 @@
  
      style = gtk_widget_get_style_context(gTabWidget);
      gtk_style_context_add_class(style, GTK_STYLE_CLASS_NOTEBOOK);
@@ -883,7 +929,7 @@
  
      if (border.top < 2)
          return 2; /* some themes don't set ythickness correctly */
-@@ -2292,7 +2465,7 @@
+@@ -2292,7 +2477,7 @@
        gtk_style_context_save(style);
        moz_gtk_tab_prepare_style_context(style, flags);
  
@@ -892,7 +938,7 @@
  
        focusRect.x += padding.left;
        focusRect.width -= (padding.left + padding.right);
-@@ -2408,7 +2581,7 @@
+@@ -2408,7 +2593,7 @@
  }
  
  static gint
@@ -901,7 +947,7 @@
                         GtkTextDirection direction)
  {
      GtkStyleContext* style;
-@@ -2468,7 +2641,7 @@
+@@ -2468,7 +2653,7 @@
      border_width = gtk_container_get_border_width(GTK_CONTAINER(gMenuSeparatorWidget));
  
      style = gtk_widget_get_style_context(gMenuSeparatorWidget);
@@ -910,7 +956,7 @@
  
      x = rect->x + border_width;
      y = rect->y + border_width;
-@@ -2521,7 +2694,8 @@
+@@ -2521,7 +2706,8 @@
              item_widget = gMenuItemWidget;
          }
          style = gtk_widget_get_style_context(item_widget);
@@ -920,7 +966,7 @@
  
          if (flags & MOZ_TOPLEVEL_MENU_ITEM) {
              gtk_style_context_add_class(style, GTK_STYLE_CLASS_MENUBAR);
-@@ -2540,7 +2714,7 @@
+@@ -2540,7 +2726,7 @@
  
          gtk_render_background(style, cr, x, y, w, h);
          gtk_render_frame(style, cr, x, y, w, h);
@@ -929,7 +975,7 @@
      }
  
      return MOZ_GTK_SUCCESS;
-@@ -2556,7 +2730,10 @@
+@@ -2556,7 +2742,10 @@
  
      ensure_menu_item_widget();
      gtk_widget_set_direction(gMenuItemWidget, direction);
@@ -941,7 +987,7 @@
      style = gtk_widget_get_style_context(gMenuItemWidget);
      gtk_style_context_save(style);
      gtk_style_context_add_class(style, GTK_STYLE_CLASS_MENUITEM);
-@@ -2606,7 +2783,7 @@
+@@ -2606,7 +2795,7 @@
      }
      
      gtk_style_context_set_state(style, state_flags);
@@ -950,7 +996,7 @@
  
      offset = gtk_container_get_border_width(GTK_CONTAINER(gCheckMenuItemWidget)) +
                                              padding.left + 2;
-@@ -2658,7 +2835,7 @@
+@@ -2658,7 +2847,7 @@
  {
      GtkBorder border;
  
@@ -959,7 +1005,7 @@
  
      *left += border.left;
      *right += border.right;
-@@ -2667,12 +2844,22 @@
+@@ -2667,12 +2856,22 @@
  }
  
  static void
@@ -983,7 +1029,7 @@
  
      *left += padding.left;
      *right += padding.right;
-@@ -2680,6 +2867,16 @@
+@@ -2680,6 +2879,16 @@
      *bottom += padding.bottom;
  }
  
@@ -1000,7 +1046,7 @@
  gint
  moz_gtk_get_widget_border(GtkThemeWidgetType widget, gint* left, gint* top,
                            gint* right, gint* bottom, GtkTextDirection direction,
-@@ -2694,36 +2891,27 @@
+@@ -2694,37 +2903,35 @@
      case MOZ_GTK_TOOLBAR_BUTTON:
          {
              ensure_button_widget();
@@ -1038,13 +1084,21 @@
              *left = *top = *right = *bottom = -1;
 -            moz_gtk_add_style_padding(style, left, top, right, bottom);
 -            moz_gtk_add_style_border(style, left, top, right, bottom);
-+
+ 
 +            moz_gtk_add_style_padding(gEntry.entry.style, left, top, right, bottom);
 +            moz_gtk_add_style_border(gEntry.entry.style, left, top, right, bottom);
- 
++
++            return MOZ_GTK_SUCCESS;
++        }
++    case MOZ_GTK_TOOLTIP:
++        {
++            ensure_tooltip_widget();
++            moz_gtk_add_style_padding(gTooltip.tooltip.styleBackground, left, top, right, bottom);
++            moz_gtk_add_style_border(gTooltip.tooltip.styleBackground, left, top, right, bottom);
              return MOZ_GTK_SUCCESS;
          }
-@@ -2759,7 +2947,7 @@
+     case MOZ_GTK_TREEVIEW:
+@@ -2759,7 +2966,7 @@
          break;
      case MOZ_GTK_DROPDOWN_ENTRY:
          ensure_combo_box_entry_widgets();
@@ -1053,7 +1107,7 @@
          break;
      case MOZ_GTK_DROPDOWN_ARROW:
          ensure_combo_box_entry_widgets();
-@@ -2795,7 +2983,7 @@
+@@ -2795,7 +3002,7 @@
  
                  if (!wide_separators) {
                      style = gtk_widget_get_style_context(gComboBoxSeparatorWidget);
@@ -1062,7 +1116,7 @@
                      separator_width = border.left;
                  }
              }
-@@ -2814,14 +3002,17 @@
+@@ -2814,14 +3021,17 @@
          w = gTabWidget;
          break;
      case MOZ_GTK_PROGRESSBAR:
@@ -1084,7 +1138,7 @@
          break;
      case MOZ_GTK_SCALE_HORIZONTAL:
          ensure_scale_widget();
-@@ -2840,12 +3031,13 @@
+@@ -2840,12 +3050,13 @@
          {
              if (widget == MOZ_GTK_CHECKBUTTON_CONTAINER) {
                  ensure_checkbox_widget();
@@ -1101,7 +1155,15 @@
  
              *left = *top = *right = *bottom = gtk_container_get_border_width(GTK_CONTAINER(w));
              moz_gtk_add_style_border(style,
-@@ -2978,6 +3170,32 @@
+@@ -2904,7 +3115,6 @@
+     case MOZ_GTK_MENUSEPARATOR:
+     /* These widgets have no borders.*/
+     case MOZ_GTK_SPINBUTTON:
+-    case MOZ_GTK_TOOLTIP:
+     case MOZ_GTK_WINDOW:
+     case MOZ_GTK_RESIZER:
+     case MOZ_GTK_MENUARROW:
+@@ -2978,6 +3188,32 @@
  }
  
  gint
@@ -1134,7 +1196,7 @@
  moz_gtk_get_tab_scroll_arrow_size(gint* width, gint* height)
  {
      gint arrow_size;
-@@ -3030,7 +3248,7 @@
+@@ -3030,7 +3266,7 @@
                           "separator-width", &separator_width,
                           NULL);
      /* Just in case... */
@@ -1143,7 +1205,7 @@
      *size = MAX(*size, (wide_separators ? separator_width : border.left));
      return MOZ_GTK_SUCCESS;
  }
-@@ -3072,7 +3290,7 @@
+@@ -3072,7 +3308,7 @@
      border_width = gtk_container_get_border_width(GTK_CONTAINER(gMenuSeparatorWidget));
  
      style = gtk_widget_get_style_context(gMenuSeparatorWidget);
@@ -1152,7 +1214,7 @@
  
      gtk_style_context_save(style);
      gtk_style_context_add_class(style, GTK_STYLE_CLASS_SEPARATOR);
-@@ -3130,15 +3348,21 @@
+@@ -3130,15 +3366,21 @@
  {
      ensure_scrollbar_widget();
  
@@ -1177,7 +1239,7 @@
  
      return MOZ_GTK_SUCCESS;
  }
-@@ -3163,7 +3387,7 @@
+@@ -3163,7 +3405,7 @@
      GtkSettings* settings;
  
      ensure_button_widget();
@@ -1186,7 +1248,7 @@
  
      g_object_get(settings, "gtk-button-images", &result, NULL);
      return result;
-@@ -3191,7 +3415,7 @@
+@@ -3191,7 +3433,7 @@
          }
          ensure_button_widget();
          return moz_gtk_button_paint(cr, rect, state,
@@ -1195,7 +1257,7 @@
                                      direction);
          break;
      case MOZ_GTK_CHECKBUTTON:
-@@ -3241,7 +3465,7 @@
+@@ -3241,7 +3483,7 @@
      case MOZ_GTK_SPINBUTTON_ENTRY:
          ensure_spin_widget();
          return moz_gtk_entry_paint(cr, rect, state,
@@ -1204,7 +1266,7 @@
          break;
      case MOZ_GTK_GRIPPER:
          return moz_gtk_gripper_paint(cr, rect, state,
-@@ -3268,7 +3492,7 @@
+@@ -3268,7 +3510,7 @@
      case MOZ_GTK_ENTRY:
          ensure_entry_widget();
          return moz_gtk_entry_paint(cr, rect, state,
@@ -1213,7 +1275,7 @@
          break;
      case MOZ_GTK_DROPDOWN:
          return moz_gtk_combo_box_paint(cr, rect, state, direction);
-@@ -3280,7 +3504,7 @@
+@@ -3280,7 +3522,7 @@
      case MOZ_GTK_DROPDOWN_ENTRY:
          ensure_combo_box_entry_widgets();
          return moz_gtk_entry_paint(cr, rect, state,
@@ -1222,7 +1284,7 @@
          break;
      case MOZ_GTK_CHECKBUTTON_CONTAINER:
      case MOZ_GTK_RADIOBUTTON_CONTAINER:
-@@ -3332,7 +3556,7 @@
+@@ -3332,7 +3574,7 @@
                                                (GtkArrowType) flags, direction);
          break;
      case MOZ_GTK_MENUBAR:
@@ -1231,7 +1293,7 @@
          break;
      case MOZ_GTK_MENUPOPUP:
          return moz_gtk_menu_popup_paint(cr, rect, direction);
-@@ -3383,7 +3607,7 @@
+@@ -3383,7 +3625,7 @@
  {
      MOZ_ASSERT(is_initialized, "Forgot to call moz_gtk_init()");
      ensure_scrollbar_widget();
@@ -1240,7 +1302,7 @@
  }
  
  gboolean moz_gtk_has_scrollbar_buttons(void)
-@@ -3391,7 +3615,7 @@
+@@ -3391,7 +3633,7 @@
      gboolean backward, forward, secondary_backward, secondary_forward;
      MOZ_ASSERT(is_initialized, "Forgot to call moz_gtk_init()");
      ensure_scrollbar_widget();
@@ -1249,7 +1311,18 @@
                            "has-backward-stepper", &backward,
                            "has-forward-stepper", &forward,
                            "has-secondary-backward-stepper", &secondary_backward,
-@@ -3415,17 +3639,19 @@
+@@ -3403,8 +3645,8 @@
+ gint
+ moz_gtk_shutdown()
+ {
+-    if (gTooltipWidget)
+-        gtk_widget_destroy(gTooltipWidget);
++    moz_gtk_widget_free(&gTooltip);
++
+     /* This will destroy all of our widgets */
+     if (gProtoWindow)
+         gtk_widget_destroy(gProtoWindow);
+@@ -3415,17 +3657,19 @@
  
      gProtoWindow = NULL;
      gProtoLayout = NULL;
@@ -1276,7 +1349,7 @@
      gComboBoxWidget = NULL;
      gComboBoxButtonWidget = NULL;
      gComboBoxSeparatorWidget = NULL;
-@@ -3433,12 +3659,12 @@
+@@ -3433,14 +3677,13 @@
      gComboBoxEntryWidget = NULL;
      gComboBoxEntryButtonWidget = NULL;
      gComboBoxEntryArrowWidget = NULL;
@@ -1289,10 +1362,12 @@
 -    gProgressWidget = NULL;
 +    moz_gtk_widget_free(&gProgressBar);
      gTabWidget = NULL;
-     gTooltipWidget = NULL;
+-    gTooltipWidget = NULL;
      gMenuBarWidget = NULL;
---- a/widget/gtk/gtkdrawing.h	2016-04-22 02:37:27.000000000 +0200
-+++ b/widget/gtk/gtkdrawing.h	2016-04-28 15:25:43.871450336 +0200
+     gMenuBarItemWidget = NULL;
+     gMenuPopupWidget = NULL;
+--- a/widget/gtk/gtkdrawing.h	2016-05-12 19:13:34.000000000 +0200
++++ b/widget/gtk/gtkdrawing.h	2016-06-07 13:44:57.520139822 +0200
 @@ -67,6 +67,13 @@
    MOZ_GTK_TAB_SELECTED        = 1 << 10
  } GtkTabFlags;
@@ -1330,8 +1405,8 @@
  #ifdef __cplusplus
  }
  #endif /* __cplusplus */
---- a/widget/gtk/mozgtk/mozgtk.c	2016-04-22 02:37:27.000000000 +0200
-+++ b/widget/gtk/mozgtk/mozgtk.c	2016-04-28 15:25:43.871450336 +0200
+--- a/widget/gtk/mozgtk/mozgtk.c	2016-05-12 19:13:34.000000000 +0200
++++ b/widget/gtk/mozgtk/mozgtk.c	2016-06-07 13:44:57.521139827 +0200
 @@ -504,6 +504,11 @@
  STUB(gtk_window_set_wmclass)
  STUB(gtk_window_unfullscreen)
@@ -1344,7 +1419,7 @@
  #endif
  
  #ifdef GTK3_SYMBOLS
-@@ -581,6 +586,13 @@
+@@ -581,6 +586,14 @@
  STUB(gtk_color_chooser_set_rgba)
  STUB(gtk_color_chooser_get_rgba)
  STUB(gtk_color_chooser_set_use_alpha)
@@ -1355,11 +1430,12 @@
 +STUB(gtk_widget_path_iter_get_state)
 +STUB(gtk_style_context_set_parent)
 +STUB(gtk_widget_path_unref)
++STUB(gtk_tooltip_get_type)
  #endif
  
  #ifdef GTK2_SYMBOLS
---- a/widget/gtk/nsLookAndFeel.cpp	2016-04-22 02:37:27.000000000 +0200
-+++ b/widget/gtk/nsLookAndFeel.cpp	2016-04-28 15:25:43.872450322 +0200
+--- a/widget/gtk/nsLookAndFeel.cpp	2016-06-01 06:11:44.000000000 +0200
++++ b/widget/gtk/nsLookAndFeel.cpp	2016-06-07 13:44:57.521139827 +0200
 @@ -353,14 +353,18 @@
      case eColorID_activeborder:
          // active window border
@@ -1415,7 +1491,7 @@
          aColor = GDK_RGBA_TO_NS_RGBA(gdk_color);
          break;
      case eColorID__moz_buttonhovertext:
-@@ -1110,7 +1121,7 @@
+@@ -1122,27 +1133,29 @@
      style = create_context(path);
      gtk_style_context_add_class(style, GTK_STYLE_CLASS_SCROLLBAR);
      gtk_style_context_add_class(style, GTK_STYLE_CLASS_TROUGH);
@@ -1424,9 +1500,9 @@
      sMozScrollbar = GDK_RGBA_TO_NS_RGBA(color);
      g_object_unref(style);
  
-@@ -1118,18 +1129,18 @@
+     // Window colors
      style = create_context(path);
-     gtk_style_context_save(style);
+-    gtk_style_context_save(style);
      gtk_style_context_add_class(style, GTK_STYLE_CLASS_BACKGROUND);
 -    gtk_style_context_get_background_color(style, GTK_STATE_FLAG_NORMAL, &color);
 +    gtk_style_context_get_background_color(style, gtk_style_context_get_state(style), &color);
@@ -1434,20 +1510,27 @@
 -    gtk_style_context_get_color(style, GTK_STATE_FLAG_NORMAL, &color);
 +    gtk_style_context_get_color(style, gtk_style_context_get_state(style), &color);
      sMozWindowText = GDK_RGBA_TO_NS_RGBA(color);
-     gtk_style_context_restore(style);
+-    gtk_style_context_restore(style);
++    g_object_unref(style);
  
      // tooltip foreground and background
-     gtk_style_context_add_class(style, GTK_STYLE_CLASS_TOOLTIP);
+-    gtk_style_context_add_class(style, GTK_STYLE_CLASS_TOOLTIP);
++    GtkCssNode tooltipPath[] = { 
++         { GTK_TYPE_TOOLTIP, "tooltip", NULL, NULL},
++    };
++    style = moz_gtk_style_create(tooltipPath, NULL);
++    gtk_style_context_get_color(style, gtk_style_context_get_state(style), &color);
++    sInfoText = GDK_RGBA_TO_NS_RGBA(color);
      gtk_style_context_add_class(style, GTK_STYLE_CLASS_BACKGROUND);
 -    gtk_style_context_get_background_color(style, GTK_STATE_FLAG_NORMAL, &color);
 +    gtk_style_context_get_background_color(style, gtk_style_context_get_state(style), &color);
      sInfoBackground = GDK_RGBA_TO_NS_RGBA(color);
 -    gtk_style_context_get_color(style, GTK_STATE_FLAG_NORMAL, &color);
-+    gtk_style_context_get_color(style, gtk_style_context_get_state(style), &color);
-     sInfoText = GDK_RGBA_TO_NS_RGBA(color);
+-    sInfoText = GDK_RGBA_TO_NS_RGBA(color);
      g_object_unref(style);
  
-@@ -1144,20 +1155,26 @@
+     // menu foreground & menu background
+@@ -1156,20 +1169,26 @@
      gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
  
      style = gtk_widget_get_style_context(accel_label);
@@ -1479,7 +1562,7 @@
  
      g_object_unref(menu);
  #endif
-@@ -1266,44 +1283,54 @@
+@@ -1278,44 +1297,54 @@
              GDK_COLOR_TO_NS_RGB(style->dark[GTK_STATE_NORMAL]);
      }
  #else
@@ -1551,7 +1634,7 @@
  
      // GTK's guide to fancy odd row background colors:
      // 1) Check if a theme explicitly defines an odd row color
-@@ -1316,7 +1343,7 @@
+@@ -1328,7 +1357,7 @@
      // Get odd row background color
      gtk_style_context_save(style);
      gtk_style_context_add_region(style, GTK_STYLE_REGION_ROW, GTK_REGION_ODD);
@@ -1560,7 +1643,7 @@
      sOddCellBackground = GDK_RGBA_TO_NS_RGBA(color);
      gtk_style_context_restore(style);
  
-@@ -1334,9 +1361,11 @@
+@@ -1346,9 +1375,11 @@
      gtk_container_add(GTK_CONTAINER(parent), infoBar);
      gtk_container_add(GTK_CONTAINER(infoBarContent), infoBarLabel);
      style = gtk_widget_get_style_context(infoBarLabel);
@@ -1573,9 +1656,9 @@
  #endif
      // Some themes have a unified menu bar, and support window dragging on it
      gboolean supports_menubar_drag = FALSE;
---- a/widget/gtk/nsNativeThemeGTK.cpp	2016-04-22 02:37:27.000000000 +0200
-+++ b/widget/gtk/nsNativeThemeGTK.cpp	2016-04-28 15:25:43.872450322 +0200
-@@ -1567,9 +1567,6 @@
+--- a/widget/gtk/nsNativeThemeGTK.cpp	2016-06-01 06:11:44.000000000 +0200
++++ b/widget/gtk/nsNativeThemeGTK.cpp	2016-06-07 13:44:57.522139832 +0200
+@@ -1570,9 +1570,6 @@
    case NS_THEME_RADIO_CONTAINER:
    case NS_THEME_CHECKBOX_LABEL:
    case NS_THEME_RADIO_LABEL:
@@ -1585,7 +1668,7 @@
    case NS_THEME_TREEVIEW_HEADER_CELL:
      {
        if (aWidgetType == NS_THEME_DROPDOWN) {
-@@ -1588,6 +1585,21 @@
+@@ -1591,6 +1588,21 @@
        aResult->height += border.top + border.bottom;
      }
      break;

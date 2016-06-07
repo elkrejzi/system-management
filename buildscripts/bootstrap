@@ -74,6 +74,7 @@ $(dirname $0)/buildperl
 $(dirname $0)/buildpython2
 $(dirname $0)/buildpython3
 $(dirname $0)/buildautoconf
+$(dirname $0)/buildautoconf2.13
 $(dirname $0)/buildautomake
 $(dirname $0)/builddiffutils
 $(dirname $0)/buildfindutils

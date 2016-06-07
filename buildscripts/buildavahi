@@ -30,6 +30,10 @@ export POSTINST_TRIGGER=("getent group avahi > /dev/null || groupadd -g 84 avahi
                          "getent passwd avahi-autoipd > /dev/null || useradd -c \"Avahi AutoIPD Owner\" -d /var/lib/avahi-autoipd -u 85 -g avahi-autoipd -s /bin/false avahi-autoipd\n"
                          "getent group netdev > /dev/null || groupadd -g 86 netdev")
 
+configure_pre() {
+  sed -i "/if \".*HAVE_DBUS/s:if :&test :g" configure
+}
+
 make_install_post() {
   rm -rf ${DEST}/etc/avahi/services/* ${DEST}/var
 
