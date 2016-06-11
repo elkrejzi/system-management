@@ -157,6 +157,7 @@ export CMAKE_FLAGS_32=("${SHARED_FLAGS[@]}"
                        -DLLVM_LIBDIR_SUFFIX=32
                        -DLLVM_TARGET_ARCH=i686
                        -DLIBCXX_INCLUDE_DOCS=OFF
+                       -DFFI_LIBRARY_DIR=/usr/lib32
                        -DLLVM_DEFAULT_TARGET_TRIPLE=i686-pc-linux-gnu)
 
 configure_pre() {

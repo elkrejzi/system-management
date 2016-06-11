@@ -1,10 +1,10 @@
 #!/bin/bash -e
 
 export PKGNAME=e2fsprogs
-export PKGVER=1.43
+export PKGVER=1.43.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://downloads.sourceforge.net/e2fsprogs/${PKGTAR}"
-#export MAKE_JOBS_FLAGS="-j4"
+export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 
 export COMMON_CONFIGURE_FLAGS=(--with-root-prefix=""

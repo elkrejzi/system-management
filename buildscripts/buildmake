@@ -1,10 +1,10 @@
 #!/bin/bash -e
 
 export PKGNAME=make
-export PKGVER=4.2
+export PKGVER=4.2.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://ftp.gnu.org/gnu/make/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export PATCHES_LIST=("make-fixes.patch")
+export CONFIGURE_FLAGS=(--without-guile)
 
 . $(dirname $0)/master.sh

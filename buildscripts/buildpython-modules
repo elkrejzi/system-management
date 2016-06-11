@@ -167,7 +167,7 @@ case $(basename $0) in
   ;;
   buildpython-sphinx )
     export PKGNAME=Sphinx
-    export PKGVER=1.4.1
+    export PKGVER=1.4.3
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/S/Sphinx/${PKGTAR}"
     export DEST=/binary/python/python-sphinx-${PKGVER}

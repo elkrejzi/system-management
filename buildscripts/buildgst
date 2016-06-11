@@ -1,8 +1,10 @@
 #!/bin/bash -e
 
-export PKGVER=1.8.1
+export PKGVER=1.8.2
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
+export DEFAULT_CXX="clang++ -std=c++11"
+export DEFAULT_CXX_32="clang++ -std=c++11 -m32"
 
 case $(basename $0) in
   buildgst-libav )
@@ -13,17 +15,7 @@ case $(basename $0) in
   buildgst-plugins-bad )
     export PKGNAME=gst-plugins-bad
     export MODULE=" Bad Plugins"
-    export PATCHES_LIST=("gst-plugins-bad-vk-fixes.patch")
-    export PATCHES_LIST_32=("gst-plugins-bad-vk-fixes.patch")
     export CONFIGURE_ADD_32=(--build=i686-unknown-linux-gnu --disable-chromaprint --disable-qt --disable-teletextdec --disable-zbar)
-    configure_pre() {
-      sed -i "s:openjpeg-2.0:openjpeg-2.1:g" configure ext/openjpeg/gstopenjpeg.h
-      sed -i "/user_data (/ s/mstream/&, NULL/" ext/openjpeg/gstopenjpegdec.c ext/openjpeg/gstopenjpegenc.c
-    }
-    configure_pre_32() {
-      sed -i "s:openjpeg-2.0:openjpeg-2.1:g" configure ext/openjpeg/gstopenjpeg.h
-      sed -i "/user_data (/ s/mstream/&, NULL/" ext/openjpeg/gstopenjpegdec.c ext/openjpeg/gstopenjpegenc.c
-    }
   ;;
   buildgst-plugins-base )
     export PKGNAME=gst-plugins-base
