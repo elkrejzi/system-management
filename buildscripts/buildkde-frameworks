@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=5.22.0
+export PKGVER=5.23.0
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export DEBUG_BUILD=1
@@ -72,13 +72,13 @@ build_all() {
   $(dirname $0)/buildktexteditor $1
   $(dirname $0)/buildplasma-framework $1
   $(dirname $0)/buildkdesignerplugin $1
+  $(dirname $0)/buildkrunner $1
   $(dirname $0)/buildkjs $1
   $(dirname $0)/buildkdelibs4support $1
   $(dirname $0)/buildkhtml $1
   $(dirname $0)/buildkjsembed $1
   $(dirname $0)/buildkmediaplayer $1
   $(dirname $0)/buildkross $1
-  $(dirname $0)/buildkrunner $1
 
   find /binary/frameworks -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
 
@@ -186,7 +186,8 @@ frameworks=(
   kdewebkit
   ktexteditor
   plasma-framework
-  kdesignerplugin )
+  kdesignerplugin
+  krunner )
 
 aids=(
   kjs
@@ -194,8 +195,7 @@ aids=(
   khtml
   kjsembed
   kmediaplayer
-  kross
-  krunner )
+  kross )
 
 if [ -z $1 ]
 then

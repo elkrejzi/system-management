@@ -1,9 +1,10 @@
 #!/bin/bash -e
 
 export PKGNAME=babl
-export PKGVER=0.1.16
+export PKGVER=0.1.18
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://download.gimp.org/pub/babl/${PKGVER:0:3}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--disable-docs)
 
 . $(dirname $0)/master.sh

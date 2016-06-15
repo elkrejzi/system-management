@@ -102,6 +102,11 @@ then
     sed -i "/linux-clang/a linux-clang-libc++: GYP_CONFIG += clang=1 host_clang=1 clang_use_chrome_plugins=0 make_clang_dir=/usr use_libcpp=1 werror=" src/core/config/desktop_linux.pri
     sed -i "/GCInfo.h/i #include <cstdlib>" src/3rdparty/chromium/third_party/WebKit/Source/platform/heap/GCInfo.cpp
   }
+elif [ ${PKGNAME} == "qtconnectivity" ]
+then
+  configure_pre() {
+    sed -i "s#(bind(#(::bind(#g" src/bluetooth/lecmaccalculator.cpp
+  }
 fi
 
 configure_override() {

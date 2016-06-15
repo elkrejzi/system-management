@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=swig
-export PKGVER=3.0.10-rc1
+export PKGVER=3.0.10
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://downloads.sourceforge.net/swig/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
