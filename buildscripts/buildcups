@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
 export PKGNAME=cups
-export PKGVER=2.1.3
-export PKGTAR=${PKGNAME}-${PKGVER}-source.tar.bz2
+export PKGVER=2.1.4
+export PKGTAR=${PKGNAME}-${PKGVER}-source.tar.gz
 export PKGURL="https://cups.org/software/${PKGVER}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1

@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=v4l-utils
-export PKGVER=1.10.0
+export PKGVER=1.10.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://www.linuxtv.org/downloads/v4l-utils/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
@@ -9,6 +9,7 @@ export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS_32=(--disable-qv4l2 --disable-v4l-utils)
 export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done")
+export DEFAULT_CXX="clang++ -std=c++11"
 
 configure_pre() {
   sed -i "/unistd.h/i #include <ctime>" utils/v4l2-ctl/v4l2-ctl-streaming.cpp utils/rds-ctl/rds-ctl.cpp

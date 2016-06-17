@@ -28,7 +28,7 @@ case $(basename $0) in
   ;;
   buildpython-cssselect )
     export PKGNAME=cssselect
-    export PKGVER=0.9.1
+    export PKGVER=0.9.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/c/cssselect/${PKGTAR}"
     export DEST=/binary/python/python-cssselect-${PKGVER}

@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=wine
-export PKGVER=1.9.10
+export PKGVER=1.9.12
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://downloads.sourceforge.net/wine/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j2"
@@ -13,6 +13,14 @@ export PATH_TO_SOURCE="../${PKGNAME}-${PKGVER}"
 export CONFIGURE_FLAGS=(--with-gstreamer --with-x --enable-win64)
 export CONFIGURE_FLAGS_32=(--with-gstreamer --with-x --with-wine64=${PWD}/wine-build64)
 export USER_CFLAGS="-I/usr/include/gsm"
+
+configure_pre() {
+  sed -i "/extern.*gnutls_cipher_get_block_size/d" ../${PKGNAME}-${PKGVER}/dlls/secur32/schannel_gnutls.c
+}
+
+configure_pre_32() {
+  sed -i "/extern.*gnutls_cipher_get_block_size/d" ../${PKGNAME}-${PKGVER}/dlls/secur32/schannel_gnutls.c
+}
 
 make_install_override() {
   if [ ${MULTILIB} == 1 ]

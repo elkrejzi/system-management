@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=5.7.0-rc
+export PKGVER=5.7.0
 export MAKE_JOBS_FLAGS="-j4"
 export DEBUG_BUILD=1
 export NO_OPTIMIZATION=1
@@ -83,15 +83,13 @@ export PKGTAR=${PKGNAME}-opensource-src-${PKGVER}.tar.xz
 export PKGDIR=${PKGNAME}-opensource-src-${PKGVER}
 
 # stable
-#export PKGURL="http://download.qt.io/official_releases/qt/5.7/${PKGVER}/submodules/${PKGTAR}"
+export PKGURL="http://download.qt.io/official_releases/qt/5.7/${PKGVER}/submodules/${PKGTAR}"
 
 # development
-export PKGURL="https://download.qt.io/development_releases/qt/5.7/${PKGVER}/submodules/${PKGTAR}"
+#export PKGURL="https://download.qt.io/development_releases/qt/5.7/${PKGVER}/submodules/${PKGTAR}"
 
 if [ ${PKGNAME} == "qtwebengine" ]
 then
-#  export PATCHES_LIST=("qtwebengine-nss.patch")
-
   configure_pre() {
     # No debug symbols for this module. Taken from Debian
     echo "QMAKE_CXXFLAGS -= -g" >> .qmake.conf

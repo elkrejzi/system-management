@@ -1,17 +1,13 @@
 #!/bin/bash -e
 
 export PKGNAME=accountsservice
-export PKGVER=0.6.40
+export PKGVER=0.6.42
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://www.freedesktop.org/software/accountsservice/${PKGTAR}"
 export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1
 export CONFIGURE_FLAGS=(--enable-admin-group=adm)
-
-configure_pre() {
-  sed -i "s:libsystemd-login:libsystemd:g" configure
-}
 
 make_install_post() {
   install -dm755 ${DEST}/etc/systemd/system/graphical.target.wants

@@ -238,7 +238,7 @@ case $(basename $0) in
   ;;
   buildgspell )
     export PKGNAME=gspell
-    export PKGVER=1.0.1
+    export PKGVER=1.0.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
   ;;
