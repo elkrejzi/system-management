@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=5.6.5
+export PKGVER=5.6.95
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export KEEP_DOC=1
@@ -54,14 +54,6 @@ case $(basename $0) in
 esac
 
 case $(basename $0) in
-  buildplasma-desktop )
-    configure_pre() {
-      sed -i "/QDebug/i #include <cmath>" ../${PKGDIR}/kcms/touchpad/src/backends/x11/synapticstouchpad.cpp
-    }
-    make_install_post() {
-      rm -rf ${DEST}/usr/share/locale/*/LC_MESSAGES/kactivities5.mo
-    }
-  ;;
   buildplasma-workspace )
     make_install_post() {
       install -dm755 ${DEST}/etc/pam.d
@@ -141,7 +133,7 @@ do
     build${plasma} )
       export PKGNAME=${plasma}
       export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-      export PKGURL="http://download.kde.org/stable/plasma/${PKGVER}/${PKGTAR}"
+      export PKGURL="http://download.kde.org/unstable/plasma/${PKGVER}/${PKGTAR}"
       if [ ${BUILD_TYPE} == "git" ]
       then
         export PKGDIR=${plasma}

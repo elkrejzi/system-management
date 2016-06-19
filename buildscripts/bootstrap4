@@ -135,6 +135,7 @@ $(dirname $0)/buildgtkmm2
 $(dirname $0)/buildgtkmm3
 $(dirname $0)/buildgucharmap
 $(dirname $0)/buildlibchamplain
+$(dirname $0)/buildlibmypaint
 $(dirname $0)/buildtracker
 $(dirname $0)/buildyelp
 $(dirname $0)/buildfolks
