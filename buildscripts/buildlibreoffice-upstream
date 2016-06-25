@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libreoffice
-export PKGVER=5.1.3
+export PKGVER=5.1.4
 export PKGDIR=${PKGNAME}
 export NO_STRIP=1
 

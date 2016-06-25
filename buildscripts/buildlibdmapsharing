@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libdmapsharing
-export PKGVER=2.9.34
+export PKGVER=2.9.35
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
 export PKGURL="https://www.flyn.org/projects/libdmapsharing/${PKGTAR}"

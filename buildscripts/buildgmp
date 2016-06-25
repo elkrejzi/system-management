@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=gmp
-export PKGVER=6.1.0
+export PKGVER=6.1.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGDIR=${PKGNAME}-${PKGVER}
 export PKGURL="https://ftp.gnu.org/gnu/gmp/${PKGTAR}"

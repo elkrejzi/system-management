@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libmicrohttpd
-export PKGVER=0.9.49
+export PKGVER=0.9.50
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://ftp.gnu.org/gnu/libmicrohttpd/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

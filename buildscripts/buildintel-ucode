@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
-export DLID=25512
+export DLID=26083
 export PKGNAME=intel-ucode
-export PKGVER=20151106
+export PKGVER=20160607
 export PKGTAR=microcode-${PKGVER}.tgz
 export PKGURL="http://downloadmirror.intel.com/${DLID}/eng/${PKGTAR}"
 

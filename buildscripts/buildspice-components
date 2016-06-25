@@ -3,17 +3,20 @@
 case $(basename $0) in
   buildspice-protocol )
     export PKGNAME=spice-protocol
-    export PKGVER=0.12.10
+    export PKGVER=0.12.11
   ;;
   buildspice )
     export PKGNAME=spice
-    export PKGVER=0.12.6
+    export PKGVER=0.13.1
   ;;
   buildspice-gtk )
     export PKGNAME=spice-gtk
-    export PKGVER=0.30
+    export PKGVER=0.32
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://www.spice-space.org/download/gtk/${PKGTAR}"
+    export CONFIGURE_FLAGS=(--enable-vala
+                            --with-audio=pulse
+                            --with-coroutine=gthread)
   ;;
 esac
 

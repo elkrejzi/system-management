@@ -17,7 +17,7 @@ case $(basename $0) in
   ;;
   buildVulkan-LoaderAndValidationLayers )
     export PKGNAME=Vulkan-LoaderAndValidationLayers
-    export PKGVER=1.0.11.1
+    export PKGVER=1.0.13.0
     export CMAKE_FLAGS=(-DCMAKE_INSTALL_SYSCONFDIR=/etc
                         -DCMAKE_SKIP_RPATH=ON
                         -DBUILD_TESTS=OFF
@@ -69,6 +69,11 @@ prepare_src_override() {
       popd
     else
       git clone https://github.com/KhronosGroup/${PKGNAME}.git
+    fi
+
+    if [ ${PKGNAME} == "SPIRV-Tools" ]
+    then
+      git clone https://github.com/KhronosGroup/SPIRV-Headers.git ${PKGDIR}/external/spirv-headers
     fi
 
     if [ -e ${DEST} ] || [ -e ${DEST}-debug ]

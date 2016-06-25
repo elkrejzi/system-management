@@ -1,11 +1,15 @@
 #!/bin/bash -e
 
 export PKGNAME=libvdpau-va-gl
-export PKGVER=0.3.6
+export PKGVER=0.4.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-export PKGURL="https://github.com/i-rinat/libvdpau-va-gl/releases/download/v${PKGVER}/${PKGTAR}"
+export PKGURL="https://github.com/i-rinat/libvdpau-va-gl/archive/v${PKGVER}.tar.gz"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
+
+configure_pre() {
+  sed -i "/include.*vec/i #include <string>" ../${PKGDIR}/src/api-device.cc
+}
 
 . $(dirname $0)/master.sh

@@ -212,14 +212,14 @@ case $(basename $0) in
   ;;
   buildgrilo )
     export PKGNAME=grilo
-    export PKGVER=0.3.0
+    export PKGVER=0.3.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
     export CONFIGURE_FLAGS=(--disable-compile-warnings)
   ;;
   buildgrilo-plugins )
     export PKGNAME=grilo-plugins
-    export PKGVER=0.3.1
+    export PKGVER=0.3.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
     export CONFIGURE_FLAGS=(--disable-compile-warnings)
@@ -244,7 +244,7 @@ case $(basename $0) in
   ;;
   buildgtksourceview )
     export PKGNAME=gtksourceview
-    export PKGVER=3.20.3
+    export PKGVER=3.20.4
   ;;
   buildgtk-vnc )
     export PKGNAME=gtk-vnc
@@ -291,7 +291,7 @@ case $(basename $0) in
   ;;
   buildlibgsf )
     export PKGNAME=libgsf
-    export PKGVER=1.14.37
+    export PKGVER=1.14.38
   ;;
   buildlibgtop )
     export PKGNAME=libgtop
@@ -309,7 +309,7 @@ case $(basename $0) in
   ;;
   buildlibgxps )
     export PKGNAME=libgxps
-    export PKGVER=0.2.3.2
+    export PKGVER=0.2.4
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
     export CONFIGURE_FLAGS=(--disable-compile-warnings)
@@ -353,7 +353,7 @@ case $(basename $0) in
   ;;
   buildlibwnck )
     export PKGNAME=libwnck
-    export PKGVER=3.14.1
+    export PKGVER=3.20.0
   ;;
   buildlibzapojit )
     export PKGNAME=libzapojit

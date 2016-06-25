@@ -19,18 +19,18 @@ case $(basename $0) in
   ;;
   buildeog )
     export PKGNAME=eog
-    export PKGVER=3.20.2
+    export PKGVER=3.20.3
   ;;
   buildepiphany )
     export PKGNAME=epiphany
-    export PKGVER=3.20.2
+    export PKGVER=3.20.3
     make_install_post() {
       sed -i "s#multipart/related;##" ${DEST}/usr/share/applications/epiphany.desktop
     }
   ;;
   buildevince )
     export PKGNAME=evince
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
     export CONFIGURE_FLAGS=(--enable-introspection --disable-compile-warnings)
     make_install_post() {
       install -dm755 ${DEST}/usr/lib/evince/mozilla
@@ -92,7 +92,7 @@ case $(basename $0) in
   ;;
   buildgnome-photos )
     export PKGNAME=gnome-photos
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
   ;;
   buildgnome-power-manager )
     export PKGNAME=gnome-power-manager
@@ -122,7 +122,7 @@ case $(basename $0) in
   ;;
   buildgucharmap )
     export PKGNAME=gucharmap
-    export PKGVER=8.0.1
+    export PKGVER=9.0.0
     export CONFIGURE_FLAGS=(--enable-vala)
   ;;
   buildnautilus )

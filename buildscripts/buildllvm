@@ -169,6 +169,10 @@ configure_pre_32() {
   rm -rf ../${PKGDIR}/tools/clang/tools/extra
 }
 
+configure_post_32() {
+  sed -i "s#/lib/libffi.so#/lib32/libffi.so#g" $(grep -rl lib/libffi.so)
+}
+
 make_install_post() {
   rm -f ${DEST}/usr/lib/libgomp.so
 

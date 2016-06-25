@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=x264
-export PKGVER=20160518
+export PKGVER=20160624
 export PKGTAR=${PKGNAME}-snapshot-${PKGVER}-2245.tar.bz2
 export PKGDIR=${PKGNAME}-snapshot-${PKGVER}-2245
 export PKGURL="http://download.videolan.org/pub/videolan/x264/snapshots/${PKGTAR}"

@@ -10,4 +10,8 @@ export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--disable-gtk --disable-libpng)
 export CONFIGURE_FLAGS_32=(--disable-gtk --disable-libpng)
 
+configure_post_32() {
+  sed -i "/SUBDIRS/s: test::g" Makefile
+}
+
 . $(dirname $0)/master.sh

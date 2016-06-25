@@ -3,11 +3,11 @@
 case $(basename $0) in
   buildgssdp )
     export PKGNAME=gssdp
-    export PKGVER=0.14.15
+    export PKGVER=0.14.16
   ;;
   buildgupnp )
     export PKGNAME=gupnp
-    export PKGVER=0.20.17
+    export PKGVER=0.20.18
   ;;
   buildgupnp-av )
     export PKGNAME=gupnp-av
@@ -15,7 +15,7 @@ case $(basename $0) in
   ;;
   buildgupnp-dlna )
     export PKGNAME=gupnp-dlna
-    export PKGVER=0.10.4
+    export PKGVER=0.10.5
   ;;
   buildgupnp-components )
     export PKG_AUTO_INSTALL=1
