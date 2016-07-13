@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=gnutls
-export PKGVER=3.5.1
+export PKGVER=3.5.2
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="ftp://ftp.gnutls.org/gcrypt/gnutls/v${PKGVER:0:3}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

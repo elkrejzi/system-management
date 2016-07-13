@@ -1,0 +1,16 @@
+#!/bin/bash -e
+
+export PKGNAME=lz4
+export PKGVER=131
+export PKGTAR=${PKGNAME}-r${PKGVER}.tar.gz
+export PKGDIR=${PKGNAME}-r${PKGVER}
+export PKGURL="https://github.com/Cyan4973/lz4/archive/r${PKGVER}.tar.gz"
+export MAKE_FLAGS="lib lz4programs PREFIX=/usr"
+export MAKE_INSTALL_FLAGS="PREFIX=/usr"
+
+configure_override() {
+  sed -i "/install.*liblz4.a/d" lib/Makefile
+  sed -i "/CFLAGS/s#-O3#${CFLAGS}#g" lib/Makefile programs/Makefile
+}
+
+. $(dirname $0)/master.sh

@@ -1,5 +1,5 @@
 --- a/arrayfunc.c	2014-10-01 18:57:35.000000000 +0200
-+++ b/arrayfunc.c	2015-09-06 22:57:56.328941059 +0200
++++ b/arrayfunc.c	2016-07-01 09:29:16.789992586 +0200
 @@ -404,6 +404,9 @@
        (*var->assign_func) (var, l->word->word, i, 0);
      else
@@ -22,7 +22,7 @@
  }
  
 --- a/assoc.c	2011-11-05 21:39:05.000000000 +0100
-+++ b/assoc.c	2015-09-06 22:57:56.328941059 +0200
++++ b/assoc.c	2016-07-01 09:29:16.789992586 +0200
 @@ -436,6 +436,8 @@
  #if 1
  	if (sh_contains_shell_metas (tlist->key))
@@ -33,7 +33,7 @@
  	  istr = tlist->key;	
  #else
 --- a/bashline.c	2014-10-01 18:57:30.000000000 +0200
-+++ b/bashline.c	2015-09-06 22:58:34.711768943 +0200
++++ b/bashline.c	2016-07-01 09:29:16.790992596 +0200
 @@ -202,6 +202,7 @@
  extern int last_command_exit_value;
  extern int array_needs_making;
@@ -79,7 +79,7 @@
    bashline_reset_event_hook ();
    check_signals_and_traps ();	/* XXX */
 --- a/builtins/common.h	2014-10-01 18:57:47.000000000 +0200
-+++ b/builtins/common.h	2015-09-06 22:57:56.330941103 +0200
++++ b/builtins/common.h	2016-07-01 09:29:16.790992596 +0200
 @@ -122,6 +122,10 @@
  /* Functions from getopts.def */
  extern void getopts_reset __P((int));
@@ -92,7 +92,7 @@
  extern int minus_o_option_value __P((char *));
  extern void list_minus_o_opts __P((int, int));
 --- a/builtins/read.def	2014-10-01 18:57:38.000000000 +0200
-+++ b/builtins/read.def	2015-09-06 22:57:56.335941212 +0200
++++ b/builtins/read.def	2016-07-01 09:29:16.790992596 +0200
 @@ -140,10 +140,12 @@
  procenv_t alrmbuf;
  int sigalrm_seen;
@@ -186,7 +186,7 @@
  
  #if defined (READLINE)
 --- a/builtins/set.def	2013-04-19 13:20:34.000000000 +0200
-+++ b/builtins/set.def	2015-09-06 22:57:56.336941234 +0200
++++ b/builtins/set.def	2016-07-01 09:29:16.791992606 +0200
 @@ -751,9 +751,11 @@
    WORD_LIST *list;
  {
@@ -231,8 +231,41 @@
  #if defined (ARRAY_VARS)
        unset_array = 0;
        if (!unset_function && valid_array_reference (name))
+--- a/builtins/shopt.def	2013-02-27 15:43:20.000000000 +0100
++++ b/builtins/shopt.def	2016-07-01 09:29:50.415349276 +0200
+@@ -160,7 +160,7 @@
+   { "compat32", &shopt_compat32, set_compatibility_level },
+   { "compat40", &shopt_compat40, set_compatibility_level },
+   { "compat41", &shopt_compat41, set_compatibility_level },
+-  { "compat42", &shopt_compat41, set_compatibility_level },
++  { "compat42", &shopt_compat42, set_compatibility_level },
+ #if defined (READLINE)
+   { "complete_fullquote", &complete_fullquote, (shopt_set_func_t *)NULL},
+   { "direxpand", &dircomplete_expand, shopt_set_complete_direxpand },
+--- a/execute_cmd.c	2014-10-01 18:57:42.000000000 +0200
++++ b/execute_cmd.c	2016-07-01 09:29:49.649340838 +0200
+@@ -2405,9 +2405,17 @@
+   if (lastpipe_flag)
+     {
+ #if defined (JOB_CONTROL)
+-      append_process (savestring (the_printed_command), dollar_dollar_pid, exec_result, lastpipe_jid);
+-#endif
++      if (INVALID_JOB (lastpipe_jid) == 0)
++        {
++          append_process (savestring (the_printed_command_except_trap), dollar_dollar_pid, exec_result, lastpipe_jid);
++          lstdin = wait_for (lastpid);
++        }
++      else
++        lstdin = wait_for_single_pid (lastpid);		/* checks bgpids list */
++#else
+       lstdin = wait_for (lastpid);
++#endif
++
+ #if defined (JOB_CONTROL)
+       /* If wait_for removes the job from the jobs table, use result of last
+ 	 command as pipeline's exit status as usual.  The jobs list can get
 --- a/jobs.c	2014-10-01 18:57:26.000000000 +0200
-+++ b/jobs.c	2015-09-06 22:57:56.340941321 +0200
++++ b/jobs.c	2016-07-01 09:29:16.791992606 +0200
 @@ -3339,7 +3339,9 @@
        if (posixly_correct && this_shell_builtin && this_shell_builtin == wait_builtin)
  	{
@@ -245,7 +278,7 @@
  	  /* If we're in a signal handler, let CHECK_WAIT_INTR pick it up;
  	     run_pending_traps will call run_sigchld_trap later  */
 --- a/lib/readline/complete.c	2013-10-14 15:27:10.000000000 +0200
-+++ b/lib/readline/complete.c	2015-09-06 22:58:34.712768964 +0200
++++ b/lib/readline/complete.c	2016-07-01 09:29:16.792992616 +0200
 @@ -689,6 +689,8 @@
  
    if (temp == 0 || *temp == '\0')
@@ -256,7 +289,7 @@
       Look for a previous slash and, if one is found, return the portion
       following that slash.  If there's no previous slash, just return the
 --- a/lib/sh/unicode.c	2014-01-30 22:47:19.000000000 +0100
-+++ b/lib/sh/unicode.c	2015-09-06 22:57:56.341941343 +0200
++++ b/lib/sh/unicode.c	2016-07-01 09:29:16.792992616 +0200
 @@ -78,13 +78,15 @@
    s = strrchr (locale, '.');
    if (s)
@@ -276,7 +309,7 @@
  }
  #endif
 --- a/parse.y	2014-10-05 19:52:50.000000000 +0200
-+++ b/parse.y	2015-09-06 22:58:35.245780313 +0200
++++ b/parse.y	2016-07-01 09:29:16.793992626 +0200
 @@ -2818,11 +2818,16 @@
      case AND_AND:
      case OR_OR:
@@ -305,17 +338,31 @@
  	}
  
 --- a/patchlevel.h	2014-10-05 19:52:50.000000000 +0200
-+++ b/patchlevel.h	2015-09-06 22:58:35.248780377 +0200
++++ b/patchlevel.h	2016-07-01 09:29:52.054367371 +0200
 @@ -25,6 +25,6 @@
     regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
     looks for to find the patch level (for the sccs version string). */
  
 -#define PATCHLEVEL 30
-+#define PATCHLEVEL 42
++#define PATCHLEVEL 46
  
  #endif /* _PATCHLEVEL_H_ */
+--- a/redir.c	2013-10-14 15:19:59.000000000 +0200
++++ b/redir.c	2016-07-01 09:29:51.234358310 +0200
+@@ -671,7 +671,10 @@
+ 	  fd = open (filename, flags, mode);
+ 	  e = errno;
+ 	  if (fd < 0 && e == EINTR)
+-	    QUIT;
++	    {
++	      QUIT;
++	      run_pending_traps ();
++	    }
+ 	  errno = e;
+ 	}
+       while (fd < 0 && errno == EINTR);
 --- a/shell.c	2014-01-14 14:04:32.000000000 +0100
-+++ b/shell.c	2015-09-06 22:57:56.343941387 +0200
++++ b/shell.c	2016-07-01 09:29:16.793992626 +0200
 @@ -73,6 +73,7 @@
  #endif
  
@@ -340,7 +387,7 @@
       passed to us. */
    if (signal_is_trapped (0))
 --- a/sig.c	2014-01-10 21:06:06.000000000 +0100
-+++ b/sig.c	2015-09-06 22:57:56.344941408 +0200
++++ b/sig.c	2016-07-01 09:29:16.793992626 +0200
 @@ -532,8 +532,10 @@
  #if defined (READLINE)
    /* Set the event hook so readline will call it after the signal handlers
@@ -355,7 +402,7 @@
  #endif
  
 --- a/subst.c	2014-10-01 18:57:47.000000000 +0200
-+++ b/subst.c	2015-09-06 22:58:34.177757570 +0200
++++ b/subst.c	2016-07-01 09:29:52.054367371 +0200
 @@ -5782,7 +5782,7 @@
        /* XXX - does this leak if name[@] or name[*]? */
        if (pflags & PF_ASSIGNRHS)
@@ -365,8 +412,24 @@
            if (ALL_ELEMENT_SUB (tt[0]) && tt[1] == ']')
  	    temp = array_value (name, quoted|Q_DOUBLE_QUOTES, 0, &atype, &ind);
  	  else
+@@ -9561,7 +9561,14 @@
+ 
+ 	  opts[opti] = '\0';
+ 	  if (opti > 0)
+-	    make_internal_declare (tlist->word->word, opts);
++	    {
++	      t = make_internal_declare (tlist->word->word, opts);
++	      if (t != EXECUTION_SUCCESS)
++		{
++		  last_command_exit_value = t;
++		  exp_jump_to_top_level (DISCARD);
++		}
++	    }
+ 
+ 	  t = do_word_assignment (tlist->word, 0);
+ 	  if (t == 0)
 --- a/subst.h	2014-10-01 18:57:43.000000000 +0200
-+++ b/subst.h	2015-09-06 22:57:56.344941408 +0200
++++ b/subst.h	2016-07-01 09:29:16.795992647 +0200
 @@ -47,6 +47,7 @@
  #define ASS_MKASSOC	0x0004
  #define ASS_MKGLOBAL	0x0008	/* force global assignment */
@@ -376,7 +439,7 @@
  /* Flags for the string extraction functions. */
  #define SX_NOALLOC	0x0001	/* just skip; don't return substring */
 --- a/variables.c	2014-10-01 18:57:51.000000000 +0200
-+++ b/variables.c	2015-09-06 22:57:56.345941430 +0200
++++ b/variables.c	2016-07-01 09:29:16.795992647 +0200
 @@ -2516,10 +2516,27 @@
       HASH_TABLE *table;
       int hflags, aflags;
@@ -451,7 +514,7 @@
    return (v);
  }
 --- a/y.tab.c	2014-10-05 19:52:50.000000000 +0200
-+++ b/y.tab.c	2015-09-06 22:58:35.247780356 +0200
++++ b/y.tab.c	2016-07-01 09:29:16.796992657 +0200
 @@ -5130,11 +5130,16 @@
      case AND_AND:
      case OR_OR:

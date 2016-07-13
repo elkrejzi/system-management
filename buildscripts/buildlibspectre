@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libspectre
-export PKGVER=0.2.7
+export PKGVER=0.2.8
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://libspectre.freedesktop.org/releases/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

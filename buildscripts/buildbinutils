@@ -1,14 +1,13 @@
 #!/bin/bash -e
 
 export PKGNAME=binutils
-export PKGVER=2.26
+export PKGVER=2.26.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
-export PKGURL="http://mirror.checkdomain.de/gnu/binutils/${PKGNAME}-${PKGVER}.tar.bz2"
+export PKGURL="https://ftp.gnu.org/gnu/binutils/${PKGNAME}-${PKGVER}.tar.bz2"
 export PKGDIR=src
 export PKGBUILD=build
 export MAKE_JOBS_FLAGS="-j4"
 export DEBUG_BUILD=1
-export PATCHES_LIST=("binutils-fixes.patch")
 export MAKE_FLAGS="tooldir=/usr"
 export MAKE_INSTALL_FLAGS="tooldir=/usr"
 export DEFAULT_CC="gcc"

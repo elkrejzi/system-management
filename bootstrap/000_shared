@@ -38,7 +38,7 @@ export LOGDIR=$(dirname $0)
 
 set +h
 
-BINUTILS_VER=2.26
+BINUTILS_VER=2.26.1
 GMP_VER=6.1.1
 MPFR_VER=3.1.4
 MPC_VER=1.0.3
@@ -128,7 +128,6 @@ http://llvm.org/releases/${LLVM_VER}/libcxx-${LLVM_VER}.src.tar.xz
 http://llvm.org/releases/${LLVM_VER}/libcxxabi-${LLVM_VER}.src.tar.xz
 http://llvm.org/releases/${LLVM_VER}/libunwind-${LLVM_VER}.src.tar.xz
 
-https://raw.githubusercontent.com/elkrejzi/system-management/master/patches/binutils-fixes.patch
 https://raw.githubusercontent.com/elkrejzi/system-management/master/patches/gcc-pure64.patch
 https://raw.githubusercontent.com/elkrejzi/system-management/master/patches/glibc-fixes.patch
 https://raw.githubusercontent.com/elkrejzi/system-management/master/patches/glibc-pure64.patch

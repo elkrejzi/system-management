@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=btrfs-progs
-export PKGVER=4.6
+export PKGVER=4.6.1
 export PKGTAR=${PKGNAME}-v${PKGVER}.tar.xz
 export PKGURL="https://www.kernel.org/pub/linux/kernel/people/kdave/btrfs-progs/${PKGTAR}"
 export PKGDIR=${PKGNAME}-v${PKGVER}

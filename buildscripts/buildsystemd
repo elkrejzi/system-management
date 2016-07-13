@@ -37,6 +37,7 @@ export CONFIGURE_FLAGS_32=(--disable-efi
                            --disable-libcurl
                            --disable-libidn
                            --disable-libiptc
+                           --disable-lz4
                            --disable-machined
                            --disable-microhttpd
                            --disable-networkd

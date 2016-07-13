@@ -118,7 +118,7 @@ case $(basename $0) in
   ;;
   buildpython-pytz )
     export PKGNAME=pytz
-    export PKGVER=2016.4
+    export PKGVER=2016.6
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="https://pypi.python.org/packages/source/p/pytz/${PKGTAR}"
     export DEST=/binary/python/python-pytz-${PKGVER}
@@ -146,7 +146,7 @@ case $(basename $0) in
   ;;
   buildpython-setuptools )
     export PKGNAME=setuptools
-    export PKGVER=23.0.0
+    export PKGVER=24.0.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/s/setuptools/${PKGTAR}"
     export DEST=/binary/python/python-setuptools-${PKGVER}

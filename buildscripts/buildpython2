@@ -3,7 +3,7 @@
 export MAJORVER=2.7
 
 export PKGNAME=Python
-export PKGVER=${MAJORVER}.11
+export PKGVER=${MAJORVER}.12
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://www.python.org/ftp/python/${PKGVER}/${PKGTAR}"
 export DEST=/binary/python/${PKGNAME}-${PKGVER}

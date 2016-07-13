@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=mariadb
-export PKGVER=10.1.14
+export PKGVER=10.1.15
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://downloads.mariadb.org/interstitial/${PKGNAME}-${PKGVER}/source/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
@@ -27,13 +27,18 @@ export CMAKE_FLAGS=(-DSYSCONFDIR=/etc/mysql
                     -DENABLED_LOCAL_INFILE=ON
                     -DWITH_EXTRA_CHARSETS=complex
                     -DWITH_EMBEDDED_SERVER=ON
+                    -DWITH_JEMALLOC=ON
                     -DWITH_PCRE=system
                     -DWITH_READLINE=ON
                     -DWITH_SSL=system
-                    -DWITH_ZLIB=system)
+                    -DWITH_SYSTEMD=yes
+                    -DWITH_ZLIB=system
+                    -DCMAKE_EXE_LINKER_FLAGS="-ljemalloc")
 
 configure_pre() {
   rm -rf ../${PKGDIR}/storage/tokudb
+
+  sed -i '/colpat.*%/s#"%"#(char *) &#g' ../${PKGDIR}/storage/connect/jdbconn.cpp
 }
 
 make_install_post() {
@@ -121,11 +126,19 @@ Description=MySQL Server
 After=network.target
 
 [Service]
+Type=notify
 User=mysql
 Group=mysql
-ExecStart=/usr/sbin/mysqld --pid-file=/run/mysqld/mysqld.pid
-Restart=always
+CapabilityBoundingSet=CAP_IPC_LOCK
+ExecStart=/usr/sbin/mysqld
+KillMode=process
+KillSignal=SIGTERM
+SendSIGKILL=no
+Restart=on-abort
+RestartSec=5s
+UMask=007
 PrivateTmp=true
+LimitNOFILE=16364
 
 [Install]
 WantedBy=multi-user.target

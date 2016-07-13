@@ -147,7 +147,6 @@ $(dirname $0)/buildhunspell
 $(dirname $0)/buildhyphen
 $(dirname $0)/buildenchant
 $(dirname $0)/buildgeoclue
-$(dirname $0)/buildlibevent
 $(dirname $0)/buildlibvpx
 $(dirname $0)/buildlibwebp
 $(dirname $0)/buildstartup-notification

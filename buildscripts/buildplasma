@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=5.6.95
+export PKGVER=5.7.1
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export KEEP_DOC=1
@@ -133,7 +133,7 @@ do
     build${plasma} )
       export PKGNAME=${plasma}
       export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-      export PKGURL="http://download.kde.org/unstable/plasma/${PKGVER}/${PKGTAR}"
+      export PKGURL="http://download.kde.org/stable/plasma/${PKGVER}/${PKGTAR}"
       if [ ${BUILD_TYPE} == "git" ]
       then
         export PKGDIR=${plasma}

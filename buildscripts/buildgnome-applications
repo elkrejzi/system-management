@@ -15,7 +15,7 @@ case $(basename $0) in
   ;;
   builddconf-editor )
     export PKGNAME=dconf-editor
-    export PKGVER=3.20.2
+    export PKGVER=3.20.3
   ;;
   buildeog )
     export PKGNAME=eog

@@ -3,7 +3,7 @@
 export PKGNAME=glibc
 export PKGVER=2.23
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-export PKGURL="http://mirror.checkdomain.de/gnu/glibc/${PKGNAME}-${PKGVER}.tar.xz"
+export PKGURL="https://ftp.gnu.org/gnu/glibc/${PKGNAME}-${PKGVER}.tar.xz"
 export PKGDIR=src
 export PKGBUILD=build
 export MAKE_JOBS_FLAGS="-j4"

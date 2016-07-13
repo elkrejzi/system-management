@@ -1,9 +1,10 @@
 #!/bin/bash -e
 
 export PKGNAME=libqalculate
-export PKGVER=0.9.7
+export PKGVER=0.9.8
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://downloads.sourceforge.net/qalculate/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
+export PATCHES_LIST=("libqalculate-fixes.patch")
 
 . $(dirname $0)/master.sh
