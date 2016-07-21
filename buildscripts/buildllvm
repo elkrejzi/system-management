@@ -3,6 +3,8 @@
 export PKGNAME=llvm
 export PKGVER=3.8.0
 
+export LLVM_RELEASE_BRANCH="release_39"
+
 proj=(
   cfe
   clang-tools-extra
@@ -19,7 +21,8 @@ proj=(
 prepare_src_common() {
   if [ ${f} == "cfe" ]
   then
-    sed -i "/ld-linux-x86-64/s/lib64/lib/" cfe/lib/Driver/Tools.cpp
+    PKGDIR=cfe patch_apply clang-runtime.patch
+
     mv ${f} ${PKGDIR}/tools/clang
   elif [ ${f} == "clang-tools-extra" ]
   then
@@ -29,7 +32,22 @@ prepare_src_common() {
     mv ${f} ${PKGDIR}/tools
   elif [ ${f} != "cfe" ] && [ ${f} != "clang-tools-extra" ] && [ ${f} != "llvm" ]
   then
+    if [ ${f} == "openmp" ]
+    then
+      sed -i "/LIBOMP_ALIASES/s#libgomp;##g" ${f}/runtime/src/CMakeLists.txt
+    fi
+
     mv ${f} ${PKGDIR}/projects
+  fi
+
+  if [ ! -e ${PKGDIR}/crtbegin-i386.S ] || [ ! -e ${PKGDIR}/crtend-i386.S ] ||
+     [ ! -e ${PKGDIR}/crtbegin-x86_64.S ] || [ ! -e ${PKGDIR}/crtend-x86_64.S ]
+  then
+    for arch in i386 x86_64
+    do
+      wget -O - http://ftp.netbsd.org/pub/NetBSD/NetBSD-current/src/lib/csu/arch/${arch}/crtbegin.S | sed "/asm.h/d;/RCSID/d" > ${PKGDIR}/crtbegin-${arch}.S
+      wget -O - http://ftp.netbsd.org/pub/NetBSD/NetBSD-current/src/lib/csu/arch/${arch}/crtend.S | sed "/asm.h/d;/RCSID/d" > ${PKGDIR}/crtend-${arch}.S
+    done
   fi
 }
 
@@ -51,14 +69,19 @@ then
 
       for f in ${PKGNAME} ${proj[@]}
       do
-        if [ -e git/${f}.tar.xz ]
+        if [ -e git/${f}.tar.xz ] && [ -z ${LLVM_RELEASE_BRANCH} ]
         then
           tar xf git/${f}.tar.xz
           pushd ${f}
             svn up
           popd
         else
-          svn co http://llvm.org/svn/llvm-project/${f}/trunk ${f}
+	  if [ ! -z ${LLVM_RELEASE_BRANCH} ]
+          then
+            svn co https://llvm.org/svn/llvm-project/${f}/branches/${LLVM_RELEASE_BRANCH} ${f}
+          else
+            svn co https://llvm.org/svn/llvm-project/${f}/trunk ${f}
+          fi
         fi
 
         prepare_src_common
@@ -124,7 +147,7 @@ export CMAKE_BUILD=1
 export MULTILIB_BUILD=1
 
 export SHARED_FLAGS=(-DCLANG_DEFAULT_CXX_STDLIB=libc++
-                     -DCLANG_DEFAULT_OPENMP_RUNTIME=libgomp
+                     -DCLANG_DEFAULT_OPENMP_RUNTIME=libomp
                      -DCLANG_INCLUDE_TESTS=OFF
                      -DCOMPILER_RT_INCLUDE_TESTS=OFF
                      -DLLVM_BUILD_LLVM_DYLIB=ON
@@ -174,7 +197,13 @@ configure_post_32() {
 }
 
 make_install_post() {
-  rm -f ${DEST}/usr/lib/libgomp.so
+  install -dm755 ${DEST}/usr/lib/clang/${PKGVER%.svn*}/32 ${DEST}/usr/lib/clang/${PKGVER%.svn*}/64
+
+  as --32 ../${PKGDIR}/crtbegin-i386.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/32/crtbegin.o
+  as --32 ../${PKGDIR}/crtend-i386.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/32/crtend.o
+
+  as --64 ../${PKGDIR}/crtbegin-x86_64.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/64/crtbegin.o
+  as --64 ../${PKGDIR}/crtend-x86_64.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/64/crtend.o
 
   install -dm755 ${DEST}/usr/lib/bfd-plugins
   ln -sf ../LLVMgold.so ${DEST}/usr/lib/bfd-plugins/LLVMgold.so
@@ -208,8 +237,6 @@ EOF
 }
 
 make_install_post_32() {
-  rm -f ${DEST}/usr/lib32/libgomp.so
-
   mv dest/usr/bin/llvm-config ${DEST}/usr/bin/llvm-config32
   mv dest/usr/include/llvm/Config/llvm-config.h ${DEST}/usr/include/llvm/Config/llvm-config-32.h
 

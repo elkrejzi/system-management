@@ -17,7 +17,7 @@ case $(basename $0) in
   ;;
   buildVulkan-LoaderAndValidationLayers )
     export PKGNAME=Vulkan-LoaderAndValidationLayers
-    export PKGVER=1.0.13.0
+    export PKGVER=1.0.17.0
     export CMAKE_FLAGS=(-DCMAKE_INSTALL_SYSCONFDIR=/etc
                         -DCMAKE_SKIP_RPATH=ON
                         -DBUILD_TESTS=OFF

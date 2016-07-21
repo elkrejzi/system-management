@@ -144,7 +144,7 @@ case $(basename $0) in
   ;;
   buildgnome-session )
     export PKGNAME=gnome-session
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
   ;;
   buildgnome-settings-daemon )
     export PKGNAME=gnome-settings-daemon
@@ -238,7 +238,7 @@ case $(basename $0) in
   ;;
   buildgspell )
     export PKGNAME=gspell
-    export PKGVER=1.0.2
+    export PKGVER=1.0.3
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
   ;;

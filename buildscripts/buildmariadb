@@ -1,13 +1,13 @@
 #!/bin/bash -e
 
 export PKGNAME=mariadb
-export PKGVER=10.1.15
+export PKGVER=10.1.16
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://downloads.mariadb.org/interstitial/${PKGNAME}-${PKGVER}/source/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
-export USER_CFLAGS="-fPIC -fno-strict-aliasing -DBIG_JOINS=1"
-export USER_CXXFLAGS="-fPIC -fno-strict-aliasing -DBIG_JOINS=1 -felide-constructors -fno-rtti"
+export USER_CFLAGS="-fPIC -fno-strict-aliasing -DBIG_JOINS=1 -w"
+export USER_CXXFLAGS="-fPIC -fno-strict-aliasing -DBIG_JOINS=1 -felide-constructors -fno-rtti -w"
 
 export CMAKE_FLAGS=(-DSYSCONFDIR=/etc/mysql
                     -DMYSQL_DATADIR=/var/lib/mysql
@@ -38,7 +38,7 @@ export CMAKE_FLAGS=(-DSYSCONFDIR=/etc/mysql
 configure_pre() {
   rm -rf ../${PKGDIR}/storage/tokudb
 
-  sed -i '/colpat.*%/s#"%"#(char *) &#g' ../${PKGDIR}/storage/connect/jdbconn.cpp
+  #sed -i '/colpat.*%/s#"%"#(char *) &#g' ../${PKGDIR}/storage/connect/jdbconn.cpp
 }
 
 make_install_post() {

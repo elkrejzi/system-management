@@ -1,15 +1,10 @@
 #!/bin/bash -e
 
 export PKGNAME=guile
-export PKGVER=2.0.11
+export PKGVER=2.0.12
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://ftp.gnu.org/gnu/guile/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export DEFAULT_CC="gcc"
-
-configure_pre() {
-  export CFLAGS=${CFLAGS/-march=skylake/}
-}
 
 make_install_post() {
   rm -rf ${DEST}/usr/lib/*.scm

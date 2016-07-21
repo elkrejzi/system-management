@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libdrm
-export PKGVER=2.4.68
+export PKGVER=2.4.69
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://dri.freedesktop.org/libdrm/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

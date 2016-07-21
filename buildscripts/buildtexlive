@@ -2,13 +2,15 @@
 
 export PKGNAME=texlive
 export PKGVER=20160523
-export TEXMFVER=20160523
-export PKGTAR=texlive-${PKGVER}-source.tar.xz
-export TEXMFTAR=texlive-${TEXMFVER}-texmf.tar.xz
+export TEXVER=20160523b
+export PKGTAR=texlive-${TEXVER}-source.tar.xz
+export TEXMFTAR=texlive-${TEXVER}-texmf.tar.xz
+export TEXEXTRATAR=texlive-${PKGVER}-extra.tar.xz
 export PKGDIR=texlive-${PKGVER}-source
 export PKGBUILD=texlive-${PKGVER}-source/build
-export PKGURL="ftp://tug.org/texlive/historic/2015/${PKGTAR}"
-export TEXMFURL="ftp://tug.org/texlive/historic/2015/${TEXMFTAR}"
+export PKGURL="ftp://tug.org/texlive/historic/2016/${PKGTAR}"
+export TEXMFURL="ftp://tug.org/texlive/historic/2016/${TEXMFTAR}"
+export TEXEXTRAURL="ftp://tug.org/texlive/historic/2016/${TEXEXTRATAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export PATH_TO_SOURCE=".."
 
@@ -47,16 +49,19 @@ post_extract_action() {
     wget -c ${TEXMFURL} -O ${SROOT}/${TEXMFTAR} || exit ${PIPESTATUS}
   fi
 
+  if [ ! -e ${SROOT}/${TEXEXTRATAR} ]
+  then
+    wget -c ${TEXEXTRAURL} -O ${SROOT}/${TEXEXTRATAR} || exit ${PIPESTATUS}
+  fi
+
   install -dm755 ${PKGBUILD}
 }
 
 make_install_post() {
   make texlinks DESTDIR=${DEST}
 
-  # TODO: Remove
-  cp -rf ../texk/tests/TeXLive ${DEST}/usr/share/texmf-dist/scripts/texlive
-
   tar --exclude=*/texmf-dist/doc --exclude=*/texmf-dist/source --strip-components=1 -xf ${SROOT}/${TEXMFTAR} -C ${DEST}/usr/share
+  tar --wildcards --strip-components=1 -xf ${SROOT}/${TEXEXTRATAR} -C ${DEST}/usr/share "*/tlpkg"
 
   sed -i "s@TEXMFROOT = \$SELFAUTOPARENT@TEXMFROOT = /usr/share@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
   sed -i "s@TEXMFSYSVAR = \$TEXMFROOT/texmf-var@TEXMFSYSVAR = /var/lib/texmf@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf

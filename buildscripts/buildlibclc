@@ -1,11 +1,13 @@
 #!/bin/bash -e
 
 export PKGNAME=libclc
-export PKGVER=0.2.0.svn273191
+export PKGVER=0.2.0.svn276104
 export MAKE_JOBS_FLAGS="-j4"
 export NO_STRIP=1
 
 configure_override() {
+  sed -i "/default_targets/s#'nvptx--nvidiacl', 'nvptx64--nvidiacl',##g" configure.py
+
   ./configure.py --prefix=/usr
 }
 

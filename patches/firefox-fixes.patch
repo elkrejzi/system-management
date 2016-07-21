@@ -1,0 +1,105 @@
+--- a/config/gcc-stl-wrapper.template.h	2016-05-12 19:13:13.000000000 +0200
++++ b/config/gcc-stl-wrapper.template.h	2016-07-10 13:51:57.078762360 +0200
+@@ -17,25 +17,6 @@
+ // Silence "warning: #include_next is a GCC extension"
+ #pragma GCC system_header
+ 
+-// mozalloc.h wants <new>; break the cycle by always explicitly
+-// including <new> here.  NB: this is a tad sneaky.  Sez the gcc docs:
+-//
+-//    `#include_next' does not distinguish between <file> and "file"
+-//    inclusion, nor does it check that the file you specify has the
+-//    same name as the current file. It simply looks for the file
+-//    named, starting with the directory in the search path after the
+-//    one where the current file was found.
+-#include_next <new>
+-
+-// See if we're in code that can use mozalloc.  NB: this duplicates
+-// code in nscore.h because nscore.h pulls in prtypes.h, and chromium
+-// can't build with that being included before base/basictypes.h.
+-#if !defined(XPCOM_GLUE) && !defined(NS_NO_XPCOM) && !defined(MOZ_NO_MOZALLOC)
+-#  include "mozilla/mozalloc.h"
+-#else
+-#  error "STL code can only be used with infallible ::operator new()"
+-#endif
+-
+ #if defined(DEBUG) && !defined(_GLIBCXX_DEBUG)
+ // Enable checked iterators and other goodies
+ //
+@@ -46,10 +27,34 @@
+ //  # define _GLIBCXX_DEBUG 1
+ #endif
+ 
++// Don't include mozalloc for cstdlib. See bug 1245076.
++#ifndef moz_dont_include_mozalloc_for_cstdlib
++#  define moz_dont_include_mozalloc_for_cstdlib
++#endif
++
++// Include mozalloc after the STL header and all other headers it includes
++// have been preprocessed.
++#if !defined(MOZ_INCLUDE_MOZALLOC_H) && \
++    !defined(moz_dont_include_mozalloc_for_${HEADER})
++#  define MOZ_INCLUDE_MOZALLOC_H
++#  define MOZ_INCLUDE_MOZALLOC_H_FROM_${HEADER}
++#endif
++
+ #pragma GCC visibility push(default)
+ #include_next <${HEADER}>
+ #pragma GCC visibility pop
+ 
++#ifdef MOZ_INCLUDE_MOZALLOC_H_FROM_${HEADER}
++// See if we're in code that can use mozalloc.  NB: this duplicates
++// code in nscore.h because nscore.h pulls in prtypes.h, and chromium
++// can't build with that being included before base/basictypes.h.
++#  if !defined(XPCOM_GLUE) && !defined(NS_NO_XPCOM) && !defined(MOZ_NO_MOZALLOC)
++#    include "mozilla/mozalloc.h"
++#  else
++#    error "STL code can only be used with infallible ::operator new()"
++#  endif
++#endif
++
+ // gcc calls a __throw_*() function from bits/functexcept.h when it
+ // wants to "throw an exception".  functexcept exists nominally to
+ // support -fno-exceptions, but since we'll always use the system
+--- a/config/make-stl-wrappers.py	2016-05-12 19:13:13.000000000 +0200
++++ b/config/make-stl-wrappers.py	2016-07-10 13:51:45.813877463 +0200
+@@ -30,7 +30,6 @@
+         os.mkdir(outdir)
+ 
+     template = open(template_file, 'r').read()
+-    path_to_new = header_path('new', compiler)
+ 
+     for header in open(header_list_file, 'r'):
+         header = header.rstrip()
+@@ -40,8 +39,7 @@
+         path = header_path(header, compiler)
+         with FileAvoidWrite(os.path.join(outdir, header)) as f:
+             f.write(string.Template(template).substitute(HEADER=header,
+-                                                         HEADER_PATH=path,
+-                                                         NEW_HEADER_PATH=path_to_new))
++                                                         HEADER_PATH=path))
+ 
+ 
+ if __name__ == '__main__':
+--- a/memory/mozalloc/mozalloc.h	2016-05-12 19:13:22.000000000 +0200
++++ b/memory/mozalloc/mozalloc.h	2016-07-10 13:53:48.831219880 +0200
+@@ -12,10 +12,17 @@
+  * https://bugzilla.mozilla.org/show_bug.cgi?id=427099
+  */
+ 
+-#include <stdlib.h>
+-#include <string.h>
+ #if defined(__cplusplus)
+ #  include <new>
++// Since libstdc++ 6, including the C headers (e.g. stdlib.h) instead of the
++// corresponding C++ header (e.g. cstdlib) can cause confusion in C++ code
++// using things defined there. Specifically, with stdlib.h, the use of abs()
++// in gfx/graphite2/src/inc/UtfCodec.h somehow ends up picking the wrong abs()
++#  include <cstdlib>
++#  include <cstring>
++#else
++#  include <stdlib.h>
++#  include <string.h>
+ #endif
+ 
+ #if defined(__cplusplus)
