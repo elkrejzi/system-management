@@ -8,13 +8,14 @@ proj=(
   libcxx
   libcxxabi
   libunwind
+  openmp
 )
 
 cmake_shared=(
   -DCMAKE_INSTALL_PREFIX=/tools
   -DCMAKE_BUILD_TYPE=Release
   -DCLANG_DEFAULT_CXX_STDLIB=libc++
-  -DCLANG_DEFAULT_OPENMP_RUNTIME=libgomp
+  -DCLANG_DEFAULT_OPENMP_RUNTIME=libomp
   -DCLANG_ENABLE_ARCMT=OFF
   -DCLANG_ENABLE_STATIC_ANALYZER=OFF
   -DCLANG_INCLUDE_TESTS=OFF
@@ -56,23 +57,36 @@ for project in llvm ${proj[@]}
 do
   if [ ! -d ${project} ]
   then
-    if [ -e $HOME/src/git/${project}.tar.xz ]
+    if [ -e $HOME/src/git/${project}.tar.xz ] && [ -z ${LLVM_RELEASE_BRANCH} ]
     then
       tar xf $HOME/src/git/${project}.tar.xz
       pushd ${project}
         svn up
       popd
     else
-      svn co http://llvm.org/svn/llvm-project/${project}/trunk ${project}
+      if [ ! -z ${LLVM_RELEASE_BRANCH} ]
+      then
+        svn co https://llvm.org/svn/llvm-project/${project}/branches/${LLVM_RELEASE_BRANCH} ${project}
+      else
+        svn co http://llvm.org/svn/llvm-project/${project}/trunk ${project}
+      fi
     fi
   fi
 
   if [ ${project} == "cfe" ]
   then
-    sed -i "/ld-linux-x86-64/s/lib64/lib/" cfe/lib/Driver/Tools.cpp
+    pushd ${project}
+      patch -Np1 -i ${PROOT}/clang-runtime.patch
+    popd
+
     mv ${project} llvm/tools/clang
   elif [ ${project} != "cfe" ] && [ ${project} != "llvm" ]
   then
+    if [ ${project} == "openmp" ]
+    then
+      sed -i "/LIBOMP_ALIASES/s#libgomp;##g" ${project}/runtime/src/CMakeLists.txt
+    fi
+
     mv ${project} llvm/projects
   fi
 done
@@ -84,6 +98,9 @@ pushd llvm
   fi
 
   sed -i "s:CLANG_HAVE_LIBXML 1:CLANG_HAVE_LIBXML 0:g" tools/clang/CMakeLists.txt
+
+  # remove for 3.9
+  /usr/bin/wget https://github.com/llvm-mirror/llvm/commit/991d814755a4cd859708ef92026d6fdd2826644e.patch -O - | patch -Np1 -i -
 popd
 
 rm -rf llvm-build llvm-build32 ${LOGDIR}/llvm-${LLVM_VER}.log
@@ -106,10 +123,26 @@ install -dm755 llvm-build llvm-build32
     cmake ${cmake_shared[@]} -DLLVM_LIBDIR_SUFFIX=32 -DLLVM_TARGET_ARCH=i686 -DLLVM_DEFAULT_TARGET_TRIPLE=i686-pc-linux-gnu ../llvm
     make -C projects/libcxx
 
-    for dir in libcxx libcxxabi libunwind
+    for dir in libcxx libcxxabi libunwind openmp
     do
       make -C projects/${dir} install
     done
+  popd
+
+  pushd llvm
+    for arch in i386 x86_64
+    do
+      wget -O - http://ftp.netbsd.org/pub/NetBSD/NetBSD-current/src/lib/csu/arch/${arch}/crtbegin.S | sed "/asm.h/d;/RCSID/d" > crtbegin-${arch}.S
+      wget -O - http://ftp.netbsd.org/pub/NetBSD/NetBSD-current/src/lib/csu/arch/${arch}/crtend.S | sed "/asm.h/d;/RCSID/d" > crtend-${arch}.S
+    done
+
+    install -dm755 /tools/lib/clang/${LLVM_VER%.svn*}/32 /tools/lib/clang/${LLVM_VER%.svn*}/64
+
+    as --32 crtbegin-i386.S -o /tools/lib/clang/${LLVM_VER%.svn*}/32/crtbegin.o
+    as --32 crtend-i386.S -o /tools/lib/clang/${LLVM_VER%.svn*}/32/crtend.o
+
+    as --64 crtbegin-x86_64.S -o /tools/lib/clang/${LLVM_VER%.svn*}/64/crtbegin.o
+    as --64 crtend-x86_64.S -o /tools/lib/clang/${LLVM_VER%.svn*}/64/crtend.o
   popd
   }
 

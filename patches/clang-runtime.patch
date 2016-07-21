@@ -1,0 +1,102 @@
+--- a/lib/Driver/ToolChains.cpp	2016-07-21 02:51:09.149913536 +0200
++++ b/lib/Driver/ToolChains.cpp	2016-07-21 02:45:58.879099891 +0200
+@@ -3708,6 +3708,7 @@
+   RHEL6,
+   RHEL7,
+   Fedora,
++  Krejzi,
+   OpenSUSE,
+   UbuntuHardy,
+   UbuntuIntrepid,
+@@ -3743,6 +3744,8 @@
+   return Distro >= UbuntuHardy && Distro <= UbuntuXenial;
+ }
+ 
++static bool IsKrejzi(enum Distro Distro) { return Distro == Krejzi; }
++
+ static Distro DetectDistro(const Driver &D, llvm::Triple::ArchType Arch) {
+   llvm::ErrorOr<std::unique_ptr<llvm::MemoryBuffer>> File =
+       llvm::MemoryBuffer::getFile("/etc/lsb-release");
+@@ -3819,6 +3822,9 @@
+   if (D.getVFS().exists("/etc/arch-release"))
+     return ArchLinux;
+ 
++  if (D.getVFS().exists("/etc/lfs-release"))
++    return Krejzi;
++
+   return UnknownDistro;
+ }
+ 
+@@ -4040,11 +4046,24 @@
+   // to the link paths.
+   path_list &Paths = getFilePaths();
+ 
++  if (IsKrejzi(Distro)) {
++    SmallString<128> P(D.ResourceDir);
++    SmallString<128> Ext;
++
++    if (Arch == llvm::Triple::x86)
++      Ext = "32";
++    else
++      Ext = "64";
++
++    llvm::sys::path::append(P, Ext);
++    addPathIfExists(D, P, Paths);
++  }
++
+   const std::string OSLibDir = getOSLibDir(Triple, Args);
+   const std::string MultiarchTriple = getMultiarchTriple(D, Triple, SysRoot);
+ 
+   // Add the multilib suffixed paths where they are available.
+-  if (GCCInstallation.isValid()) {
++  if (!IsKrejzi(Distro) && GCCInstallation.isValid()) {
+     const llvm::Triple &GCCTriple = GCCInstallation.getTriple();
+     const std::string &LibPath = GCCInstallation.getParentLibPath();
+     const Multilib &Multilib = GCCInstallation.getMultilib();
+@@ -4113,7 +4132,7 @@
+ 
+   // Try walking via the GCC triple path in case of biarch or multiarch GCC
+   // installations with strange symlinks.
+-  if (GCCInstallation.isValid()) {
++  if (!IsKrejzi(Distro) && GCCInstallation.isValid()) {
+     addPathIfExists(D,
+                     SysRoot + "/usr/lib/" + GCCInstallation.getTriple().str() +
+                         "/../../" + OSLibDir,
+@@ -4293,13 +4312,13 @@
+     Loader = "ld64.so.1";
+     break;
+   case llvm::Triple::x86:
+-    LibDir = "lib";
++    LibDir = "lib32";
+     Loader = "ld-linux.so.2";
+     break;
+   case llvm::Triple::x86_64: {
+     bool X32 = Triple.getEnvironment() == llvm::Triple::GNUX32;
+ 
+-    LibDir = X32 ? "libx32" : "lib64";
++    LibDir = X32 ? "libx32" : "lib";
+     Loader = X32 ? "ld-linux-x32.so.2" : "ld-linux-x86-64.so.2";
+     break;
+   }
+@@ -4308,7 +4327,7 @@
+   if (Distro == Exherbo && (Triple.getVendor() == llvm::Triple::UnknownVendor ||
+                             Triple.getVendor() == llvm::Triple::PC))
+     return "/usr/" + Triple.str() + "/lib/" + Loader;
+-  return "/" + LibDir + "/" + Loader;
++  return (getenv("LFS_TOOLS_BOOTSTRAP") ? "/tools/" : "/") + LibDir + "/" + Loader;
+ }
+ 
+ void Linux::AddClangSystemIncludeArgs(const ArgList &DriverArgs,
+--- a/lib/Driver/ToolChains.h	2016-07-21 02:51:09.154913614 +0200
++++ b/lib/Driver/ToolChains.h	2016-07-21 02:11:39.839753953 +0200
+@@ -847,6 +847,10 @@
+ 
+   std::vector<std::string> ExtraOpts;
+ 
++  RuntimeLibType GetDefaultRuntimeLibType() const override {
++    return ToolChain::RLT_CompilerRT;
++  }
++
+ protected:
+   Tool *buildAssembler() const override;
+   Tool *buildLinker() const override;
