@@ -205,6 +205,14 @@ make_install_post() {
   as --64 ../${PKGDIR}/crtbegin-x86_64.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/64/crtbegin.o
   as --64 ../${PKGDIR}/crtend-x86_64.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/64/crtend.o
 
+  for arch in 32 64
+  do
+    ln -sf crtbegin.o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/crtbeginS.o
+    ln -sf crtbegin.o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/crtbeginT.o
+    ln -sf crtend.o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/crtendS.o
+    ln -sf crtend.o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/crtendT.o
+  done
+
   install -dm755 ${DEST}/usr/lib/bfd-plugins
   ln -sf ../LLVMgold.so ${DEST}/usr/lib/bfd-plugins/LLVMgold.so
 

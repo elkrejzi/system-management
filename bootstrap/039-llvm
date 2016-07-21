@@ -143,6 +143,14 @@ install -dm755 llvm-build llvm-build32
 
     as --64 crtbegin-x86_64.S -o /tools/lib/clang/${LLVM_VER%.svn*}/64/crtbegin.o
     as --64 crtend-x86_64.S -o /tools/lib/clang/${LLVM_VER%.svn*}/64/crtend.o
+
+    for arch in 32 64
+    do
+      ln -sf crtbegin.o /tools/lib/clang/${LLVM_VER%.svn*}/${arch}/crtbeginS.o
+      ln -sf crtbegin.o /tools/lib/clang/${LLVM_VER%.svn*}/${arch}/crtbeginT.o
+      ln -sf crtend.o /tools/lib/clang/${LLVM_VER%.svn*}/${arch}/crtendS.o
+      ln -sf crtend.o /tools/lib/clang/${LLVM_VER%.svn*}/${arch}/crtendT.o
+    done
   popd
   }
 
