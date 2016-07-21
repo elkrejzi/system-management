@@ -199,18 +199,18 @@ configure_post_32() {
 make_install_post() {
   install -dm755 ${DEST}/usr/lib/clang/${PKGVER%.svn*}/32 ${DEST}/usr/lib/clang/${PKGVER%.svn*}/64
 
-  as --32 ../${PKGDIR}/crtbegin-i386.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/32/crtbegin.o
-  as --32 ../${PKGDIR}/crtend-i386.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/32/crtend.o
+  clang -m32 -g -O2 -fno-stack-protector -fpic -c ../${PKGDIR}/crtbegin-i386.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/32/crtbegin.o
+  clang -m32 -g -O2 -fno-stack-protector -fpic -DSHARED -c ../${PKGDIR}/crtbegin-i386.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/32/crtbeginS.o
+  clang -m32 -g -O2 -fno-stack-protector -fpic -c ../${PKGDIR}/crtend-i386.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/32/crtend.o
 
-  as --64 ../${PKGDIR}/crtbegin-x86_64.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/64/crtbegin.o
-  as --64 ../${PKGDIR}/crtend-x86_64.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/64/crtend.o
+  clang -g -O2 -fno-stack-protector -fpic -c ../${PKGDIR}/crtbegin-x86_64.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/64/crtbegin.o
+  clang -g -O2 -fno-stack-protector -fpic -DSHARED -c ../${PKGDIR}/crtbegin-x86_64.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/64/crtbeginS.o
+  clang -g -O2 -fno-stack-protector -fpic -c ../${PKGDIR}/crtend-x86_64.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/64/crtend.o
 
   for arch in 32 64
   do
-    ln -sf crtbegin.o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/crtbeginS.o
     ln -sf crtbegin.o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/crtbeginT.o
     ln -sf crtend.o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/crtendS.o
-    ln -sf crtend.o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/crtendT.o
   done
 
 cat > ${PWD}/crtfastmath.c << "EOF"
@@ -315,8 +315,8 @@ set_fast_math (void)
 #endif
 EOF
 
-  clang -g -O2 -fno-stack-protector -fpic -c ${PWD}/crtfastmath.c -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/64/crtfastmath.o
   clang -m32 -g -O2 -fno-stack-protector -fpic -c ${PWD}/crtfastmath.c -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/32/crtfastmath.o
+  clang -g -O2 -fno-stack-protector -fpic -c ${PWD}/crtfastmath.c -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/64/crtfastmath.o
 
   install -dm755 ${DEST}/usr/lib/bfd-plugins
   ln -sf ../LLVMgold.so ${DEST}/usr/lib/bfd-plugins/LLVMgold.so

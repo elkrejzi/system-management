@@ -132,24 +132,24 @@ install -dm755 llvm-build llvm-build32
   pushd llvm
     for arch in i386 x86_64
     do
-      wget -O - http://ftp.netbsd.org/pub/NetBSD/NetBSD-current/src/lib/csu/arch/${arch}/crtbegin.S | sed "/asm.h/d;/RCSID/d" > crtbegin-${arch}.S
-      wget -O - http://ftp.netbsd.org/pub/NetBSD/NetBSD-current/src/lib/csu/arch/${arch}/crtend.S | sed "/asm.h/d;/RCSID/d" > crtend-${arch}.S
+      /usr/bin/wget -O - http://ftp.netbsd.org/pub/NetBSD/NetBSD-current/src/lib/csu/arch/${arch}/crtbegin.S | sed "/asm.h/d;/RCSID/d" > crtbegin-${arch}.S
+      /usr/bin/wget -O - http://ftp.netbsd.org/pub/NetBSD/NetBSD-current/src/lib/csu/arch/${arch}/crtend.S | sed "/asm.h/d;/RCSID/d" > crtend-${arch}.S
     done
 
     install -dm755 /tools/lib/clang/${LLVM_VER%.svn*}/32 /tools/lib/clang/${LLVM_VER%.svn*}/64
 
-    as --32 crtbegin-i386.S -o /tools/lib/clang/${LLVM_VER%.svn*}/32/crtbegin.o
-    as --32 crtend-i386.S -o /tools/lib/clang/${LLVM_VER%.svn*}/32/crtend.o
+    clang -m32 -g -O2 -fno-stack-protector -fpic -c crtbegin-i386.S -o /tools/lib/clang/${LLVM_VER%.svn*}/32/crtbegin.o
+    clang -m32 -g -O2 -fno-stack-protector -fpic -DSHARED -c crtbegin-i386.S -o /tools/lib/clang/${LLVM_VER%.svn*}/32/crtbeginS.o
+    clang -m32 -g -O2 -fno-stack-protector -fpic -c crtend-i386.S -o /tools/lib/clang/${LLVM_VER%.svn*}/32/crtend.o
 
-    as --64 crtbegin-x86_64.S -o /tools/lib/clang/${LLVM_VER%.svn*}/64/crtbegin.o
-    as --64 crtend-x86_64.S -o /tools/lib/clang/${LLVM_VER%.svn*}/64/crtend.o
+    clang -g -O2 -fno-stack-protector -fpic -c crtbegin-x86_64.S -o /tools/lib/clang/${LLVM_VER%.svn*}/64/crtbegin.o
+    clang -g -O2 -fno-stack-protector -fpic -DSHARED -c crtbegin-x86_64.S -o /tools/lib/clang/${LLVM_VER%.svn*}/64/crtbeginS.o
+    clang -g -O2 -fno-stack-protector -fpic -c crtend-x86_64.S -o /tools/lib/clang/${LLVM_VER%.svn*}/64/crtend.o
 
     for arch in 32 64
     do
-      ln -sf crtbegin.o /tools/lib/clang/${LLVM_VER%.svn*}/${arch}/crtbeginS.o
       ln -sf crtbegin.o /tools/lib/clang/${LLVM_VER%.svn*}/${arch}/crtbeginT.o
       ln -sf crtend.o /tools/lib/clang/${LLVM_VER%.svn*}/${arch}/crtendS.o
-      ln -sf crtend.o /tools/lib/clang/${LLVM_VER%.svn*}/${arch}/crtendT.o
     done
 
 cat > ${PWD}/crtfastmath.c << "EOF"
@@ -254,8 +254,8 @@ set_fast_math (void)
 #endif
 EOF
 
-    clang -g -O2 -fno-stack-protector -fpic -c ${PWD}/crtfastmath.c -o /tools/lib/clang/${LLVM_VER%.svn*}/64/crtfastmath.o
     clang -m32 -g -O2 -fno-stack-protector -fpic -c ${PWD}/crtfastmath.c -o /tools/lib/clang/${LLVM_VER%.svn*}/32/crtfastmath.o
+    clang -g -O2 -fno-stack-protector -fpic -c ${PWD}/crtfastmath.c -o /tools/lib/clang/${LLVM_VER%.svn*}/64/crtfastmath.o
 
   popd
   }
