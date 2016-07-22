@@ -674,4 +674,7 @@ ln -sf /tools/lib/libc++abi.so{,.1} ${LFS}/usr/lib
 ln -sf /tools/lib32/libc++.so{,.1} ${LFS}/usr/lib32
 ln -sf /tools/lib32/libc++abi.so{,.1} ${LFS}/usr/lib32
 
+ln -sf /tools/lib/libomp.so ${LFS}/usr/lib
+ln -sf /tools/lib32/libomp.so ${LFS}/usr/lib32
+
 ln -sf bash ${LFS}/bin/sh

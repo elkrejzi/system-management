@@ -167,7 +167,8 @@ export SHARED_FLAGS=(-DCLANG_DEFAULT_CXX_STDLIB=libc++
                      -DLIBUNWIND_ENABLE_ASSERTIONS=OFF
                      -DLIBUNWIND_ENABLE_SHARED=OFF
                      -DLLVM_TARGETS_TO_BUILD="AMDGPU;X86"
-                     -DLLVM_BINUTILS_INCDIR=/usr/include)
+                     -DLLVM_BINUTILS_INCDIR=/usr/include
+                     -DLIBOMP_LIBFLAGS="-lm")
 
 export CMAKE_FLAGS=("${SHARED_FLAGS[@]}"
                     -DLLVM_BUILD_DOCS=ON

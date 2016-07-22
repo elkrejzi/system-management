@@ -1,5 +1,5 @@
---- a/lib/Driver/ToolChains.cpp	2016-07-21 02:51:09.149913536 +0200
-+++ b/lib/Driver/ToolChains.cpp	2016-07-21 02:45:58.879099891 +0200
+--- a/lib/Driver/ToolChains.cpp	2016-07-22 00:49:11.719791703 +0200
++++ b/lib/Driver/ToolChains.cpp	2016-07-22 00:11:56.375082482 +0200
 @@ -3708,6 +3708,7 @@
    RHEL6,
    RHEL7,
@@ -87,8 +87,8 @@
  }
  
  void Linux::AddClangSystemIncludeArgs(const ArgList &DriverArgs,
---- a/lib/Driver/ToolChains.h	2016-07-21 02:51:09.154913614 +0200
-+++ b/lib/Driver/ToolChains.h	2016-07-21 02:11:39.839753953 +0200
+--- a/lib/Driver/ToolChains.h	2016-07-22 00:49:11.717791680 +0200
++++ b/lib/Driver/ToolChains.h	2016-07-22 00:11:56.376082494 +0200
 @@ -847,6 +847,10 @@
  
    std::vector<std::string> ExtraOpts;
@@ -100,3 +100,13 @@
  protected:
    Tool *buildAssembler() const override;
    Tool *buildLinker() const override;
+--- a/lib/Driver/Tools.cpp	2016-07-22 00:49:11.721791727 +0200
++++ b/lib/Driver/Tools.cpp	2016-07-22 00:48:08.263048618 +0200
+@@ -3002,6 +3002,7 @@
+ static void addClangRT(const ToolChain &TC, const ArgList &Args,
+                        ArgStringList &CmdArgs) {
+   CmdArgs.push_back(TC.getCompilerRTArgString(Args, "builtins"));
++  CmdArgs.push_back("-lm");
+ }
+ 
+ namespace {
