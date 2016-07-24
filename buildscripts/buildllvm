@@ -37,16 +37,23 @@ prepare_src_common() {
       sed -i "/LIBOMP_ALIASES/s#libgomp;##g" ${f}/runtime/src/CMakeLists.txt
     fi
 
+    if [ ${f} == "libcxx" ]
+    then
+      sed -i "/-nodefaultlibs/d" ${f}/lib/CMakeLists.txt
+    fi
+
     mv ${f} ${PKGDIR}/projects
   fi
 
   if [ ! -e ${PKGDIR}/crtbegin-i386.S ] || [ ! -e ${PKGDIR}/crtend-i386.S ] ||
-     [ ! -e ${PKGDIR}/crtbegin-x86_64.S ] || [ ! -e ${PKGDIR}/crtend-x86_64.S ]
+     [ ! -e ${PKGDIR}/crtbegin-x86_64.S ] || [ ! -e ${PKGDIR}/crtend-x86_64.S ] ||
+     [ ! -e ${PKGDIR}/crtfastmath-i386.c ] || [ ! -e ${PKGDIR}/crtfastmath-x86_64.c ]
   then
     for arch in i386 x86_64
     do
       wget -O - http://ftp.netbsd.org/pub/NetBSD/NetBSD-current/src/lib/csu/arch/${arch}/crtbegin.S | sed "/asm.h/d;/RCSID/d" > ${PKGDIR}/crtbegin-${arch}.S
       wget -O - http://ftp.netbsd.org/pub/NetBSD/NetBSD-current/src/lib/csu/arch/${arch}/crtend.S | sed "/asm.h/d;/RCSID/d" > ${PKGDIR}/crtend-${arch}.S
+      wget "https://gcc.gnu.org/viewcvs/gcc/trunk/libgcc/config/i386/crtfastmath.c?revision=232055&view=co" -O ${PKGDIR}/crtfastmath-${arch}.c
     done
   fi
 }
@@ -198,126 +205,34 @@ configure_post_32() {
 }
 
 make_install_post() {
-  install -dm755 ${DEST}/usr/lib/clang/${PKGVER%.svn*}/32 ${DEST}/usr/lib/clang/${PKGVER%.svn*}/64
-
-  clang -m32 -g -O2 -fno-stack-protector -fpic -c ../${PKGDIR}/crtbegin-i386.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/32/crtbegin.o
-  clang -m32 -g -O2 -fno-stack-protector -fpic -DSHARED -c ../${PKGDIR}/crtbegin-i386.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/32/crtbeginS.o
-  clang -m32 -g -O2 -fno-stack-protector -fpic -c ../${PKGDIR}/crtend-i386.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/32/crtend.o
-
-  clang -g -O2 -fno-stack-protector -fpic -c ../${PKGDIR}/crtbegin-x86_64.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/64/crtbegin.o
-  clang -g -O2 -fno-stack-protector -fpic -DSHARED -c ../${PKGDIR}/crtbegin-x86_64.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/64/crtbeginS.o
-  clang -g -O2 -fno-stack-protector -fpic -c ../${PKGDIR}/crtend-x86_64.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/64/crtend.o
-
-  for arch in 32 64
+  for arch in i386 x86_64
   do
+    if [ ${arch} == "i386" ]
+    then
+      CCARGS="-m32"
+      LIB="lib32"
+    else
+      CCARGS=""
+      LIB="lib"
+    fi
+
+    install -dm755 ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch} ${DEST}/usr/lib/clang/${PKGVER%.svn*}/lib/linux/${arch}
+
+    clang ${CCARGS} -g -O2 -fno-stack-protector -fpic -c ../${PKGDIR}/crtbegin-${arch}.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/crtbegin.o
+    clang ${CCARGS} -g -O2 -fno-stack-protector -fpic -DSHARED -c ../${PKGDIR}/crtbegin-${arch}.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/crtbeginS.o
+    clang ${CCARGS} -g -O2 -fno-stack-protector -fpic -c ../${PKGDIR}/crtend-${arch}.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/crtend.o
+
+    clang ${CCARGS} -g -O2 -fno-stack-protector -fpic -c ../${PKGDIR}/crtfastmath-${arch}.c -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/crtfastmath.o
+
     ln -sf crtbegin.o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/crtbeginT.o
     ln -sf crtend.o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/crtendS.o
-  done
 
-cat > ${PWD}/crtfastmath.c << "EOF"
-/*
- * Copyright (C) 2005-2016 Free Software Foundation, Inc.
- *
- * This file is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 3, or (at your option) any
- * later version.
- * 
- * This file is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
- * 
- * Under Section 7 of GPL version 3, you are granted additional
- * permissions described in the GCC Runtime Library Exception, version
- * 3.1, as published by the Free Software Foundation.
- *
- * You should have received a copy of the GNU General Public License and
- * a copy of the GCC Runtime Library Exception along with this program;
- * see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
- * <http://www.gnu.org/licenses/>.
- */
+    mv ${DEST}/usr/lib/clang/${PKGVER%.svn*}/lib/linux/libclang_rt.builtins-${arch}.a ${DEST}/usr/lib/clang/${PKGVER%.svn*}/lib/linux/${arch}/
 
-#ifndef _SOFT_FLOAT
-#define MXCSR_DAZ (1 << 6)	/* Enable denormals are zero mode */
-#define MXCSR_FTZ (1 << 15)	/* Enable flush to zero mode */
-
-#ifndef __x86_64__
-/* All 64-bit targets have SSE and DAZ;
-   only check them explicitly for 32-bit ones. */
-#include "cpuid.h"
-
-__attribute__ ((target("fxsr,sse")))
-static void
-/* The i386 ABI only requires 4-byte stack alignment, so this is necessary
-   to make sure the fxsave struct gets correct alignment.
-   See PR27537 and PR28621.  */
-__attribute__ ((force_align_arg_pointer))
-set_fast_math_sse (unsigned int edx)
-{
-  unsigned int mxcsr;
-  
-  if (edx & bit_FXSAVE)
-    {
-      /* Check if DAZ is available.  */
-      struct
-      {
-	unsigned short cwd;
-	unsigned short swd;
-	unsigned short twd;
-	unsigned short fop;
-	unsigned int fip;
-	unsigned int fcs;
-	unsigned int foo;
-	unsigned int fos;
-	unsigned int mxcsr;
-	unsigned int mxcsr_mask;
-	unsigned int st_space[32];
-	unsigned int xmm_space[32];
-	unsigned int padding[56];
-      } __attribute__ ((aligned (16))) fxsave;
-
-      /* This is necessary since some implementations of FXSAVE
-	 do not modify reserved areas within the image.  */
-      fxsave.mxcsr_mask = 0;
-
-      __builtin_ia32_fxsave (&fxsave);
-
-      mxcsr = fxsave.mxcsr;
-
-      if (fxsave.mxcsr_mask & MXCSR_DAZ)
-	mxcsr |= MXCSR_DAZ;
-    }
-  else
-    mxcsr = __builtin_ia32_stmxcsr ();
-
-  mxcsr |= MXCSR_FTZ;
-  __builtin_ia32_ldmxcsr (mxcsr);
-}
-#endif
-
-static void __attribute__((constructor))
-set_fast_math (void)
-{
-#ifndef __x86_64__
-  unsigned int eax, ebx, ecx, edx;
-
-  if (!__get_cpuid (1, &eax, &ebx, &ecx, &edx))
-    return;
-
-  if (edx & bit_SSE)
-    set_fast_math_sse (edx);
-#else
-  unsigned int mxcsr = __builtin_ia32_stmxcsr ();
-  mxcsr |= MXCSR_DAZ | MXCSR_FTZ;
-  __builtin_ia32_ldmxcsr (mxcsr);
-#endif
-}
-#endif
+cat > ${DEST}/usr/lib/clang/${PKGVER%.svn*}/lib/linux/libclang_rt.builtins-${arch}.a << EOF
+INPUT ( /usr/lib/clang/${PKGVER%.svn*}/lib/linux/${arch}/libclang_rt.builtins-${arch}.a AS_NEEDED ( /usr/${LIB}/libunwind.a -lm ) )
 EOF
-
-  clang -m32 -g -O2 -fno-stack-protector -fpic -c ${PWD}/crtfastmath.c -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/32/crtfastmath.o
-  clang -g -O2 -fno-stack-protector -fpic -c ${PWD}/crtfastmath.c -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/64/crtfastmath.o
+    done
 
   install -dm755 ${DEST}/usr/lib/bfd-plugins
   ln -sf ../LLVMgold.so ${DEST}/usr/lib/bfd-plugins/LLVMgold.so
@@ -360,6 +275,23 @@ make_install_post_32() {
 
 post_install_config() {
   remove_rpath
+
+  for arch in i386 x86_64
+  do
+    if [ ${arch} == "i386" ]
+    then
+      LIB="lib32"
+    else
+      LIB="lib"
+    fi
+
+    mv ${DEST}/usr/${LIB}/libunwind.a ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/
+
+cat > ${DEST}/usr/${LIB}/libunwind.a << EOF
+INPUT ( /usr/lib/clang/${PKGVER%.svn*}/${arch}/libunwind.a AS_NEEDED ( -lpthread -ldl ) )
+EOF
+    done
+
 }
 
 . $(dirname $0)/master.sh
