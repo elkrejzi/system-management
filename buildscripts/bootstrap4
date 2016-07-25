@@ -72,9 +72,7 @@ $(dirname $0)/buildgsound
 $(dirname $0)/buildgspell
 $(dirname $0)/buildgtk-vnc
 $(dirname $0)/buildgtksourceview
-$(dirname $0)/buildgtkspell3
 $(dirname $0)/buildlibcacard
-$(dirname $0)/buildlibcryptui
 $(dirname $0)/buildlibcue
 $(dirname $0)/buildlibgee
 $(dirname $0)/buildlibgrss
@@ -89,13 +87,11 @@ $(dirname $0)/buildliboauth
 $(dirname $0)/buildlibosinfo
 $(dirname $0)/buildlibpaper
 $(dirname $0)/buildlibpeas
-$(dirname $0)/buildlibpst
 $(dirname $0)/buildlibpwquality
 $(dirname $0)/buildlibspectre
 $(dirname $0)/buildlibunique
 $(dirname $0)/buildlibwnck
 $(dirname $0)/buildlibxklavier
-$(dirname $0)/buildlibytnef
 $(dirname $0)/buildmate-desktop
 $(dirname $0)/buildnetwork-manager-applet
 $(dirname $0)/buildprelink
@@ -148,7 +144,6 @@ $(dirname $0)/buildcups-pk-helper
 $(dirname $0)/builddconf-editor
 $(dirname $0)/buildeog
 $(dirname $0)/buildepiphany
-$(dirname $0)/buildevolution
 $(dirname $0)/buildfile-roller
 $(dirname $0)/buildgdm
 $(dirname $0)/buildgedit
@@ -189,6 +184,9 @@ $(dirname $0)/buildgupnp-components
 $(dirname $0)/builddleyna
 $(dirname $0)/buildlightdm
 $(dirname $0)/buildlightdm-gtk-greeter
+$(dirname $0)/buildmailnag
+$(dirname $0)/buildmailnag-gnome-shell
+$(dirname $0)/buildmailnag-goa-plugin
 #$(dirname $0)/buildbeignet
 $(dirname $0)/buildchmlib
 $(dirname $0)/buildclinfo
@@ -238,7 +236,6 @@ $(dirname $0)/buildcdrtools
 $(dirname $0)/builddvd+rw-tools
 $(dirname $0)/buildtranscode
 $(dirname $0)/buildsound-theme-freedesktop
-$(dirname $0)/buildbogofilter
 $(dirname $0)/buildbtrfs-progs
 $(dirname $0)/buildcabextract
 $(dirname $0)/buildcpio
