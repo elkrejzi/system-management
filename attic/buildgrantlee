@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=grantlee
+export PKGVER=5.1.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://downloads.grantlee.org/${PKGTAR}"
+export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export CMAKE_FLAGS=(-DBUILD_TESTS=OFF)
+
+. $(dirname $0)/master.sh
+

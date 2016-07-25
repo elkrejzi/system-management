@@ -1,0 +1,74 @@
+#!/bin/bash -e
+
+export PKGVER=16.04.3
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export KEEP_DOC=1
+
+export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
+                    -DKDE_INSTALL_LIBDIR=lib
+                    -DBUILD_TESTING=OFF
+                    -DQML_INSTALL_DIR=lib/qt5/qml
+                    -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins
+                    -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules)
+
+case $(basename $0) in
+  buildark )
+    export PKGNAME=ark
+  ;;
+  buildbaloo-widgets )
+    export PKGNAME=baloo-widgets
+  ;;
+  builddolphin )
+    export PKGNAME=dolphin
+  ;;
+  buildgwenview )
+    export PKGNAME=gwenview
+  ;;
+  buildkate )
+    export PKGNAME=kate
+  ;;
+  buildkcalc )
+    export PKGNAME=kcalc
+  ;;
+  buildkdebugsettings )
+    export PKGNAME=kdebugsettings
+  ;;
+  buildkhelpcenter )
+    export PKGNAME=khelpcenter
+  ;;
+  buildkio-extras )
+    export PKGNAME=kio-extras
+  ;;
+  buildksystemlog )
+    export PKGNAME=ksystemlog
+    configure_pre() {
+      sed -i "s:libsystemd-journal:libsystemd:g" ../${PKGDIR}/cmake/FindJournald.cmake
+    }
+  ;;
+  buildkwalletmanager )
+    export PKGNAME=kwalletmanager
+  ;;
+  buildlibkdcraw )
+    export PKGNAME=libkdcraw
+  ;;
+  buildlibkipi )
+    export PKGNAME=libkipi
+  ;;
+  buildsmb4k )
+    export PKGNAME=smb4k
+    export PKGVER=1.9.65
+  ;;
+  buildspectacle )
+    export PKGNAME=spectacle
+  ;;
+esac
+
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
+if [ -z ${PKGURL} ]
+then
+  export PKGURL="http://download.kde.org/stable/applications/${PKGVER}/src/${PKGTAR}"
+fi
+
+. $(dirname $0)/master.sh

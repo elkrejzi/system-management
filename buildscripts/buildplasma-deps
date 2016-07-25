@@ -1,13 +1,6 @@
 #!/bin/bash -e
 
 case $(basename $0) in
-  buildgrantlee )
-    export PKGNAME=grantlee
-    export PKGVER=5.1.0
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="http://downloads.grantlee.org/${PKGTAR}"
-    export CMAKE_FLAGS=(-DBUILD_TESTS=OFF)
-  ;;
   buildlibdbusmenu-qt )
     export PKGNAME=libdbusmenu-qt
     export PKGVER=0.9.3+16.04.20160218
@@ -41,6 +34,7 @@ case $(basename $0) in
     export PKGDIR=phonon-vlc-${PKGVER}
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://download.kde.org/stable/phonon/phonon-backend-vlc/${PKGVER}/${PKGTAR}"
+    export PATCHES_LIST=("phonon-vlc-fixes.patch")
     export CMAKE_FLAGS=(-DCMAKE_INSTALL_LIBDIR=lib
                         -DCMAKE_SKIP_RPATH=ON
                         -DPHONON_BUILD_PHONON4QT5=ON)

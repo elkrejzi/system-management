@@ -13,68 +13,19 @@ export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
                     -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules)
 
 case $(basename $0) in
-  buildark )
-    export PKGNAME=ark
-  ;;
-  buildbaloo-widgets )
-    export PKGNAME=baloo-widgets
-  ;;
-  builddolphin )
-    export PKGNAME=dolphin
-  ;;
-  buildgwenview )
-    export PKGNAME=gwenview
-  ;;
-  buildkate )
-    export PKGNAME=kate
-  ;;
-  buildkcalc )
-    export PKGNAME=kcalc
-  ;;
-  buildkdebugsettings )
-    export PKGNAME=kdebugsettings
-  ;;
-  buildkhelpcenter )
-    export PKGNAME=khelpcenter
-  ;;
   buildkile )
     export PKGNAME=kile
     export PKGVER=2.1+7b238c4
   ;;
-  buildkio-extras )
-    export PKGNAME=kio-extras
-  ;;
   buildkonsole )
     export PKGNAME=konsole
-  ;;
-  buildksystemlog )
-    export PKGNAME=ksystemlog
-    configure_pre() {
-      sed -i "s:libsystemd-journal:libsystemd:g" ../${PKGDIR}/cmake/FindJournald.cmake
-    }
-  ;;
-  buildkwalletmanager )
-    export PKGNAME=kwalletmanager
-  ;;
-  buildlibkdcraw )
-    export PKGNAME=libkdcraw
   ;;
   buildlibkexiv2 )
     export PKGNAME=libkexiv2
   ;;
-  buildlibkipi )
-    export PKGNAME=libkipi
-  ;;
   buildokular )
     export PKGNAME=okular
     export PKGVER=15.12.1+df0c412
-  ;;
-  buildsmb4k )
-    export PKGNAME=smb4k
-    export PKGVER=1.9.65
-  ;;
-  buildspectacle )
-    export PKGNAME=spectacle
   ;;
 esac
 
