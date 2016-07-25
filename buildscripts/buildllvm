@@ -229,6 +229,8 @@ make_install_post() {
 
     mv ${DEST}/usr/lib/clang/${PKGVER%.svn*}/lib/linux/libclang_rt.builtins-${arch}.a ${DEST}/usr/lib/clang/${PKGVER%.svn*}/lib/linux/${arch}/
 
+    ln -sf ../lib/linux/libclang_rt.builtins-${arch}.a ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/libclang_rt.builtins-${arch}.a
+
 cat > ${DEST}/usr/lib/clang/${PKGVER%.svn*}/lib/linux/libclang_rt.builtins-${arch}.a << EOF
 INPUT ( /usr/lib/clang/${PKGVER%.svn*}/lib/linux/${arch}/libclang_rt.builtins-${arch}.a AS_NEEDED ( /usr/${LIB}/libunwind.a -lm ) )
 EOF

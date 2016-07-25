@@ -1,12 +1,11 @@
 #!/bin/bash -e
 
 export PKGNAME=libgd
-export PKGVER=2.1.1
+export PKGVER=2.2.3
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-export PKGURL="https://bitbucket.org/libgd/gd-libgd/downloads/${PKGTAR}"
+export PKGURL="https://github.com/libgd/libgd/releases/download/gd-${PKGVER}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done\n"
                     "cp -rf --remove-destination usr/bin/gdlib-config /usr/bin")
-export PATCHES_LIST=("libgd-fixes.patch")
 
 . $(dirname $0)/master.sh

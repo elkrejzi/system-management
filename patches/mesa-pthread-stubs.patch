@@ -1,0 +1,27 @@
+diff --git a/configure.ac b/configure.ac
+index 5c196a9..6d2f8dd 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -819,22 +819,6 @@ dnl to -pthread, which causes problems if we need -lpthread to appear in
+ dnl pkgconfig files.
+ test -z "$PTHREAD_LIBS" && PTHREAD_LIBS="-lpthread"
+ 
+-dnl pthread-stubs is mandatory on targets where it exists
+-case "$host_os" in
+-cygwin* )
+-    pthread_stubs_possible="no"
+-    ;;
+-* )
+-    pthread_stubs_possible="yes"
+-    ;;
+-esac
+-
+-if test "x$pthread_stubs_possible" = xyes; then
+-    PKG_CHECK_MODULES(PTHREADSTUBS, pthread-stubs)
+-    AC_SUBST(PTHREADSTUBS_CFLAGS)
+-    AC_SUBST(PTHREADSTUBS_LIBS)
+-fi
+-
+ dnl SELinux awareness.
+ AC_ARG_ENABLE([selinux],
+     [AS_HELP_STRING([--enable-selinux],

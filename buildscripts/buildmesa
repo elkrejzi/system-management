@@ -66,16 +66,15 @@ fi
 export MAKE_JOBS_FLAGS="-j4"
 export DEBUG_BUILD=1
 export MULTILIB_BUILD=1
-export PATCHES_LIST=("mesalib-xdemos.patch")
-export PATCHES_LIST_32=("mesalib-xdemos.patch")
+export PATCHES_LIST=("mesalib-xdemos.patch" "mesa-pthread-stubs.patch")
+export PATCHES_LIST_32=("mesalib-xdemos.patch" "mesa-pthread-stubs.patch")
+export DLOPEN_LIBS="-ldl"
 
 configure_pre() {
-  sed -i "/pthread-stubs/d" configure.ac
   autoreconf -fi
 }
 
 configure_pre_32() {
-  sed -i "/pthread-stubs/d" configure.ac
   autoreconf -fi
   export LLVM_CONFIG=/usr/bin/llvm-config32
 }
@@ -109,8 +108,6 @@ export COMMON_FLAGS=(--disable-valgrind
                      --enable-vdpau
                      --enable-omx
                      --enable-va
-                     --enable-opencl
-                     --enable-opencl-icd
                      --enable-glx-tls
                      --enable-llvm-shared-libs
                      --with-dri-drivers=i965

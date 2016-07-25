@@ -156,6 +156,8 @@ install -dm755 llvm-build llvm-build32
       mv /tools/lib/clang/${LLVM_VER%.svn*}/lib/linux/libclang_rt.builtins-${arch}.a /tools/lib/clang/${LLVM_VER%.svn*}/lib/linux/${arch}/
       mv /tools/${LIB}/libunwind.a /tools/lib/clang/${LLVM_VER%.svn*}/${arch}/
 
+      ln -sf ../lib/linux/libclang_rt.builtins-${arch}.a /tools/lib/clang/${LLVM_VER%.svn*}/${arch}/libclang_rt.builtins-${arch}.a
+
 cat > /tools/lib/clang/${LLVM_VER%.svn*}/lib/linux/libclang_rt.builtins-${arch}.a << EOF
 INPUT ( /tools/lib/clang/${LLVM_VER%.svn*}/lib/linux/${arch}/libclang_rt.builtins-${arch}.a AS_NEEDED ( /tools/${LIB}/libunwind.a -lm ) )
 EOF
