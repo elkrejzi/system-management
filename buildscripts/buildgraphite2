@@ -9,4 +9,12 @@ export CMAKE_BUILD=1
 export MULTILIB_BUILD=1
 export CMAKE_FLAGS_32=(-DLIB_SUFFIX=32)
 
+configure_pre() {
+  sed -i "/target_link/s# gcc)#)#g" ../${PKGDIR}/src/CMakeLists.txt
+}
+
+configure_pre_32() {
+  sed -i "/target_link/s# gcc)#)#g" ../${PKGDIR}/src/CMakeLists.txt
+}
+
 . $(dirname $0)/master.sh

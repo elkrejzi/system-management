@@ -57,6 +57,11 @@ case $(basename $0) in
                             --with-systemd-daemon
                             --with-xkb-output=/var/lib/xkb)
 
+    configure_pre() {
+      install -dm755 dep
+      ln -sf /usr/lib/libunwind.so dep/libunwind.so
+      export LIBUNWIND_LIBS="-L${PWD}/dep -lunwind"
+    }
     make_install_post() {
       rm -rf ${DEST}/var/log
       install -dm755 ${DEST}/etc/X11/xorg.conf.d

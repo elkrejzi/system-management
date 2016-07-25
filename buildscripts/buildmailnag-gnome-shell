@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=mailnag-gnome-shell
+export PKGVER=3.20.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/pulb/mailnag-gnome-shell/archive/v${PKGVER}.tar.gz"
+export MAKE_INSTALL_FLAGS="prefix=\${DEST}/usr"
+
+configure_override() {
+  unset CC
+}
+
+. $(dirname $0)/master.sh

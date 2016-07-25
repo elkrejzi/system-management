@@ -24,11 +24,14 @@ case $(basename $0) in
   buildevolution-data-server )
     export PKGNAME=evolution-data-server
     export PKGVER=3.20.4
-    export CONFIGURE_FLAGS=(--disable-google-auth
-                            --disable-uoa
+    export PATCHES_LIST=("eds-webkit2.patch")
+    export CONFIGURE_FLAGS=(--disable-uoa
                             --with-krb5=/usr
                             --with-openldap
                             --enable-vala-bindings)
+    configure_pre() {
+      sed -i "s:webkitgtk-3.0:webkit2gtk-4.0:g" configure
+    }
   ;;
   buildfolks )
     export PKGNAME=folks
@@ -270,6 +273,13 @@ case $(basename $0) in
   buildlibchamplain )
     export PKGNAME=libchamplain
     export PKGVER=0.12.13
+  ;;
+  buildlibcryptui )
+    export PKGNAME=libcryptui
+    export PKGVER=3.12.2
+    configure_pre() {
+      sed -i "/accepted_versions/s:2.0:& 2.1:g" configure
+    }
   ;;
   buildlibgdata )
     export PKGNAME=libgdata

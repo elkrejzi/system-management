@@ -2,10 +2,17 @@
 
 export PKGNAME=libkpathsea
 export PKGVER=20160523
-export PKGTAR=texlive-${PKGVER}-source.tar.xz
+export PKGTAR=texlive-${PKGVER}b-source.tar.xz
 export PKGDIR=texlive-${PKGVER}-source
 export PKGBUILD=texlive-${PKGVER}-source/texk/kpathsea
 export PKGURL="ftp://tug.org/texlive/historic/2015/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
+
+make_install_post() {
+  sed -i "s@TEXMFROOT = \$SELFAUTOPARENT@TEXMFROOT = /usr/share@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
+  sed -i "s@TEXMFSYSVAR = \$TEXMFROOT/texmf-var@TEXMFSYSVAR = /var/lib/texmf@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
+  sed -i "s@TEXMFSYSCONFIG = \$TEXMFROOT/texmf-config@TEXMFSYSCONFIG = /etc/texmf@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
+  sed -i "s@TEXMFHOME = ~/texmf@TEXMFHOME = ~/.texmf@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
+}
 
 . $(dirname $0)/master.sh

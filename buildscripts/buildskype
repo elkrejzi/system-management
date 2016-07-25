@@ -1,0 +1,82 @@
+#!/bin/bash -e
+
+export PKGNAME=skype
+export PKGVER=4.3.0.37
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="http://download.skype.com/linux/${PKGTAR}"
+
+export QTVER=4.8.7+dfsg-8
+export QPKGS=(http://ftp.de.debian.org/debian/pool/main/q/qtwebkit/libqtwebkit4_2.3.4.dfsg-8_i386.deb
+              http://ftp.de.debian.org/debian/pool/main/q/qt4-x11/libqt4-network_${QTVER}_i386.deb
+              http://ftp.de.debian.org/debian/pool/main/q/qt4-x11/libqtdbus4_${QTVER}_i386.deb
+              http://ftp.de.debian.org/debian/pool/main/q/qt4-x11/libqt4-xml_${QTVER}_i386.deb
+              http://ftp.de.debian.org/debian/pool/main/q/qt4-x11/libqt4-opengl_${QTVER}_i386.deb
+              http://ftp.de.debian.org/debian/pool/main/q/qt4-x11/libqt4-xmlpatterns_${QTVER}_i386.deb
+              http://ftp.de.debian.org/debian/pool/main/q/qt4-x11/libqtcore4_${QTVER}_i386.deb
+              http://ftp.de.debian.org/debian/pool/main/q/qt4-x11/libqtgui4_${QTVER}_i386.deb
+              http://ftp.de.debian.org/debian/pool/main/i/icu/libicu55_55.1-7_i386.deb
+              http://ftp.de.debian.org/debian/pool/main/n/nas/libaudio2_1.9.4-4_i386.deb
+              http://ftp.de.debian.org/debian/pool/main/libm/libmng/libmng1_1.0.10+dfsg-3.1+b3_i386.deb
+              http://ftp.de.debian.org/debian/pool/main/libd/libdbusmenu-qt/libdbusmenu-qt2_0.9.3+16.04.20160218-1_i386.deb
+              http://ftp.de.debian.org/debian/pool/main/s/sni-qt/sni-qt_0.2.7+15.10.20150729-2_i386.deb)
+
+configure_override() {
+cat > skype-wrapper << "EOF"
+#!/bin/sh
+
+export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib32/libv4l/v4l2convert.so"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}/usr/lib32/skype"
+
+export QT_PLUGIN_PATH="${QT_PLUGIN_PATH:+$QT_PLUGIN_PATH:}/usr/lib32/skype/plugins"
+export XDG_CONFIG_DIRS="${XDG_CONFIG_DIRS:+$XDG_CONFIG_DIRS:}/usr/lib32/skype/xdg"
+
+exec "/usr/lib32/skype/skype" "$@"
+EOF
+
+  chmod 755 skype-wrapper
+
+  rm -rf LICENSE README third-party_attributions.txt
+}
+
+make_override() {
+  for pkg in ${QPKGS[@]}
+  do
+      ar=$(basename ${pkg})
+      wget -c ${pkg}
+      ar x ${ar}
+      rm -rf ${ar}
+      tar xf data.tar.xz
+      rm -rf control.tar.gz data.tar.xz debian-binary
+  done
+
+  mv etc/xdg .
+  mv usr/lib/i386-linux-gnu/* .
+  mv qt4/plugins .
+
+  rm -rf etc usr qt4 qt-default
+
+  find . -name "*.so*" -exec chmod 755 {} \;
+}
+
+make_install_override() {
+  for s in 16 24 32 48 64 96 128 256
+  do
+    install -Dm644 icons/SkypeBlue_${s}x${s}.png ${DEST}/usr/share/icons/hicolor/${s}x${s}/apps/skype.png
+  done
+
+  rm -rf icons
+
+  install -dm755 ${DEST}/etc/dbus-1/system.d
+  install -dm755 ${DEST}/usr/bin ${DEST}/usr/lib32/skype
+  install -dm755 ${DEST}/usr/share/applications ${DEST}/usr/share/skype
+
+  mv skype.conf ${DEST}/etc/dbus-1/system.d/skype.conf
+  mv skype-wrapper ${DEST}/usr/bin/skype
+  mv skype.desktop ${DEST}/usr/share/applications/skype.desktop
+
+  mv avatars lang sounds ${DEST}/usr/share/skype
+
+  mv * ${DEST}/usr/lib32/skype
+}
+
+. $(dirname $0)/master.sh

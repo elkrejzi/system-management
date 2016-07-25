@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=poppler
-export PKGVER=0.45.0
+export PKGVER=0.46.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://poppler.freedesktop.org/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

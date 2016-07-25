@@ -33,7 +33,7 @@ then
 
       pushd ${PKGDIR}
         export PKGVER="$(cat VERSION | sed s/-devel//)-$(git describe | cut -d - -f 4)"
-        autoreconf -fi
+        #autoreconf -fi
       popd
 
       if [ -z ${DEST_SET} ]
@@ -75,8 +75,10 @@ configure_pre() {
 }
 
 configure_pre_32() {
-  autoreconf -fi
+  export LDFLAGS="$(clang -m32 -print-file-name=libclang_rt.builtins-i386.a)"
   export LLVM_CONFIG=/usr/bin/llvm-config32
+
+  autoreconf -fi
 }
 
 make_post() {
