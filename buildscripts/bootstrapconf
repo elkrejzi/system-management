@@ -257,7 +257,7 @@ cp -a /media/ntfs/Other/Linux/kernel_firmware/* /lib/firmware
 find /lib/firmware -type d -exec chmod 755 {} \;
 find /lib/firmware -type f -exec chmod 644 {} \;
 
-systemctl enable lightdm
+systemctl enable gdm
 
 echo "Entering password for user root:"
 passwd
@@ -282,7 +282,7 @@ Now run the following from outside the chroot
 
 export LFS=/mnt/lfs
 
-for D in AccountsService alsa bluetooth lightdm-data \
+for D in AccountsService alsa bluetooth \
          git mysql NetworkManager postgresql upower  \
          systemd/backlight systemd/rfkill
 do
