@@ -175,8 +175,6 @@ $(dirname $0)/buildgnome-terminal
 $(dirname $0)/buildgnome-user-docs
 $(dirname $0)/buildgupnp-components
 $(dirname $0)/builddleyna
-$(dirname $0)/buildlightdm
-$(dirname $0)/buildlightdm-gtk-greeter
 $(dirname $0)/buildmailnag
 $(dirname $0)/buildmailnag-gnome-shell
 $(dirname $0)/buildmailnag-goa-plugin
