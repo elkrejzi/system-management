@@ -5,11 +5,8 @@ export PKGVER=1.900.1
 export PKGTAR=${PKGNAME}-${PKGVER}.zip
 export PKGURL="http://www.ece.uvic.ca/~mdadams/jasper/software/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done")
-export MULTILIB_BUILD=1
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
 export PATCHES_LIST=("jasper.patch")
-export PATCHES_LIST_32=("jasper.patch")
 export CONFIGURE_FLAGS=(--enable-shared)
-export CONFIGURE_FLAGS_32=(--enable-shared)
 
 . $(dirname $0)/master.sh

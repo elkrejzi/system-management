@@ -6,21 +6,10 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/libproxy/libproxy/archive/${PKGVER}.tar.gz"
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
-export MULTILIB_BUILD=1
-
 export CMAKE_FLAGS=(-DCMAKE_SKIP_RPATH=ON
                     -DBUILD_TESTING=OFF
                     -DPERL_VENDORINSTALL=yes
-                    -DWITH_WEBKIT=OFF)
-
-export CMAKE_FLAGS_32=(${CMAKE_FLAGS[@]}
-                       -DLIB_INSTALL_DIR=/usr/lib32
-                       -DKF5_CONF=KF5_CONF-NOTFOUND
-                       -DWITH_GNOME3=OFF
-                       -DWITH_NM=OFF
-                       -DWITH_PERL=OFF
-                       -DWITH_PYTHON=OFF)
-
-CMAKE_FLAGS+=(-DWITH_VALA=ON)
+                    -DWITH_WEBKIT=OFF
+                    -DWITH_VALA=ON)
 
 . $(dirname $0)/master.sh

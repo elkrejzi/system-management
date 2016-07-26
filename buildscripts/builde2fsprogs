@@ -5,31 +5,17 @@ export PKGVER=1.43.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://downloads.sourceforge.net/e2fsprogs/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
-
-export COMMON_CONFIGURE_FLAGS=(--with-root-prefix=""
-                               --enable-elf-shlibs
-                               --disable-libblkid
-                               --disable-libuuid
-                               --disable-uuidd
-                               --disable-fsck)
-
-export CONFIGURE_FLAGS=("${COMMON_CONFIGURE_FLAGS[@]}")
-export CONFIGURE_FLAGS_32=("${COMMON_CONFIGURE_FLAGS[@]}"
-                           --disable-debugfs
-                           --disable-imager
-                           --disable-resizer)
+export CONFIGURE_FLAGS=(--with-root-prefix=""
+                        --enable-elf-shlibs
+                        --disable-libblkid
+                        --disable-libuuid
+                        --disable-uuidd
+                        --disable-fsck)
+export MAKE_INSTALL_FLAGS="install-libs"
 
 configure_override() {
   ./configure --prefix=/usr "${CONFIGURE_FLAGS[@]}"
 }
-
-configure_override_32() {
-  ./configure --prefix=/usr --libdir=/usr/lib32 "${CONFIGURE_FLAGS[@]}"
-}
-
-export MAKE_INSTALL_FLAGS="install-libs"
-export MAKE_INSTALL_FLAGS_32="install-libs"
 
 post_install_config() {
   for file in ${DEST}/usr/lib/*.so ; do ln -sf ../..$(readlink $file) $file ; done
@@ -37,8 +23,7 @@ post_install_config() {
   sed -i -e 's#^SS_DIR=.*#SS_DIR="/usr/share/ss"#' ${DEST}/usr/bin/mk_cmds
   sed -i -e 's#^ET_DIR=.*#ET_DIR="/usr/share/et"#' ${DEST}/usr/bin/compile_et
 
-  rm -f ${DEST}/usr/lib32/e2initrd_helper
-  rm -f ${DEST}/usr/lib{,32}/*.a
+  rm -f ${DEST}/usr/lib/*.a
 }
 
 . $(dirname $0)/master.sh

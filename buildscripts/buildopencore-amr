@@ -6,6 +6,5 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://downloads.sourceforge.net/opencore-amr/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
 
 . $(dirname $0)/master.sh

@@ -7,18 +7,12 @@ export PKGURL="https://www.libsdl.org/release/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export KEEP_STATIC=1
-export MULTILIB_BUILD=1
 export PATCHES_LIST=("SDL2-relative-mouse.patch")
-export PATCHES_LIST_32=("SDL2-relative-mouse.patch")
-
-export COMMON_CONFIGURE_FLAGS=(--enable-video-wayland
-                               --disable-alsa-shared
-                               --disable-x11-shared
-                               --disable-wayland-shared
-                               --disable-pulseaudio-shared)
-
-export CONFIGURE_FLAGS=("${COMMON_CONFIGURE_FLAGS[@]}")
-export CONFIGURE_FLAGS_32=("${COMMON_CONFIGURE_FLAGS[@]}")
+export CONFIGURE_FLAGS=(--enable-video-wayland
+                        --disable-alsa-shared
+                        --disable-x11-shared
+                        --disable-wayland-shared
+                        --disable-pulseaudio-shared)
 
 post_install_config() {
   rm -rf ${DEST}/usr/lib*/libSDL2.a

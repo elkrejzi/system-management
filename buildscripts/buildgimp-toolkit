@@ -2,14 +2,12 @@
 
 export MAKE_JOBS_FLAGS="-j4"
 export DEBUG_BUILD=1
-export MULTILIB_BUILD=1
 
 case $(basename $0) in
   buildatk )
     export PKGNAME=atk
     export PKGVER=2.20.0
     export DEST=/binary/${PKGNAME}-${PKGVER}
-    export CONFIGURE_FLAGS_32=(--disable-introspection)
   ;;
   buildat-spi2-atk )
     export PKGNAME=at-spi2-atk
@@ -18,7 +16,6 @@ case $(basename $0) in
   buildat-spi2-core )
     export PKGNAME=at-spi2-core
     export PKGVER=2.20.2
-    export CONFIGURE_FLAGS_32=(--disable-introspection)
   ;;
   buildcairo )
     export PKGNAME=cairo
@@ -26,6 +23,7 @@ case $(basename $0) in
     export DEST=/binary/${PKGNAME}-${PKGVER}
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="http://cairographics.org/releases/${PKGTAR}"
+    export MULTILIB_BUILD=1
     export CONFIGURE_FLAGS=(--enable-tee)
     export CONFIGURE_FLAGS_32=(--enable-tee)
     configure_post_32() {
@@ -42,7 +40,6 @@ case $(basename $0) in
                             --enable-wayland-compositor
                             --enable-x11-backend
                             --enable-evdev-input)
-    unset MULTILIB_BUILD
     configure_pre() {
       sed -i "/int main (void)/d" configure
     }
@@ -52,14 +49,12 @@ case $(basename $0) in
     export PKGVER=3.0.18
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
-    unset MULTILIB_BUILD
   ;;
   buildclutter-gtk )
     export PKGNAME=clutter-gtk
     export PKGVER=1.8.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
-    unset MULTILIB_BUILD
   ;;
   buildcogl )
     export PKGNAME=cogl
@@ -70,26 +65,21 @@ case $(basename $0) in
                             --enable-wayland-egl-platform
                             --enable-kms-egl-platform
                             --enable-xlib-egl-platform)
-    unset MULTILIB_BUILD
   ;;
   buildgdk-pixbuf )
     export PKGNAME=gdk-pixbuf
     export PKGVER=2.34.0
     export DEST=/binary/${PKGNAME}-${PKGVER}
     export CONFIGURE_FLAGS=(--with-x11 --with-libjasper)
-    export CONFIGURE_FLAGS_32=(--with-x11 --with-libjasper --disable-introspection)
-    make_install_post_32() {
-      export SPACE_ADDED=1
-      mv dest/usr/bin/gdk-pixbuf-query-loaders ${DEST}/usr/bin/gdk-pixbuf-query-loaders-32
-    }
-    export POSTINST_TRIGGER=("[ -x /usr/bin/gdk-pixbuf-query-loaders ] && echo \"Processing triggers for gdk-pixbuf-2.0\" && /usr/bin/gdk-pixbuf-query-loaders --update-cache"
-                             "[ -x /usr/bin/gdk-pixbuf-query-loaders-32 ] && echo \"Processing triggers for gdk-pixbuf-2.0 (32 bit)\" && /usr/bin/gdk-pixbuf-query-loaders-32 --update-cache")
+    export SPACE_ADDED=1
+    export POSTINST_TRIGGER=("[ -x /usr/bin/gdk-pixbuf-query-loaders ] && echo \"Processing triggers for gdk-pixbuf-2.0\" && /usr/bin/gdk-pixbuf-query-loaders --update-cache")
   ;;
   buildglib2 )
     export PKGNAME=glib
     export PKGVER=2.48.1
     export DEST=/binary/${PKGNAME}-${PKGVER}
     export KEEP_EMPTY_DIRS=1
+    export MULTILIB_BUILD=1
     export PATCHES_LIST=("glib-compile-schemas-quiet.patch")
     export CONFIGURE_FLAGS=(--with-pcre=system --with-python=/usr/bin/python3)
     export CONFIGURE_FLAGS_32=(--with-pcre=system)
@@ -107,20 +97,15 @@ case $(basename $0) in
     export PKGNAME=gobject-introspection
     export PKGVER=1.48.0
     export PYTHON=python3
-    unset MULTILIB_BUILD
   ;;
   buildgtk2 )
     export PKGNAME=gtk+
     export PKGVER=2.24.30
     export DEST=/binary/${PKGNAME}-${PKGVER}
     export CONFIGURE_FLAGS=(--enable-man)
-    export CONFIGURE_FLAGS_32=(--disable-introspection)
-    export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-query-immodules-2.0 ] && echo \"Processing triggers for gtk-2.0\" && /usr/bin/gtk-query-immodules-2.0 --update-cache"
-                             "[ -x /usr/bin/gtk-query-immodules-2.0-32 ] && echo \"Processing triggers for gtk-2.0 (32 bit)\" && /usr/bin/gtk-query-immodules-2.0-32 --update-cache")
+    export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-query-immodules-2.0 ] && echo \"Processing triggers for gtk-2.0\" && /usr/bin/gtk-query-immodules-2.0 --update-cache")
+    export SPACE_ADDED=1
     configure_pre() {
-      sed -i 's#l \(gtk-.*\).sgml#& -o \1#' docs/{faq,tutorial}/Makefile.in
-    }
-    configure_pre_32() {
       sed -i 's#l \(gtk-.*\).sgml#& -o \1#' docs/{faq,tutorial}/Makefile.in
     }
     make_install_post() {
@@ -132,18 +117,13 @@ gtk-theme-name = "Adwaita"
 gtk-font-name = "Cantarell 11"
 EOF
     }
-    make_install_post_32() {
-      export SPACE_ADDED=1
-      mv dest/usr/bin/gtk-query-immodules-2.0 ${DEST}/usr/bin/gtk-query-immodules-2.0-32
-    }
   ;;
   buildgtk3 )
     export PKGNAME=gtk+
     export PKGVER=3.20.6
     export CONFIGURE_FLAGS=(--enable-broadway-backend --enable-wayland-backend --enable-x11-backend --enable-man)
-    export CONFIGURE_FLAGS_32=("${CONFIGURE_FLAGS[@]}" --disable-cloudprint --disable-introspection --disable-libcanberra)
-    export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-query-immodules-3.0 ] && echo \"Processing triggers for gtk-3.0\" && /usr/bin/gtk-query-immodules-3.0 --update-cache"
-                             "[ -x /usr/bin/gtk-query-immodules-3.0-32 ] && echo \"Processing triggers for gtk-3.0 (32 bit)\" && /usr/bin/gtk-query-immodules-3.0-32 --update-cache")
+    export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-query-immodules-3.0 ] && echo \"Processing triggers for gtk-3.0\" && /usr/bin/gtk-query-immodules-3.0 --update-cache")
+    export SPACE_ADDED=1
     make_install_post() {
       rm -f ${DEST}/usr/share/man/man1/gtk3-*
 
@@ -154,21 +134,17 @@ gtk-theme-name = Adwaita
 gtk-font-name = Cantarell 11
 EOF
     }
-    make_install_post_32() {
-      export SPACE_ADDED=1
-      mv dest/usr/bin/gtk-query-immodules-3.0 ${DEST}/usr/bin/gtk-query-immodules-3.0-32
-    }
   ;;
   buildpango )
     export PKGNAME=pango
     export PKGVER=1.40.1
     export DEST=/binary/${PKGNAME}-${PKGVER}
+    export MULTILIB_BUILD=1
     export CONFIGURE_FLAGS_32=(--disable-introspection)
   ;;
   buildvala )
     export PKGNAME=vala
     export PKGVER=0.32.1
-    unset MULTILIB_BUILD
   ;;
 esac
 

@@ -6,26 +6,14 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGDIR=${PKGNAME}-${PKGVER/rc5/.0}
 export PKGURL="https://downloads.sourceforge.net/aa-project/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
-
-export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done\n"
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done\n"
                     "cp -rf --remove-destination usr/bin/aalib-config /usr/bin"
-                    "cp -rf --remove-destination usr/bin/aalib-config-32 /usr/bin\n"
                     "cp -rf --remove-destination usr/share/aclocal /usr/share"
                     "cp -rf --remove-destination usr/share/man/man3 /usr/share/man")
 
 configure_pre() {
   sed -i '/AM_PATH_AALIB,/s/AM_PATH_AALIB/[&]/' aalib.m4
   sed -i '203s/return;/return (1);/' src/aalinuxkbd.c
-}
-
-configure_pre_32() {
-  sed -i '/AM_PATH_AALIB,/s/AM_PATH_AALIB/[&]/' aalib.m4
-  sed -i '203s/return;/return (1);/' src/aalinuxkbd.c
-}
-
-make_install_post_32() {
-  mv dest/usr/bin/aalib-config ${DEST}/usr/bin/aalib-config-32
 }
 
 . $(dirname $0)/master.sh

@@ -5,7 +5,6 @@ export PKGVER=7.50.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://curl.haxx.se/download/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
 
 if [ -z $1 ]
 then
@@ -13,26 +12,5 @@ then
 fi
 
 export CONFIGURE_FLAGS=(--enable-threaded-resolver ${ADDITIONAL_CONFIGURE_FLAGS[@]})
-export CONFIGURE_FLAGS_32=(--enable-threaded-resolver ${ADDITIONAL_CONFIGURE_FLAGS[@]})
-
-make_install_post() {
-  mv ${DEST}/usr/include/curl/curlbuild.h ${DEST}/usr/include/curl/curlbuild-64.h
-
-cat > ${DEST}/usr/include/curl/curlbuild.h << "EOF"
-#include <bits/wordsize.h>
-
-#if __WORDSIZE == 32
-#include "curlbuild-32.h"
-#elif __WORDSIZE == 64
-#include "curlbuild-64.h"
-#else
-#error "Unknown word size"
-#endif
-EOF
-}
-
-make_install_post_32() {
-  mv dest/usr/include/curl/curlbuild.h ${DEST}/usr/include/curl/curlbuild-32.h
-}
 
 . $(dirname $0)/master.sh

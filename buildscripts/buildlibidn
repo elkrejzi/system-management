@@ -5,7 +5,6 @@ export PKGVER=1.33
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://ftp.gnu.org/gnu/libidn/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
 
 make_install_post() {
   rm -rf ${DEST}/usr/share/emacs ${DEST}/usr/share/info/*.png

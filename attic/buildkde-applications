@@ -37,6 +37,10 @@ case $(basename $0) in
   buildkhelpcenter )
     export PKGNAME=khelpcenter
   ;;
+  buildkile )
+    export PKGNAME=kile
+    export PKGVER=2.1+7b238c4
+  ;;
   buildkio-extras )
     export PKGNAME=kio-extras
   ;;
@@ -52,8 +56,15 @@ case $(basename $0) in
   buildlibkdcraw )
     export PKGNAME=libkdcraw
   ;;
+  buildlibkexiv2 )
+    export PKGNAME=libkexiv2
+  ;;
   buildlibkipi )
     export PKGNAME=libkipi
+  ;;
+  buildokular )
+    export PKGNAME=okular
+    export PKGVER=15.12.1+df0c412
   ;;
   buildsmb4k )
     export PKGNAME=smb4k

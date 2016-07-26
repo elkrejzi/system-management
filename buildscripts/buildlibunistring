@@ -5,6 +5,5 @@ export PKGVER=0.9.6
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://ftp.gnu.org/gnu/libunistring/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
 
 . $(dirname $0)/master.sh

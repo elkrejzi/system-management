@@ -10,39 +10,75 @@ build_all() {
   export PKG_AUTO_INSTALL=1
 
   $(dirname $0)/buildattica $1
+  $(dirname $0)/buildbluez-qt $1
   $(dirname $0)/buildbreeze-icons $1
+  $(dirname $0)/buildkapidox $1
   $(dirname $0)/buildkarchive $1
   $(dirname $0)/buildkcodecs $1
   $(dirname $0)/buildkconfig $1
   $(dirname $0)/buildkcoreaddons $1
   $(dirname $0)/buildkdbusaddons $1
+  $(dirname $0)/buildkdnssd $1
   $(dirname $0)/buildkguiaddons $1
   $(dirname $0)/buildki18n $1
+  $(dirname $0)/buildkidletime $1
+  $(dirname $0)/buildkitemmodels $1
   $(dirname $0)/buildkitemviews $1
+  $(dirname $0)/buildkplotting $1
+  $(dirname $0)/buildkwayland $1
   $(dirname $0)/buildkwidgetsaddons $1
   $(dirname $0)/buildkwindowsystem $1
+  $(dirname $0)/buildmodemmanager-qt $1
+  $(dirname $0)/buildnetworkmanager-qt $1
   $(dirname $0)/buildsolid $1
   $(dirname $0)/buildsonnet $1
+  $(dirname $0)/buildthreadweaver $1
   $(dirname $0)/buildkauth $1
   $(dirname $0)/buildkcompletion $1
   $(dirname $0)/buildkcrash $1
   $(dirname $0)/buildkdoctools $1
+  $(dirname $0)/buildkfilemetadata $1
+  $(dirname $0)/buildkimageformats $1
   $(dirname $0)/buildknotifications $1
   $(dirname $0)/buildkpty $1
+  $(dirname $0)/buildkunitconversion $1
   $(dirname $0)/buildkconfigwidgets $1
   $(dirname $0)/buildkglobalaccel $1
+  $(dirname $0)/buildkpackage $1
   $(dirname $0)/buildkservice $1
+  $(dirname $0)/buildkdesu $1
+  $(dirname $0)/buildkemoticons $1
   $(dirname $0)/buildkiconthemes $1
   $(dirname $0)/buildkjobwidgets $1
+  $(dirname $0)/buildkpeople $1
   $(dirname $0)/buildktextwidgets $1
   $(dirname $0)/buildkwallet $1
   $(dirname $0)/buildkxmlgui $1
   $(dirname $0)/buildkbookmarks $1
   $(dirname $0)/buildkio $1
+  $(dirname $0)/buildbaloo $1
   $(dirname $0)/buildframeworkintegration $1
+  $(dirname $0)/buildkactivities $1
+  $(dirname $0)/buildkdeclarative $1
   $(dirname $0)/buildkinit $1
+  $(dirname $0)/buildknewstuff $1
   $(dirname $0)/buildknotifyconfig $1
   $(dirname $0)/buildkparts $1
+  $(dirname $0)/buildkxmlrpcclient $1
+  $(dirname $0)/buildkactivities-stats $1
+  $(dirname $0)/buildkcmutils $1
+  $(dirname $0)/buildkded $1
+  $(dirname $0)/buildkdewebkit $1
+  $(dirname $0)/buildktexteditor $1
+  $(dirname $0)/buildplasma-framework $1
+  $(dirname $0)/buildkdesignerplugin $1
+  $(dirname $0)/buildkrunner $1
+  $(dirname $0)/buildkjs $1
+  $(dirname $0)/buildkdelibs4support $1
+  $(dirname $0)/buildkhtml $1
+  $(dirname $0)/buildkjsembed $1
+  $(dirname $0)/buildkmediaplayer $1
+  $(dirname $0)/buildkross $1
 
   find /binary/frameworks -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
 
@@ -58,6 +94,28 @@ case $(basename $0) in
   ;;
 esac
 
+case $(basename $0) in
+  buildbreeze-icons )
+    export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-update-icon-cache ] && echo \"Processing triggers for breeze-icon-theme\" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/breeze"
+                             "[ -x /usr/bin/gtk-update-icon-cache ] && echo \"Processing triggers for breeze-dark-icon-theme\" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/breeze-dark")
+    export NO_STRIP=1
+    export SPACE_ADDED=1
+    unset DEBUG_BUILD
+  ;;
+  buildkinit )
+    configure_pre() {
+      sed -i "/PROTECT/s#1#0#" ../${PKGDIR}/src/CMakeLists.txt
+    }
+ ;;
+  buildkdesu )
+    export POSTINST_TRIGGER=("chgrp nogroup /usr/lib/libexec/kf5/kdesud"
+                             "chmod 2755 /usr/lib/libexec/kf5/kdesud")
+  ;;
+  buildkdelibs4support )
+    export POSTINST_TRIGGER=("chmod 4755 /usr/lib/libexec/kf5/fileshareset")
+  ;;
+esac
+
 export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
                     -DKDE_INSTALL_LIBDIR=lib
                     -DBUILD_TESTING=OFF
@@ -67,39 +125,77 @@ export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
 
 frameworks=(
   attica
+  bluez-qt
   breeze-icons
+  kapidox
   karchive
   kcodecs
   kconfig
   kcoreaddons
   kdbusaddons
+  kdnssd
   kguiaddons
   ki18n
+  kidletime
+  kitemmodels
   kitemviews
+  kplotting
+  kwayland
   kwidgetsaddons
   kwindowsystem
+  modemmanager-qt
+  networkmanager-qt
   solid
   sonnet
+  threadweaver
   kauth
   kcompletion
   kcrash
   kdoctools
+  kfilemetadata
+  kimageformats
   knotifications
   kpty
+  kunitconversion
   kconfigwidgets
   kglobalaccel
+  kpackage
   kservice
+  kdesu
+  kemoticons
   kiconthemes
   kjobwidgets
+  kpeople
   ktextwidgets
   kwallet
   kxmlgui
   kbookmarks
   kio
+  baloo
   frameworkintegration
+  kactivities
+  kdeclarative
   kinit
+  knewstuff
   knotifyconfig
-  kparts )
+  kparts
+  kxmlrpcclient
+  kactivities-stats
+  kcmutils
+  kded
+  kdewebkit
+  ktexteditor
+  plasma-framework
+  kdesignerplugin
+  krunner )
+
+aids=(
+  kjs
+  kdelibs4support
+  khtml
+  kjsembed
+  kmediaplayer
+  kross )
 
 if [ -z $1 ]
 then
@@ -116,6 +212,21 @@ do
       export PKGNAME=${framework}
       export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
       export PKGURL="http://download.kde.org/stable/frameworks/${PKGVER%.0}/${PKGTAR}"
+      if [ ${BUILD_TYPE} == "git" ]
+      then
+        export PKGDIR=${framework}
+      fi
+    ;;
+  esac
+done
+
+for framework in ${aids[@]}
+do
+  case $(basename $0) in
+    build${framework} )
+      export PKGNAME=${framework}
+      export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+      export PKGURL="http://download.kde.org/stable/frameworks/${PKGVER%.0}/portingAids/${PKGTAR}"
       if [ ${BUILD_TYPE} == "git" ]
       then
         export PKGDIR=${framework}

@@ -5,15 +5,11 @@ export PKGVER=0.5.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://downloads.webmproject.org/releases/webp/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
-export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done")
-
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
 export CONFIGURE_FLAGS=(--enable-swap-16bit-csp
                         --enable-experimental
                         --enable-libwebpdecoder
                         --enable-libwebpdemux
                         --enable-libwebpmux)
-
-export CONFIGURE_FLAGS_32=(${CONFIGURE_FLAGS[@]})
 
 . $(dirname $0)/master.sh

@@ -6,26 +6,20 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tgz
 export PKGURL="ftp://ftp.openldap.org/pub/OpenLDAP/openldap-release/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1
-export MULTILIB_BUILD=1
 export PATCHES_LIST=("openldap-blfs-paths.patch" "openldap-symbol-versions.patch")
-export PATCHES_LIST_32=("openldap-blfs-paths.patch" "openldap-symbol-versions.patch")
-export MAKE_FLAGS_32="-C libraries"
-export MAKE_INSTALL_FLAGS_32="-C libraries"
-
-export COMMON_CONFIGURE_FLAGS=(--libexecdir=/usr/lib
-                               --disable-debug
-                               --enable-dynamic
-                               --enable-crypt
-                               --enable-modules
-                               --enable-rlookups
-                               --enable-backends=mod
-                               --enable-overlays=mod
-                               --disable-bdb
-                               --disable-hdb
-                               --disable-ndb)
-
-export CONFIGURE_FLAGS=("${COMMON_CONFIGURE_FLAGS[@]}" --enable-spasswd --enable-sql)
-export CONFIGURE_FLAGS_32=("${COMMON_CONFIGURE_FLAGS[@]}" --disable-spasswd --disable-sql)
+export CONFIGURE_FLAGS=(--libexecdir=/usr/lib
+                        --disable-debug
+                        --enable-dynamic
+                        --enable-crypt
+                        --enable-modules
+                        --enable-rlookups
+                        --enable-backends=mod
+                        --enable-overlays=mod
+                        --disable-bdb
+                        --disable-hdb
+                        --disable-ndb
+                        --enable-spasswd
+                        --enable-sql)
 
 configure_pre() {
   autoconf
@@ -33,15 +27,6 @@ configure_pre() {
 
 make_pre() {
   make depend
-}
-
-configure_pre_32() {
-  autoconf
-}
-
-configure_post_32() {
-  make -C include
-  make -C libraries depend
 }
 
 make_install_post() {

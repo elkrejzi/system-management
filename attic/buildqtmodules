@@ -10,14 +10,31 @@ case $(basename $0) in
   buildqtmodules )
     export PKG_AUTO_INSTALL=1
 
+    $(dirname $0)/buildqtimageformats
     $(dirname $0)/buildqtscript
+    $(dirname $0)/buildqtserialport
     $(dirname $0)/buildqtsvg
     $(dirname $0)/buildqtx11extras
     $(dirname $0)/buildqtxmlpatterns
     $(dirname $0)/buildqtdeclarative
+    $(dirname $0)/buildqtcharts
+    $(dirname $0)/buildqtconnectivity
+    $(dirname $0)/buildqtdatavis3d
+    $(dirname $0)/buildqtgamepad
+    $(dirname $0)/buildqtgraphicaleffects
+    $(dirname $0)/buildqtlocation
     $(dirname $0)/buildqtmultimedia
+    $(dirname $0)/buildqtquickcontrols
+    $(dirname $0)/buildqtquickcontrols2
+    $(dirname $0)/buildqtscxml
+    $(dirname $0)/buildqtsensors
+    $(dirname $0)/buildqtserialbus
     $(dirname $0)/buildqttools
+    $(dirname $0)/buildqtvirtualkeyboard
+    $(dirname $0)/buildqtwayland
+    $(dirname $0)/buildqtwebchannel
     $(dirname $0)/buildqtwebsockets
+    $(dirname $0)/buildqtwebengine
 
     find /binary/qt* -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
 
@@ -26,14 +43,31 @@ case $(basename $0) in
 esac
 
 qtmodules=(
+  qtimageformats
   qtscript
+  qtserialport
   qtsvg
   qtx11extras
   qtxmlpatterns
   qtdeclarative
+  qtcharts
+  qtconnectivity
+  qtdatavis3d
+  qtgamepad
+  qtgraphicaleffects
+  qtlocation
   qtmultimedia
+  qtquickcontrols
+  qtquickcontrols2
+  qtscxml
+  qtsensors
+  qtserialbus
   qttools
+  qtvirtualkeyboard
+  qtwayland
+  qtwebchannel
   qtwebsockets
+  qtwebengine
 )
 
 for qtmodule in ${qtmodules[@]}
@@ -53,6 +87,25 @@ export PKGURL="http://download.qt.io/official_releases/qt/5.7/${PKGVER}/submodul
 
 # development
 #export PKGURL="https://download.qt.io/development_releases/qt/5.7/${PKGVER}/submodules/${PKGTAR}"
+
+if [ ${PKGNAME} == "qtwebengine" ]
+then
+  configure_pre() {
+    # No debug symbols for this module. Taken from Debian
+    echo "QMAKE_CXXFLAGS -= -g" >> .qmake.conf
+    echo "QMAKE_CXXFLAGS -= -gstabs" >> .qmake.conf
+    echo "WEBENGINE_CONFIG += use_system_icu use_proprietary_codecs" >> .qmake.conf
+    unset DEBUG_BUILD
+
+    sed -i "/linux-clang/a linux-clang-libc++: GYP_CONFIG += clang=1 host_clang=1 clang_use_chrome_plugins=0 make_clang_dir=/usr use_libcpp=1 werror=" src/core/config/desktop_linux.pri
+    sed -i "/GCInfo.h/i #include <cstdlib>" src/3rdparty/chromium/third_party/WebKit/Source/platform/heap/GCInfo.cpp
+  }
+elif [ ${PKGNAME} == "qtconnectivity" ]
+then
+  configure_pre() {
+    sed -i "s#(bind(#(::bind(#g" src/bluetooth/lecmaccalculator.cpp
+  }
+fi
 
 configure_override() {
   qmake

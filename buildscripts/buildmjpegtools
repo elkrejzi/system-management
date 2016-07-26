@@ -6,10 +6,8 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://downloads.sourceforge.net/mjpeg/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
-export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done")
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
 export CONFIGURE_FLAGS=(--enable-largefile)
-export CONFIGURE_FLAGS_32=(--enable-largefile)
 
 make_install_post() {
   install -m644 mpeg2enc/mpeg2syntaxcodes.h ${DEST}/usr/include/mjpegtools/mpeg2enc/

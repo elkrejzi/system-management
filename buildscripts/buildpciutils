@@ -5,7 +5,6 @@ export PKGVER=3.5.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://www.kernel.org/pub/software/utils/pciutils/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
 
 configure_override() {
   wget http://pci-ids.ucw.cz/v2.2/pci.ids -O pci.ids
@@ -13,46 +12,23 @@ configure_override() {
   sed -i "s#gcc#${CC}#g" Makefile
 }
 
-configure_override_32() {
-  sed -i "s#gcc#${CC}#g" Makefile
-}
-
 make_override() {
-  if [ ${MULTILIB} == 1 ]
-  then
-    local CMD="lib/libpci.so.${PKGVER}"
-  else
-    local CMD=""
-  fi
-
   make PREFIX=/usr              \
        SHAREDIR=/usr/share/misc \
        SHARED=yes               \
        ZLIB=no                  \
-       OPT="${CFLAGS}" ${CMD} ${MAKE_JOBS_FLAGS}
+       OPT="${CFLAGS}" ${MAKE_JOBS_FLAGS}
 }
 
 make_install_override() {
-  if [ ${MULTILIB} == 1 ]
-  then
-    local CMD="LIBDIR=/usr/lib32"
-     install -dm755 ${DEST}/usr/lib32
-     ln -sf libpci.so.${PKGVER} ${DEST}/usr/lib32/libpci.so.3
-  else
-    local CMD="install"
-  fi
-
   make PREFIX=/usr              \
        SHAREDIR=/usr/share/misc \
        SHARED=yes               \
        ZLIB=no                  \
-       OPT="${CFLAGS}" install-lib ${CMD} DESTDIR=${DEST}
+       OPT="${CFLAGS}" install-lib install DESTDIR=${DEST}
 
-  if [ ${MULTILIB} == 1 ]
-  then
-    install -dm755 ${DEST}/usr/bin
-    mv ${DEST}/usr/sbin/lspci ${DEST}/usr/bin
-  fi
+  install -dm755 ${DEST}/usr/bin
+  mv ${DEST}/usr/sbin/lspci ${DEST}/usr/bin
 }
 
 . $(dirname $0)/master.sh

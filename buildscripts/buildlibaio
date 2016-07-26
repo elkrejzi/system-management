@@ -5,17 +5,7 @@ export PKGVER=0.3.110
 export PKGTAR=${PKGNAME}_${PKGVER}.orig.tar.gz
 export PKGURL="http://http.debian.net/debian/pool/main/liba/libaio/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
 export MAKE_INSTALL_FLAGS="prefix=\${DEST}/usr"
-export MAKE_INSTALL_FLAGS_32="prefix=\${PWD}/dest/usr libdir=\${PWD}/dest/usr/lib32"
-
-configure_override() {
-  export CFLAGS=${CFLAGS/-fstack-protector-strong/}
-}
-
-configure_override_32() {
-  export CFLAGS=${CFLAGS/-fstack-protector-strong/}
-}
 
 post_install_config() {
   rm -rf ${DEST}/usr/lib*/*.a

@@ -6,9 +6,7 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
 export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--disable-orbit)
-export CONFIGURE_FLAGS_32=(--disable-orbit)
 
 make_override() {
   make -C gconf gconfmarshal.c gconfmarshal.h

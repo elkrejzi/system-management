@@ -196,8 +196,8 @@ configure_pre() {
 }
 
 configure_pre_32() {
-  rm -rf ../${PKGDIR}/tools/{lld,lldb}
-  rm -rf ../${PKGDIR}/tools/clang/tools/extra
+  rm -rf ../${PKGDIR}/tools/{clang,lld,lldb}
+  rm -rf ../${PKGDIR}/projects/compiler-rt
 }
 
 configure_post_32() {

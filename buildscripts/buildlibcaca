@@ -6,13 +6,9 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://caca.zoy.org/files/libcaca/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
-
-export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done\n"
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done\n"
                     "cp -rf --remove-destination usr/bin/caca-config /usr/bin"
-                    "cp -rf --remove-destination usr/bin/caca-config-32 /usr/bin"
                     "cp -rf --remove-destination usr/share/man/man1/caca-config.1 /usr/share/man/man1")
-
 export CONFIGURE_FLAGS=(--disable-doc
                         --disable-gl
                         --disable-csharp
@@ -20,17 +16,5 @@ export CONFIGURE_FLAGS=(--disable-doc
                         --disable-java
                         --disable-python
                         --disable-ruby)
-
-export CONFIGURE_FLAGS_32=(${CONFIGURE_FLAGS[@]}
-                           --disable-cppunit
-                           --disable-imlib2)
-
-configure_pre_32() {
-  sed -i "/PKG_CONFIG/s:cppunit:& > 9999:" configure
-}
-
-make_install_post_32() {
-  mv dest/usr/bin/caca-config ${DEST}/usr/bin/caca-config-32
-}
 
 . $(dirname $0)/master.sh

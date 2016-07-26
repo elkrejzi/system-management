@@ -6,8 +6,6 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://downloads.sourceforge.net/mpg123/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--with-module-suffix=.so)
-export CONFIGURE_FLAGS_32=(--with-module-suffix=.so --with-cpu=i586)
 
 . $(dirname $0)/master.sh

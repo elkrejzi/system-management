@@ -96,9 +96,7 @@ case $(basename $0) in
   buildglib-networking )
     export PKGNAME=glib-networking
     export PKGVER=2.48.2
-    export MULTILIB_BUILD=1
-    export POSTINST_TRIGGER=("[ -x /usr/bin/gio-querymodules ] && echo \"Processing triggers for gio-2.0\" && /usr/bin/gio-querymodules /usr/lib/gio/modules"
-                             "[ -x /usr/bin/gio-querymodules-32 ] && echo \"Processing triggers for gio-2.0 (32 bit)\" && /usr/bin/gio-querymodules-32 /usr/lib32/gio/modules")
+    export POSTINST_TRIGGER=("[ -x /usr/bin/gio-querymodules ] && echo \"Processing triggers for gio-2.0\" && /usr/bin/gio-querymodules /usr/lib/gio/modules")
   ;;
   buildgmime )
     export PKGNAME=gmime
@@ -176,17 +174,7 @@ case $(basename $0) in
   buildgnome-themes-standard )
     export PKGNAME=gnome-themes-standard
     export PKGVER=3.20.2
-    export MULTILIB_BUILD=1
     export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-update-icon-cache ] && echo \"Processing triggers for hicolor-icon-theme\" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/HighContrast")
-    export MAKE_FLAGS_32="-C themes/Adwaita/gtk-2.0 libadwaita.la"
-    make_install_override() {
-      if [ ${MULTILIB} == 0 ]
-      then
-        make install ${ADDITIONAL_MAKE_INSTALL_FLAGS}
-      else
-        make -C themes/Adwaita/gtk-2.0 install-engineLTLIBRARIES ${ADDITIONAL_MAKE_INSTALL_FLAGS}
-      fi
-    }
   ;;
   buildgnome-user-docs )
     export PKGNAME=gnome-user-docs
@@ -303,8 +291,6 @@ case $(basename $0) in
   buildlibgudev )
     export PKGNAME=libgudev
     export PKGVER=230
-    export MULTILIB_BUILD=1
-    export CONFIGURE_FLAGS_32=(--disable-introspection)
   ;;
   buildlibgweather )
     export PKGNAME=libgweather
@@ -334,11 +320,8 @@ case $(basename $0) in
   buildlibrsvg )
     export PKGNAME=librsvg
     export PKGVER=2.40.16
-    export MULTILIB_BUILD=1
-    export POSTINST_TRIGGER=("[ -x /usr/bin/gdk-pixbuf-query-loaders ] && echo \"Processing triggers for gdk-pixbuf-2.0\" && /usr/bin/gdk-pixbuf-query-loaders --update-cache"
-                             "[ -x /usr/bin/gdk-pixbuf-query-loaders-32 ] && echo \"Processing triggers for gdk-pixbuf-2.0 (32 bit)\" && /usr/bin/gdk-pixbuf-query-loaders-32 --update-cache")
+    export POSTINST_TRIGGER=("[ -x /usr/bin/gdk-pixbuf-query-loaders ] && echo \"Processing triggers for gdk-pixbuf-2.0\" && /usr/bin/gdk-pixbuf-query-loaders --update-cache")
     export CONFIGURE_FLAGS=(--enable-vala)
-    export CONFIGURE_FLAGS_32=(--disable-introspection)
     make_install_post() {
       export SPACE_ADDED=1
     }
@@ -350,9 +333,7 @@ case $(basename $0) in
   buildlibsoup )
     export PKGNAME=libsoup
     export PKGVER=2.54.1
-    export MULTILIB_BUILD=1
     export CONFIGURE_FLAGS=(--disable-tls-check)
-    export CONFIGURE_FLAGS_32=(--disable-introspection --disable-tls-check --disable-vala)
   ;;
   buildlibwnck )
     export PKGNAME=libwnck

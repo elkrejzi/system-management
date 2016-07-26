@@ -2,29 +2,24 @@
 
 export PKGVER=1.8.2
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
-export DEFAULT_CXX="clang++ -std=c++11"
-export DEFAULT_CXX_32="clang++ -std=c++11 -m32"
 
 case $(basename $0) in
   buildgst-libav )
     export PKGNAME=gst-libav
     export MODULE=" Libav Plugins"
-    export CONFIGURE_ADD_32=(--with-libav-extra-configure="--disable-inline-asm")
   ;;
   buildgst-plugins-bad )
     export PKGNAME=gst-plugins-bad
     export MODULE=" Bad Plugins"
-    export CONFIGURE_ADD_32=(--build=i686-unknown-linux-gnu --disable-chromaprint --disable-qt --disable-teletextdec --disable-zbar)
   ;;
   buildgst-plugins-base )
     export PKGNAME=gst-plugins-base
     export MODULE=" Base Plugins"
+    export MULTILIB_BUILD=1
   ;;
   buildgst-plugins-good )
     export PKGNAME=gst-plugins-good
     export MODULE=" Good Plugins"
-    export CONFIGURE_ADD_32=(--build=i686-unknown-linux-gnu)
   ;;
   buildgst-plugins-ugly )
     export PKGNAME=gst-plugins-ugly
@@ -32,6 +27,7 @@ case $(basename $0) in
   ;;
   buildgstreamer )
     export PKGNAME=gstreamer
+    export MULTILIB_BUILD=1
   ;;
   buildgstreamer-vaapi )
     export PKGNAME=gstreamer-vaapi
@@ -46,7 +42,7 @@ export CONFIGURE_FLAGS=(--libexecdir=/usr/lib "${EXTRA_ARGS[@]}")
 export CONFIGURE_FLAGS_32=(--libexecdir=/usr/lib32
                            --disable-examples
                            --disable-introspection
-                           "${EXTRA_ARGS[@]}" "${CONFIGURE_ADD_32[@]}")
+                           "${EXTRA_ARGS[@]}")
 
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://gstreamer.freedesktop.org/src/${PKGNAME}/${PKGTAR}"

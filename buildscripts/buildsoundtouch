@@ -7,13 +7,8 @@ export PKGDIR=${PKGNAME}
 export PKGURL="http://www.surina.net/soundtouch/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
 
 configure_pre() {
-  ./bootstrap
-}
-
-configure_pre_32() {
   ./bootstrap
 }
 

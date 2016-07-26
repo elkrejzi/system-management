@@ -8,19 +8,14 @@ export PKGDIR=${PKGNAME}-${PKGVER}
 export PKGBUILD=${PKGDIR}/src
 export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1
-export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS=(--localstatedir=/var/lib
+                        --enable-dns-for-realm
+                        --with-system-et
+                        --with-system-ss
+                        --with-ldap
+                        --without-system-verto)
 
-export COMMON_CONFIGURE_FLAGS=(--localstatedir=/var/lib
-                               --enable-dns-for-realm
-                               --with-system-et
-                               --with-system-ss
-                               --with-ldap
-                               --without-system-verto)
-
-export CONFIGURE_FLAGS=("${COMMON_CONFIGURE_FLAGS[@]}")
-export CONFIGURE_FLAGS_32=("${COMMON_CONFIGURE_FLAGS[@]}" --without-tcl --disable-aesni)
-
-configure_pre_common() {
+configure_pre() {
   sed -e "s@python2.5/Python.h@& python2.7/Python.h@g" \
       -e "s@-lpython2.5]@&,\n  AC_CHECK_LIB(python2.7,main,[PYTHON_LIB=-lpython2.7])@g" \
       -i configure.in
@@ -29,14 +24,6 @@ configure_pre_common() {
       -i util/ac_check_krb5.m4
 
   autoconf
-}
-
-configure_pre() {
-  configure_pre_common
-}
-
-configure_pre_32() {
-  configure_pre_common
 }
 
 make_install_post() {

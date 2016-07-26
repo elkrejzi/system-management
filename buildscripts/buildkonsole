@@ -1,1 +1,18 @@
-buildkde-applications
+#!/bin/bash -e
+
+export PKGNAME=konsole
+export PKGVER=16.07.80
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export DEST=/binary/plasma/${PKGNAME}-${PKGVER}
+export PKGURL="http://download.kde.org/unstable/applications/${PKGVER}/src/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export KEEP_DOC=1
+export CMAKE_FLAGS=(-DSYSCONF_INSTALL_DIR=/etc
+                    -DKDE_INSTALL_LIBDIR=lib
+                    -DBUILD_TESTING=OFF
+                    -DQML_INSTALL_DIR=lib/qt5/qml
+                    -DQT_PLUGIN_INSTALL_DIR=lib/qt5/plugins
+                    -DECM_MKSPECS_INSTALL_DIR=/usr/lib/qt5/mkspecs/modules)
+
+. $(dirname $0)/master.sh

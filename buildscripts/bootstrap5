@@ -10,14 +10,10 @@ export PKG_AUTO_INSTALL=1
 $(dirname $0)/buildfceux
 $(dirname $0)/buildpcsxr
 $(dirname $0)/buildyoutube-dl
-$(dirname $0)/buildkde-frameworks
+#$(dirname $0)/buildkde-frameworks
 $(dirname $0)/buildadwaita-qt
 $(dirname $0)/buildQGnomePlatform
-$(dirname $0)/buildlibkexiv2
-$(dirname $0)/buildsnorenotify
-$(dirname $0)/buildokular
-$(dirname $0)/buildkid3
-$(dirname $0)/buildkile
+#$(dirname $0)/buildsnorenotify
 $(dirname $0)/buildkonsole
 $(dirname $0)/buildquassel
 $(dirname $0)/buildacpica

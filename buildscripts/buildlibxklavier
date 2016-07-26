@@ -4,7 +4,6 @@ export PKGNAME=libxklavier
 export PKGVER=5.4
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://ftp.osuosl.org/pub/blfs/conglomeration/libxklavier/${PKGTAR}"
-export DEST=/binary/mate/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 
 . $(dirname $0)/master.sh

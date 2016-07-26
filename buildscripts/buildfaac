@@ -6,16 +6,10 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://downloads.sourceforge.net/faac/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
-export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done")
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
 export PATCHES_LIST=("faac-fixes.patch")
-export PATCHES_LIST_32=("faac-fixes.patch")
 
 configure_pre() {
-  sed -i -e '/obj-type/d' -e '/Long Term/d' frontend/main.c
-}
-
-configure_pre_32() {
   sed -i -e '/obj-type/d' -e '/Long Term/d' frontend/main.c
 }
 

@@ -5,6 +5,5 @@ export PKGVER=0.6.11
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://download.gnome.org/sources//libcroco/${PKGVER:0:3}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
 
 . $(dirname $0)/master.sh

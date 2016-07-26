@@ -7,19 +7,12 @@ export PKGURL="https://cups.org/software/${PKGVER}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1
 export KEEP_STATIC=1
-export MULTILIB_BUILD=1
 export POSTINST_TRIGGER=("getent group lpadmin > /dev/null || groupadd -g 19 lpadmin")
-
 export CONFIGURE_FLAGS=(--with-rcdir=/tmp/cupsinit
                         --with-docdir=/usr/share/cups/doc
                         --with-system-groups=lpadmin
                         --with-icondir=/usr/share/icons
                         --with-menudir=/usr/share/applications)
-
-export CONFIGURE_FLAGS_32=(--disable-libusb
-                           --disable-avahi
-                           --disable-dbus
-                           --disable-pam)
 
 configure_pre() {
   sed -i "/MAN.*.EXT/s:.gz::g" configure config-scripts/cups-manpages.m4
@@ -36,17 +29,8 @@ session include system-session
 EOF
 }
 
-configure_pre_32() {
-  sed -i "/MAN.*.EXT/s:.gz::g" configure config-scripts/cups-manpages.m4
-}
-
 make_install_override() {
-  if [ ${MULTILIB} == 1 ]
-  then
-    make install-libs BUILDROOT=${PWD}/dest
-  else
-    make install BUILDROOT=${DEST}
-  fi
+  make install BUILDROOT=${DEST}
 }
 
 post_install_config() {
