@@ -6,4 +6,7 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://downloads.sourceforge.net/strace/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
+# FIXME: linux-api-headers-4.7 problem
+exit 0
+
 . $(dirname $0)/master.sh

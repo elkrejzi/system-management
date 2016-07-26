@@ -10,10 +10,10 @@ export PKG_AUTO_INSTALL=1
 $(dirname $0)/buildfceux
 $(dirname $0)/buildpcsxr
 $(dirname $0)/buildyoutube-dl
-#$(dirname $0)/buildkde-frameworks
+$(dirname $0)/buildkde-frameworks
 $(dirname $0)/buildadwaita-qt
 $(dirname $0)/buildQGnomePlatform
-#$(dirname $0)/buildsnorenotify
+$(dirname $0)/buildsnorenotify
 $(dirname $0)/buildkonsole
 $(dirname $0)/buildquassel
 $(dirname $0)/buildacpica
@@ -24,7 +24,6 @@ $(dirname $0)/buildvirglrenderer
 $(dirname $0)/buildseabios
 $(dirname $0)/buildqemu
 $(dirname $0)/buildlibreoffice-upstream
-$(dirname $0)/buildwine
 $(dirname $0)/buildtexlive
 
 pushd /binary
