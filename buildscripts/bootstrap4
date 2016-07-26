@@ -82,10 +82,7 @@ $(dirname $0)/buildlibpaper
 $(dirname $0)/buildlibpeas
 $(dirname $0)/buildlibpwquality
 $(dirname $0)/buildlibspectre
-$(dirname $0)/buildlibunique
 $(dirname $0)/buildlibwnck
-$(dirname $0)/buildlibxklavier
-$(dirname $0)/buildmate-desktop
 $(dirname $0)/buildnetwork-manager-applet
 $(dirname $0)/buildprelink
 $(dirname $0)/buildspice-protocol
@@ -101,7 +98,6 @@ $(dirname $0)/buildzenity
 $(dirname $0)/buildzziplib
 $(dirname $0)/buildaccountsservice
 $(dirname $0)/buildatkmm
-$(dirname $0)/buildcaja
 $(dirname $0)/buildclutter-gst
 $(dirname $0)/buildclutter-gtk
 $(dirname $0)/buildgegl
@@ -254,21 +250,11 @@ $(dirname $0)/buildunrar
 $(dirname $0)/buildvalgrind
 $(dirname $0)/buildwhois
 $(dirname $0)/buildxfsprogs
-$(dirname $0)/buildjdk
-$(dirname $0)/buildgoogle-chrome
-$(dirname $0)/buildsteam
 $(dirname $0)/buildGConf
-$(dirname $0)/buildgnutls28
-$(dirname $0)/buildlibgcrypt15
+$(dirname $0)/buildgoogle-chrome
+$(dirname $0)/buildjdk
 $(dirname $0)/buildlibjpeg-turbo6
-$(dirname $0)/buildlibpng12
-$(dirname $0)/buildudev
-$(dirname $0)/buildlibdbusmenu
-$(dirname $0)/buildlibdbusmenu-gtk2
-$(dirname $0)/buildlibindicator
-$(dirname $0)/buildlibindicator-gtk2
-$(dirname $0)/buildlibappindicator
-$(dirname $0)/buildlibappindicator-gtk2
+$(dirname $0)/buildsteam
 
 find /binary -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
 

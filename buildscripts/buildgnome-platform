@@ -274,13 +274,6 @@ case $(basename $0) in
     export PKGNAME=libchamplain
     export PKGVER=0.12.13
   ;;
-  buildlibcryptui )
-    export PKGNAME=libcryptui
-    export PKGVER=3.12.2
-    configure_pre() {
-      sed -i "/accepted_versions/s:2.0:& 2.1:g" configure
-    }
-  ;;
   buildlibgdata )
     export PKGNAME=libgdata
     export PKGVER=0.17.5

@@ -38,14 +38,6 @@ case $(basename $0) in
       ln -sf ../../evince/mozilla/libevbrowserplugin.so ${DEST}/usr/lib/mozilla/plugins/libevbrowserplugin.so
     }
   ;;
-  buildevolution )
-    export PKGNAME=evolution
-    export PKGVER=3.20.4
-    export CONFIGURE_FLAGS=(--disable-autoar
-                            --enable-contact-maps
-                            --with-openldap
-                            --without-spamassassin)
-  ;;
   buildfile-roller )
     export PKGNAME=file-roller
     export PKGVER=3.20.2

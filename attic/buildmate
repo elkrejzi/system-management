@@ -9,6 +9,14 @@ case $(basename $0) in
     export PKGVER=1.12.2
     export CONFIGURE_FLAGS=(--enable-pixbuf)
   ;;
+  buildcaja )
+    export PKGNAME=caja
+    export PKGVER=1.14.1
+    export CONFIGURE_FLAGS=(--disable-packagekit
+                            --disable-update-mimedb
+                            --disable-icon-update
+                            --disable-schemas-compile)
+  ;;
   buildcaja-extensions )
     export PKGNAME=caja-extensions
     export PKGVER=1.12.0
@@ -49,6 +57,11 @@ case $(basename $0) in
   buildmate-control-center )
     export PKGNAME=mate-control-center
     export PKGVER=1.12.1
+  ;;
+  buildmate-desktop )
+    export PKGNAME=mate-desktop
+    export PKGVER=1.14.1
+    export CONFIGURE_FLAGS=(--disable-desktop-docs)
   ;;
   buildmate-icon-theme )
     export PKGNAME=mate-icon-theme

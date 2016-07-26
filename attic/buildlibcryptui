@@ -1,1 +1,13 @@
-buildgnome-platform
+#!/bin/bash -e
+
+export PKGNAME=libcryptui
+export PKGVER=3.12.2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
+export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:4}/${PKGTAR}"
+
+configure_pre() {
+  sed -i "/accepted_versions/s:2.0:& 2.1:g" configure
+}
+
+. $(dirname $0)/master.sh
