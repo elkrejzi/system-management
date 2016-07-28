@@ -1,0 +1,560 @@
+# Build finished on Mar 27 2016. Build duration: 1 day 3 hours 3 minutes 40 seconds
+
+# Begin Sun Apr  3 11:26:53 UTC 2016
+
+Rebuild dbus-glib-0.106 to add 32 bit libraries
+Rebuild pciutils-3.4.1 to add 32 bit libraries
+
+Updated to alsa-lib-1.1.1
+Updated to clutter-gtk-1.8.0
+Updated to cython-0.23.5
+Updated to dhcp-4.3.4
+Updated to elfutils-0.166
+Updated to ffmpeg-3.0.1
+Updated to giflib-5.1.4
+Updated to git-2.8.0
+Updated to glibmm-2.48.1
+Updated to graphite2-1.3.8
+Updated to gtk+-3.20.2
+Updated to gtksourceview-3.20.1
+Updated to gzip-1.7
+Updated to ImageMagick-6.9.3-7
+Updated to iso-codes-3.67
+Updated to libmbim-1.12.4
+Updated to libqmi-1.12.10
+Updated to librsvg-2.40.15
+Updated to lightdm-1.18.0
+Updated to LVM2-2.02.149
+Updated to NetworkManager-1.1.92, added 32 bit libraries
+Updated to perl-archive-zip-1.57
+Updated to php-7.0.5
+Updated to postgresql-9.5.2
+Updated to python-setuptools-20.6.7
+Updated to qemu-2.5.1
+Updated to sqlite-3.12.0
+Updated to whois-5.2.12
+Updated to xapian-core-1.2.23
+Updated to alsa-plugins-1.1.1
+Updated to alsa-utils-1.1.1
+Updated to gedit-3.20.1
+Updated to ModemManager-1.4.14
+Updated to network-manager-applet-1.1.92
+Updated to pangomm-2.40.0
+Updated to gtkmm-3.20.0
+
+python-isodate-0.5.4
+python-rdflib-4.2.1
+zeitgeist-0.9.16
+libchamplain-0.12.13
+libcue-2.0.1
+libgrss-0.7.0
+libgsf-1.14.36
+libiptcdata-1.0.4
+libmediaart-1.9.0
+libosinfo-0.3.0
+tracker-1.8.0
+gegl-0.3.6
+gexiv2-0.10.3
+gfbgraph-0.2.3
+gom-0.3.2
+gsound-1.0.2
+libdmapsharing-2.9.34
+libzapojit-0.0.3
+gnome-online-miners-3.20.0
+grilo-plugins-0.3.1
+folks-0.11.2
+telepathy-idle-0.2.0
+dconf-editor-3.20.0
+gnome-calendar-3.20.0
+gnome-clocks-3.20.0
+gnome-contacts-3.19.91
+gnome-documents-3.20.0
+gnome-maps-3.20.0
+gnome-photos-3.20.0
+gnome-todo-3.20.0
+gnome-weather-3.20.0
+polari-3.20.0
+
+steam-1.0.0.52
+
+GConf-3.2.6 32 and 64 bit, versioned .so only
+gnutls-3.3.19 32 and 64 bit, versioned .so only
+libgcrypt-1.5.5 32 and 64 bit, versioned .so only
+libjpeg-turbo6-1.4.2 32 and 64 bit, versioned .so version 6 only
+libpng-1.2.56 32 and 64 bit, versioned .so only
+udev-182 32 and 64 bit, versioned .so version 0 only
+
+libdbusmenu-16.04.0 32 and 64 bit, GTK+2 and GTK+3 version
+libindicator-12.10.1 32 and 64 bit, GTK+2 and GTK+3 version
+libappindicator-12.10.0 32 and 64 bit, GTK+2 and GTK+3 version
+
+Updated to kde-cli-tools-5.6.1
+Updated to kdecoration-5.6.1
+Updated to kscreenlocker-5.6.1
+Updated to kwayland-5.6.1
+Updated to libkscreen-5.6.1
+Updated to libksysguard-5.6.1
+Updated to breeze-5.6.1
+Updated to breeze-gtk-5.6.1
+Updated to oxygen-5.6.1
+Updated to khelpcenter-5.6.1
+Updated to kinfocenter-5.6.1
+Updated to ksysguard-5.6.1
+Updated to kwin-5.6.1
+Updated to systemsettings-5.6.1
+Updated to plasma-workspace-5.6.1
+Updated to bluedevil-5.6.1
+Updated to kactivitymanagerd-5.6.1
+Updated to kde-gtk-config-5.6.1
+Updated to khotkeys-5.6.1
+Updated to kmenuedit-5.6.1
+Updated to kscreen-5.6.1
+Updated to kwayland-integration-5.6.1
+Updated to kwrited-5.6.1
+Updated to milou-5.6.1
+Updated to plasma-nm-5.6.1
+Updated to plasma-pa-5.6.1
+Updated to plasma-workspace-wallpapers-5.6.1
+Updated to polkit-kde-agent-1-5.6.1
+Updated to powerdevil-5.6.1
+Updated to plasma-desktop-5.6.1
+Updated to kdeplasma-addons-5.6.1
+
+vulkan-runtime-1.0.8 32 and 64 bit
+
+# End Sun Apr  3 13:14:05 UTC 2016
+
+# Begin Sun Apr 10 11:01:57 UTC 2016
+
+Updated to bluez-5.39
+Updated to epiphany-3.20.1
+Updated to flashplayer-11.2.202.616
+Updated to fontconfig-2.11.95
+Updated to git-2.8.1
+Updated to gnome-disk-utility-3.20.1
+Updated to harfbuzz-1.2.6
+Updated to inputproto-2.3.2
+Updated to libreoffice-5.1.2.2
+Updated to libxkbcommon-0.6.1
+Updated to live-media-2016.04.01
+Updated to LVM2-2.02.150
+Updated to mate-desktop-1.14.0
+Updated to mesa-11.2.0
+Updated to NetworkManager-1.1.93
+Updated to scons-2.5.0
+Updated to sqlite-3.12.1
+Updated to thunderbird-45.0b4
+Updated to tidy-html5-5.2.0
+Updated to xorg-server-1.18.3
+Updated to caja-1.14.0
+Updated to network-manager-applet-1.1.93
+Updated to xf86-input-libinput-0.18.0
+Updated to xf86-video-amdgpu-1.1.0
+Updated to xf86-video-intel-2.99.917 (git snapshot)
+
+Updated to extra-cmake-modules-5.21.0
+Updated to attica-5.21.0
+Updated to bluez-qt-5.21.0
+Updated to breeze-icons-5.21.0
+Updated to kapidox-5.21.0
+Updated to karchive-5.21.0
+Updated to kcodecs-5.21.0
+Updated to kconfig-5.21.0
+Updated to kcoreaddons-5.21.0
+Updated to kdbusaddons-5.21.0
+Updated to kdnssd-5.21.0
+Updated to kguiaddons-5.21.0
+Updated to ki18n-5.21.0
+Updated to kidletime-5.21.0
+Updated to kimageformats-5.21.0
+Updated to kitemmodels-5.21.0
+Updated to kitemviews-5.21.0
+Updated to kplotting-5.21.0
+Updated to kwidgetsaddons-5.21.0
+Updated to kwindowsystem-5.21.0
+Updated to modemmanager-qt-5.21.0
+Updated to networkmanager-qt-5.21.0
+Updated to solid-5.21.0
+Updated to sonnet-5.21.0
+Updated to threadweaver-5.21.0
+Updated to kauth-5.21.0
+Updated to kcompletion-5.21.0
+Updated to kcrash-5.21.0
+Updated to kdoctools-5.21.0
+Updated to kfilemetadata-5.21.0
+Updated to knotifications-5.21.0
+Updated to kpty-5.21.0
+Updated to kunitconversion-5.21.0
+Updated to kconfigwidgets-5.21.0
+Updated to kglobalaccel-5.21.0
+Updated to kpackage-5.21.0
+Updated to kservice-5.21.0
+Updated to kdesu-5.21.0
+Updated to kemoticons-5.21.0
+Updated to kiconthemes-5.21.0
+Updated to kjobwidgets-5.21.0
+Updated to kpeople-5.21.0
+Updated to ktextwidgets-5.21.0
+Updated to kwallet-5.21.0
+Updated to kxmlgui-5.21.0
+Updated to kbookmarks-5.21.0
+Updated to kio-5.21.0
+Updated to baloo-5.21.0
+Updated to frameworkintegration-5.21.0
+Updated to kactivities-5.21.0
+Updated to kdeclarative-5.21.0
+Updated to kinit-5.21.0
+Updated to knewstuff-5.21.0
+Updated to knotifyconfig-5.21.0
+Updated to kparts-5.21.0
+Updated to kxmlrpcclient-5.21.0
+
+kactivities-stats-5.21.0
+
+Updated to kcmutils-5.21.0
+Updated to kded-5.21.0
+Updated to kdewebkit-5.21.0
+Updated to ktexteditor-5.21.0
+Updated to plasma-framework-5.21.0
+Updated to kdesignerplugin-5.21.0
+Updated to kjs-5.21.0
+Updated to kdelibs4support-5.21.0
+Updated to khtml-5.21.0
+Updated to kjsembed-5.21.0
+Updated to kmediaplayer-5.21.0
+Updated to kross-5.21.0
+Updated to krunner-5.21.0
+
+Removed brltty-5.3.1
+Removed chromium-49.0.2623.108
+Removed chromium-pepper-flash-21.0.0.197
+Removed cython-0.23.5
+Removed dotconf-1.3
+Removed espeak-1.48.04
+Removed fontforge-20150824
+Removed foomatic-db-4.0-20160314
+Removed foomatic-db-engine-4.0-20160314
+Removed hplip-3.16.2
+Removed ninja-1.6.0
+Removed python-notify-0.1.1
+Removed python-pillow-3.1.1
+Removed python-reportlab-3.3.0
+Removed python-unidecode-0.04.19
+Removed re2c-0.16
+Removed speech-dispatcher-0.8.3
+
+google-chrome-49.0.2623.112
+
+Rebuild qemu-2.5.1 without brltty support
+
+# End Sun Apr 10 14:47:13 UTC 2016
+
+# Begin Sun Apr 17 15:20:42 UTC 2016
+
+Updated to at-spi2-atk-2.20.1
+Updated to at-spi2-core-2.20.1
+Updated to cheese-3.20.1
+Updated to cmake-3.5.2
+Updated to db-6.2.23
+Updated to dconf-editor-3.20.1
+Updated to dejagnu-1.6
+Updated to eog-3.20.1
+Updated to evolution-data-server-3.20.1
+Updated to file-roller-3.20.1
+Updated to firefox-45.0.2
+Updated to gcc-6-20160410
+Updated to geocode-glib-3.20.1
+Updated to gnome-calendar-3.20.1
+Updated to gnome-control-center-3.20.1
+Updated to gnome-desktop-3.20.1
+Updated to gnome-logs-3.20.1
+Updated to gnome-maps-3.20.1
+Updated to gnome-online-accounts-3.20.1
+Updated to gnome-photos-3.20.1
+Updated to gnome-session-3.20.1
+Updated to gnome-settings-daemon-3.20.1
+Updated to gnome-shell-3.20.1
+Updated to gnome-system-monitor-3.20.1
+Updated to gnome-terminal-3.20.1
+Updated to gnome-user-docs-3.20.1
+Updated to gnutls-3.4.11
+Updated to google-chrome-50.0.2661.75
+Updated to gspell-1.0.1
+Updated to gtk+-3.20.3
+Updated to gtkmm-3.20.1
+Updated to gvfs-1.28.1
+Updated to httpd-2.4.20
+Updated to ImageMagick-6.9.3-8
+Updated to libgcrypt-1.7.0
+Updated to libinput-1.2.3
+Updated to libtasn1-4.8
+Updated to linux-4.5.1-krejzi
+Updated to mesa-11.3.0-gf30f6e2 (git snapshot)
+Updated to mpv-0.17.0
+Updated to mutter-3.20.1
+Updated to NetworkManager-1.1.94
+Updated to pango-1.40.1
+Updated to python-babel-2.3.3
+Updated to python-setuptools-20.9.0
+Updated to python-sphinx-1.4.1
+Updated to samba-4.4.2
+Updated to thunderbird-45.0
+Updated to util-linux-2.28
+Updated to vinagre-3.20.1
+Updated to vino-3.20.1
+Updated to vte-0.44.1
+Updated to vulkan-runtime-1.0.10
+Updated to webkitgtk-2.12.1
+Updated to yelp-3.20.1
+Updated to yelp-xsl-3.20.1
+
+Removed libreoffice-5.1.2.2
+Removed clucene-core-2.3.3.4
+Removed cppunit-1.13.2
+Removed gegl-0.2.0
+Removed glew-1.13.0
+Removed glm-0.9.7.1
+Removed hdf5-1.8.16
+Removed libabw-0.1.1
+Removed libcdr-0.1.2
+Removed libcmis-0.5.0
+Removed libe-book-0.1.2
+Removed libetonyek-0.1.6
+Removed libexttextcat-3.4.4
+Removed libfreehand-0.1.1
+Removed libgltf-0.0.2
+Removed libieee1284-0.2.11
+Removed libixion-0.9.1
+Removed libksane-16.03.80
+Removed liblangtag-0.5.8
+Removed libmspub-0.1.2
+Removed libmwaw-0.3.7
+Removed libodfgen-0.1.6
+Removed liborcus-0.9.2
+Removed libpagemaker-0.0.3
+Removed librevenge-0.0.4
+Removed libvisio-0.1.5
+Removed libwpd-0.10.1
+Removed libwpg-0.3.1
+Removed libwps-0.4.3
+Removed lpsolve-5.5.2.0
+Removed mdds-0.12.1
+Removed mdds-1.0.0
+Removed mythes-1.2.4
+Removed net-snmp-5.7.3
+Removed npapi-sdk-0.27.2
+Removed raptor2-2.0.15
+Removed rasqal-0.9.33
+Removed redland-1.0.17
+Removed sane-backends-1.0.25
+Removed simple-scan-3.20.0
+Removed skanlite-2.0
+Removed vigra-1.11.0
+
+libreoffice-5.1.2 binary version from upstream
+python-imagesize-0.7.0
+
+Rebuild apr-util-1.5.4 against db-6.2.23
+Rebuild bind-9.10.3-P4 against db-6.2.23
+Rebuild colord-1.3.2 without sane-backends support
+Rebuild cyrus-sasl-2.1.26 against db-6.2.23
+Rebuild evolution-data-server-3.20.1 against db-6.2.23
+Rebuild gimp-2.8.16 against gegl-0.3
+Rebuild httpd-2.4.20 against db-6.2.23
+Rebuild inkscape-0.91 without libcdr, libvisio and libwpg support
+Rebuild iproute2-4.5.0 against db-6.2.23
+Rebuild Linux-PAM-1.2.1 against db-6.2.23
+Rebuild perl-5.22.1 against db-6.2.23
+Rebuild php-7.0.5 against db-6.2.23 and without net-snmp support
+Rebuild postfix-3.1.0 against db-6.2.23
+Rebuild Python-2.7.11 against db-6.2.23
+Rebuild Python-3.5.1 against db-6.2.23
+Rebuild ruby-2.3.0 against db-6.2.23
+Rebuild serf-1.3.8 against db-6.2.23
+Rebuild subversion-1.9.3 against db-6.2.23
+
+# End Sun Apr 17 20:55:17 UTC 2016
+
+# Begin Sun Apr 24 09:49:12 UTC 2016
+
+libtommath-1.0
+
+Updated to acpica-20160422
+Updated to adwaita-qt-0.4
+Updated to btrfs-progs-4.5.1
+Updated to file-5.26
+Updated to firebird-3.0.0.32483
+Updated to fuse-2.9.5
+Updated to gdm-3.20.1
+Updated to gnome-tweak-tool-3.20.1
+Updated to grantlee-5.1.0
+Updated to grep-2.25
+Updated to gtksourceview-3.20.2
+Updated to jdk-1.8.0u92
+Updated to kid3-3.4.0
+Updated to krb5-1.14.2
+Updated to libcue-2.1.0
+Updated to libdc1394-2.2.4
+Updated to libgphoto2-2.5.10
+Updated to libinput-1.2.4
+Updated to libmicrohttpd-0.9.49
+Updated to libraw1394-2.1.2
+Updated to libteam-1.24
+Updated to lightdm-1.18.1
+Updated to linux-4.5.2-krejzi
+Updated to live-media-2016.04.21
+Updated to LVM2-2.02.151
+Updated to NetworkManager-1.2.0
+Updated to network-manager-applet-1.2.0
+Updated to perl-io-socket-ssl-2.027
+Updated to perl-net-ssleay-1.74
+Updated to phonon-4.9.0
+Updated to phonon-backend-gstreamer-4.9.0
+Updated to phonon-backend-vlc-0.9.0
+Updated to python-babel-2.3.4
+Updated to python-imagesize-0.7.1
+Updated to python-pyparsing-2.1.1
+Updated to python-pytz-2016.4
+Updated to rest-0.8.0
+Updated to seabios-1.9.2
+Updated to sqlite-3.12.2
+Updated to tdb-1.3.9
+Updated to tzdata-2016d
+Updated to virglrenderer-0.5.0
+Updated to wavpack-4.80.0
+Updated to wireshark-2.0.3
+Updated to x264-20160422
+Updated to youtube-dl-2016.04.19
+
+Updated to gstreamer-1.8.1
+Updated to gst-plugins-base-1.8.1
+Updated to gst-plugins-good-1.8.1
+Updated to gst-plugins-bad-1.8.1
+Updated to gst-plugins-ugly-1.8.1
+Updated to gst-libav-1.8.1
+Updated to gstreamer-vaapi-1.8.1
+
+Updated to kde-cli-tools-5.6.3
+Updated to kdecoration-5.6.3
+Updated to kscreenlocker-5.6.3
+Updated to kwayland-5.6.3
+Updated to libkscreen-5.6.3
+Updated to libksysguard-5.6.3
+Updated to breeze-5.6.3
+Updated to breeze-gtk-5.6.3
+Updated to oxygen-5.6.3
+Updated to kinfocenter-5.6.3
+Updated to ksysguard-5.6.3
+Updated to kwin-5.6.3
+Updated to systemsettings-5.6.3
+Updated to plasma-workspace-5.6.3
+Updated to bluedevil-5.6.3
+Updated to kactivitymanagerd-5.6.3
+Updated to kde-gtk-config-5.6.3
+Updated to khotkeys-5.6.3
+Updated to kmenuedit-5.6.3
+Updated to kscreen-5.6.3
+Updated to kwayland-integration-5.6.3
+Updated to kwrited-5.6.3
+Updated to milou-5.6.3
+Updated to plasma-nm-5.6.3
+Updated to plasma-pa-5.6.3
+Updated to plasma-workspace-wallpapers-5.6.3
+Updated to polkit-kde-agent-1-5.6.3
+Updated to powerdevil-5.6.3
+Updated to plasma-desktop-5.6.3
+Updated to kdeplasma-addons-5.6.3
+
+Updated to baloo-widgets-16.04.0
+Updated to libkdcraw-16.04.0
+Updated to libkexiv2-16.04.0
+Updated to libkipi-16.04.0
+Updated to ark-16.04.0
+Updated to dolphin-16.04.0
+Updated to gwenview-16.04.0
+Updated to kate-16.04.0
+Updated to kcalc-16.04.0
+Updated to kdebugsettings-16.04.0
+Updated to khelpcenter-16.04.0
+Updated to kio-extras-16.04.0
+Updated to konsole-16.04.0
+Updated to ksystemlog-16.04.0
+Updated to kwalletmanager-16.04.0
+Updated to spectacle-16.04.0
+
+Updated to akonadi-16.04.0
+Updated to gpgmepp-16.04.0
+Updated to grantleetheme-16.04.0
+Updated to kdgantt2-16.04.0
+Updated to kcalcore-16.04.0
+Updated to kcontacts-16.04.0
+Updated to kholidays-16.04.0
+Updated to kldap-16.04.0
+Updated to kmime-16.04.0
+Updated to kontactinterface-16.04.0
+Updated to kpimtextedit-16.04.0
+Updated to syndication-16.04.0
+Updated to kblog-16.04.0
+Updated to kidentitymanagement-16.04.0
+Updated to kimap-16.04.0
+Updated to kmbox-16.04.0
+Updated to kcalutils-16.04.0
+Updated to ktnef-16.04.0
+Updated to libkleo-16.04.0
+Updated to kdepimlibs-16.04.0
+Updated to akonadi-search-16.04.0
+Updated to kalarmcal-16.04.0
+Updated to kmailtransport-16.04.0
+Updated to libkdepim-16.04.0
+Updated to akonadi-calendar-16.04.0
+Updated to mailimporter-16.04.0
+Updated to pimcommon-16.04.0
+Updated to kdepim-apps-libs-16.04.0
+Updated to libgravatar-16.04.0
+Updated to libksieve-16.04.0
+Updated to calendarsupport-16.04.0
+Updated to messagelib-16.04.0
+Updated to eventviews-16.04.0
+Updated to mailcommon-16.04.0
+Updated to incidenceeditor-16.04.0
+Updated to kdepim-addons-16.04.0
+Updated to kdepim-runtime-16.04.0
+Updated to kdepim-16.04.0
+Updated to kleopatra-16.04.0
+
+Rebuild systemd-229 against libmicrohttpd-0.9.49
+
+# End Sun Apr 24 12:41:29 UTC 2016
+
+# End Sun May  7 12:42:09 UTC 2016
+
+Updated to bind-9.10.4
+Updated to ffmpeg-3.0.2
+Updated to firefox-46.0
+Updated to gcc-6.1.0
+Updated to git-2.8.2
+Updated to glib-networking-2.48.1
+Updated to gnome-todo-3.20.1
+Updated to gparted-0.26.0
+Updated to gzip-1.8
+Updated to libdrm-2.4.68
+Updated to libgpg-error-1.22
+Updated to libsoup-2.54.1
+Updated to LVM2-2.02.152
+Updated to mesa-11.3.0-g750c38f (git snapshot)
+Updated to nautilus-3.20.1
+Updated to perl-5.22.2
+Updated to php-7.0.6
+Updated to poppler-0.43.0
+Updated to pygobject-3.20.1
+Updated to ruby-2.3.1
+Updated to subversion-1.9.4
+Updated to systemd-229 (git snapshot)
+Updated to taglib-1.11
+Updated to webkitgtk-2.12.2
+Updated to xf86-input-evdev-2.10.2
+Updated to xf86-input-libinput-0.19.0
+Updated to xf86-input-synaptics-1.8.99.1
+Updated to xf86-video-intel-2.99.917 (git snapshot)
+
+# End Sun May  7 17:07:03 UTC 2016

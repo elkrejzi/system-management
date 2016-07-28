@@ -13,6 +13,7 @@ export TEXMFURL="ftp://tug.org/texlive/historic/2016/${TEXMFTAR}"
 export TEXEXTRAURL="ftp://tug.org/texlive/historic/2016/${TEXEXTRATAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export PATH_TO_SOURCE=".."
+export NO_STRIP=1
 
 export POSTINST_TRIGGER=("/usr/bin/mktexlsr"
                          "/usr/bin/fmtutil-sys --all 1>/dev/null")
@@ -34,6 +35,7 @@ export CONFIGURE_FLAGS=(--datarootdir=/usr/share
                         --with-system-graphite2
                         --with-system-harfbuzz
                         --with-system-icu
+                        --with-system-kpathsea
                         --with-system-libgs
                         --with-system-libpaper
                         --with-system-libpng
@@ -57,18 +59,37 @@ post_extract_action() {
   install -dm755 ${PKGBUILD}
 }
 
+mypkg_strip() {
+  find * -type f 2>/dev/null | while read BUILD_BINARY ; do
+    case "$(file -bi "${BUILD_BINARY}")" in *application/x-sharedlib* | *application/x-executable*)
+      strip --strip-unneeded ${BUILD_BINARY}
+    esac
+  done
+
+  find * -name "*.a" -exec strip --strip-unneeded {} \;
+}
+
 make_install_post() {
   make texlinks DESTDIR=${DEST}
 
   tar --exclude=*/texmf-dist/doc --exclude=*/texmf-dist/source --strip-components=1 -xf ${SROOT}/${TEXMFTAR} -C ${DEST}/usr/share
   tar --wildcards --strip-components=1 -xf ${SROOT}/${TEXEXTRATAR} -C ${DEST}/usr/share "*/tlpkg"
 
-  sed -i "s@TEXMFROOT = \$SELFAUTOPARENT@TEXMFROOT = /usr/share@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
-  sed -i "s@TEXMFSYSVAR = \$TEXMFROOT/texmf-var@TEXMFSYSVAR = /var/lib/texmf@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
-  sed -i "s@TEXMFSYSCONFIG = \$TEXMFROOT/texmf-config@TEXMFSYSCONFIG = /etc/texmf@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
-  sed -i "s@TEXMFHOME = ~/texmf@TEXMFHOME = ~/.texmf@g" ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
+  # libkpathsea
+  rm -rf ${DEST}/usr/share/texmf-dist/web2c/mktex.opt
+  rm -rf ${DEST}/usr/share/texmf-dist/web2c/mktexdir{,.opt}
+  rm -rf ${DEST}/usr/share/texmf-dist/web2c/mktexnam{,.opt}
+  rm -rf ${DEST}/usr/share/texmf-dist/web2c/mktexupd
+  rm -rf ${DEST}/usr/share/texmf-dist/web2c/texmf.cnf
 
-  unset PKG_AUTO_INSTALL
+  # saves a lot of time
+  pushd ${DEST}/usr/bin
+    mypkg_strip
+  popd
+
+  pushd ${DEST}/usr/lib
+    mypkg_strip
+  popd
 }
 
 . $(dirname $0)/master.sh

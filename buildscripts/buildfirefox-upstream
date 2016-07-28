@@ -1,0 +1,35 @@
+#!/bin/bash -e
+
+export PKGNAME=firefox
+export PKGVER=48.0b10
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGDIR=${PKGNAME}
+export PKGURL="http://ftp.mozilla.org/pub/firefox/releases/${PKGVER}/linux-x86_64/en-US/${PKGTAR}"
+export NO_STRIP=1
+
+export MOZ_PATH="$(dirname $(realpath $0))"
+
+configure_override() {
+  true
+}
+
+make_override() {
+  true
+}
+
+make_install_override() {
+  install -dm755 ${DEST}/usr/bin ${DEST}/usr/lib/firefox
+  install -dm755 ${DEST}/usr/lib/mozilla/plugins
+  install -dm755 ${DEST}/usr/share/applications
+  install -dm755 ${DEST}/usr/share/pixmaps
+
+  install -m644 ${MOZ_PATH}/../misc/firefox.desktop ${DEST}/usr/share/applications/firefox.desktop
+  install -m644 browser/icons/mozicon128.png ${DEST}/usr/share/pixmaps/firefox.png
+
+  ln -sf ../lib/firefox/firefox ${DEST}/usr/bin/firefox
+  ln -sf ../mozilla/plugins ${DEST}/usr/lib/firefox/plugins
+
+  mv * ${DEST}/usr/lib/firefox
+}
+
+. $(dirname $0)/master.sh

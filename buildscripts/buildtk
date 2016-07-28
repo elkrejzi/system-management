@@ -2,7 +2,7 @@
 
 export TKMAJOR=8.6
 export PKGNAME=tk
-export PKGVER=${TKMAJOR}.5
+export PKGVER=${TKMAJOR}.6
 export PKGTAR=${PKGNAME}${PKGVER}-src.tar.gz
 export PKGURL="https://downloads.sourceforge.net/tcl/${PKGTAR}"
 export PKGDIR=${PKGNAME}${PKGVER}

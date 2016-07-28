@@ -6,11 +6,14 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://valgrind.org/downloads/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export NO_OPTIMIZATION=1
-export DEFAULT_CC="gcc"
 
 configure_pre() {
   sed -i "s/-mt//g" configure
   sed -i "s:2.22:2.23:g" configure
+}
+
+configure_post() {
+  sed -i "s#-lgcc#-lcompiler-rt#g" $(grep -rl lgcc)
 }
 
 . $(dirname $0)/master.sh

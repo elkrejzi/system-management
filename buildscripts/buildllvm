@@ -196,8 +196,8 @@ configure_pre() {
 }
 
 configure_pre_32() {
-  rm -rf ../${PKGDIR}/tools/{clang,lld,lldb}
-  rm -rf ../${PKGDIR}/projects/compiler-rt
+  rm -rf ../${PKGDIR}/tools/{lld,lldb}
+  rm -rf ../${PKGDIR}/tools/clang/tools/extra
 }
 
 configure_post_32() {
@@ -229,9 +229,11 @@ make_install_post() {
 
     mv ${DEST}/usr/lib/clang/${PKGVER%.svn*}/lib/linux/libclang_rt.builtins-${arch}.a ${DEST}/usr/lib/clang/${PKGVER%.svn*}/lib/linux/${arch}/
 
-    ln -sf ../lib/linux/libclang_rt.builtins-${arch}.a ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/libclang_rt.builtins-${arch}.a
-
 cat > ${DEST}/usr/lib/clang/${PKGVER%.svn*}/lib/linux/libclang_rt.builtins-${arch}.a << EOF
+INPUT ( /usr/lib/clang/${PKGVER%.svn*}/lib/linux/${arch}/libclang_rt.builtins-${arch}.a AS_NEEDED ( /usr/${LIB}/libunwind.a -lm ) )
+EOF
+
+cat > ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/libcompiler-rt.a << EOF
 INPUT ( /usr/lib/clang/${PKGVER%.svn*}/lib/linux/${arch}/libclang_rt.builtins-${arch}.a AS_NEEDED ( /usr/${LIB}/libunwind.a -lm ) )
 EOF
     done

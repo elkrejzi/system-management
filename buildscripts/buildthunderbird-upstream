@@ -1,0 +1,36 @@
+#!/bin/bash -e
+
+export PKGNAME=thunderbird
+export PKGVER=47.0b2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGDIR=${PKGNAME}
+export PKGURL="http://ftp.mozilla.org/pub/thunderbird/releases/${PKGVER}/linux-x86_64/en-US/${PKGTAR}"
+export NO_STRIP=1
+
+export MOZ_PATH="$(dirname $(realpath $0))"
+
+configure_override() {
+  true
+}
+
+make_override() {
+  true
+}
+
+make_install_override() {
+  install -dm755 ${DEST}/usr/bin ${DEST}/usr/lib/thunderbird
+  install -dm755 ${DEST}/usr/share/applications
+
+  install -m644 ${MOZ_PATH}/../misc/thunderbird.desktop ${DEST}/usr/share/applications/thunderbird.desktop
+
+  ln -sf ../lib/thunderbird/thunderbird ${DEST}/usr/bin/thunderbird
+
+  for s in 16 22 24 32 48 256
+  do
+    install -Dm644 chrome/icons/default/default${s}.png ${DEST}/usr/share/icons/hicolor/${s}x${s}/apps/thunderbird.png
+  done
+
+  mv * ${DEST}/usr/lib/thunderbird
+}
+
+. $(dirname $0)/master.sh

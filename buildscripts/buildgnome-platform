@@ -62,8 +62,8 @@ case $(basename $0) in
       rm -rf ${DEST}/var
       sed -i "/user = gdm/d" ${DEST}/etc/pam.d/gdm-launch-environment
 
-      sed -i "/auth.*gnome_keyring/i auth     optional       pam_kwallet5.so" ${DEST}/etc/pam.d/gdm-password
-      sed -i "/session.*gnome_keyring/i session  optional       pam_kwallet5.so auto_start" ${DEST}/etc/pam.d/gdm-password
+      #sed -i "/auth.*gnome_keyring/i auth     optional       pam_kwallet5.so" ${DEST}/etc/pam.d/gdm-password
+      #sed -i "/session.*gnome_keyring/i session  optional       pam_kwallet5.so auto_start" ${DEST}/etc/pam.d/gdm-password
     }
   ;;
   buildgeocode-glib )
@@ -136,7 +136,7 @@ case $(basename $0) in
   ;;
   buildgnome-online-accounts )
     export PKGNAME=gnome-online-accounts
-    export PKGVER=3.20.2
+    export PKGVER=3.20.3
     export CONFIGURE_FLAGS=(--enable-kerberos --disable-compile-warnings)
   ;;
   buildgnome-online-miners )

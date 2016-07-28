@@ -2,7 +2,7 @@
 
 export TCLMAJOR=8.6
 export PKGNAME=tcl
-export PKGVER=${TCLMAJOR}.5
+export PKGVER=${TCLMAJOR}.6
 export PKGTAR=${PKGNAME}${PKGVER}-src.tar.gz
 export PKGURL="https://downloads.sourceforge.net/tcl/${PKGTAR}"
 export PKGDIR=${PKGNAME}${PKGVER}
@@ -33,10 +33,10 @@ make_install_post() {
       -e "s#${PWD%/unix}/pkgs/tdbc1.0.4#/usr/include#" \
       -i "${DEST}/usr/lib/tdbc1.0.4/tdbcConfig.sh"
 
-  sed -e "s#${PWD%/unix}/unix/pkgs/itcl4.0.4#/usr/lib/itcl4.0.4#" \
-      -e "s#${PWD%/unix}/pkgs/itcl4.0.4/generic#/usr/include#" \
-      -e "s#${PWD%/unix}/pkgs/itcl4.0.4#/usr/include#" \
-      -i "${DEST}/usr/lib/itcl4.0.4/itclConfig.sh"
+  sed -e "s#${PWD%/unix}/unix/pkgs/itcl4.0.5#/usr/lib/itcl4.0.5#" \
+      -e "s#${PWD%/unix}/pkgs/itcl4.0.5/generic#/usr/include#" \
+      -e "s#${PWD%/unix}/pkgs/itcl4.0.5#/usr/include#" \
+      -i "${DEST}/usr/lib/itcl4.0.5/itclConfig.sh"
 }
 
 . $(dirname $0)/master.sh

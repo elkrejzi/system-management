@@ -75,7 +75,7 @@ configure_pre() {
 }
 
 configure_pre_32() {
-  export LDFLAGS="$(clang -m32 -print-file-name=libclang_rt.builtins-i386.a)"
+  export LDFLAGS="-lcompiler-rt"
   export LLVM_CONFIG=/usr/bin/llvm-config32
 
   autoreconf -fi

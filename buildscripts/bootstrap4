@@ -14,30 +14,6 @@ $(dirname $0)/buildxf86-input-synaptics
 $(dirname $0)/buildxf86-input-wacom
 $(dirname $0)/buildxf86-video-amdgpu
 $(dirname $0)/buildxf86-video-intel
-$(dirname $0)/buildextra-cmake-modules
-$(dirname $0)/buildmedia-player-info
-$(dirname $0)/buildmobile-broadband-provider-info
-$(dirname $0)/buildlibplist
-$(dirname $0)/buildlibusbmuxd
-$(dirname $0)/buildlibimobiledevice
-$(dirname $0)/buildcmrt
-$(dirname $0)/buildlibatasmart
-$(dirname $0)/buildlibzip
-$(dirname $0)/buildlm_sensors
-$(dirname $0)/buildmozjs24
-$(dirname $0)/buildparted
-$(dirname $0)/buildxapian-core
-$(dirname $0)/buildalsa-plugins
-$(dirname $0)/buildalsa-utils
-$(dirname $0)/builddoxygen
-$(dirname $0)/buildlibdbusmenu-qt
-$(dirname $0)/buildphonon
-$(dirname $0)/buildphonon-backend-gstreamer
-$(dirname $0)/buildphonon-backend-vlc
-$(dirname $0)/buildpolkit-qt-1
-$(dirname $0)/buildqca
-$(dirname $0)/buildudisks
-$(dirname $0)/buildupower
 $(dirname $0)/buildweston
 $(dirname $0)/buildcogl
 $(dirname $0)/buildgeocode-glib
@@ -171,7 +147,7 @@ $(dirname $0)/builddleyna
 $(dirname $0)/buildmailnag
 $(dirname $0)/buildmailnag-gnome-shell
 $(dirname $0)/buildmailnag-goa-plugin
-$(dirname $0)/buildbeignet
+#$(dirname $0)/buildbeignet
 $(dirname $0)/buildclinfo
 $(dirname $0)/buildenscript
 $(dirname $0)/buildexpect
@@ -246,15 +222,28 @@ $(dirname $0)/buildunrar
 $(dirname $0)/buildvalgrind
 $(dirname $0)/buildwhois
 $(dirname $0)/buildxfsprogs
+$(dirname $0)/buildacpica
+$(dirname $0)/buildlibiscsi
+$(dirname $0)/buildusbredir
+$(dirname $0)/buildvde2
+$(dirname $0)/buildvirglrenderer
+$(dirname $0)/buildseabios
+$(dirname $0)/buildqemu
+$(dirname $0)/buildtexlive
+$(dirname $0)/builddblatex
+$(dirname $0)/buildfceux
+$(dirname $0)/buildpcsxr
 $(dirname $0)/buildGConf
+$(dirname $0)/buildlibjpeg-turbo6
 $(dirname $0)/buildgoogle-chrome
 $(dirname $0)/buildjdk
-$(dirname $0)/buildlibjpeg-turbo6
+$(dirname $0)/buildlibreoffice-upstream
 $(dirname $0)/buildsteam
+$(dirname $0)/buildyoutube-dl
 
 find /binary -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
 
-find /binary -type d -name "*-[0-9]*" ! -path "*/etc/*" ! -path "*/usr/*" | while read dir
+find /binary -type d -name "*-[0-9]*" ! -path "*/etc/*" ! -path "*/opt/*" ! -path "*/usr/*" | while read dir
 do
   P=$(basename ${dir})
   D=$(dirname ${dir})
