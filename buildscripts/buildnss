@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=nss
-export PKGVER=3.25
+export PKGVER=3.26
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGBUILD=${PKGNAME}-${PKGVER}/nss
 export PKGURL="https://ftp.mozilla.org/pub/security/nss/releases/NSS_${PKGVER/./_}_RTM/src/${PKGTAR}"

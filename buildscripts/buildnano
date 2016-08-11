@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=nano
-export PKGVER=2.6.2
+export PKGVER=2.6.3
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://nano-editor.org/dist/v${PKGVER:0:3}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

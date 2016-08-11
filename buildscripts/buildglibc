@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=glibc
-export PKGVER=2.23
+export PKGVER=2.24
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://ftp.gnu.org/gnu/glibc/${PKGNAME}-${PKGVER}.tar.xz"
 export PKGDIR=src
@@ -12,8 +12,8 @@ export KEEP_EMPTY_DIRS=1
 export MULTILIB_BUILD=1
 export NO_OPTIMIZATION=1
 
-export PATCHES_LIST=("glibc-fixes.patch" "glibc-paths.patch" "glibc-pure64.patch")
-export PATCHES_LIST_32=("glibc-fixes.patch" "glibc-paths.patch" "glibc-pure64.patch")
+export PATCHES_LIST=("glibc-paths.patch" "glibc-pure64.patch")
+export PATCHES_LIST_32=("glibc-paths.patch" "glibc-pure64.patch")
 
 export MAKE_INSTALL_FLAGS="install_root=\${DEST} ${MAKE_JOBS_FLAGS}"
 export MAKE_INSTALL_FLAGS_32="install_root=\${PWD}/dest ${MAKE_JOBS_FLAGS}"

@@ -1,0 +1,48 @@
+--- a/amdgpu/amdgpu_vamgr.c	2015-11-05 22:10:21.000000000 +0100
++++ b/amdgpu/amdgpu_vamgr.c	2016-08-02 12:02:21.254614317 +0200
+@@ -157,7 +157,7 @@
+ drm_private void
+ amdgpu_vamgr_free_va(struct amdgpu_bo_va_mgr *mgr, uint64_t va, uint64_t size)
+ {
+-	struct amdgpu_bo_va_hole *hole;
++	struct amdgpu_bo_va_hole *hole = NULL;
+ 
+ 	if (va == AMDGPU_INVALID_VA_ADDRESS)
+ 		return;
+--- a/util_double_list.h	2016-07-21 01:42:21.000000000 +0200
++++ b/util_double_list.h	2016-08-02 12:02:21.254614317 +0200
+@@ -114,29 +114,29 @@
+ #endif
+ 
+ #define LIST_FOR_EACH_ENTRY(pos, head, member)				\
+-   for (pos = container_of((head)->next, pos, member);			\
++   for (pos = NULL, pos = container_of((head)->next, pos, member);	\
+ 	&pos->member != (head);						\
+ 	pos = container_of(pos->member.next, pos, member))
+ 
+ #define LIST_FOR_EACH_ENTRY_SAFE(pos, storage, head, member)	\
+-   for (pos = container_of((head)->next, pos, member),			\
++   for (pos = NULL, pos = container_of((head)->next, pos, member),			\
+ 	storage = container_of(pos->member.next, pos, member);	\
+ 	&pos->member != (head);						\
+ 	pos = storage, storage = container_of(storage->member.next, storage, member))
+ 
+ #define LIST_FOR_EACH_ENTRY_SAFE_REV(pos, storage, head, member)	\
+-   for (pos = container_of((head)->prev, pos, member),			\
++   for (pos = NULL, pos = container_of((head)->prev, pos, member),			\
+ 	storage = container_of(pos->member.prev, pos, member);		\
+ 	&pos->member != (head);						\
+ 	pos = storage, storage = container_of(storage->member.prev, storage, member))
+ 
+ #define LIST_FOR_EACH_ENTRY_FROM(pos, start, head, member)		\
+-   for (pos = container_of((start), pos, member);			\
++   for (pos = NULL, pos = container_of((start), pos, member);			\
+ 	&pos->member != (head);						\
+ 	pos = container_of(pos->member.next, pos, member))
+ 
+ #define LIST_FOR_EACH_ENTRY_FROM_REV(pos, start, head, member)		\
+-   for (pos = container_of((start), pos, member);			\
++   for (pos = NULL, pos = container_of((start), pos, member);			\
+ 	&pos->member != (head);						\
+ 	pos = container_of(pos->member.prev, pos, member))
+ 

@@ -1,13 +1,16 @@
 #!/bin/bash -e
 
 export PKGNAME=ibus
-export PKGVER=1.5.13
+export PKGVER=1.5.14
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/ibus/ibus/releases/download/${PKGVER}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1
 export POSTINST_TRIGGER=("[ -x /usr/bin/dconf ] && echo \"Processing triggers for dconf\" && /usr/bin/dconf update")
-export CONFIGURE_FLAGS=(--enable-wayland --enable-python-library --with-python=python3)
+export CONFIGURE_FLAGS=(--disable-emoji-dict
+                        --enable-wayland
+                        --enable-python-library
+                        --with-python=python3)
 
 make_install_post() {
   export SPACE_ADDED=1

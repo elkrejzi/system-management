@@ -49,7 +49,7 @@ case $(basename $0) in
   ;;
   buildgnome-calculator )
     export PKGNAME=gnome-calculator
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
   ;;
   buildgnome-calendar )
     export PKGNAME=gnome-calendar
@@ -82,7 +82,7 @@ case $(basename $0) in
   ;;
   buildgnome-maps )
     export PKGNAME=gnome-maps
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
   ;;
   buildgnome-nettool )
     export PKGNAME=gnome-nettool
@@ -92,7 +92,7 @@ case $(basename $0) in
   ;;
   buildgnome-photos )
     export PKGNAME=gnome-photos
-    export PKGVER=3.20.2
+    export PKGVER=3.20.3
   ;;
   buildgnome-power-manager )
     export PKGNAME=gnome-power-manager
@@ -127,7 +127,7 @@ case $(basename $0) in
   ;;
   buildnautilus )
     export PKGNAME=nautilus
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
     export CONFIGURE_FLAGS=(--disable-packagekit
                             --disable-selinux
                             --disable-update-mimedb
@@ -135,7 +135,7 @@ case $(basename $0) in
   ;;
   buildnetwork-manager-applet )
     export PKGNAME=network-manager-applet
-    export PKGVER=1.2.2
+    export PKGVER=1.2.4
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
     configure_pre() {

@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=live-media
-export PKGVER=2016.06.23
+export PKGVER=2016.08.07
 export PKGTAR=live.${PKGVER}.tar.gz
 export PKGDIR=live
 export PKGURL="http://live555.com/liveMedia/public/${PKGTAR}"

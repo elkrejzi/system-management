@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=openssh
-export PKGVER=7.2p2
+export PKGVER=7.3p1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

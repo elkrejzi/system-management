@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=NetworkManager
-export PKGVER=1.2.2
+export PKGVER=1.2.4
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://download.gnome.org/sources/NetworkManager/${PKGVER:0:3}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
@@ -12,6 +12,8 @@ export CONFIGURE_FLAGS=(--enable-doc \
                         --with-pppd-plugin-dir=/usr/lib/pppd/2.4.7
                         --with-systemdsystemunitdir=/lib/systemd/system
                         --with-udev-dir=/lib/udev)
+
+export DEFAULT_CXX="clang++ -std=c++11"
 
 configure_pre() {
   sed -i "/Qt[CDN]/s:Qt:Qt5:g;s: moc_location: host_bins:g" configure

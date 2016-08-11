@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libcap-ng
-export PKGVER=0.7.7
+export PKGVER=0.7.8
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://people.redhat.com/sgrubb/libcap-ng/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

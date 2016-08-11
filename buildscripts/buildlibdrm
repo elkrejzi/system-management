@@ -7,6 +7,8 @@ export PKGURL="http://dri.freedesktop.org/libdrm/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export DEBUG_BUILD=1
 export MULTILIB_BUILD=1
+export PATCHES_LIST=("libdrm-fixes.patch")
+export PATCHES_LIST_32=("libdrm-fixes.patch")
 export CONFIGURE_FLAGS=(--enable-udev --disable-valgrind)
 export CONFIGURE_FLAGS_32=(--enable-udev --disable-valgrind)
 

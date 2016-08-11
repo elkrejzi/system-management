@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=gc
-export PKGVER=7.4.4
+export PKGVER=7.6.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://www.hboehm.info/gc/gc_source/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

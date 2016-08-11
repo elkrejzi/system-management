@@ -9,7 +9,7 @@ export NO_OPTIMIZATION=1
 
 configure_pre() {
   sed -i "s/-mt//g" configure
-  sed -i "s:2.22:2.23:g" configure
+  sed -i "s:2.22:2.24:g" configure
 }
 
 configure_post() {

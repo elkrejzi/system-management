@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=highlight
-export PKGVER=3.30
+export PKGVER=3.31
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://www.andre-simon.de/zip/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

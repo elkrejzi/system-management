@@ -1,18 +1,17 @@
 #!/bin/bash -e
 
 export PKGNAME=FreeRDP
-export PKGVER=1.2.0-beta1-android9
-export PKGTAR=${PKGNAME}-${PKGVER/-android/+android}.tar.gz
+export PKGVER=2.0.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/FreeRDP/FreeRDP/archive/${PKGVER}.tar.gz"
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
-export PATCHES_LIST=("freerdp-fixes.patch")
-export USER_CFLAGS="$(pkg-config --cflags gstreamer-1.0)"
 export CMAKE_FLAGS=(-DCMAKE_INSTALL_LIBDIR=lib
                     -DWITH_CUPS=ON
                     -DWITH_GSM=ON
                     -DWITH_JPEG=ON
-                    -DWITH_PULSE=ON)
+                    -DWITH_PULSE=ON
+                    -DWITH_X264=ON)
 
 make_install_post() {
   remove_rpath

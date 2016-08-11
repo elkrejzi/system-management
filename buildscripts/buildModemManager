@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=ModemManager
-export PKGVER=1.5.993
+export PKGVER=1.6.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://www.freedesktop.org/software/ModemManager/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

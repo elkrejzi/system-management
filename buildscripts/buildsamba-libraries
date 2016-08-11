@@ -18,7 +18,7 @@ case $(basename $0) in
   ;;
   buildtalloc )
     export PKGNAME=talloc
-    export PKGVER=2.1.7
+    export PKGVER=2.1.8
   ;;
   buildtdb )
     export PKGNAME=tdb
