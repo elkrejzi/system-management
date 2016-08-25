@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=wayland-protocols
-export PKGVER=1.5
+export PKGVER=1.7
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://wayland.freedesktop.org/releases/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

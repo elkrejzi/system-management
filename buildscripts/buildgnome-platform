@@ -86,7 +86,7 @@ case $(basename $0) in
   ;;
   buildgjs )
     export PKGNAME=gjs
-    export PKGVER=1.45.3
+    export PKGVER=1.45.4
     export DEFAULT_CC="gcc"
     export DEFAULT_CXX="g++"
     make_install_post() {
@@ -154,7 +154,7 @@ case $(basename $0) in
   ;;
   buildgnome-shell )
     export PKGNAME=gnome-shell
-    export PKGVER=3.20.3
+    export PKGVER=3.20.4
     export DEBUG_BUILD=1
     export DEFAULT_CC="gcc"
     export DEFAULT_CXX="g++"
@@ -282,11 +282,11 @@ case $(basename $0) in
   ;;
   buildlibgsf )
     export PKGNAME=libgsf
-    export PKGVER=1.14.39
+    export PKGVER=1.14.40
   ;;
   buildlibgtop )
     export PKGNAME=libgtop
-    export PKGVER=2.34.0
+    export PKGVER=2.34.1
   ;;
   buildlibgudev )
     export PKGNAME=libgudev
@@ -294,7 +294,7 @@ case $(basename $0) in
   ;;
   buildlibgweather )
     export PKGNAME=libgweather
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
   ;;
   buildlibgxps )
     export PKGNAME=libgxps

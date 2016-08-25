@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=qemu
-export PKGVER=2.6.0
+export PKGVER=2.6.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://wiki.qemu-project.org/download/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
@@ -10,8 +10,8 @@ export NO_STRIP=1
 export POSTINST_TRIGGER=("getent group kvm > /dev/null || groupadd -g 61 kvm\n"
                          "chmod 4755 /usr/libexec/qemu-bridge-helper")
 
-export TARGETS_LIST="i386-softmmu mipsel-softmmu x86_64-softmmu \
-                     i386-linux-user mipsel-linux-user x86_64-linux-user"
+export TARGETS_LIST="aarch64-softmmu i386-softmmu mipsel-softmmu x86_64-softmmu \
+                     aarch64-linux-user i386-linux-user mipsel-linux-user x86_64-linux-user"
 
 export CONFIGURE_FLAGS=(--enable-linux-aio
                         --enable-spice
@@ -21,7 +21,10 @@ export CONFIGURE_FLAGS=(--enable-linux-aio
                         --with-sdlabi=2.0
                         --audio-drv-list="pa alsa sdl"
                         --target-list="${TARGETS_LIST}"
-                        --host-cc="clang")
+                        --host-cc="gcc")
+
+export DEFAULT_CC="gcc"
+export DEFAULT_CXX="g++"
 
 make_install_post() {
   rm -rf ${DEST}/usr/share/qemu/*.aml ${DEST}/usr/share/qemu/bios.bin ${DEST}/var

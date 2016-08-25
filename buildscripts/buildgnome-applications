@@ -19,7 +19,7 @@ case $(basename $0) in
   ;;
   buildeog )
     export PKGNAME=eog
-    export PKGVER=3.20.3
+    export PKGVER=3.20.4
   ;;
   buildepiphany )
     export PKGNAME=epiphany
@@ -40,7 +40,7 @@ case $(basename $0) in
   ;;
   buildfile-roller )
     export PKGNAME=file-roller
-    export PKGVER=3.20.2
+    export PKGVER=3.20.3
     export CONFIGURE_FLAGS=(--disable-packagekit)
   ;;
   buildgedit )
@@ -74,7 +74,7 @@ case $(basename $0) in
   ;;
   buildgnome-documents )
     export PKGNAME=gnome-documents
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildgnome-logs )
     export PKGNAME=gnome-logs
@@ -82,7 +82,7 @@ case $(basename $0) in
   ;;
   buildgnome-maps )
     export PKGNAME=gnome-maps
-    export PKGVER=3.20.2
+    export PKGVER=3.20.3
   ;;
   buildgnome-nettool )
     export PKGNAME=gnome-nettool
@@ -118,7 +118,7 @@ case $(basename $0) in
   ;;
   buildgnome-weather )
     export PKGNAME=gnome-weather
-    export PKGVER=3.20.1
+    export PKGVER=3.20.2
   ;;
   buildgucharmap )
     export PKGNAME=gucharmap
@@ -135,11 +135,12 @@ case $(basename $0) in
   ;;
   buildnetwork-manager-applet )
     export PKGNAME=network-manager-applet
-    export PKGVER=1.2.4
+    export PKGVER=1.4.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
     configure_pre() {
       sed -i "s:-Werror::g" configure
+      sed -i "/Wno-unused-but-set-variable/d" configure
     }
   ;;
   buildpolari )

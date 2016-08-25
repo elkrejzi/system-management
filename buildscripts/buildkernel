@@ -1,15 +1,16 @@
 #!/bin/bash -e
 
 export PKGNAME=linux
+#export PKGVER=4.7
 export PKGVER=4.8
-export PATCHVER=
+#export PATCHVER=4.8-rc2
 export COMMON_URL="https://cdn.kernel.org/pub/linux/kernel/v4.x"
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="${COMMON_URL}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export NO_OPTIMIZATION=1
 export NO_STRIP=1
-export PATCHES_LIST=("linux-march-native.patch")
+export PATCHES_LIST=("linux-march-native.patch" "linux-amdgpu.patch")
 export DEFAULT_CC="gcc"
 
 post_extract_action() {
@@ -36,6 +37,7 @@ configure_override() {
   fi
 
   sed -i "s:-ltinfo ::g" tools/thermal/tmon/Makefile
+  sed -i "/SKL_CSR_VERSION_REQUIRED/s#1, 23#1, 26#" drivers/gpu/drm/i915/intel_csr.c
 }
 
 make_override() {

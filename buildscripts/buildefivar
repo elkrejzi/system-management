@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
 export PKGNAME=efivar
-export PKGVER=0.24
-export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
-export PKGURL="https://github.com/rhinstaller/efivar/releases/download/${PKGVER}/${PKGTAR}"
+export PKGVER=27
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/rhinstaller/efivar/archive/${PKGVER}.tar.gz"
 export MAKE_FLAGS="libdir=/usr/lib"
 export MAKE_INSTALL_FLAGS="libdir=/usr/lib"
 export DEFAULT_CC="gcc"

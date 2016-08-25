@@ -39,7 +39,7 @@ prepare_src_common() {
 
     if [ ${f} == "libcxx" ]
     then
-      sed -i "/-nodefaultlibs/d" ${f}/lib/CMakeLists.txt
+      sed -i "s:gcc_s:compiler-rt:g" ${f}/cmake/config-ix.cmake ${f}/lib/CMakeLists.txt
     fi
 
     mv ${f} ${PKGDIR}/projects
@@ -174,8 +174,7 @@ export SHARED_FLAGS=(-DCLANG_DEFAULT_CXX_STDLIB=libc++
                      -DLIBUNWIND_ENABLE_ASSERTIONS=OFF
                      -DLIBUNWIND_ENABLE_SHARED=OFF
                      -DLLVM_TARGETS_TO_BUILD="AMDGPU;X86"
-                     -DLLVM_BINUTILS_INCDIR=/usr/include
-                     -DLIBOMP_LIBFLAGS="-lm")
+                     -DLLVM_BINUTILS_INCDIR=/usr/include)
 
 export CMAKE_FLAGS=("${SHARED_FLAGS[@]}"
                     -DLLVM_BUILD_DOCS=ON
@@ -207,13 +206,11 @@ configure_post_32() {
 make_install_post() {
   for arch in i386 x86_64
   do
+    CCARGS=""
+
     if [ ${arch} == "i386" ]
     then
       CCARGS="-m32"
-      LIB="lib32"
-    else
-      CCARGS=""
-      LIB="lib"
     fi
 
     install -dm755 ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch} ${DEST}/usr/lib/clang/${PKGVER%.svn*}/lib/linux/${arch}
@@ -230,13 +227,11 @@ make_install_post() {
     mv ${DEST}/usr/lib/clang/${PKGVER%.svn*}/lib/linux/libclang_rt.builtins-${arch}.a ${DEST}/usr/lib/clang/${PKGVER%.svn*}/lib/linux/${arch}/
 
 cat > ${DEST}/usr/lib/clang/${PKGVER%.svn*}/lib/linux/libclang_rt.builtins-${arch}.a << EOF
-INPUT ( /usr/lib/clang/${PKGVER%.svn*}/lib/linux/${arch}/libclang_rt.builtins-${arch}.a AS_NEEDED ( /usr/${LIB}/libunwind.a -lm ) )
+INPUT ( /usr/lib/clang/${PKGVER%.svn*}/lib/linux/${arch}/libclang_rt.builtins-${arch}.a AS_NEEDED ( /usr/lib/clang/${PKGVER%.svn*}/lib/linux/${arch}/libunwind.a -lpthread -ldl -lm ) )
 EOF
 
-cat > ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/libcompiler-rt.a << EOF
-INPUT ( /usr/lib/clang/${PKGVER%.svn*}/lib/linux/${arch}/libclang_rt.builtins-${arch}.a AS_NEEDED ( /usr/${LIB}/libunwind.a -lm ) )
-EOF
-    done
+    ln -sf ../lib/linux/libclang_rt.builtins-${arch}.a ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/libcompiler-rt.a
+  done
 
   install -dm755 ${DEST}/usr/lib/bfd-plugins
   ln -sf ../LLVMgold.so ${DEST}/usr/lib/bfd-plugins/LLVMgold.so
@@ -282,19 +277,15 @@ post_install_config() {
 
   for arch in i386 x86_64
   do
+    LIB="lib"
+
     if [ ${arch} == "i386" ]
     then
       LIB="lib32"
-    else
-      LIB="lib"
     fi
 
-    mv ${DEST}/usr/${LIB}/libunwind.a ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/
-
-cat > ${DEST}/usr/${LIB}/libunwind.a << EOF
-INPUT ( /usr/lib/clang/${PKGVER%.svn*}/${arch}/libunwind.a AS_NEEDED ( -lpthread -ldl ) )
-EOF
-    done
+    mv ${DEST}/usr/${LIB}/libunwind.a ${DEST}/usr/lib/clang/${PKGVER%.svn*}/lib/linux/${arch}/libunwind.a
+  done
 
 }
 

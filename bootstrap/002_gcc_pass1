@@ -17,7 +17,6 @@ tar xf ${SROOT}/gcc-${GCC_VER}.tar.bz2
     tar -xf ${SROOT}/mpc-${MPC_VER}.tar.gz
     mv mpc-${MPC_VER} mpc
 
-    patch -Np1 -i ${PROOT}/gcc-fixes.patch
     patch -Np1 -i ${PROOT}/gcc-pure64.patch
 
     # A hack to get /tools/lib32 recognised.

@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
 export PKGNAME=openjpeg
-export PKGVER=2.1.0
+export PKGVER=2.1.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-export PKGURL="https://downloads.sourceforge.net/openjpeg.mirror/${PKGTAR}"
+export PKGURL="https://github.com/uclouvain/openjpeg/archive/v${PKGVER}.tar.gz"
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")

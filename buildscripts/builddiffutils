@@ -1,13 +1,9 @@
 #!/bin/bash -e
 
 export PKGNAME=diffutils
-export PKGVER=3.4
+export PKGVER=3.5
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://ftp.gnu.org/gnu/diffutils/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-
-configure_pre() {
-  sed -i 's:= @mkdir_p@:= /bin/mkdir -p:' po/Makefile.in.in
-}
 
 . $(dirname $0)/master.sh

@@ -28,7 +28,7 @@ case $(basename $0) in
   ;;
   buildpangomm )
     export PKGNAME=pangomm
-    export PKGVER=2.40.0
+    export PKGVER=2.40.1
   ;;
 esac
 

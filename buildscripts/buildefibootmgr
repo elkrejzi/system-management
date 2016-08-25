@@ -1,21 +1,14 @@
 #!/bin/bash -e
 
 export PKGNAME=efibootmgr
-export PKGVER=0.12
-export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
-export PKGURL="https://github.com/rhinstaller/efibootmgr/releases/download/efibootmgr-${PKGVER}/${PKGTAR}"
+export PKGVER=13
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/rhinstaller/efibootmgr/archive/${PKGVER}.tar.gz"
 export MAKE_FLAGS="EXTRA_CFLAGS=\${DEFAULT_CFLAGS}"
 export DEFAULT_CC="gcc"
 
 configure_override() {
   true
-}
-
-make_install_override() {
-  install -Dm755 src/efibootmgr/efibootmgr ${DEST}/usr/sbin/efibootmgr
-
-  install -dm755 ${DEST}/usr/share/man/man8
-  install -m644 src/man/man8/* ${DEST}/usr/share/man/man8
 }
 
 . $(dirname $0)/master.sh

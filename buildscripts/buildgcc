@@ -2,7 +2,7 @@
 
 export PKGNAME=gcc
 #export PKGVER=6-20160421
-export PKGVER=6.1.0
+export PKGVER=6.2.0
 #export GCCVER="6.0.1 20160421"
 export GCCVER=${PKGVER}
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
@@ -11,7 +11,7 @@ export MAKE_JOBS_FLAGS="-j4"
 export PKGDIR=src
 export PKGBUILD=build
 export DEBUG_BUILD=1
-export PATCHES_LIST=("gcc-fixes.patch" "gcc-pure64.patch")
+export PATCHES_LIST=("gcc-pure64.patch")
 export DEFAULT_CC="gcc"
 export DEFAULT_CXX="g++"
 

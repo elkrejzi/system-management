@@ -1,18 +1,12 @@
 #!/bin/bash -e
 
 export PKGNAME=weston
-export PKGVER=1.11.0
+export PKGVER=1.11.91
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://wayland.freedesktop.org/releases/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export DEBUG_BUILD=1
 export POSTINST_TRIGGER=("chmod 4755 /usr/bin/weston-launch")
 export CONFIGURE_FLAGS=(--enable-demo-clients-install)
-
-configure_pre() {
-  install -dm755 dep
-  ln -sf /usr/lib/libunwind.so dep/libunwind.so
-  export LIBUNWIND_LIBS="-L${PWD}/dep -lunwind"
-}
 
 . $(dirname $0)/master.sh

@@ -1,9 +1,8 @@
 #!/bin/bash -e
 
-export PKGVER=5.24.0
+export PKGVER=5.25.0
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
-export DEBUG_BUILD=1
 export KEEP_DOC=1
 
 build_all() {
@@ -30,8 +29,8 @@ build_all() {
   $(dirname $0)/buildknotifications $1
   $(dirname $0)/buildkpty $1
   $(dirname $0)/buildkconfigwidgets $1
-  $(dirname $0)/buildkglobalaccel $1
   $(dirname $0)/buildkservice $1
+  $(dirname $0)/buildkglobalaccel $1
   $(dirname $0)/buildkiconthemes $1
   $(dirname $0)/buildkjobwidgets $1
   $(dirname $0)/buildktextwidgets $1

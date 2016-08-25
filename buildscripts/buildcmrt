@@ -10,4 +10,8 @@ configure_pre() {
   autoreconf -fi
 }
 
+make_install_post() {
+  install -m755 jitter/igfxcmjit64.so ${DEST}/usr/lib
+}
+
 . $(dirname $0)/master.sh
