@@ -146,8 +146,7 @@ $(dirname $0)/buildgupnp-components
 $(dirname $0)/builddleyna
 $(dirname $0)/buildmailnag
 $(dirname $0)/buildmailnag-gnome-shell
-$(dirname $0)/buildmailnag-goa-plugin
-#$(dirname $0)/buildbeignet
+$(dirname $0)/buildbeignet
 $(dirname $0)/buildclinfo
 $(dirname $0)/buildenscript
 $(dirname $0)/buildexpect

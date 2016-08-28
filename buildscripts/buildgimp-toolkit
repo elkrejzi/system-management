@@ -58,7 +58,7 @@ case $(basename $0) in
   ;;
   buildcogl )
     export PKGNAME=cogl
-    export PKGVER=1.22.1
+    export PKGVER=1.22.2
     export CONFIGURE_FLAGS=(--enable-gles1
                             --enable-gles2
                             --enable-wayland-egl-server
