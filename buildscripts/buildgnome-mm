@@ -15,8 +15,7 @@ case $(basename $0) in
   ;;
   buildgtkmm2 )
     export PKGNAME=gtkmm
-    export PKGVER=2.24.4
-    export USER_CXXFLAGS="-std=c++11"
+    export PKGVER=2.24.5
   ;;
   buildgtkmm3 )
     export PKGNAME=gtkmm

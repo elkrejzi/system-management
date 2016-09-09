@@ -1,13 +1,13 @@
 #!/bin/bash -e
 
 export PKGNAME=tigervnc
-export PKGVER=1.6.0
-export XSERVER_VER=1.18.3
+export PKGVER=1.7.0
+export XSERVER_VER=1.18.4
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/TigerVNC/tigervnc/archive/v${PKGVER}.tar.gz"
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
-export PATCHES_LIST=("tigervnc-fixes.patch")
+export PATCHES_LIST=("tigervnc-gethomedir.patch")
 export CMAKE_FLAGS=(-DBUILD_VIEWER=OFF)
 export DEFAULT_CC="gcc"
 export DEFAULT_CXX="g++"

@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=freetype
-export PKGVER=2.6.5
+export PKGVER=2.7
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://downloads.sourceforge.net/freetype/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
@@ -10,14 +10,14 @@ export MULTILIB_BUILD=1
 configure_pre() {
   sed -ri "s:.*(AUX_MODULES.*valid):\1:" modules.cfg
 
-  sed -ri "s:.*(#.*SUBPIXEL_(RENDERING|HINTING  2)) .*:\1:g" \
+  sed -ri "s:.*(#.*SUBPIXEL_RENDERING) .*:\1:g" \
           include/freetype/config/ftoption.h
 }
 
 configure_pre_32() {
   sed -ri "s:.*(AUX_MODULES.*valid):\1:" modules.cfg
 
-  sed -ri "s:.*(#.*SUBPIXEL_(RENDERING|HINTING  2)) .*:\1:g" \
+  sed -ri "s:.*(#.*SUBPIXEL_RENDERING) .*:\1:g" \
           include/freetype/config/ftoption.h
 }
 

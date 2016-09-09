@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=firefox
-export PKGVER=48.0.2
+export PKGVER=49.0b10
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGDIR=${PKGNAME}
 export PKGURL="http://ftp.mozilla.org/pub/firefox/releases/${PKGVER}/linux-x86_64/en-US/${PKGTAR}"

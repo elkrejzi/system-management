@@ -1,0 +1,18 @@
+--- a/unix/xserver/hw/vnc/Makefile.am	2016-09-08 12:31:18.000000000 +0200
++++ b/unix/xserver/hw/vnc/Makefile.am	2016-09-09 23:08:36.888538684 +0200
+@@ -5,6 +5,7 @@
+ RDR_LIB=$(LIB_DIR)/rdr/librdr.la
+ NETWORK_LIB=$(LIB_DIR)/network/libnetwork.la
+ XREGION_LIB=$(LIB_DIR)/Xregion/libXregion.la
++OS_LIB=$(LIB_DIR)/os/libos.la
+ COMMON_LIBS=$(NETWORK_LIB) $(RFB_LIB) $(RDR_LIB) $(XREGION_LIB)
+ 
+ noinst_LTLIBRARIES = libvnccommon.la
+@@ -64,6 +65,6 @@
+ 
+ libvnc_la_LDFLAGS = -module -avoid-version -Wl,-z,now
+ 
+-libvnc_la_LIBADD = libvnccommon.la $(COMMON_LIBS)
++libvnc_la_LIBADD = libvnccommon.la $(COMMON_LIBS) $(OS_LIB)
+ 
+ EXTRA_DIST = Xvnc.man

@@ -80,7 +80,7 @@ case $(basename $0) in
   ;;
   buildlibXfont )
     export PKGNAME=libXfont
-    export PKGVER=1.5.1
+    export PKGVER=1.5.2
   ;;
   buildlibXft )
     export PKGNAME=libXft

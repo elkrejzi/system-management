@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=enca
-export PKGVER=1.18
+export PKGVER=1.19
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://dl.cihar.com/enca/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

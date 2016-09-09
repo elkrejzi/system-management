@@ -141,7 +141,7 @@ case $(basename $0) in
   ;;
   buildgnome-online-miners )
     export PKGNAME=gnome-online-miners
-    export PKGVER=3.20.0
+    export PKGVER=3.20.1
   ;;
   buildgnome-session )
     export PKGNAME=gnome-session
@@ -184,7 +184,7 @@ case $(basename $0) in
   ;;
   buildgnome-user-share )
     export PKGNAME=gnome-user-share
-    export PKGVER=3.18.1
+    export PKGVER=3.18.2
     export CONFIGURE_FLAGS=(--with-httpd=/usr/sbin/httpd --with-modules-path=/usr/lib/httpd/modules)
   ;;
   buildgnome-video-effects )
@@ -260,7 +260,7 @@ case $(basename $0) in
   ;;
   buildlibchamplain )
     export PKGNAME=libchamplain
-    export PKGVER=0.12.13
+    export PKGVER=0.12.14
   ;;
   buildlibgdata )
     export PKGNAME=libgdata
@@ -294,7 +294,7 @@ case $(basename $0) in
   ;;
   buildlibgweather )
     export PKGNAME=libgweather
-    export PKGVER=3.20.2
+    export PKGVER=3.20.3
   ;;
   buildlibgxps )
     export PKGNAME=libgxps

@@ -1,13 +1,13 @@
 #!/bin/bash -e
 
 export PKGNAME=unrar
-export PKGVER=5.4.2
+export PKGVER=5.4.5
 export PKGTAR=unrarsrc-${PKGVER}.tar.gz
 export PKGDIR=unrar
 export PKGURL="http://www.rarlab.com/rar/${PKGTAR}"
 
 configure_override() {
-  sed -i "s:-O2:${CFLAGS}:g;/CXX/s:g++:${CXX}:g" makefile
+  sed -i "s:-O2:${CFLAGS} -w:g;/CXX/s:c++:${CXX}:g" makefile
 
   unset CFLAGS
 }

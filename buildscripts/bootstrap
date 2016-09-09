@@ -254,7 +254,7 @@ popd
 $(dirname $0)/buildpython3
 
 $(dirname $0)/buildsubversion
-$(dirname $0)/buildllvm-svn
+$(dirname $0)/buildllvm
 $(dirname $0)/buildintel-ucode
 $(dirname $0)/buildlsb-release
 $(dirname $0)/buildfuse

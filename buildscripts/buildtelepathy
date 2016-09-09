@@ -19,7 +19,7 @@ case $(basename $0) in
   ;;
   buildtelepathy-mission-control )
     export PKGNAME=telepathy-mission-control
-    export PKGVER=5.16.3
+    export PKGVER=5.16.4
     export CONFIGURE_FLAGS=(--disable-upower)
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
   ;;

@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
 export PKGNAME=llvm
-export PKGVER=3.8.0
+export PKGVER=3.9.0
 
-export LLVM_RELEASE_BRANCH="release_39"
+#export LLVM_RELEASE_BRANCH=""
 
 proj=(
   cfe

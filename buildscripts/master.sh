@@ -202,7 +202,7 @@ post_install_clean() {
     find ${DEST} -name "*.la" -delete
   fi
 
-  find ${DEST} -name "*.so" -exec chmod 755 {} \;
+  find ${DEST} -name "*.so*" -exec chmod 755 {} \;
   find ${DEST} \( -name .packlist -o -name perllocal.pod \) -delete
 
   rm -rf ${DEST}/usr/share/info/dir

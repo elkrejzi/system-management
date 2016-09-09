@@ -46,7 +46,7 @@ case $(basename $0) in
   ;;
   buildclutter-gst )
     export PKGNAME=clutter-gst
-    export PKGVER=3.0.18
+    export PKGVER=3.0.20
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
   ;;
@@ -137,7 +137,7 @@ EOF
   ;;
   buildpango )
     export PKGNAME=pango
-    export PKGVER=1.40.1
+    export PKGVER=1.40.2
     export DEST=/binary/${PKGNAME}-${PKGVER}
     export MULTILIB_BUILD=1
     export CONFIGURE_FLAGS_32=(--disable-introspection)
