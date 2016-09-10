@@ -12,7 +12,6 @@ export PKGURL="https://download.qt.io/official_releases/qt/5.7/${PKGVER}/submodu
 #export PKGURL="https://download.qt.io/development_releases/qt/5.7/${PKGVER}/submodules/${PKGTAR}"
 
 export MAKE_JOBS_FLAGS="-j4"
-export DEBUG_BUILD=1
 export MAKE_INSTALL_FLAGS="INSTALL_ROOT=\${DEST}"
 
 configure_override() {

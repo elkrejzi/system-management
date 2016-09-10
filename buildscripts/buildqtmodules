@@ -2,7 +2,6 @@
 
 export PKGVER=5.7.0
 export MAKE_JOBS_FLAGS="-j4"
-export DEBUG_BUILD=1
 export NO_OPTIMIZATION=1
 export MAKE_INSTALL_FLAGS="INSTALL_ROOT=\${DEST}"
 

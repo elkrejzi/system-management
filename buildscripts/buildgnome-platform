@@ -203,14 +203,14 @@ case $(basename $0) in
   ;;
   buildgrilo )
     export PKGNAME=grilo
-    export PKGVER=0.3.1
+    export PKGVER=0.3.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
     export CONFIGURE_FLAGS=(--disable-compile-warnings)
   ;;
   buildgrilo-plugins )
     export PKGNAME=grilo-plugins
-    export PKGVER=0.3.2
+    export PKGVER=0.3.3
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
     export CONFIGURE_FLAGS=(--disable-compile-warnings)

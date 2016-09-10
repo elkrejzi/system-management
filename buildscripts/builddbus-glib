@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=dbus-glib
-export PKGVER=0.106
+export PKGVER=0.108
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://dbus.freedesktop.org/releases/dbus-glib/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
