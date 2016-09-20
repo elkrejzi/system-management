@@ -136,7 +136,7 @@ case $(basename $0) in
   ;;
   buildgnome-online-accounts )
     export PKGNAME=gnome-online-accounts
-    export PKGVER=3.20.3
+    export PKGVER=3.20.4
     export CONFIGURE_FLAGS=(--enable-kerberos --disable-compile-warnings)
   ;;
   buildgnome-online-miners )
@@ -155,9 +155,8 @@ case $(basename $0) in
   buildgnome-shell )
     export PKGNAME=gnome-shell
     export PKGVER=3.20.4
-    export DEBUG_BUILD=1
-    export DEFAULT_CC="gcc"
-    export DEFAULT_CXX="g++"
+    #export DEFAULT_CC="gcc"
+    #export DEFAULT_CXX="g++"
     make_install_post() {
       install -dm755 ${DEST}/usr/lib/gnome-shell/mozilla
 
@@ -348,7 +347,6 @@ case $(basename $0) in
   buildmutter )
     export PKGNAME=mutter
     export PKGVER=3.20.3
-    export DEBUG_BUILD=1
     export CONFIGURE_FLAGS=(--enable-compile-warnings=minimum)
   ;;
   buildrest )

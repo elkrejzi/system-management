@@ -1,16 +1,13 @@
 #!/bin/bash -e
 
 export PKGNAME=readline
-export PKGVER=6.3
+export PKGVER=7.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://ftp.gnu.org/gnu/readline/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export MULTILIB_BUILD=1
-export PATCHES_LIST=("readline-fixes.patch")
-export PATCHES_LIST_32=("readline-fixes.patch")
-export MAKE_FLAGS="SHLIB_LIBS=-lncurses"
-export MAKE_FLAGS_32="SHLIB_LIBS=-lncurses"
-export MAKE_INSTALL_FLAGS_32="SHLIB_LIBS=-lncurses"
+export MAKE_FLAGS="SHLIB_LIBS=-lncursesw"
+export MAKE_FLAGS_32="SHLIB_LIBS=-lncursesw"
 
 post_install_config() {
   install -dm755 ${DEST}/etc ${DEST}/lib

@@ -1,16 +1,14 @@
-diff -Naur a/config-bot.h b/config-bot.h
---- a/config-bot.h	2009-08-14 21:11:38.000000000 +0200
-+++ b/config-bot.h	2014-02-28 01:15:42.713879256 +0100
-@@ -196,4 +196,4 @@
+--- a/config-bot.h	2016-05-19 20:34:43.000000000 +0200
++++ b/config-bot.h	2016-09-18 14:55:26.005672469 +0200
+@@ -200,4 +200,4 @@
  /******************************************************************/
  
  /* If you don't want bash to provide a default mail file to check. */
 -/* #undef DEFAULT_MAIL_DIRECTORY */
 +#undef DEFAULT_MAIL_DIRECTORY
-diff -Naur a/config-top.h b/config-top.h
---- a/config-top.h	2012-08-19 02:51:30.000000000 +0200
-+++ b/config-top.h	2014-02-28 01:15:28.729632959 +0100
-@@ -59,14 +59,14 @@
+--- a/config-top.h	2016-05-19 20:34:02.000000000 +0200
++++ b/config-top.h	2016-09-18 14:55:26.005672469 +0200
+@@ -63,14 +63,14 @@
  /* The default value of the PATH variable. */
  #ifndef DEFAULT_PATH_VALUE
  #define DEFAULT_PATH_VALUE \
@@ -27,8 +25,8 @@ diff -Naur a/config-top.h b/config-top.h
  #endif
  
  /* Default primary and secondary prompt strings. */
-@@ -80,20 +80,20 @@
- #define KSH_COMPATIBLE_SELECT
+@@ -87,20 +87,20 @@
+ #define DEFAULT_BASHRC "~/.bashrc"
  
  /* System-wide .bashrc file for interactive shells. */
 -/* #define SYS_BASHRC "/etc/bash.bashrc" */

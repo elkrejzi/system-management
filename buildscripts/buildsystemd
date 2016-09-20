@@ -3,7 +3,6 @@
 export PKGNAME=systemd
 export PKGVER=231
 export MAKE_JOBS_FLAGS="-j4"
-export DEBUG_BUILD=1
 export KEEP_EMPTY_DIRS=1
 export MULTILIB_BUILD=1
 export USER_CFLAGS="-fno-lto -Wno-unknown-attributes"

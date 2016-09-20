@@ -1,11 +1,11 @@
 #!/bin/bash -e
 
 export PKGNAME=bash
-export PKGVER=4.3.30
+export PKGVER=4.4
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://ftp.gnu.org/gnu/bash/${PKGVER}"
 export MAKE_JOBS_FLAGS="-j4"
-export PATCHES_LIST=("bash-fixes.patch" "bash-config.patch")
+export PATCHES_LIST=("bash-config.patch")
 
 export CONFIGURE_FLAGS=(--bindir=/bin
                         --without-bash-malloc

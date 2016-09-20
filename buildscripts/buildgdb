@@ -7,8 +7,7 @@ export PKGURL="https://ftp.gnu.org/gnu/gdb/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--with-system-readline
                         --without-guile
-                        --with-system-gdbinit=/etc/gdb/gdbinit
-                        --enable-targets="i686-linux-gnu,mipsel-linux-gnu,x86_64-linux-gnu")
+                        --with-system-gdbinit=/etc/gdb/gdbinit)
 
 export MAKE_INSTALL_FLAGS="-C gdb"
 

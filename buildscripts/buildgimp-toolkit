@@ -1,7 +1,6 @@
 #!/bin/bash -e
 
 export MAKE_JOBS_FLAGS="-j4"
-export DEBUG_BUILD=1
 
 case $(basename $0) in
   buildatk )
@@ -137,7 +136,7 @@ EOF
   ;;
   buildpango )
     export PKGNAME=pango
-    export PKGVER=1.40.2
+    export PKGVER=1.40.3
     export DEST=/binary/${PKGNAME}-${PKGVER}
     export MULTILIB_BUILD=1
     export CONFIGURE_FLAGS_32=(--disable-introspection)

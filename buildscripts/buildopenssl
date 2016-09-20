@@ -5,7 +5,6 @@ export PKGVER=1.0.2h
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://www.openssl.org/source/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export DEBUG_BUILD=1
 export KEEP_EMPTY_DIRS=1
 export PATCHES_LIST=("openssl.patch" "openssl-fixes.patch")
 export MAKE_INSTALL_FLAGS="INSTALL_PREFIX=\${DEST} MANDIR=/usr/share/man MANSUFFIX=ssl"

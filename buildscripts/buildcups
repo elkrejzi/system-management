@@ -1,13 +1,14 @@
 #!/bin/bash -e
 
 export PKGNAME=cups
-export PKGVER=2.1.4
+export PKGVER=2.2.0
 export PKGTAR=${PKGNAME}-${PKGVER}-source.tar.gz
 export PKGURL="https://cups.org/software/${PKGVER}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1
 export KEEP_STATIC=1
 export POSTINST_TRIGGER=("getent group lpadmin > /dev/null || groupadd -g 19 lpadmin")
+export PATCHES_LIST=("cups-systemd.patch")
 export CONFIGURE_FLAGS=(--with-rcdir=/tmp/cupsinit
                         --with-docdir=/usr/share/cups/doc
                         --with-system-groups=lpadmin
