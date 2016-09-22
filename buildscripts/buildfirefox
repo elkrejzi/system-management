@@ -1,16 +1,19 @@
 #!/bin/bash -e
 
 export PKGNAME=firefox
-export PKGVER=49.0b1
+export PKGVER=49.0
 export PKGTAR=${PKGNAME}-${PKGVER}.source.tar.xz
 export PKGURL="https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/${PKGVER}/source/${PKGTAR}"
 export NO_OPTIMIZATION=1
+
+export MOZ_PATH="$(dirname $(realpath $0))"
 
 configure_override() {
   sed -i "s:-\$(MOZ_APP_VERSION)::g" config/baseconfig.mk
 
 cat > mozconfig << "EOF"
 ac_add_options --enable-application=browser
+
 ac_add_options --prefix=/usr
 ac_add_options --enable-release
 ac_add_options --enable-gold
@@ -40,6 +43,7 @@ ac_add_options --enable-official-branding
 ac_add_options --enable-pulseaudio
 ac_add_options --enable-safe-browsing
 ac_add_options --enable-startup-notification
+ac_add_options --enable-update-channel=release
 ac_add_options --enable-url-classifier
 
 ac_add_options --disable-gconf
@@ -50,6 +54,8 @@ ac_add_options --disable-debug
 ac_add_options --disable-tests
 ac_add_options --disable-updater
 
+export MOZ_ADDON_SIGNING=1
+export MOZ_REQUIRE_SIGNING=1
 export MOZILLA_OFFICIAL=1
 EOF
 }
@@ -61,6 +67,8 @@ make_override() {
 make_install_override() {
   make -f client.mk install DESTDIR=${DEST} INSTALL_SDK=
 
+  install -Dm644 ${MOZ_PATH}/../misc/firefox.desktop ${DEST}/usr/share/applications/firefox.desktop
+
   for i in 16 22 24 32 48 256
   do
     install -Dm644 browser/branding/official/default$i.png ${DEST}/usr/share/icons/hicolor/${i}x${i}/apps/firefox.png
@@ -70,10 +78,11 @@ make_install_override() {
   install -Dm644 browser/branding/official/mozicon128.png ${DEST}/usr/share/icons/hicolor/128x128/apps/firefox.png
   install -Dm644 browser/branding/official/content/about-logo.png ${DEST}/usr/share/icons/hicolor/192x192/apps/firefox.png
   install -Dm644 browser/branding/official/content/about-logo@2x.png ${DEST}/usr/share/icons/hicolor/384x384/apps/firefox.png
-}
 
-make_install_post() {
-  install -dm755 ${DEST}/usr/lib/firefox/browser/defaults/preferences ${DEST}/usr/share/applications
+  rm -rf ${DEST}/usr/lib/firefox/dictionaries
+  ln -sf ../../share/hunspell ${DEST}/usr/lib/firefox/dictionaries
+
+  install -dm755 ${DEST}/usr/lib/firefox/browser/defaults/preferences
 
 cat > ${DEST}/usr/lib/firefox/browser/defaults/preferences/vendor.js << "EOF"
 // Use LANG environment variable to choose locale
@@ -82,136 +91,6 @@ pref("intl.locale.matchOS", true);
 // Disable default browser checking.
 pref("browser.shell.checkDefaultBrowser", false);
 EOF
-
-cat > ${DEST}/usr/share/applications/firefox.desktop << "EOF"
-[Desktop Entry]
-Name=Firefox Web Browser
-Name[ar]=متصفح الوِب فَيَرفُكْس
-Name[ast]=Restolador web Firefox
-Name[bn]=ফায়ারফক্স ওয়েব ব্রাউজার
-Name[ca]=Navegador web Firefox
-Name[cs]=Firefox Webový prohlížeč
-Name[da]=Firefox - internetbrowser
-Name[es]=Navegador web Firefox
-Name[et]=Firefoxi veebibrauser
-Name[fa]=مرورگر اینترنتی Firefox
-Name[fi]=Firefox-selain
-Name[fr]=Navigateur Web Firefox
-Name[gl]=Navegador web Firefox
-Name[he]=דפדפן האינטרנט Firefox
-Name[hr]=Firefox web preglednik
-Name[hu]=Firefox webböngésző
-Name[it]=Firefox Browser Web
-Name[ja]=Firefox ウェブ・ブラウザ
-Name[ko]=Firefox 웹 브라우저
-Name[ku]=Geroka torê Firefox
-Name[lt]=Firefox interneto naršyklė
-Name[nb]=Firefox Nettleser
-Name[nl]=Firefox webbrowser
-Name[nn]=Firefox Nettlesar
-Name[no]=Firefox Nettleser
-Name[pl]=Przeglądarka WWW Firefox
-Name[pt]=Firefox Navegador Web
-Name[pt_BR]=Navegador Web Firefox
-Name[ro]=Firefox – Navigator Internet
-Name[ru]=Веб-браузер Firefox
-Name[sk]=Firefox - internetový prehliadač
-Name[sl]=Firefox spletni brskalnik
-Name[sv]=Webbläsaren Firefox
-Name[ug]=Firefox توركۆرگۈ
-Name[uk]=Веб-браузер Firefox
-Name[vi]=Trình duyệt web Firefox
-Name[zh_CN]=Firefox 网络浏览器
-Name[zh_TW]=Firefox 網路瀏覽器
-Comment=Browse the World Wide Web
-Comment[ar]=تصفح الشبكة العنكبوتية العالمية
-Comment[ast]=Restola pela Rede
-Comment[bn]=ইন্টারনেট ব্রাউজ করুন
-Comment[ca]=Navegueu per la web
-Comment[cs]=Prohlížení stránek World Wide Webu
-Comment[da]=Surf på internettet
-Comment[de]=Im Internet surfen
-Comment[es]=Navegue por la web
-Comment[et]=Lehitse veebi
-Comment[fa]=صفحات شبکه جهانی اینترنت را مرور نمایید
-Comment[fi]=Selaa Internetin WWW-sivuja
-Comment[fr]=Naviguer sur le Web
-Comment[gl]=Navegar pola rede
-Comment[he]=גלישה ברחבי האינטרנט
-Comment[hr]=Pretražite web
-Comment[hu]=A világháló böngészése
-Comment[it]=Esplora il web
-Comment[ja]=ウェブを閲覧します
-Comment[ko]=웹을 돌아 다닙니다
-Comment[ku]=Li torê bigere
-Comment[lt]=Naršykite internete
-Comment[nb]=Surf på nettet
-Comment[nl]=Verken het internet
-Comment[nn]=Surf på nettet
-Comment[no]=Surf på nettet
-Comment[pl]=Przeglądanie stron WWW
-Comment[pt]=Navegue na Internet
-Comment[pt_BR]=Navegue na Internet
-Comment[ro]=Navigați pe Internet
-Comment[ru]=Доступ в Интернет
-Comment[sk]=Prehliadanie internetu
-Comment[sl]=Brskajte po spletu
-Comment[sv]=Surfa på webben
-Comment[ug]=دۇنيادىكى توربەتلەرنى كۆرگىلى بولىدۇ
-Comment[uk]=Перегляд сторінок Інтернету
-Comment[vi]=Để duyệt các trang web
-Comment[zh_CN]=浏览互联网
-Comment[zh_TW]=瀏覽網際網路
-GenericName=Web Browser
-GenericName[ar]=متصفح وب
-GenericName[ast]=Restolador Web
-GenericName[bn]=ওয়েব ব্রাউজার
-GenericName[ca]=Navegador web
-GenericName[cs]=Webový prohlížeč
-GenericName[da]=Webbrowser
-GenericName[es]=Navegador web
-GenericName[et]=Veebibrauser
-GenericName[fa]=مرورگر اینترنتی
-GenericName[fi]=WWW-selain
-GenericName[fr]=Navigateur Web
-GenericName[gl]=Navegador Web
-GenericName[he]=דפדפן אינטרנט
-GenericName[hr]=Web preglednik
-GenericName[hu]=Webböngésző
-GenericName[it]=Browser web
-GenericName[ja]=ウェブ・ブラウザ
-GenericName[ko]=웹 브라우저
-GenericName[ku]=Geroka torê
-GenericName[lt]=Interneto naršyklė
-GenericName[nb]=Nettleser
-GenericName[nl]=Webbrowser
-GenericName[nn]=Nettlesar
-GenericName[no]=Nettleser
-GenericName[pl]=Przeglądarka WWW
-GenericName[pt]=Navegador Web
-GenericName[pt_BR]=Navegador Web
-GenericName[ro]=Navigator Internet
-GenericName[ru]=Веб-браузер
-GenericName[sk]=Internetový prehliadač
-GenericName[sl]=Spletni brskalnik
-GenericName[sv]=Webbläsare
-GenericName[ug]=توركۆرگۈ
-GenericName[uk]=Веб-браузер
-GenericName[vi]=Trình duyệt Web
-GenericName[zh_CN]=网络浏览器
-GenericName[zh_TW]=網路瀏覽器
-Exec=firefox %u
-Terminal=false
-Type=Application
-Icon=firefox
-Categories=Network;WebBrowser;
-MimeType=text/html;text/xml;application/xhtml+xml;application/vnd.mozilla.xul+xml;text/mml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
-StartupNotify=true
-EOF
-
-  rm -rf ${DEST}/usr/lib/firefox/dictionaries
-
-  ln -sf ../../share/hunspell ${DEST}/usr/lib/firefox/dictionaries
 }
 
 . $(dirname $0)/master.sh

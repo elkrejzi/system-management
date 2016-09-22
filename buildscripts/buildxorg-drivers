@@ -6,18 +6,23 @@ case $(basename $0) in
     export PKGVER=2.10.3
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://xorg.freedesktop.org/releases/individual/driver/${PKGTAR}"
+    export PATCHES_LIST=("xf86-input-evdev-fixes.patch")
   ;;
   buildxf86-input-libinput )
     export PKGNAME=xf86-input-libinput
-    export PKGVER=0.19.1
+    export PKGVER=0.19.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://xorg.freedesktop.org/releases/individual/driver/${PKGTAR}"
+    post_install_config() {
+      mv ${DEST}/usr/share/X11/xorg.conf.d/40-libinput.conf ${DEST}/usr/share/X11/xorg.conf.d/60-libinput.conf
+    }
   ;;
   buildxf86-input-synaptics )
     export PKGNAME=xf86-input-synaptics
     export PKGVER=1.8.99.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://xorg.freedesktop.org/releases/individual/driver/${PKGTAR}"
+    export PATCHES_LIST=("xf86-input-synaptics-fixes.patch")
   ;;
   buildxf86-input-wacom )
     export PKGNAME=xf86-input-wacom
@@ -29,7 +34,7 @@ case $(basename $0) in
   ;;
   buildxf86-video-amdgpu )
     export PKGNAME=xf86-video-amdgpu
-    export PKGVER=1.1.2
+    export PKGVER=1.1.99
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="http://xorg.freedesktop.org/releases/individual/driver/${PKGTAR}"
   ;;

@@ -3,11 +3,11 @@
 case $(basename $0) in
   buildgssdp )
     export PKGNAME=gssdp
-    export PKGVER=0.14.16
+    export PKGVER=1.0.0
   ;;
   buildgupnp )
     export PKGNAME=gupnp
-    export PKGVER=0.20.18
+    export PKGVER=1.0.0
   ;;
   buildgupnp-av )
     export PKGNAME=gupnp-av

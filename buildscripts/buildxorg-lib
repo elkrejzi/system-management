@@ -82,6 +82,10 @@ case $(basename $0) in
     export PKGNAME=libXfont
     export PKGVER=1.5.2
   ;;
+  buildlibXfont2 )
+    export PKGNAME=libXfont2
+    export PKGVER=2.0.1
+  ;;
   buildlibXft )
     export PKGNAME=libXft
     export PKGVER=2.3.2
@@ -180,6 +184,7 @@ case $(basename $0) in
     $(dirname $0)/buildlibXdamage
     $(dirname $0)/buildlibfontenc
     $(dirname $0)/buildlibXfont
+    $(dirname $0)/buildlibXfont2
     $(dirname $0)/buildlibXft
     $(dirname $0)/buildlibXi
     $(dirname $0)/buildlibXinerama

@@ -5,16 +5,16 @@ export MAKE_JOBS_FLAGS="-j4"
 case $(basename $0) in
   buildatk )
     export PKGNAME=atk
-    export PKGVER=2.20.0
+    export PKGVER=2.22.0
     export DEST=/binary/${PKGNAME}-${PKGVER}
   ;;
   buildat-spi2-atk )
     export PKGNAME=at-spi2-atk
-    export PKGVER=2.20.1
+    export PKGVER=2.21.91
   ;;
   buildat-spi2-core )
     export PKGNAME=at-spi2-core
-    export PKGVER=2.20.2
+    export PKGVER=2.21.4
   ;;
   buildcairo )
     export PKGNAME=cairo
@@ -51,7 +51,7 @@ case $(basename $0) in
   ;;
   buildclutter-gtk )
     export PKGNAME=clutter-gtk
-    export PKGVER=1.8.0
+    export PKGVER=1.8.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
   ;;
@@ -63,11 +63,12 @@ case $(basename $0) in
                             --enable-wayland-egl-server
                             --enable-wayland-egl-platform
                             --enable-kms-egl-platform
-                            --enable-xlib-egl-platform)
+                            --enable-xlib-egl-platform
+                            --disable-maintainer-flags)
   ;;
   buildgdk-pixbuf )
     export PKGNAME=gdk-pixbuf
-    export PKGVER=2.34.0
+    export PKGVER=2.36.0
     export DEST=/binary/${PKGNAME}-${PKGVER}
     export CONFIGURE_FLAGS=(--with-x11 --with-libjasper)
     export SPACE_ADDED=1
@@ -75,7 +76,7 @@ case $(basename $0) in
   ;;
   buildglib2 )
     export PKGNAME=glib
-    export PKGVER=2.48.2
+    export PKGVER=2.50.0
     export DEST=/binary/${PKGNAME}-${PKGVER}
     export KEEP_EMPTY_DIRS=1
     export MULTILIB_BUILD=1
@@ -94,7 +95,7 @@ case $(basename $0) in
   ;;
   buildgobject-introspection )
     export PKGNAME=gobject-introspection
-    export PKGVER=1.48.0
+    export PKGVER=1.50.0
     export PYTHON=python3
   ;;
   buildgtk2 )
@@ -119,7 +120,7 @@ EOF
   ;;
   buildgtk3 )
     export PKGNAME=gtk+
-    export PKGVER=3.20.9
+    export PKGVER=3.22.0
     export CONFIGURE_FLAGS=(--enable-broadway-backend --enable-wayland-backend --enable-x11-backend --enable-man)
     export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-query-immodules-3.0 ] && echo \"Processing triggers for gtk-3.0\" && /usr/bin/gtk-query-immodules-3.0 --update-cache")
     export SPACE_ADDED=1
@@ -143,7 +144,7 @@ EOF
   ;;
   buildvala )
     export PKGNAME=vala
-    export PKGVER=0.32.1
+    export PKGVER=0.34.0
   ;;
 esac
 

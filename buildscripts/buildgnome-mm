@@ -11,7 +11,7 @@ case $(basename $0) in
   ;;
   buildglibmm )
     export PKGNAME=glibmm
-    export PKGVER=2.48.1
+    export PKGVER=2.50.0
   ;;
   buildgtkmm2 )
     export PKGNAME=gtkmm
@@ -19,11 +19,11 @@ case $(basename $0) in
   ;;
   buildgtkmm3 )
     export PKGNAME=gtkmm
-    export PKGVER=3.20.1
+    export PKGVER=3.22.0
   ;;
   buildlibsigc++ )
     export PKGNAME=libsigc++
-    export PKGVER=2.8.0
+    export PKGVER=2.10.0
   ;;
   buildpangomm )
     export PKGNAME=pangomm

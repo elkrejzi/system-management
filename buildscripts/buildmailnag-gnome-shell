@@ -8,6 +8,7 @@ export MAKE_INSTALL_FLAGS="prefix=\${DEST}/usr"
 
 configure_override() {
   unset CC
+  sed -i "s:3.20:3.22:g" metadata.json
 }
 
 . $(dirname $0)/master.sh

@@ -9,8 +9,8 @@ export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
 export PATCHES_LIST=("tigervnc-gethomedir.patch")
 export CMAKE_FLAGS=(-DBUILD_VIEWER=OFF)
-export DEFAULT_CC="gcc"
-export DEFAULT_CXX="g++"
+#export DEFAULT_CC="gcc"
+#export DEFAULT_CXX="g++"
 
 configure_pre() {
   install -dm755 unix

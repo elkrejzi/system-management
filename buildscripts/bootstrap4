@@ -19,6 +19,7 @@ $(dirname $0)/buildcogl
 $(dirname $0)/buildgeocode-glib
 $(dirname $0)/buildgmime
 $(dirname $0)/buildlibsigc++
+$(dirname $0)/buildpcre2
 $(dirname $0)/buildraptor2
 $(dirname $0)/buildrest
 $(dirname $0)/buildtelepathy-glib
@@ -31,6 +32,7 @@ $(dirname $0)/buildexempi
 $(dirname $0)/buildgexiv2
 $(dirname $0)/buildgjs
 $(dirname $0)/buildglibmm
+$(dirname $0)/buildgnome-autoar
 $(dirname $0)/buildgnome-desktop
 $(dirname $0)/buildgnome-menus
 $(dirname $0)/buildgnome-online-accounts
@@ -42,6 +44,7 @@ $(dirname $0)/buildgtksourceview
 $(dirname $0)/buildlibcacard
 $(dirname $0)/buildlibcue
 $(dirname $0)/buildlibgee
+$(dirname $0)/buildlibgepub
 $(dirname $0)/buildlibgrss
 $(dirname $0)/buildlibgsf
 $(dirname $0)/buildlibgtop
@@ -179,7 +182,7 @@ $(dirname $0)/buildgparted
 $(dirname $0)/buildinkscape
 $(dirname $0)/buildphp
 $(dirname $0)/buildsqlitebrowser
-$(dirname $0)/buildtigervnc
+#$(dirname $0)/buildtigervnc
 $(dirname $0)/buildtransmission
 $(dirname $0)/buildwireshark
 $(dirname $0)/buildxscreensaver

@@ -1,0 +1,131 @@
+--- a/src/emuMB.c	2016-06-01 03:40:46.000000000 +0200
++++ b/src/emuMB.c	2016-09-20 22:49:27.482859547 +0200
+@@ -184,10 +184,13 @@
+ EvdevMBEmuTimer(InputInfoPtr pInfo)
+ {
+     EvdevPtr pEvdev = pInfo->private;
+-    int	sigstate;
+     int id;
+ 
+-    sigstate = xf86BlockSIGIO ();
++#if HAVE_THREADED_INPUT
++    input_lock();
++#else
++    int sigstate = xf86BlockSIGIO();
++#endif
+ 
+     pEvdev->emulateMB.pending = FALSE;
+     if ((id = stateTab[pEvdev->emulateMB.state][4][0]) != 0) {
+@@ -200,7 +203,11 @@
+                     pEvdev->emulateMB.state);
+     }
+ 
+-    xf86UnblockSIGIO (sigstate);
++#if HAVE_THREADED_INPUT
++    input_unlock();
++#else
++    xf86UnblockSIGIO(sigstate);
++#endif
+     return 0;
+ }
+ 
+@@ -261,9 +268,7 @@
+ }
+ 
+ 
+-void EvdevMBEmuWakeupHandler(pointer data,
+-                             int i,
+-                             pointer LastSelectMask)
++void EvdevMBEmuWakeupHandler(WAKEUP_HANDLER_ARGS)
+ {
+     InputInfoPtr pInfo = (InputInfoPtr)data;
+     EvdevPtr     pEvdev = (EvdevPtr)pInfo->private;
+@@ -277,9 +282,7 @@
+     }
+ }
+ 
+-void EvdevMBEmuBlockHandler(pointer data,
+-                            struct timeval **waitTime,
+-                            pointer LastSelectMask)
++void EvdevMBEmuBlockHandler(BLOCK_HANDLER_ARGS)
+ {
+     InputInfoPtr    pInfo = (InputInfoPtr) data;
+     EvdevPtr        pEvdev= (EvdevPtr) pInfo->private;
+--- a/src/emuThird.c	2016-06-01 03:40:46.000000000 +0200
++++ b/src/emuThird.c	2016-09-20 22:49:15.606788355 +0200
+@@ -89,12 +89,19 @@
+     InputInfoPtr      pInfo    = (InputInfoPtr)arg;
+     EvdevPtr          pEvdev   = pInfo->private;
+     struct emulate3B *emu3B    = &pEvdev->emulate3B;
+-    int               sigstate = 0;
+ 
+-    sigstate = xf86BlockSIGIO ();
++#if HAVE_THREADED_INPUT
++    input_lock();
++#else
++    int sigstate = xf86BlockSIGIO();
++#endif
+     emu3B->state = EM3B_EMULATING;
+     Evdev3BEmuPostButtonEvent(pInfo, emu3B->button, BUTTON_PRESS);
+-    xf86UnblockSIGIO (sigstate);
++#if HAVE_THREADED_INPUT
++    input_unlock();
++#else
++    xf86UnblockSIGIO(sigstate);
++#endif
+     return 0;
+ }
+ 
+--- a/src/evdev.c	2016-05-12 07:28:16.000000000 +0200
++++ b/src/evdev.c	2016-09-20 22:49:04.951724694 +0200
+@@ -1108,6 +1108,7 @@
+     InputInfoPtr pInfo;
+     struct input_event ev[ArrayLength(bits) + 1];
+     int i;
++    int rc;
+ 
+     memset(ev, 0, sizeof(ev));
+ 
+@@ -1122,7 +1123,9 @@
+     ev[i].code = SYN_REPORT;
+     ev[i].value = 0;
+ 
+-    write(pInfo->fd, ev, sizeof ev);
++    rc = write(pInfo->fd, ev, sizeof ev);
++    if (rc != sizeof ev)
++	    xf86IDrvMsg(pInfo, X_ERROR, "Failed to set keyboard controls: %s\n", strerror(errno));
+ }
+ 
+ static int
+--- a/src/evdev.h	2016-06-01 03:40:46.000000000 +0200
++++ b/src/evdev.h	2016-09-20 22:49:27.482859547 +0200
+@@ -67,6 +67,18 @@
+ #define LogMessageVerbSigSafe xf86MsgVerb
+ #endif
+ 
++#if GET_ABI_MAJOR(ABI_XINPUT_VERSION) >= 23
++#define HAVE_THREADED_INPUT	1
++#endif
++
++#if GET_ABI_MAJOR(ABI_XINPUT_VERSION) >= 24
++#define BLOCK_HANDLER_ARGS     	void *data, void *waitTime
++#define WAKEUP_HANDLER_ARGS	void *data, int i
++#else
++#define BLOCK_HANDLER_ARGS	pointer data, struct timeval **waitTime, pointer LastSelectMask
++#define WAKEUP_HANDLER_ARGS	void *data, int i, pointer LastSelectMask
++#endif
++
+ #define EVDEV_MAXBUTTONS 32
+ #define EVDEV_MAXQUEUE 32
+ 
+@@ -260,8 +272,8 @@
+ /* Middle Button emulation */
+ int  EvdevMBEmuTimer(InputInfoPtr);
+ BOOL EvdevMBEmuFilterEvent(InputInfoPtr, int, BOOL);
+-void EvdevMBEmuWakeupHandler(pointer, int, pointer);
+-void EvdevMBEmuBlockHandler(pointer, struct timeval**, pointer);
++void EvdevMBEmuWakeupHandler(WAKEUP_HANDLER_ARGS);
++void EvdevMBEmuBlockHandler(BLOCK_HANDLER_ARGS);
+ void EvdevMBEmuPreInit(InputInfoPtr);
+ void EvdevMBEmuOn(InputInfoPtr);
+ void EvdevMBEmuFinalize(InputInfoPtr);

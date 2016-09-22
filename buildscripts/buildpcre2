@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+export PKGNAME=pcre2
+export PKGVER=10.22
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://downloads.sourceforge.net/pcre/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--enable-pcre2-16
+                        --enable-pcre2-32
+                        --enable-jit
+                        --enable-pcre2grep-libz
+                        --enable-pcre2grep-libbz2
+                        --enable-pcre2test-libreadline)
+
+. $(dirname $0)/master.sh
