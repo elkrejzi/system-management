@@ -49,6 +49,6 @@ esac
 export MAKE_JOBS_FLAGS="-j4"
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export DEST=/binary/xorg/xcb/${PKGNAME}-${PKGVER}
-export PKGURL="http://xorg.freedesktop.org/releases/individual/xcb/${PKGTAR}"
+export PKGURL="https://www.x.org/releases/individual/xcb/${PKGTAR}"
 
 . $(dirname $0)/master.sh

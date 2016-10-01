@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=intel-hybrid-driver
-export PKGVER=1.0.1
+export PKGVER=1.0.2
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/01org/intel-hybrid-driver/archive/${PKGVER}.tar.gz"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}

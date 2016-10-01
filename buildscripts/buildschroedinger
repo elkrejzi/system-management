@@ -3,7 +3,7 @@
 export PKGNAME=schroedinger
 export PKGVER=1.0.11
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-export PKGURL="http://diracvideo.org/download/schroedinger/${PKGTAR}"
+export PKGURL="https://download.videolan.org/contrib/schroedinger/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 

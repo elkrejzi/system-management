@@ -1,13 +1,18 @@
 #!/bin/bash -e
 
 export PKGNAME=beignet
-export PKGVER=1.1.1
+export PKGVER=1.2.0
 export PKGTAR=${PKGNAME}-${PKGVER}-source.tar.gz
 export PKGDIR=Beignet-${PKGVER}-Source
 export PKGURL="https://01.org/sites/default/files/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
+export PATCHES_LIST=("beignet-cmrt-fixes.patch")
 export CMAKE_FLAGS=(-DLIB_INSTALL_DIR=/usr/lib -DBUILD_EXAMPLES=OFF)
+
+configure_pre() {
+  sed -i "s:CMRT_FOUND:\!&:g" ../${PKGDIR}/src/CMakeLists.txt
+}
 
 make_install_post() {
   mv ${DEST}/usr/include/CL/cl_intel.h ${DEST}/usr/include

@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=firebird
-export PKGVER=3.0.0.32483
+export PKGVER=3.0.1.32609
 export PKGTAR=Firebird-${PKGVER}-0.tar.bz2
 export PKGDIR=Firebird-${PKGVER}-0
 export PKGURL="https://downloads.sourceforge.net/firebird/${PKGTAR}"

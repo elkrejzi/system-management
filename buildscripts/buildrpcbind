@@ -3,7 +3,7 @@
 export PKGNAME=rpcbind
 export PKGVER=0.2.3
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
-export PKGURL="https://downloads.sourceforge.net/rpcbind/"
+export PKGURL="https://downloads.sourceforge.net/rpcbind/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export PATCHES_LIST=("rpcbind.patch")
 export POSTINST_TRIGGER=("getent group rpc > /dev/null || groupadd -g 28 rpc"

@@ -76,6 +76,8 @@ case $(basename $0) in
   buildxcb-proto )
     export PKGNAME=xcb-proto
     export PKGVER=1.12
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="https://www.x.org/releases/individual/xcb/${PKGTAR}"
   ;;
   buildxcmiscproto )
     export PKGNAME=xcmiscproto
@@ -107,11 +109,13 @@ case $(basename $0) in
   ;;
   buildxproto )
     export PKGNAME=xproto
-    export PKGVER=7.0.29
+    export PKGVER=7.0.31
   ;;
   buildxtrans )
     export PKGNAME=xtrans
     export PKGVER=1.3.5
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="https://www.x.org/releases/individual/lib/${PKGTAR}"
   ;;
   buildxorg-proto )
     export PKG_AUTO_INSTALL=1
@@ -152,9 +156,13 @@ case $(basename $0) in
 esac
 
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
-export PKGURL="http://xorg.freedesktop.org/releases/individual/proto/${PKGTAR}"
 export NO_OPTIMIZATION=1
 export NO_STRIP=1
+
+if [ -z ${PKGURL} ]
+then
+  export PKGURL="https://www.x.org/releases/individual/proto/${PKGTAR}"
+fi
 
 if [ ${PKGNAME} != "xtrans" ] && [ ${PKGNAME} != "xcb-proto" ]
 then

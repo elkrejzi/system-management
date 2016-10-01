@@ -8,39 +8,39 @@ case $(basename $0) in
     export PKGNAME=font-util
     export PKGVER=1.3.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
-    export PKGURL="http://xorg.freedesktop.org/releases/individual/font/${PKGTAR}"
+    export PKGURL="https://www.x.org/releases/individual/font/${PKGTAR}"
     unset NO_OPTIMIZATION NO_STRIP
   ;;
   buildutil-macros )
     export PKGNAME=util-macros
     export PKGVER=1.19.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
-    export PKGURL="http://xorg.freedesktop.org/releases/individual/util/${PKGTAR}"
+    export PKGURL="https://www.x.org/releases/individual/util/${PKGTAR}"
   ;;
   buildxbitmaps )
     export PKGNAME=xbitmaps
     export PKGVER=1.1.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
-    export PKGURL="http://xorg.freedesktop.org/releases/individual/data/${PKGTAR}"
+    export PKGURL="https://www.x.org/releases/individual/data/${PKGTAR}"
   ;;
   buildxcursor-themes )
     export PKGNAME=xcursor-themes
     export PKGVER=1.0.4
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
-    export PKGURL="http://xorg.freedesktop.org/releases/individual/data/${PKGTAR}"
+    export PKGURL="https://www.x.org/releases/individual/data/${PKGTAR}"
   ;;
   buildxkeyboard-config )
     export PKGNAME=xkeyboard-config
     export PKGVER=2.18
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
-    export PKGURL="http://xorg.freedesktop.org/releases/individual/data/xkeyboard-config/${PKGTAR}"
+    export PKGURL="https://www.x.org/releases/individual/data/xkeyboard-config/${PKGTAR}"
     export CONFIGURE_FLAGS=(--with-xkb-rules-symlink=xorg)
   ;;
   buildxorg-server )
     export PKGNAME=xorg-server
     export PKGVER=1.18.99.901
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
-    export PKGURL="http://xorg.freedesktop.org/releases/individual/xserver/${PKGTAR}"
+    export PKGURL="https://www.x.org/releases/individual/xserver/${PKGTAR}"
     export KEEP_EMPTY_DIRS=1
     export PATCHES_LIST=("xwayland-pointer-lock.patch")
     export CONFIGURE_FLAGS=(--disable-install-setuid

@@ -3,7 +3,7 @@
 export PKGNAME=jemalloc
 export PKGVER=4.2.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
-export PKGURL="http://www.canonware.com/download/jemalloc/${PKGVER}"
+export PKGURL="http://www.canonware.com/download/jemalloc/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
 make_install_post() {

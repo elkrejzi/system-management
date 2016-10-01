@@ -3,7 +3,7 @@
 export PKGNAME=libunwind
 export PKGVER=1.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-export PKGURL="http://download.savannah.gnu.org/releases/libunwind/"
+export PKGURL="http://download.savannah.gnu.org/releases/libunwind/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
 configure_pre() {

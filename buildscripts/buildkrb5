@@ -3,7 +3,7 @@
 export PKGNAME=krb5
 export PKGVER=1.14.4
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-export PKGURL="http://web.mit.edu/kerberos/www/dist/krb5/${PKGVER}/${PKGTAR}"
+export PKGURL="http://web.mit.edu/kerberos/www/dist/krb5/${PKGVER:0:4}/${PKGTAR}"
 export PKGDIR=${PKGNAME}-${PKGVER}
 export PKGBUILD=${PKGDIR}/src
 export MAKE_JOBS_FLAGS="-j4"

@@ -3,7 +3,7 @@
 export PKGNAME=postgresql
 export PKGVER=9.5.4
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
-export PKGURL="https://ftp.postgresql.org/pub/source/v${PKGTAR}/${PKGTAR}"
+export PKGURL="https://ftp.postgresql.org/pub/source/v${PKGVER}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
 if [ -z $1 ]

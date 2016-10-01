@@ -4,7 +4,7 @@ export PKGNAME=lsof
 export PKGVER=4.89
 export PKGTAR=${PKGNAME}_${PKGVER}.tar.bz2
 export PKGDIR=${PKGNAME}_${PKGVER}_src
-export PKGURL="ftp://sunsite.ualberta.ca/pub/Mirror/lsof/lsof_4.89.tar.bz2"
+export PKGURL="http://ftp.u-strasbg.fr/securite/lsof/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
 post_extract_action() {

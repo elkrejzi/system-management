@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=ghostscript
-export PKGVER=9.19
+export PKGVER=9.20
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs${PKGVER/./}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

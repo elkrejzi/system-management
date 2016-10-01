@@ -41,7 +41,7 @@ case $(basename $0) in
     export PKGNAME=libxcb
     export PKGVER=1.12
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
-    export PKGURL="http://xorg.freedesktop.org/releases/individual/xcb/${PKGTAR}"
+    export PKGURL="https://www.x.org/releases/individual/xcb/${PKGTAR}"
     export CONFIGURE_FLAGS=(--disable-devel-docs)
     export CONFIGURE_FLAGS_32=(--disable-devel-docs)
 
@@ -212,7 +212,7 @@ export DEST=/binary/xorg/lib/${PKGNAME}-${PKGVER}
 
 if [ -z ${PKGURL} ]
 then
-  export PKGURL="http://xorg.freedesktop.org/releases/individual/lib/${PKGTAR}"
+  export PKGURL="https://www.x.org/releases/individual/lib/${PKGTAR}"
 fi
 
 export MAKE_JOBS_FLAGS="-j4"

@@ -10,18 +10,18 @@ case $(basename $0) in
   ;;
   buildat-spi2-atk )
     export PKGNAME=at-spi2-atk
-    export PKGVER=2.21.91
+    export PKGVER=2.22.0
   ;;
   buildat-spi2-core )
     export PKGNAME=at-spi2-core
-    export PKGVER=2.21.4
+    export PKGVER=2.22.0
   ;;
   buildcairo )
     export PKGNAME=cairo
     export PKGVER=1.14.6
     export DEST=/binary/${PKGNAME}-${PKGVER}
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-    export PKGURL="http://cairographics.org/releases/${PKGTAR}"
+    export PKGURL="https://www.cairographics.org/releases/${PKGTAR}"
     export MULTILIB_BUILD=1
     export CONFIGURE_FLAGS=(--enable-tee)
     export CONFIGURE_FLAGS_32=(--enable-tee)

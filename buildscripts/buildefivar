@@ -1,12 +1,13 @@
 #!/bin/bash -e
 
 export PKGNAME=efivar
-export PKGVER=27
+export PKGVER=30
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/rhinstaller/efivar/archive/${PKGVER}.tar.gz"
 export MAKE_FLAGS="libdir=/usr/lib"
 export MAKE_INSTALL_FLAGS="libdir=/usr/lib"
 export DEFAULT_CC="gcc"
+export USER_CFLAGS="-g3 -flto"
 
 configure_override() {
   true

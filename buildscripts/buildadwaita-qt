@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=adwaita-qt
-export PKGVER=0.4
+export PKGVER=0.5
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/MartinBriza/adwaita-qt/archive/${PKGVER}.tar.gz"
 export MAKE_JOBS_FLAGS="-j4"

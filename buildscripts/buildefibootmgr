@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=efibootmgr
-export PKGVER=13
+export PKGVER=14
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/rhinstaller/efibootmgr/archive/${PKGVER}.tar.gz"
 export MAKE_FLAGS="EXTRA_CFLAGS=\${DEFAULT_CFLAGS}"

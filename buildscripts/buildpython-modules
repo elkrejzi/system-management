@@ -4,16 +4,16 @@ case $(basename $0) in
 
   buildpython-alabaster )
     export PKGNAME=alabaster
-    export PKGVER=0.7.8
+    export PKGVER=0.7.9
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/a/alabaster/${PKGTAR}"
+    export PKGURL="https://files.pythonhosted.org/packages/source/a/alabaster/${PKGTAR}"
     export DEST=/binary/python/python-alabaster-${PKGVER}
   ;;
   buildpython-babel )
     export PKGNAME=Babel
     export PKGVER=2.3.4
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/B/Babel/${PKGTAR}"
+    export PKGURL="https://files.pythonhosted.org/packages/source/B/Babel/${PKGTAR}"
     export DEST=/binary/python/python-babel-${PKGVER}
     make_install_post() {
       mv ${DEST}/usr/bin/pybabel{,3}
@@ -23,14 +23,14 @@ case $(basename $0) in
     export PKGNAME=Beaker
     export PKGVER=1.8.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/B/Beaker/${PKGTAR}"
+    export PKGURL="https://files.pythonhosted.org/packages/source/B/Beaker/${PKGTAR}"
     export DEST=/binary/python/python-beaker-${PKGVER}
   ;;
   buildpython-cssselect )
     export PKGNAME=cssselect
     export PKGVER=0.9.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/c/cssselect/${PKGTAR}"
+    export PKGURL="https://files.pythonhosted.org/packages/source/c/cssselect/${PKGTAR}"
     export DEST=/binary/python/python-cssselect-${PKGVER}
   ;;
   buildpython-docutils )
@@ -51,35 +51,35 @@ case $(basename $0) in
     export PKGNAME=imagesize
     export PKGVER=0.7.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/i/imagesize/${PKGTAR}"
+    export PKGURL="https://files.pythonhosted.org/packages/source/i/imagesize/${PKGTAR}"
     export DEST=/binary/python/python-imagesize-${PKGVER}
   ;;
   buildpython-isodate )
     export PKGNAME=isodate
     export PKGVER=0.5.4
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/i/isodate/${PKGTAR}"
+    export PKGURL="https://files.pythonhosted.org/packages/source/i/isodate/${PKGTAR}"
     export DEST=/binary/python/python-isodate-${PKGVER}
   ;;
   buildpython-jinja2 )
     export PKGNAME=Jinja2
     export PKGVER=2.8
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/J/Jinja2/${PKGTAR}"
+    export PKGURL="https://files.pythonhosted.org/packages/source/J/Jinja2/${PKGTAR}"
     export DEST=/binary/python/python-jinja2-${PKGVER}
   ;;
   buildpython-lxml )
     export PKGNAME=lxml
     export PKGVER=3.6.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/l/lxml/${PKGTAR}"
+    export PKGURL="https://files.pythonhosted.org/packages/source/l/lxml/${PKGTAR}"
     export DEST=/binary/python/python-lxml-${PKGVER}
   ;;
   buildpython-mako )
     export PKGNAME=Mako
     export PKGVER=1.0.4
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/M/Mako/${PKGTAR}"
+    export PKGURL="https://files.pythonhosted.org/packages/source/M/Mako/${PKGTAR}"
     export DEST=/binary/python/python-mako-${PKGVER}
     make_install_post() {
       mv ${DEST}/usr/bin/mako-render{,3}
@@ -89,14 +89,14 @@ case $(basename $0) in
     export PKGNAME=MarkupSafe
     export PKGVER=0.23
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/M/MarkupSafe/${PKGTAR}"
+    export PKGURL="https://files.pythonhosted.org/packages/source/M/MarkupSafe/${PKGTAR}"
     export DEST=/binary/python/python-markupsafe-${PKGVER}
   ;;
   buildpython-pygments )
     export PKGNAME=Pygments
     export PKGVER=2.1.3
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/P/Pygments/${PKGTAR}"
+    export PKGURL="https://files.pythonhosted.org/packages/source/P/Pygments/${PKGTAR}"
     export DEST=/binary/python/python-pygments-${PKGVER}
     make_install_post() {
       mv ${DEST}/usr/bin/pygmentize{,3}
@@ -111,23 +111,23 @@ case $(basename $0) in
   ;;
   buildpython-pyparsing )
     export PKGNAME=pyparsing
-    export PKGVER=2.1.8
+    export PKGVER=2.1.9
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/p/pyparsing/${PKGTAR}"
+    export PKGURL="https://files.pythonhosted.org/packages/source/p/pyparsing/${PKGTAR}"
     export DEST=/binary/python/python-pyparsing-${PKGVER}
   ;;
   buildpython-pytz )
     export PKGNAME=pytz
     export PKGVER=2016.6.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
-    export PKGURL="https://pypi.python.org/packages/source/p/pytz/${PKGTAR}"
+    export PKGURL="https://files.pythonhosted.org/packages/source/p/pytz/${PKGTAR}"
     export DEST=/binary/python/python-pytz-${PKGVER}
   ;;
   buildpython-pyxdg )
     export PKGNAME=pyxdg
     export PKGVER=0.25
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/p/pyxdg/${PKGTAR}"
+    export PKGURL="https://files.pythonhosted.org/packages/source/p/pyxdg/${PKGTAR}"
     export DEST=/binary/python/python-pyxdg-${PKGVER}
   ;;
   buildpython-pyyaml )
@@ -141,35 +141,35 @@ case $(basename $0) in
     export PKGNAME=rdflib
     export PKGVER=4.2.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/r/rdflib/${PKGTAR}"
+    export PKGURL="https://files.pythonhosted.org/packages/source/r/rdflib/${PKGTAR}"
     export DEST=/binary/python/python-rdflib-${PKGVER}
   ;;
   buildpython-setuptools )
     export PKGNAME=setuptools
-    export PKGVER=25.2.0
+    export PKGVER=28.0.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/s/setuptools/${PKGTAR}"
+    export PKGURL="https://files.pythonhosted.org/packages/source/s/setuptools/${PKGTAR}"
     export DEST=/binary/python/python-setuptools-${PKGVER}
   ;;
   buildpython-six )
     export PKGNAME=six
     export PKGVER=1.10.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/s/six/${PKGTAR}"
+    export PKGURL="https://files.pythonhosted.org/packages/source/s/six/${PKGTAR}"
     export DEST=/binary/python/python-six-${PKGVER}
   ;;
   buildpython-snowballstemmer )
     export PKGNAME=snowballstemmer
     export PKGVER=1.2.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/s/snowballstemmer/${PKGTAR}"
+    export PKGURL="https://files.pythonhosted.org/packages/source/s/snowballstemmer/${PKGTAR}"
     export DEST=/binary/python/python-snowballstemmer-${PKGVER}
   ;;
   buildpython-sphinx )
     export PKGNAME=Sphinx
     export PKGVER=1.4.5
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/S/Sphinx/${PKGTAR}"
+    export PKGURL="https://files.pythonhosted.org/packages/source/S/Sphinx/${PKGTAR}"
     export DEST=/binary/python/python-sphinx-${PKGVER}
     make_install_post() {
       for file in ${DEST}/usr/bin/*
@@ -182,7 +182,7 @@ case $(basename $0) in
     export PKGNAME=sphinx_rtd_theme
     export PKGVER=0.1.9
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/s/sphinx_rtd_theme/${PKGTAR}"
+    export PKGURL="https://files.pythonhosted.org/packages/source/s/sphinx_rtd_theme/${PKGTAR}"
     export DEST=/binary/python/python-sphinx_rtd_theme-${PKGVER}
   ;;
   buildpython-systemd )
@@ -268,7 +268,7 @@ case $(basename $0) in
     export PKGNAME=M2Crypto
     export PKGVER=0.24.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/M/M2Crypto/${PKGTAR}"
+    export PKGURL="https://files.pythonhosted.org/packages/source/M/M2Crypto/${PKGTAR}"
     export DEST=/binary/python/python-m2crypto-${PKGVER}
   ;;
   *)
