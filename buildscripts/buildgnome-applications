@@ -53,7 +53,7 @@ case $(basename $0) in
   ;;
   buildgnome-calendar )
     export PKGNAME=gnome-calendar
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
   ;;
   buildgnome-clocks )
     export PKGNAME=gnome-clocks
@@ -135,7 +135,7 @@ case $(basename $0) in
   ;;
   buildnetwork-manager-applet )
     export PKGNAME=network-manager-applet
-    export PKGVER=1.4.0
+    export PKGVER=1.4.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
     configure_pre() {

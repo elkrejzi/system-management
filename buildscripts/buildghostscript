@@ -18,8 +18,6 @@ export MAKE_INSTALL_FLAGS="soinstall"
 
 configure_pre() {
   rm -rf cups/libs expat freetype ijs jpeg jpegxr lcms lcms2 libpng tiff zlib
-
-  sed -i 's/ZLIBDIR=src/ZLIBDIR=$includedir/' configure.ac configure
 }
 
 make_install_post() {

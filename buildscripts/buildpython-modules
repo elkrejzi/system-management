@@ -70,7 +70,7 @@ case $(basename $0) in
   ;;
   buildpython-lxml )
     export PKGNAME=lxml
-    export PKGVER=3.6.0
+    export PKGVER=3.6.4
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://files.pythonhosted.org/packages/source/l/lxml/${PKGTAR}"
     export DEST=/binary/python/python-lxml-${PKGVER}
@@ -132,7 +132,7 @@ case $(basename $0) in
   ;;
   buildpython-pyyaml )
     export PKGNAME=PyYAML
-    export PKGVER=3.11
+    export PKGVER=3.12
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="http://pyyaml.org/download/pyyaml/${PKGTAR}"
     export DEST=/binary/python/python-pyyaml-${PKGVER}
@@ -146,7 +146,7 @@ case $(basename $0) in
   ;;
   buildpython-setuptools )
     export PKGNAME=setuptools
-    export PKGVER=28.0.0
+    export PKGVER=28.2.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://files.pythonhosted.org/packages/source/s/setuptools/${PKGTAR}"
     export DEST=/binary/python/python-setuptools-${PKGVER}
@@ -167,7 +167,7 @@ case $(basename $0) in
   ;;
   buildpython-sphinx )
     export PKGNAME=Sphinx
-    export PKGVER=1.4.5
+    export PKGVER=1.4.8
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://files.pythonhosted.org/packages/source/S/Sphinx/${PKGTAR}"
     export DEST=/binary/python/python-sphinx-${PKGVER}
@@ -187,7 +187,7 @@ case $(basename $0) in
   ;;
   buildpython-systemd )
     export PKGNAME=python-systemd
-    export PKGVER=231
+    export PKGVER=232
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://github.com/systemd/python-systemd/archive/v${PKGVER}.tar.gz"
     export DEST=/binary/python/python-systemd-${PKGVER}
@@ -266,7 +266,7 @@ make_install_override() {
 case $(basename $0) in
   buildpython-m2crypto)
     export PKGNAME=M2Crypto
-    export PKGVER=0.24.0
+    export PKGVER=0.25.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://files.pythonhosted.org/packages/source/M/M2Crypto/${PKGTAR}"
     export DEST=/binary/python/python-m2crypto-${PKGVER}

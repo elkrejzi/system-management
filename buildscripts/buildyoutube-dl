@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=youtube-dl
-export PKGVER=2016.08.12
+export PKGVER=2016.10.02
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/rg3/youtube-dl/archive/${PKGVER}.tar.gz"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}

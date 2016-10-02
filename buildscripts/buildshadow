@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
 export PKGNAME=shadow
-export PKGVER=4.2.1
-export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-export PKGURL="https://pkg-shadow.alioth.debian.org/releases/${PKGTAR}"
+export PKGVER=4.4
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/shadow-maint/shadow/archive/${PKGVER}.tar.gz"
 export MAKE_JOBS_FLAGS="-j4"
 
 export POSTINST_TRIGGER=("chmod 4755 /bin/su /usr/bin/chage /usr/bin/chfn"
@@ -13,13 +13,14 @@ export POSTINST_TRIGGER=("chmod 4755 /bin/su /usr/bin/chage /usr/bin/chfn"
                          "grpconv"
                          "pwconv")
 
-export CONFIGURE_FLAGS=(--with-group-name-max-length=32)
+export CONFIGURE_FLAGS=(--enable-man --with-group-name-max-length=32)
 
 configure_pre() {
-  sed -i 's/groups$(EXEEXT) //' src/Makefile.in
-  find man -name Makefile.in -exec sed -i 's/groups\.1 / /' {} \;
+  sed -i "s#SUBDIRS = .*#SUBDIRS =#g" man/Makefile.am
+  sed -i "s#groups login#login#g" src/Makefile.am
+  sed -i "/man1\/groups\.1/d" man/Makefile.am
 
-  sed -i -e 's/ ko//' -e 's/ zh_CN zh_TW//' man/Makefile.in
+  autoreconf -fi
 
   sed -i -e 's@#ENCRYPT_METHOD DES@ENCRYPT_METHOD SHA512@' \
          -e 's@/var/spool/mail@/var/mail@' etc/login.defs

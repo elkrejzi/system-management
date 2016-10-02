@@ -154,19 +154,14 @@ install -dm755 llvm-build llvm-build32
       ln -sf crtend.o /tools/lib/clang/${LLVM_VER%.svn*}/${arch}/crtendS.o
 
       mv /tools/lib/clang/${LLVM_VER%.svn*}/lib/linux/libclang_rt.builtins-${arch}.a /tools/lib/clang/${LLVM_VER%.svn*}/lib/linux/${arch}/
-      mv /tools/${LIB}/libunwind.a /tools/lib/clang/${LLVM_VER%.svn*}/${arch}/
+      mv /tools/${LIB}/libunwind.a /tools/lib/clang/${LLVM_VER%.svn*}/lib/linux/${arch}/
 
 cat > /tools/lib/clang/${LLVM_VER%.svn*}/lib/linux/libclang_rt.builtins-${arch}.a << EOF
-INPUT ( /tools/lib/clang/${LLVM_VER%.svn*}/lib/linux/${arch}/libclang_rt.builtins-${arch}.a AS_NEEDED ( /tools/${LIB}/libunwind.a -lm ) )
+INPUT ( /tools/lib/clang/${LLVM_VER%.svn*}/lib/linux/${arch}/libclang_rt.builtins-${arch}.a AS_NEEDED ( /tools/lib/clang/${LLVM_VER%.svn*}/lib/linux/${arch}/libunwind.a -lpthread -ldl -lm ) )
 EOF
 
-cat > /tools/lib/clang/${LLVM_VER%.svn*}/${arch}/libcompiler-rt.a << EOF
-INPUT ( /tools/lib/clang/${LLVM_VER%.svn*}/lib/linux/${arch}/libclang_rt.builtins-${arch}.a AS_NEEDED ( /tools/${LIB}/libunwind.a -lm ) )
-EOF
+      ln -sf ../lib/linux/libclang_rt.builtins-${arch}.a /tools/lib/clang/${LLVM_VER%.svn*}/${arch}/libcompiler-rt.a 
 
-cat > /tools/${LIB}/libunwind.a << EOF
-INPUT ( /tools/lib/clang/${LLVM_VER%.svn*}/${arch}/libunwind.a AS_NEEDED ( -lpthread -ldl ) )
-EOF
     done
 
   popd

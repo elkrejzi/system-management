@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libproxy
-export PKGVER=0.4.12
+export PKGVER=0.4.13
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/libproxy/libproxy/archive/${PKGVER}.tar.gz"
 export MAKE_JOBS_FLAGS="-j4"

@@ -1,16 +1,15 @@
 #!/bin/bash -e
 
 export PKGNAME=linux
-#export PKGVER=4.7
-export PKGVER=4.8
-#export PATCHVER=4.8-rc2
+export PKGVER=4.7
+export PATCHVER=4.7.6
 export COMMON_URL="https://cdn.kernel.org/pub/linux/kernel/v4.x"
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="${COMMON_URL}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export NO_OPTIMIZATION=1
 export NO_STRIP=1
-export PATCHES_LIST=("linux-march-native.patch" "linux-amdgpu.patch")
+export PATCHES_LIST=("linux-march-native.patch")
 export DEFAULT_CC="gcc"
 
 post_extract_action() {
@@ -46,7 +45,7 @@ make_override() {
 
   make ${MAKE_JOBS_FLAGS}
 
-  for DIR in tools/thermal/tmon tools/power/cpupower tools/power/x86/turbostat
+  for DIR in tools/thermal/tmon tools/power/cpupower tools/power/x86/turbostat tools/power/x86/x86_energy_perf_policy
   do
     make -C ${DIR} ${MAKE_JOBS_FLAGS}
   done
@@ -129,6 +128,10 @@ make_install_override() {
   popd
 
   pushd tools/power/x86/turbostat
+    make install DESTDIR=${PKGTOOLS}
+  popd
+
+  pushd tools/power/x86/x86_energy_perf_policy
     make install DESTDIR=${PKGTOOLS}
   popd
   # End linux-tools

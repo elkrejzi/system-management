@@ -3,14 +3,13 @@
 case $(basename $0) in
   buildxf86-input-evdev )
     export PKGNAME=xf86-input-evdev
-    export PKGVER=2.10.3
+    export PKGVER=2.10.4
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="https://www.x.org/releases/individual/driver/${PKGTAR}"
-    export PATCHES_LIST=("xf86-input-evdev-fixes.patch")
   ;;
   buildxf86-input-libinput )
     export PKGNAME=xf86-input-libinput
-    export PKGVER=0.19.0
+    export PKGVER=0.20.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="https://www.x.org/releases/individual/driver/${PKGTAR}"
     post_install_config() {

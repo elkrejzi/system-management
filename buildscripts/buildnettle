@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=nettle
-export PKGVER=3.2
+export PKGVER=3.3
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://ftp.gnu.org/gnu/nettle/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

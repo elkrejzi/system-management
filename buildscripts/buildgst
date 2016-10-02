@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=1.8.3
+export PKGVER=1.9.90
 export MAKE_JOBS_FLAGS="-j4"
 export DEFAULT_CXX="clang++ -std=c++11"
 
@@ -38,6 +38,11 @@ esac
 
 export EXTRA_ARGS=(--with-package-name="GStreamer${MODULE} ${PKGVER} BLFS"
                    --with-package-origin="http://www.linuxfromscratch.org/blfs/view/systemd/")
+
+if [ ${PKGNAME} == "gst-libav" ]
+then
+  EXTRA_ARGS+=(--with-system-libav)
+fi
 
 export CONFIGURE_FLAGS=(--libexecdir=/usr/lib "${EXTRA_ARGS[@]}")
 export CONFIGURE_FLAGS_32=(--libexecdir=/usr/lib32

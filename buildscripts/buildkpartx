@@ -1,12 +1,23 @@
 #!/bin/bash -e
 
 export PKGNAME=kpartx
-export PKGVER=0.5.0
-export PKGTAR=multipath-tools-${PKGVER}.tar.bz2
+export PKGVER=0.6.3
+export PKGTAR=multipath-tools-${PKGVER}.tar.gz
 export PKGDIR=multipath-tools-${PKGVER}
 export PKGBUILD=${PKGDIR}/kpartx
-export PKGURL="http://christophe.varoqui.free.fr/multipath-tools/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
+
+if [ $1 ] && [ $1 == "gentarball" ]
+then
+  rm -rf multipath-tools
+  git clone http://git.opensvc.com/multipath-tools/.git
+  pushd multipath-tools
+    git archive --format=tar.gz --prefix=multipath-tools-${PKGVER}/ ${PKGVER} > ../multipath-tools-${PKGVER}.tar.gz
+  popd
+  rm -rf multipath-tools
+
+  exit 0
+fi
 
 configure_override() {
   sed -i "s:lib64:lib:g" ../Makefile.inc
@@ -16,8 +27,7 @@ configure_override() {
 }
 
 make_install_post() {
-  mv ${DEST}/etc/udev/rules.d ${DEST}/lib/udev
-  rm -rf ${DEST}/etc
+  mv ${DEST}/usr/lib ${DEST}/lib
 
   gzip -d ${DEST}/usr/share/man/man8/*.gz
 }

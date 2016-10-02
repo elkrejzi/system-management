@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=postfix
-export PKGVER=3.1.2
+export PKGVER=3.1.3
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="ftp://ftp.porcupine.org/mirrors/postfix-release/official/${PKGTAR}"
 export KEEP_DOC=1
