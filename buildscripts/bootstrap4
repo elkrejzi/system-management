@@ -176,7 +176,6 @@ $(dirname $0)/buildpython-modules 2
 $(dirname $0)/buildbluefish
 $(dirname $0)/buildcgit
 $(dirname $0)/buildcups-filters
-$(dirname $0)/buildfail2ban
 $(dirname $0)/buildgimp
 $(dirname $0)/buildgparted
 $(dirname $0)/buildinkscape
@@ -237,6 +236,7 @@ $(dirname $0)/buildfceux
 $(dirname $0)/buildpcsxr
 $(dirname $0)/buildGConf
 $(dirname $0)/buildlibjpeg-turbo6
+$(dirname $0)/buildlibpng12
 $(dirname $0)/buildgoogle-chrome
 $(dirname $0)/buildjdk
 $(dirname $0)/buildlibreoffice-upstream
