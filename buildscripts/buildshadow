@@ -22,6 +22,7 @@ then
     sed -i "s#SUBDIRS = .*#SUBDIRS =#g" man/Makefile.am
     sed -i "s#groups login#login#g" src/Makefile.am
     sed -i "/man1\/groups\.1/d" man/Makefile.am
+    sed -i "/man\/.*\/Makefile/d" configure.ac
 
     ./autogen.sh --without-selinux
     make dist-xz
