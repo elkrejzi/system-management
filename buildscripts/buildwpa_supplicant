@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=wpa_supplicant
-export PKGVER=2.5
+export PKGVER=2.6
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://hostap.epitest.fi/releases/${PKGTAR}"
 export PKGDIR=${PKGNAME}-${PKGVER}

@@ -7,83 +7,83 @@ pkg_remove() {
 
 export PKG_AUTO_INSTALL=1
 
-$(dirname $0)/buildlinux-api-headers
-$(dirname $0)/buildglibc
-$(dirname $0)/buildtzdata
+#$(dirname $0)/buildlinux-api-headers
+#$(dirname $0)/buildglibc
+#$(dirname $0)/buildtzdata
 
-{
-  mv -v /tools/bin/{ld,ld-old}
-  mv -v /tools/bin/{ld-new,ld}
+#{
+#  mv -v /tools/bin/{ld,ld-old}
+#  mv -v /tools/bin/{ld-new,ld}
 
-  gcc -dumpspecs | sed -e 's@/tools@@g'                   \
-      -e '/\*startfile_prefix_spec:/{n;s@.*@/usr/lib/ @}' \
-      -e '/\*cpp:/{n;s@$@ -isystem /usr/include@}' >      \
-      `dirname $(gcc --print-libgcc-file-name)`/specs
+#  gcc -dumpspecs | sed -e 's@/tools@@g'                   \
+#      -e '/\*startfile_prefix_spec:/{n;s@.*@/usr/lib/ @}' \
+#      -e '/\*cpp:/{n;s@$@ -isystem /usr/include@}' >      \
+#      `dirname $(gcc --print-libgcc-file-name)`/specs
 
-  for L in bs_BA en_US hr_HR
-  do
-    sed -i "s:^#${L}:${L}:g" /etc/locale.gen
-  done
+#  for L in bs_BA en_US hr_HR
+#  do
+#    sed -i "s:^#${L}:${L}:g" /etc/locale.gen
+#  done
 
-  locale-gen
-}
+#  locale-gen
+#}
 
-$(dirname $0)/buildzlib
-$(dirname $0)/buildfile
-$(dirname $0)/buildm4
-$(dirname $0)/buildbison
-$(dirname $0)/buildflex
-$(dirname $0)/buildattr
-$(dirname $0)/buildacl
-$(dirname $0)/buildsed
-$(dirname $0)/buildbinutils
-$(dirname $0)/buildgmp
-$(dirname $0)/buildmpfr
-$(dirname $0)/buildmpc
-$(dirname $0)/buildgcc
-$(dirname $0)/buildpkg-config
-$(dirname $0)/buildncurses
-$(dirname $0)/buildutil-linux
-$(dirname $0)/builde2fsprogs
-$(dirname $0)/buildprocps-ng
-$(dirname $0)/buildbzip2
-$(dirname $0)/buildreadline
-$(dirname $0)/buildxz
-$(dirname $0)/buildbc
-$(dirname $0)/buildpsmisc
-$(dirname $0)/buildcracklib
-$(dirname $0)/buildopenssl
-$(dirname $0)/buildpcre
-$(dirname $0)/buildtcl
-$(dirname $0)/buildbdb
-$(dirname $0)/buildpam
-$(dirname $0)/buildlibcap
-$(dirname $0)/buildbash
-$(dirname $0)/buildcoreutils
-$(dirname $0)/buildgrep
+#$(dirname $0)/buildzlib
+#$(dirname $0)/buildfile
+#$(dirname $0)/buildm4
+#$(dirname $0)/buildbison
+#$(dirname $0)/buildflex
+#$(dirname $0)/buildattr
+#$(dirname $0)/buildacl
+#$(dirname $0)/buildsed
+#$(dirname $0)/buildbinutils
+#$(dirname $0)/buildgmp
+#$(dirname $0)/buildmpfr
+#$(dirname $0)/buildmpc
+#$(dirname $0)/buildgcc
+#$(dirname $0)/buildpkg-config
+#$(dirname $0)/buildncurses
+#$(dirname $0)/buildutil-linux
+#$(dirname $0)/builde2fsprogs
+#$(dirname $0)/buildprocps-ng
+#$(dirname $0)/buildbzip2
+#$(dirname $0)/buildreadline
+#$(dirname $0)/buildxz
+#$(dirname $0)/buildbc
+#$(dirname $0)/buildpsmisc
+#$(dirname $0)/buildcracklib
+#$(dirname $0)/buildopenssl
+#$(dirname $0)/buildpcre
+#$(dirname $0)/buildtcl
+#$(dirname $0)/buildbdb
+#$(dirname $0)/buildpam
+#$(dirname $0)/buildlibcap
+#$(dirname $0)/buildbash
+#$(dirname $0)/buildcoreutils
+#$(dirname $0)/buildgrep
+#$(dirname $0)/buildexpat
 $(dirname $0)/buildshadow
-$(dirname $0)/buildexpat
-$(dirname $0)/buildgdbm
-$(dirname $0)/buildlibffi
-$(dirname $0)/buildlibtool
-$(dirname $0)/buildsqlite
-$(dirname $0)/buildhostname
-$(dirname $0)/buildrun-parts
-$(dirname $0)/buildwhich
-$(dirname $0)/buildperl
-$(dirname $0)/buildpython2
-$(dirname $0)/buildpython3
-$(dirname $0)/buildautoconf
-$(dirname $0)/buildautoconf2.13
-$(dirname $0)/buildautomake
-$(dirname $0)/builddiffutils
-$(dirname $0)/buildfindutils
-$(dirname $0)/buildgawk
-$(dirname $0)/buildgperf
-$(dirname $0)/buildgroff
-$(dirname $0)/buildgzip
-$(dirname $0)/buildmake
-$(dirname $0)/buildpatch
+#$(dirname $0)/buildgdbm
+#$(dirname $0)/buildlibffi
+#$(dirname $0)/buildlibtool
+#$(dirname $0)/buildsqlite
+#$(dirname $0)/buildhostname
+#$(dirname $0)/buildrun-parts
+#$(dirname $0)/buildwhich
+#$(dirname $0)/buildperl
+#$(dirname $0)/buildpython2
+#$(dirname $0)/buildpython3
+#$(dirname $0)/buildautoconf
+#$(dirname $0)/buildautoconf2.13
+#$(dirname $0)/buildautomake
+#$(dirname $0)/builddiffutils
+#$(dirname $0)/buildfindutils
+#$(dirname $0)/buildgawk
+#$(dirname $0)/buildgperf
+#$(dirname $0)/buildgroff
+#$(dirname $0)/buildgzip
+#$(dirname $0)/buildmake
+#$(dirname $0)/buildpatch
 $(dirname $0)/buildtar
 $(dirname $0)/buildtexinfo
 $(dirname $0)/buildcheck
