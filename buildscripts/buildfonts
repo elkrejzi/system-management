@@ -31,7 +31,7 @@ case $(basename $0) in
 
     # Begin baekmuk
 
-    wget -c https://kldp.net/frs/download.php/1429/baekmuk-ttf-${BAEKMUK_VER}.tar.gz -O - | tar xfz -
+    wget -c https://kldp.net/baekmuk/release/865-baekmuk-ttf-${BAEKMUK_VER}.tar.gz -O - | tar xfz -
 
     export DEST=/binary/fonts/fonts-baekmuk-${BAEKMUK_VER}
 

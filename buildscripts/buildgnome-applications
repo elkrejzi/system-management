@@ -92,7 +92,7 @@ case $(basename $0) in
   ;;
   buildgnome-photos )
     export PKGNAME=gnome-photos
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
   ;;
   buildgnome-power-manager )
     export PKGNAME=gnome-power-manager

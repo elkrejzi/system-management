@@ -7,6 +7,7 @@ export PKGURL="http://webkitgtk.org/releases/${PKGVER}"
 export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export CMAKE_BUILD=1
+export PATCHES_LIST=("webkitgtk-fixes.patch")
 export CMAKE_FLAGS=(-DCMAKE_SKIP_RPATH=ON
                     -DPORT=GTK
                     -DLIB_INSTALL_DIR=/usr/lib)

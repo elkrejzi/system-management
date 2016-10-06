@@ -104,7 +104,7 @@ case $(basename $0) in
   ;;
   buildgnome-backgrounds )
     export PKGNAME=gnome-backgrounds
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
     export KEEP_STATIC=1
     export NO_STRIP=1
   ;;
@@ -167,7 +167,7 @@ case $(basename $0) in
   ;;
   buildgnome-themes-standard )
     export PKGNAME=gnome-themes-standard
-    export PKGVER=3.20.2
+    export PKGVER=3.22.2
     export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-update-icon-cache ] && echo \"Processing triggers for hicolor-icon-theme\" && /usr/bin/gtk-update-icon-cache -qf /usr/share/icons/HighContrast")
   ;;
   buildgnome-user-docs )

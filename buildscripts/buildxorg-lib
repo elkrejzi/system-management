@@ -27,7 +27,7 @@ case $(basename $0) in
   ;;
   buildlibX11 )
     export PKGNAME=libX11
-    export PKGVER=1.6.3
+    export PKGVER=1.6.4
   ;;
   buildlibXau )
     export PKGNAME=libXau
@@ -76,7 +76,7 @@ case $(basename $0) in
   ;;
   buildlibXfixes )
     export PKGNAME=libXfixes
-    export PKGVER=5.0.2
+    export PKGVER=5.0.3
   ;;
   buildlibXfont )
     export PKGNAME=libXfont
@@ -92,7 +92,7 @@ case $(basename $0) in
   ;;
   buildlibXi )
     export PKGNAME=libXi
-    export PKGVER=1.7.6
+    export PKGVER=1.7.7
   ;;
   buildlibXinerama )
     export PKGNAME=libXinerama
@@ -116,11 +116,11 @@ case $(basename $0) in
   ;;
   buildlibXrandr )
     export PKGNAME=libXrandr
-    export PKGVER=1.5.0
+    export PKGVER=1.5.1
   ;;
   buildlibXrender )
     export PKGNAME=libXrender
-    export PKGVER=0.9.9
+    export PKGVER=0.9.10
   ;;
   buildlibXres )
     export PKGNAME=libXres
@@ -140,18 +140,18 @@ case $(basename $0) in
   ;;
   buildlibXtst )
     export PKGNAME=libXtst
-    export PKGVER=1.2.2
+    export PKGVER=1.2.3
     make_install_post() {
       find ${DEST}/usr/share/man -type f -name '*.[[:digit:]]' -exec sed -ri '1s|^\.so (.*)\.([0-9]+)|.so man\2/\1.\2|' {} +
     }
   ;;
   buildlibXv )
     export PKGNAME=libXv
-    export PKGVER=1.0.10
+    export PKGVER=1.0.11
   ;;
   buildlibXvMC )
     export PKGNAME=libXvMC
-    export PKGVER=1.0.9
+    export PKGVER=1.0.10
   ;;
   buildlibXxf86dga )
     export PKGNAME=libXxf86dga

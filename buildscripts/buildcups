@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=cups
-export PKGVER=2.2.0
+export PKGVER=2.2.1
 export PKGTAR=${PKGNAME}-${PKGVER}-source.tar.gz
 export PKGURL="https://github.com/apple/cups/releases/download/v${PKGVER}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

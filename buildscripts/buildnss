@@ -1,10 +1,10 @@
 #!/bin/bash -e
 
 export PKGNAME=nss
-export PKGVER=3.27
+export PKGVER=3.27.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGBUILD=${PKGNAME}-${PKGVER}/nss
-export PKGURL="https://ftp.mozilla.org/pub/security/nss/releases/NSS_${PKGVER/./_}_RTM/src/${PKGTAR}"
+export PKGURL="https://ftp.mozilla.org/pub/security/nss/releases/NSS_$(echo ${PKGVER} | sed 's|\.|_|g')_RTM/src/${PKGTAR}"
 export PATCHES_LIST=("nss-standalone.patch")
 
 configure_override() {

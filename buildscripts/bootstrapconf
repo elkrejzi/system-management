@@ -116,7 +116,7 @@ EOF
 grpconv
 pwconv
 
-useradd -c "Armin K" -MU armin
+useradd -c "Armin K" -s /bin/bash -MU armin
 
 gpasswd -a armin kvm
 gpasswd -a armin systemd-journal

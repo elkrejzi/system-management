@@ -26,6 +26,7 @@ then
         pushd ${PKGNAME}
           git fetch origin
           git reset --hard origin/master
+          git checkout 8e3e9d74b54dc9dda0432f69fdbb2eab5969cc8a
         popd
       else
         git clone git://anongit.freedesktop.org/mesa/mesa

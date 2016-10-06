@@ -228,6 +228,7 @@ case $(basename $0) in
       $(dirname $0)/buildpython-pyinotify
       $(dirname $0)/buildpython-pyyaml
       $(dirname $0)/buildpython-systemd
+      $(dirname $0)/buildpython-typing
     fi
     exit 0
   ;;
@@ -236,7 +237,8 @@ esac
 
 export NO_OPTIMIZATION=1
 
-if [ $(basename $0) == "buildpython-m2crypto" ]
+if [ $(basename $0) == "buildpython-m2crypto" ] ||
+   [ $(basename $0) == "buildpython-typing" ]
 then
   export PYTHON=python
 else
@@ -270,6 +272,13 @@ case $(basename $0) in
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://files.pythonhosted.org/packages/source/M/M2Crypto/${PKGTAR}"
     export DEST=/binary/python/python-m2crypto-${PKGVER}
+  ;;
+  buildpython-typing)
+    export PKGNAME=typing
+    export PKGVER=3.5.2.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://files.pythonhosted.org/packages/source/t/typing/${PKGTAR}"
+    export DEST=/binary/python/python-typing-${PKGVER}
   ;;
   *)
     export MULTILIB_BUILD=1
