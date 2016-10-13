@@ -19,6 +19,7 @@ $(dirname $0)/buildcogl
 $(dirname $0)/buildgeocode-glib
 $(dirname $0)/buildgmime
 $(dirname $0)/buildlibsigc++
+$(dirname $0)/buildosinfo-db-tools
 $(dirname $0)/buildpcre2
 $(dirname $0)/buildraptor2
 $(dirname $0)/buildrest
@@ -62,6 +63,7 @@ $(dirname $0)/buildlibspectre
 $(dirname $0)/buildlibwnck
 $(dirname $0)/buildlibxklavier
 $(dirname $0)/buildnetwork-manager-applet
+$(dirname $0)/buildosinfo-db
 $(dirname $0)/buildspice-protocol
 $(dirname $0)/buildt1lib
 $(dirname $0)/buildtelepathy-logger

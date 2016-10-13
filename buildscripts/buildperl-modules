@@ -53,6 +53,13 @@ case $(basename $0) in
     export DEST=/binary/perl/perl-net-ssleay-${PKGVER}
     export PERL_MM_USE_DEFAULT=1
   ;;
+  buildperl-parse-yapp )
+    export PKGNAME=Parse-Yapp
+    export PKGVER=1.05
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://search.cpan.org/CPAN/authors/id/F/FD/FDESAR/${PKGTAR}"
+    export DEST=/binary/perl/perl-parse-yapp-${PKGVER}
+  ;;
   buildperl-sgmls )
     export PKGNAME=SGMLSpm
     export PKGVER=1.1
@@ -90,6 +97,7 @@ make_install_post() {
       $(dirname $0)/buildperl-xml-parser
       $(dirname $0)/buildperl-archive-zip
       $(dirname $0)/buildperl-error
+      $(dirname $0)/buildperl-parse-yapp
       $(dirname $0)/buildperl-sgmls
       $(dirname $0)/buildperl-uri
     elif [ $1 == 2 ]

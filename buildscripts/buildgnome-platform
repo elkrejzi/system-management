@@ -23,7 +23,7 @@ case $(basename $0) in
   ;;
   buildevolution-data-server )
     export PKGNAME=evolution-data-server
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
     export CONFIGURE_FLAGS=(--disable-uoa
                             --with-krb5=/usr
                             --with-openldap
@@ -40,7 +40,7 @@ case $(basename $0) in
   ;;
   buildgdm )
     export PKGNAME=gdm
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
     export KEEP_EMPTY_DIRS=1
     export CONFIGURE_FLAGS=(--enable-gdm-xsession --without-plymouth --with-default-pam-config=lfs)
     export POSTINST_TRIGGER=("getent group gdm > /dev/null || groupadd -g 21 gdm"
@@ -114,11 +114,11 @@ case $(basename $0) in
   ;;
   buildgnome-control-center )
     export PKGNAME=gnome-control-center
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
   ;;
   buildgnome-desktop )
     export PKGNAME=gnome-desktop
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
     export CONFIGURE_FLAGS=(--with-gnome-distributor=Krejzi)
   ;;
   buildgnome-keyring )
@@ -133,7 +133,7 @@ case $(basename $0) in
   ;;
   buildgnome-online-accounts )
     export PKGNAME=gnome-online-accounts
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
     export CONFIGURE_FLAGS=(--enable-kerberos --disable-compile-warnings)
   ;;
   buildgnome-online-miners )
@@ -142,16 +142,16 @@ case $(basename $0) in
   ;;
   buildgnome-session )
     export PKGNAME=gnome-session
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
   ;;
   buildgnome-settings-daemon )
     export PKGNAME=gnome-settings-daemon
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
     export MAKE_INSTALL_FLAGS="udevrulesdir=/lib/udev/rules.d"
   ;;
   buildgnome-shell )
     export PKGNAME=gnome-shell
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
     make_install_post() {
       install -dm755 ${DEST}/usr/lib/gnome-shell/mozilla
 
@@ -161,7 +161,7 @@ case $(basename $0) in
   ;;
   buildgnome-shell-extensions )
     export PKGNAME=gnome-shell-extensions
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
     export KEEP_STATIC=1
     export NO_STRIP=1
   ;;
@@ -240,7 +240,7 @@ case $(basename $0) in
   ;;
   buildgvfs )
     export PKGNAME=gvfs
-    export PKGVER=1.30.0
+    export PKGVER=1.30.1
     export POSTINST_TRIGGER=("[ -x /usr/bin/gio-querymodules ] && echo \"Processing triggers for gio-2.0\" && /usr/bin/gio-querymodules /usr/lib/gio/modules")
     make_install_post() {
       export SPACE_ADDED=1
@@ -262,7 +262,7 @@ case $(basename $0) in
   ;;
   buildlibgee )
     export PKGNAME=libgee
-    export PKGVER=0.18.0
+    export PKGVER=0.18.1
   ;;
   buildlibgepub )
     export PKGNAME=libgepub
@@ -347,7 +347,7 @@ case $(basename $0) in
   ;;
   buildmutter )
     export PKGNAME=mutter
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
     export CONFIGURE_FLAGS=(--enable-compile-warnings=minimum
                             --disable-maintainer-flags
                             --disable-Werror)

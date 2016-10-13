@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGNAME=libosinfo
+export PKGNAME=osinfo-db-tools
 export PKGVER=1.0.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://fedorahosted.org/releases/l/i/libosinfo/${PKGTAR}"

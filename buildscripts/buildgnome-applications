@@ -10,27 +10,27 @@ case $(basename $0) in
   ;;
   buildcheese )
     export PKGNAME=cheese
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
     export CONFIGURE_FLAGS=(--disable-compile-warnings)
   ;;
   builddconf-editor )
     export PKGNAME=dconf-editor
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
   ;;
   buildeog )
     export PKGNAME=eog
-    export PKGVER=3.20.4
+    export PKGVER=3.20.5
   ;;
   buildepiphany )
     export PKGNAME=epiphany
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
     make_install_post() {
       sed -i "s#multipart/related;##" ${DEST}/usr/share/applications/epiphany.desktop
     }
   ;;
   buildevince )
     export PKGNAME=evince
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
     export CONFIGURE_FLAGS=(--enable-introspection --disable-compile-warnings)
     make_install_post() {
       install -dm755 ${DEST}/usr/lib/evince/mozilla
@@ -40,7 +40,7 @@ case $(basename $0) in
   ;;
   buildfile-roller )
     export PKGNAME=file-roller
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
     export CONFIGURE_FLAGS=(--disable-packagekit)
   ;;
   buildgedit )
@@ -49,7 +49,7 @@ case $(basename $0) in
   ;;
   buildgnome-calculator )
     export PKGNAME=gnome-calculator
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
   ;;
   buildgnome-calendar )
     export PKGNAME=gnome-calendar
@@ -57,11 +57,11 @@ case $(basename $0) in
   ;;
   buildgnome-clocks )
     export PKGNAME=gnome-clocks
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
   ;;
   buildgnome-color-manager )
     export PKGNAME=gnome-color-manager
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
     export CONFIGURE_FLAGS=(--disable-packagekit)
   ;;
   buildgnome-contacts )
@@ -78,11 +78,11 @@ case $(basename $0) in
   ;;
   buildgnome-logs )
     export PKGNAME=gnome-logs
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
   ;;
   buildgnome-maps )
     export PKGNAME=gnome-maps
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
   ;;
   buildgnome-nettool )
     export PKGNAME=gnome-nettool
@@ -96,7 +96,7 @@ case $(basename $0) in
   ;;
   buildgnome-power-manager )
     export PKGNAME=gnome-power-manager
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
   ;;
   buildgnome-system-monitor )
     export PKGNAME=gnome-system-monitor
@@ -145,7 +145,7 @@ case $(basename $0) in
   ;;
   buildpolari )
     export PKGNAME=polari
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
   ;;
   buildseahorse )
     export PKGNAME=seahorse

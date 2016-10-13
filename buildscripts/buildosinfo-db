@@ -1,0 +1,22 @@
+#!/bin/bash -e
+
+export PKGNAME=osinfo-db
+export PKGVER=20160728
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://fedorahosted.org/releases/l/i/libosinfo/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export NO_STRIP=1
+
+configure_override() {
+  true
+}
+
+make_override() {
+  true
+}
+
+make_install_override() {
+  osinfo-db-import --root ${DEST} --system ${SROOT}/${PKGTAR}
+}
+
+. $(dirname $0)/master.sh

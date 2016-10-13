@@ -11,7 +11,7 @@ case $(basename $0) in
   ;;
   buildgupnp-av )
     export PKGNAME=gupnp-av
-    export PKGVER=0.12.8
+    export PKGVER=0.12.9
   ;;
   buildgupnp-dlna )
     export PKGNAME=gupnp-dlna

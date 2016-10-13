@@ -76,7 +76,7 @@ case $(basename $0) in
   ;;
   buildglib2 )
     export PKGNAME=glib
-    export PKGVER=2.50.0
+    export PKGVER=2.50.1
     export DEST=/binary/${PKGNAME}-${PKGVER}
     export KEEP_EMPTY_DIRS=1
     export MULTILIB_BUILD=1
@@ -144,7 +144,7 @@ EOF
   ;;
   buildvala )
     export PKGNAME=vala
-    export PKGVER=0.34.0
+    export PKGVER=0.34.1
   ;;
 esac
 

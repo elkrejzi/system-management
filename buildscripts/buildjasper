@@ -1,12 +1,11 @@
 #!/bin/bash -e
 
 export PKGNAME=jasper
-export PKGVER=1.900.1
-export PKGTAR=${PKGNAME}-${PKGVER}.zip
+export PKGVER=1.900.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://www.ece.uvic.ca/~frodo/jasper/software/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
-export PATCHES_LIST=("jasper.patch")
 export CONFIGURE_FLAGS=(--enable-shared)
 
 . $(dirname $0)/master.sh

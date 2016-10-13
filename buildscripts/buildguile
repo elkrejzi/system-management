@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=guile
-export PKGVER=2.0.12
+export PKGVER=2.0.13
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://ftp.gnu.org/gnu/guile/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

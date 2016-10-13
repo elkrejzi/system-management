@@ -18,10 +18,9 @@ case $(basename $0) in
   ;;
   buildxf86-input-synaptics )
     export PKGNAME=xf86-input-synaptics
-    export PKGVER=1.8.99.1
+    export PKGVER=1.8.99.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="https://www.x.org/releases/individual/driver/${PKGTAR}"
-    export PATCHES_LIST=("xf86-input-synaptics-fixes.patch")
   ;;
   buildxf86-input-wacom )
     export PKGNAME=xf86-input-wacom
