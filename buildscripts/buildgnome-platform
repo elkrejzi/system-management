@@ -240,7 +240,7 @@ case $(basename $0) in
   ;;
   buildgvfs )
     export PKGNAME=gvfs
-    export PKGVER=1.30.1
+    export PKGVER=1.30.1.1
     export POSTINST_TRIGGER=("[ -x /usr/bin/gio-querymodules ] && echo \"Processing triggers for gio-2.0\" && /usr/bin/gio-querymodules /usr/lib/gio/modules")
     make_install_post() {
       export SPACE_ADDED=1
@@ -269,6 +269,10 @@ case $(basename $0) in
     export PKGVER=0.4
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER}/${PKGTAR}"
+  ;;
+  buildlibgit2-glib )
+    export PKGNAME=libgit2-glib
+    export PKGVER=0.24.4
   ;;
   buildlibgnome-keyring )
     export PKGNAME=libgnome-keyring
@@ -364,10 +368,10 @@ case $(basename $0) in
   ;;
   buildtracker )
     export PKGNAME=tracker
-    export PKGVER=1.10.0
+    export PKGVER=1.10.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
-    export CONFIGURE_FLAGS=(--disable-miner-firefox --disable-miner-thunderbird)
+    export CONFIGURE_FLAGS=(--disable-miner-firefox --disable-miner-thunderbird --disable-miner-user-guides)
   ;;
   buildvte )
     export PKGNAME=vte

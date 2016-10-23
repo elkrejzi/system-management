@@ -1,0 +1,26 @@
+#!/bin/bash -e
+
+export PKGNAME=rubber
+export PKGVER=1.4
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://launchpad.net/rubber/trunk/${PKGVER}/+download/${PKGTAR}"
+
+configure_override() {
+cat > setup.cfg << "EOF"
+[install]
+mandir  = $base/share/man
+infodir = $base/share/info
+EOF
+}
+
+make_override() {
+  true
+}
+
+make_install_override() {
+  python setup.py install --prefix=/usr  \
+                          --optimize=1   \
+                          --root=${DEST}
+}
+
+. $(dirname $0)/master.sh

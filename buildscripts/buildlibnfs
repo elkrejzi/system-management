@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libnfs
-export PKGVER=1.10.0
+export PKGVER=1.11.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGDIR=${PKGNAME}-${PKGNAME}-${PKGVER}
 export PKGURL="https://github.com/sahlberg/libnfs/archive/${PKGTAR}"

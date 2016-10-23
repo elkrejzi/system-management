@@ -9,7 +9,7 @@ case $(basename $0) in
   ;;
   buildxf86-input-libinput )
     export PKGNAME=xf86-input-libinput
-    export PKGVER=0.20.0
+    export PKGVER=0.22.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="https://www.x.org/releases/individual/driver/${PKGTAR}"
     post_install_config() {

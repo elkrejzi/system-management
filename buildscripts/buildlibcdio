@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
 export PKGNAME=libcdio
-export PKGVER=0.93
-export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGVER=0.94
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://ftp.gnu.org/gnu/libcdio/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"

@@ -47,6 +47,21 @@ case $(basename $0) in
     export PKGNAME=gedit
     export PKGVER=3.22.0
   ;;
+  buildgedit-code-assistance )
+    export PKGNAME=gedit-code-assistance
+    export PKGVER=3.16.0
+  ;;
+  buildgedit-latex )
+    export PKGNAME=gedit-latex
+    export PKGVER=3.20.0
+    configure_pre() {
+      sed -i "s#/etc/texmf#/usr/share/texmf-dist/web2c#;s#share/texmf-texlive#share/texmf-dist#g" latex/latex/environment.py
+    }
+  ;;
+  buildgedit-plugins )
+    export PKGNAME=gedit-plugins
+    export PKGVER=3.22.0
+  ;;
   buildgnome-calculator )
     export PKGNAME=gnome-calculator
     export PKGVER=3.22.1
@@ -127,7 +142,7 @@ case $(basename $0) in
   ;;
   buildnautilus )
     export PKGNAME=nautilus
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
     export CONFIGURE_FLAGS=(--disable-packagekit
                             --disable-selinux
                             --disable-update-mimedb

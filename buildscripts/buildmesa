@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=mesa
-export PKGVER=12.0.1
+export PKGVER=13.0.0-rc1
 
 if [ $(basename $0) == "buildmesa-git" ]
 then
@@ -73,6 +73,7 @@ export DLOPEN_LIBS="-ldl"
 
 configure_pre() {
   autoreconf -fi
+  sed -i "/stdint.h/a #include <string.h>" src/util/bitscan.h
 }
 
 configure_pre_32() {
@@ -80,6 +81,7 @@ configure_pre_32() {
   export LLVM_CONFIG=/usr/bin/llvm-config32
 
   autoreconf -fi
+  sed -i "/stdint.h/a #include <string.h>" src/util/bitscan.h
 }
 
 make_post() {

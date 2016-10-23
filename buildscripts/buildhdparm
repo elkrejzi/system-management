@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=hdparm
-export PKGVER=9.48
+export PKGVER=9.50
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://downloads.sourceforge.net/hdparm/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

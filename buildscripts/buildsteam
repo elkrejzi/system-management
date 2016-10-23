@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=steam
-export PKGVER=1.0.0.52
+export PKGVER=1.0.0.53
 export PKGTAR=${PKGNAME}_${PKGVER}.tar.gz
 export PKGDIR=${PKGNAME}
 export PKGURL="http://repo.steampowered.com/steam/pool/steam/s/steam/${PKGTAR}"

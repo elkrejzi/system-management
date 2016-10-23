@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=libnotify
-export PKGVER=0.7.6
+export PKGVER=0.7.7
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://download.gnome.org/sources/libnotify/${PKGVER:0:3}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

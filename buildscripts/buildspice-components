@@ -11,7 +11,7 @@ case $(basename $0) in
   ;;
   buildspice-gtk )
     export PKGNAME=spice-gtk
-    export PKGVER=0.32
+    export PKGVER=0.33
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="https://www.spice-space.org/download/gtk/${PKGTAR}"
     export CONFIGURE_FLAGS=(--enable-vala

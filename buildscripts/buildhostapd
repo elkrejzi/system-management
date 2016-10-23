@@ -1,0 +1,59 @@
+#!/bin/bash -e
+
+export PKGNAME=hostapd
+export PKGVER=2.6
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://w1.fi/releases/${PKGTAR}"
+export PKGDIR=${PKGNAME}-${PKGVER}
+export PKGBUILD=${PKGDIR}/hostapd
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_DOC=1
+
+configure_override() {
+  sed -r -e "s:^#(CONFIG_DRIVER_WIRED.*):\1:g" \
+         -e "s:^#(CONFIG_DRIVER_NL80211_QCA.*):\1:g" \
+         -e "s:^#(CONFIG_LIBNL32.*):\1:g" \
+         -e "s:^#(CONFIG_EAP.*):\1:g" \
+         -e "s:^#(CONFIG_WPS.*):\1:g" \
+         -e "s:^#(CONFIG_RADIUS_SERVER.*):\1:g" \
+         -e "s:^#(CONFIG_IEEE80211.*):\1:g" \
+         -e "s:^#(CONFIG_ACS.*):\1:g" \
+         defconfig > .config
+
+  sed -i "s:/etc/hostapd:/etc/hostapd/hostapd:g" hostapd.conf
+}
+
+make_install_override() {
+  install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/lib/systemd/system
+  install -dm755 ${DEST}/usr/bin ${DEST}/usr/sbin ${DEST}/usr/share/doc/hostapd
+  install -dm755 ${DEST}/usr/share/man/man1 ${DEST}/usr/share/man/man8
+
+  install -m755 hostapd_cli ${DEST}/usr/bin
+  install -m755 hostapd ${DEST}/usr/sbin
+
+  install -m644 hostapd_cli.1 ${DEST}/usr/share/man/man1
+  install -m644 hostapd.8 ${DEST}/usr/share/man/man8
+
+  install -m644 -t ${DEST}/usr/share/doc/hostapd \
+                   hostapd.accept hostapd.deny \
+                   hostapd.eap_user hostapd.radius_clients \
+                   hostapd.sim_db hostapd.vlan hostapd.wpa_psk \
+                   wired.conf
+
+cat > ${DEST}/lib/systemd/system/hostapd.service << "EOF"
+[Unit]
+Description=Hostapd IEEE 802.11 AP, IEEE 802.1X/WPA/WPA2/EAP/RADIUS Authenticator
+After=network.target
+
+[Service]
+ExecStart=/usr/sbin/hostapd /etc/hostapd/hostapd.conf
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+  ln -sf /lib/systemd/system/hostapd.service ${DEST}/etc/systemd/system/multi-user.target.wants/hostapd.service
+}
+
+. $(dirname $0)/master.sh

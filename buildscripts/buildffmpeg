@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=ffmpeg
-export PKGVER=3.1.4
+export PKGVER=3.1.5
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://ffmpeg.org/releases/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}

@@ -18,6 +18,7 @@ $(dirname $0)/buildweston
 $(dirname $0)/buildcogl
 $(dirname $0)/buildgeocode-glib
 $(dirname $0)/buildgmime
+$(dirname $0)/buildlibgit2
 $(dirname $0)/buildlibsigc++
 $(dirname $0)/buildosinfo-db-tools
 $(dirname $0)/buildpcre2
@@ -46,6 +47,7 @@ $(dirname $0)/buildlibcacard
 $(dirname $0)/buildlibcue
 $(dirname $0)/buildlibgee
 $(dirname $0)/buildlibgepub
+$(dirname $0)/buildlibgit2-glib
 $(dirname $0)/buildlibgrss
 $(dirname $0)/buildlibgsf
 $(dirname $0)/buildlibgtop
@@ -115,6 +117,9 @@ $(dirname $0)/buildepiphany
 $(dirname $0)/buildfile-roller
 $(dirname $0)/buildgdm
 $(dirname $0)/buildgedit
+$(dirname $0)/buildgedit-code-assistance
+$(dirname $0)/buildgedit-latex
+$(dirname $0)/buildgedit-plugins
 $(dirname $0)/buildgnome-calculator
 $(dirname $0)/buildgnome-calendar
 $(dirname $0)/buildgnome-clocks

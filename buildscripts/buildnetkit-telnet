@@ -1,0 +1,19 @@
+#!/bin/bash -e
+
+export PKGNAME=netkit-telnet
+export PKGVER=0.17
+export PKGTAR=${PKGNAME}_${PKGVER}.orig.tar.gz
+export PKGURL="http://ftp.debian.org/debian/pool/main/n/netkit-telnet/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export PATCHES_LIST=("netkit-telnet-fixes.patch")
+
+configure_override() {
+  ./configure --prefix=/usr
+}
+
+make_install_override() {
+  install -Dm755 telnet/telnet ${DEST}/usr/bin/telnet
+  install -Dm644 telnet/telnet.1 ${DEST}/usr/share/man/man1/telnet.1
+}
+
+. $(dirname $0)/master.sh
