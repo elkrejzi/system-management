@@ -38,11 +38,10 @@ case $(basename $0) in
   ;;
   buildxorg-server )
     export PKGNAME=xorg-server
-    export PKGVER=1.18.99.901
+    export PKGVER=1.18.99.902
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="https://www.x.org/releases/individual/xserver/${PKGTAR}"
     export KEEP_EMPTY_DIRS=1
-    export PATCHES_LIST=("xwayland-pointer-lock.patch")
     export CONFIGURE_FLAGS=(--disable-install-setuid
                             --enable-dri2
                             --enable-dri3
@@ -56,9 +55,6 @@ case $(basename $0) in
                             --enable-xwayland
                             --with-systemd-daemon
                             --with-xkb-output=/var/lib/xkb)
-    configure_pre() {
-      autoreconf -fi
-    }
     make_install_post() {
       rm -rf ${DEST}/var/log
       install -dm755 ${DEST}/etc/X11/xorg.conf.d

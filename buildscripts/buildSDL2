@@ -1,13 +1,12 @@
 #!/bin/bash -e
 
 export PKGNAME=SDL2
-export PKGVER=2.0.4
+export PKGVER=2.0.5
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://www.libsdl.org/release/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
 export KEEP_STATIC=1
-export PATCHES_LIST=("SDL2-relative-mouse.patch")
 export CONFIGURE_FLAGS=(--enable-video-wayland
                         --disable-alsa-shared
                         --disable-x11-shared

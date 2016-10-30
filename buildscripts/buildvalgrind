@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=valgrind
-export PKGVER=3.11.0
+export PKGVER=3.12.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://valgrind.org/downloads/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
@@ -9,7 +9,6 @@ export NO_OPTIMIZATION=1
 
 configure_pre() {
   sed -i "s/-mt//g" configure
-  sed -i "s:2.22:2.24:g" configure
 }
 
 configure_post() {

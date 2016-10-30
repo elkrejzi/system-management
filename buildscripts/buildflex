@@ -1,11 +1,13 @@
 #!/bin/bash -e
 
 export PKGNAME=flex
-export PKGVER=2.6.1
-export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGVER=2.6.2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/westes/flex/releases/download/v${PKGVER}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export KEEP_STATIC=1
+
+export HELP2MAN=/bin/true
 
 make_install_post() {
   ln -sf flex ${DEST}/usr/bin/lex

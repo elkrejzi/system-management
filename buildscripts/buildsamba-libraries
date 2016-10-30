@@ -29,7 +29,7 @@ case $(basename $0) in
   ;;
   buildtevent )
     export PKGNAME=tevent
-    export PKGVER=0.9.30
+    export PKGVER=0.9.31
   ;;
 esac
 

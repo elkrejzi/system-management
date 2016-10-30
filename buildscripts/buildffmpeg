@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=ffmpeg
-export PKGVER=3.1.5
+export PKGVER=3.2
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://ffmpeg.org/releases/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
@@ -13,7 +13,6 @@ configure_override() {
 
   ./configure --prefix=/usr              \
               --enable-chromaprint       \
-              --enable-fontconfig        \
               --enable-gpl               \
               --enable-ladspa            \
               --enable-libass            \
@@ -23,8 +22,8 @@ configure_override() {
               --enable-libcelt           \
               --enable-libcdio           \
               --enable-libdc1394         \
-              --enable-libfaac           \
               --enable-libfdk-aac        \
+              --enable-libfontconfig     \
               --enable-libfreetype       \
               --enable-libfribidi        \
               --enable-libgme            \
@@ -61,6 +60,7 @@ configure_override() {
               --enable-libzvbi           \
               --enable-nonfree           \
               --enable-openal            \
+              --enable-opencl            \
               --enable-opengl            \
               --enable-openssl           \
               --enable-postproc          \
@@ -70,7 +70,6 @@ configure_override() {
               --enable-version3          \
               --enable-x11grab           \
               --disable-debug            \
-              --disable-opencl           \
               --disable-static           \
               --extra-cflags="${DEFAULT_CFLAGS}"   \
               --extra-cxxflags="${DEFAULT_CXXFLAGS}" \

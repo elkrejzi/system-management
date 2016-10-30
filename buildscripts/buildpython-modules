@@ -21,7 +21,7 @@ case $(basename $0) in
   ;;
   buildpython-beaker )
     export PKGNAME=Beaker
-    export PKGVER=1.8.0
+    export PKGVER=1.8.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://files.pythonhosted.org/packages/source/B/Beaker/${PKGTAR}"
     export DEST=/binary/python/python-beaker-${PKGVER}
@@ -146,7 +146,7 @@ case $(basename $0) in
   ;;
   buildpython-setuptools )
     export PKGNAME=setuptools
-    export PKGVER=28.6.1
+    export PKGVER=28.7.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://files.pythonhosted.org/packages/source/s/setuptools/${PKGTAR}"
     export DEST=/binary/python/python-setuptools-${PKGVER}
