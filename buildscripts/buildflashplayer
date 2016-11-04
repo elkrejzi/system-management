@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=flashplayer
-export PKGVER=11.2.202.637
+export PKGVER=11.2.202.643
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://fpdownload.macromedia.com/get/flashplayer/pdc/${PKGVER}/install_flash_player_11_linux.x86_64.tar.gz"
 export NO_STRIP=1

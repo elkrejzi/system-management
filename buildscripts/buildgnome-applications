@@ -125,7 +125,7 @@ case $(basename $0) in
   ;;
   buildgnome-todo )
     export PKGNAME=gnome-todo
-    export PKGVER=3.20.2
+    export PKGVER=3.22.0
   ;;
   buildgnome-tweak-tool )
     export PKGNAME=gnome-tweak-tool

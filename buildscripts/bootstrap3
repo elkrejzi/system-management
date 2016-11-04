@@ -145,6 +145,7 @@ $(dirname $0)/buildalsa-plugins
 $(dirname $0)/buildalsa-utils
 $(dirname $0)/builddoxygen
 $(dirname $0)/buildlibdbusmenu-qt
+$(dirname $0)/buildmupdf
 $(dirname $0)/buildphonon
 $(dirname $0)/buildphonon-backend-gstreamer
 $(dirname $0)/buildphonon-backend-vlc

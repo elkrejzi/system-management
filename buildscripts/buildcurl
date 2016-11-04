@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=curl
-export PKGVER=7.50.3
+export PKGVER=7.51.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://curl.haxx.se/download/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

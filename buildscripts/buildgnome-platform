@@ -65,7 +65,7 @@ case $(basename $0) in
   ;;
   buildgexiv2 )
     export PKGNAME=gexiv2
-    export PKGVER=0.10.3
+    export PKGVER=0.10.4
     export CONFIGURE_FLAGS=(--enable-introspection)
     configure_pre() {
       sed -i "s:-Wl,-lstdc++::g" Makefile.in

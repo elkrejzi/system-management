@@ -1,0 +1,425 @@
+--- a/libupower-glib/up-client.c	2015-07-29 14:47:49.000000000 +0200
++++ b/libupower-glib/up-client.c	2016-11-04 13:24:57.466792084 +0100
+@@ -39,9 +39,10 @@
+ #include "up-daemon-generated.h"
+ #include "up-device.h"
+ 
+-static void	up_client_class_init	(UpClientClass	*klass);
+-static void	up_client_init		(UpClient	*client);
+-static void	up_client_finalize	(GObject	*object);
++static void	up_client_class_init		(UpClientClass	*klass);
++static void	up_client_initable_iface_init	(GInitableIface *iface);
++static void	up_client_init			(UpClient	*client);
++static void	up_client_finalize		(GObject	*object);
+ 
+ #define UP_CLIENT_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), UP_TYPE_CLIENT, UpClientPrivate))
+ 
+@@ -71,9 +72,9 @@
+ };
+ 
+ static guint signals [UP_CLIENT_LAST_SIGNAL] = { 0 };
+-static gpointer up_client_object = NULL;
+ 
+-G_DEFINE_TYPE (UpClient, up_client, G_TYPE_OBJECT)
++G_DEFINE_TYPE_WITH_CODE (UpClient, up_client, G_TYPE_OBJECT,
++                         G_IMPLEMENT_INTERFACE(G_TYPE_INITABLE, up_client_initable_iface_init))
+ 
+ /**
+  * up_client_get_devices:
+@@ -434,11 +435,10 @@
+  * up_client_init:
+  * @client: This class instance
+  */
+-static void
+-up_client_init (UpClient *client)
++static gboolean
++up_client_initable_init (GInitable *initable, GCancellable *cancellable, GError **error)
+ {
+-	GError *error = NULL;
+-
++	UpClient *client = UP_CLIENT (initable);
+ 	client->priv = UP_CLIENT_GET_PRIVATE (client);
+ 
+ 	/* connect to main interface */
+@@ -446,13 +446,10 @@
+ 									 G_DBUS_PROXY_FLAGS_NONE,
+ 									 "org.freedesktop.UPower",
+ 									 "/org/freedesktop/UPower",
+-									 NULL,
+-									 &error);
+-	if (client->priv->proxy == NULL) {
+-		g_warning ("Couldn't connect to proxy: %s", error->message);
+-		g_error_free (error);
+-		return;
+-	}
++									 cancellable,
++									 error);
++	if (client->priv->proxy == NULL)
++		return FALSE;
+ 
+ 	/* all callbacks */
+ 	g_signal_connect (client->priv->proxy, "device-added",
+@@ -461,6 +458,23 @@
+ 			  G_CALLBACK (up_device_removed_cb), client);
+ 	g_signal_connect (client->priv->proxy, "notify",
+ 			  G_CALLBACK (up_client_notify_cb), client);
++
++	return TRUE;
++}
++
++static void
++up_client_initable_iface_init (GInitableIface *iface)
++{
++	iface->init = up_client_initable_init;
++}
++
++/*
++ * up_client_init:
++ * @client: This class instance
++ */
++static void
++up_client_init (UpClient *client)
++{
+ }
+ 
+ /*
+@@ -482,23 +496,45 @@
+ }
+ 
+ /**
++ * up_client_new_full:
++ * @cancellable: (allow-none): A #GCancellable or %NULL.
++ * @error: Return location for error or %NULL.
++ *
++ * Creates a new #UpClient object. If connecting to upowerd on D-Bus fails,
++ % this returns %NULL and sets @error.
++ *
++ * Return value: a new UpClient object, or %NULL on failure.
++ *
++ * Since: 0.99.5
++ **/
++UpClient *
++up_client_new_full (GCancellable *cancellable, GError **error)
++{
++	return g_initable_new (UP_TYPE_CLIENT, cancellable, error, NULL);
++}
++
++/**
+  * up_client_new:
+  *
+- * Creates a new #UpClient object.
++ * Creates a new #UpClient object. If connecting to upowerd on D-Bus fails,
++ * this returns %NULL and prints out a warning with the error message.
++ * Consider using up_client_new_full() instead which allows you to handle errors
++ * and cancelling long operations yourself.
+  *
+- * Return value: a new UpClient object.
++ * Return value: a new UpClient object, or %NULL on failure.
+  *
+  * Since: 0.9.0
+  **/
+ UpClient *
+ up_client_new (void)
+ {
+-	if (up_client_object != NULL) {
+-		g_object_ref (up_client_object);
+-	} else {
+-		up_client_object = g_object_new (UP_TYPE_CLIENT, NULL);
+-		g_object_add_weak_pointer (up_client_object, &up_client_object);
++	GError *error = NULL;
++	UpClient *client;
++	client = up_client_new_full (NULL, &error);
++	if (client == NULL) {
++		g_warning ("Couldn't connect to proxy: %s", error->message);
++		g_error_free (error);
+ 	}
+-	return UP_CLIENT (up_client_object);
++	return client;
+ }
+ 
+--- a/libupower-glib/up-client.h	2015-04-22 11:57:08.000000000 +0200
++++ b/libupower-glib/up-client.h	2016-11-04 13:24:57.464792049 +0100
+@@ -72,6 +72,7 @@
+ /* general */
+ GType		 up_client_get_type			(void);
+ UpClient	*up_client_new				(void);
++UpClient	*up_client_new_full			(GCancellable *cancellable, GError **error);
+ 
+ /* sync versions */
+ UpDevice *	 up_client_get_display_device		(UpClient *client);
+--- a/libupower-glib/up-device.c	2015-07-29 14:47:49.000000000 +0200
++++ b/libupower-glib/up-device.c	2016-11-04 13:24:57.469792136 +0100
+@@ -273,7 +273,10 @@
+ 	/* get a human readable time */
+ 	t = (time_t) up_exported_device_get_update_time (priv->proxy_device);
+ 	time_tm = localtime (&t);
++#pragma GCC diagnostic push
++#pragma GCC diagnostic ignored "-Wformat-y2k"
+ 	strftime (time_buf, sizeof time_buf, "%c", time_tm);
++#pragma GCC diagnostic pop
+ 
+ 	string = g_string_new ("");
+ 	if (!is_display)
+--- a/src/linux/up-device-idevice.c	2015-07-01 09:34:46.000000000 +0200
++++ b/src/linux/up-device-idevice.c	2016-11-04 13:24:57.472792188 +0100
+@@ -68,13 +68,97 @@
+ 	return TRUE;
+ }
+ 
++static const char *
++lockdownd_error_to_string (lockdownd_error_t lerr)
++{
++	switch (lerr) {
++	case LOCKDOWN_E_SUCCESS:
++		return "LOCKDOWN_E_SUCCESS";
++	case LOCKDOWN_E_INVALID_ARG:
++		return "LOCKDOWN_E_INVALID_ARG";
++	case LOCKDOWN_E_INVALID_CONF:
++		return "LOCKDOWN_E_INVALID_CONF";
++	case LOCKDOWN_E_PLIST_ERROR:
++		return "LOCKDOWN_E_PLIST_ERROR";
++	case LOCKDOWN_E_PAIRING_FAILED:
++		return "LOCKDOWN_E_PAIRING_FAILED";
++	case LOCKDOWN_E_SSL_ERROR:
++		return "LOCKDOWN_E_SSL_ERROR";
++	case LOCKDOWN_E_DICT_ERROR:
++		return "LOCKDOWN_E_DICT_ERROR";
++	case LOCKDOWN_E_NOT_ENOUGH_DATA:
++		return "LOCKDOWN_E_NOT_ENOUGH_DATA";
++	case LOCKDOWN_E_MUX_ERROR:
++		return "LOCKDOWN_E_MUX_ERROR";
++	case LOCKDOWN_E_NO_RUNNING_SESSION:
++		return "LOCKDOWN_E_NO_RUNNING_SESSION";
++	case LOCKDOWN_E_INVALID_RESPONSE:
++		return "LOCKDOWN_E_INVALID_RESPONSE";
++	case LOCKDOWN_E_MISSING_KEY:
++		return "LOCKDOWN_E_MISSING_KEY";
++	case LOCKDOWN_E_MISSING_VALUE:
++		return "LOCKDOWN_E_MISSING_VALUE";
++	case LOCKDOWN_E_GET_PROHIBITED:
++		return "LOCKDOWN_E_GET_PROHIBITED";
++	case LOCKDOWN_E_SET_PROHIBITED:
++		return "LOCKDOWN_E_SET_PROHIBITED";
++	case LOCKDOWN_E_REMOVE_PROHIBITED:
++		return "LOCKDOWN_E_REMOVE_PROHIBITED";
++	case LOCKDOWN_E_IMMUTABLE_VALUE:
++		return "LOCKDOWN_E_IMMUTABLE_VALUE";
++	case LOCKDOWN_E_PASSWORD_PROTECTED:
++		return "LOCKDOWN_E_PASSWORD_PROTECTED";
++	case LOCKDOWN_E_USER_DENIED_PAIRING:
++		return "LOCKDOWN_E_USER_DENIED_PAIRING";
++	case LOCKDOWN_E_PAIRING_DIALOG_RESPONSE_PENDING:
++		return "LOCKDOWN_E_PAIRING_DIALOG_RESPONSE_PENDING";
++	case LOCKDOWN_E_MISSING_HOST_ID:
++		return "LOCKDOWN_E_MISSING_HOST_ID";
++	case LOCKDOWN_E_INVALID_HOST_ID:
++		return "LOCKDOWN_E_INVALID_HOST_ID";
++	case LOCKDOWN_E_SESSION_ACTIVE:
++		return "LOCKDOWN_E_SESSION_ACTIVE";
++	case LOCKDOWN_E_SESSION_INACTIVE:
++		return "LOCKDOWN_E_SESSION_INACTIVE";
++	case LOCKDOWN_E_MISSING_SESSION_ID:
++		return "LOCKDOWN_E_MISSING_SESSION_ID";
++	case LOCKDOWN_E_INVALID_SESSION_ID:
++		return "LOCKDOWN_E_INVALID_SESSION_ID";
++	case LOCKDOWN_E_MISSING_SERVICE:
++		return "LOCKDOWN_E_MISSING_SERVICE";
++	case LOCKDOWN_E_INVALID_SERVICE:
++		return "LOCKDOWN_E_INVALID_SERVICE";
++	case LOCKDOWN_E_SERVICE_LIMIT:
++		return "LOCKDOWN_E_SERVICE_LIMIT";
++	case LOCKDOWN_E_MISSING_PAIR_RECORD:
++		return "LOCKDOWN_E_MISSING_PAIR_RECORD";
++	case LOCKDOWN_E_SAVE_PAIR_RECORD_FAILED:
++		return "LOCKDOWN_E_SAVE_PAIR_RECORD_FAILED";
++	case LOCKDOWN_E_INVALID_PAIR_RECORD:
++		return "LOCKDOWN_E_INVALID_PAIR_RECORD";
++	case LOCKDOWN_E_INVALID_ACTIVATION_RECORD:
++		return "LOCKDOWN_E_INVALID_ACTIVATION_RECORD";
++	case LOCKDOWN_E_MISSING_ACTIVATION_RECORD:
++		return "LOCKDOWN_E_MISSING_ACTIVATION_RECORD";
++	case LOCKDOWN_E_SERVICE_PROHIBITED:
++		return "LOCKDOWN_E_SERVICE_PROHIBITED";
++	case LOCKDOWN_E_ESCROW_LOCKED:
++		return "LOCKDOWN_E_ESCROW_LOCKED";
++	case LOCKDOWN_E_UNKNOWN_ERROR:
++		return "LOCKDOWN_E_UNKNOWN_ERROR";
++	default:
++		return "unknown error";
++	}
++}
++
+ static gboolean
+-start_poll_cb (UpDeviceIdevice *idevice)
++up_device_idevice_start_poll_cb (UpDeviceIdevice *idevice)
+ {
+ 	UpDevice *device = UP_DEVICE (idevice);
+ 	idevice_t dev = NULL;
+ 	lockdownd_client_t client = NULL;
+ 	char *uuid = NULL;
++	lockdownd_error_t lerr;
+ 
+ 	g_object_get (G_OBJECT (idevice), "serial", &uuid, NULL);
+ 	g_assert (uuid);
+@@ -85,8 +169,11 @@
+ 
+ 	g_clear_pointer (&uuid, g_free);
+ 
+-	if (LOCKDOWN_E_SUCCESS != lockdownd_client_new_with_handshake (dev, &client, "upower"))
++	if ((lerr = lockdownd_client_new_with_handshake (dev, &client, "upower")) != LOCKDOWN_E_SUCCESS) {
++		g_debug ("Could not start initial lockdownd client: %s (%d)",
++			 lockdownd_error_to_string (lerr), lerr);
+ 		goto out;
++	}
+ 
+ 	/* coldplug */
+ 	idevice->priv->client = client;
+@@ -160,7 +247,10 @@
+ 		      "has-history", TRUE,
+ 		      NULL);
+ 
+-	idevice->priv->start_id = g_timeout_add_seconds (1, (GSourceFunc) start_poll_cb, idevice);
++	idevice->priv->start_id = g_timeout_add_seconds (5, (GSourceFunc) up_device_idevice_start_poll_cb,
++							 idevice);
++	g_source_set_name_by_id (idevice->priv->start_id,
++				 "[upower] up_device_idevice_start_poll_cb (linux)");
+ 
+ 	return TRUE;
+ }
+--- a/src/up-daemon.c	2016-02-16 09:44:34.000000000 +0100
++++ b/src/up-daemon.c	2016-11-04 13:24:57.463792032 +0100
+@@ -435,8 +435,8 @@
+ 			       GDBusMethodInvocation *invocation,
+ 			       UpDaemon *daemon)
+ {
+-	up_exported_daemon_complete_get_display_device (skeleton, invocation,
+-							up_backend_get_critical_action (daemon->priv->backend));
++	up_exported_daemon_complete_get_critical_action (skeleton, invocation,
++							 up_backend_get_critical_action (daemon->priv->backend));
+ 	return TRUE;
+ }
+ 
+--- a/src/up-kbd-backlight.c	2015-07-29 14:47:49.000000000 +0200
++++ b/src/up-kbd-backlight.c	2016-11-04 13:24:57.468792118 +0100
+@@ -43,13 +43,43 @@
+ struct UpKbdBacklightPrivate
+ {
+ 	gint			 fd;
+-	gint			 brightness;
+ 	gint			 max_brightness;
+ };
+ 
+ G_DEFINE_TYPE (UpKbdBacklight, up_kbd_backlight, UP_TYPE_EXPORTED_KBD_BACKLIGHT_SKELETON)
+ 
+ /**
++ * up_kbd_backlight_brightness_read:
++ **/
++static gint
++up_kbd_backlight_brightness_read (UpKbdBacklight *kbd_backlight)
++{
++	gchar buf[16];
++	gchar *end = NULL;
++	ssize_t len;
++	gint64 brightness = -1;
++
++	g_return_val_if_fail (kbd_backlight->priv->fd >= 0, brightness);
++
++	lseek (kbd_backlight->priv->fd, 0, SEEK_SET);
++	len = read (kbd_backlight->priv->fd, buf, G_N_ELEMENTS (buf) - 1);
++
++	if (len > 0) {
++		buf[len] = '\0';
++		brightness = g_ascii_strtoll (buf, &end, 10);
++
++		if (brightness < 0 ||
++		    brightness > kbd_backlight->priv->max_brightness ||
++		    end == buf) {
++			brightness = -1;
++			g_warning ("failed to convert brightness: %s", buf);
++		}
++	}
++
++	return brightness;
++}
++
++/**
+  * up_kbd_backlight_brightness_write:
+  **/
+ static gboolean
+@@ -84,9 +114,8 @@
+ 	}
+ 
+ 	/* emit signal */
+-	kbd_backlight->priv->brightness = value;
+ 	up_exported_kbd_backlight_emit_brightness_changed (UP_EXPORTED_KBD_BACKLIGHT (kbd_backlight),
+-							   kbd_backlight->priv->brightness);
++							   value);
+ 
+ out:
+ 	g_free (text);
+@@ -103,8 +132,19 @@
+ 				 GDBusMethodInvocation *invocation,
+ 				 UpKbdBacklight *kbd_backlight)
+ {
+-	up_exported_kbd_backlight_complete_get_brightness (skeleton, invocation,
+-							   kbd_backlight->priv->brightness);
++	gint brightness;
++
++	brightness = up_kbd_backlight_brightness_read (kbd_backlight);
++
++	if (brightness >= 0) {
++		up_exported_kbd_backlight_complete_get_brightness (skeleton, invocation,
++								   brightness);
++	} else {
++		g_dbus_method_invocation_return_error (invocation,
++						       UP_DAEMON_ERROR, UP_DAEMON_ERROR_GENERAL,
++						       "error reading brightness");
++	}
++
+ 	return TRUE;
+ }
+ 
+@@ -216,23 +256,12 @@
+ 		goto out;
+ 	}
+ 
+-	/* read brightness */
++	/* open the brightness file for read and write operations */
+ 	path_now = g_build_filename (dir_path, "brightness", NULL);
+-	ret = g_file_get_contents (path_now, &buf_now, NULL, &error);
+-	if (!ret) {
+-		g_warning ("failed to get brightness: %s", error->message);
+-		g_error_free (error);
+-		goto out;
+-	}
+-	kbd_backlight->priv->brightness = g_ascii_strtoull (buf_now, &end, 10);
+-	if (kbd_backlight->priv->brightness == 0 && end == buf_now) {
+-		g_warning ("failed to convert brightness: %s", buf_now);
+-		goto out;
+-	}
+-
+-	/* open the file for writing */
+ 	kbd_backlight->priv->fd = open (path_now, O_RDWR);
+-	if (kbd_backlight->priv->fd < 0)
++
++	/* read brightness and check if it has an acceptable value */
++	if (up_kbd_backlight_brightness_read (kbd_backlight) < 0)
+ 		goto out;
+ 
+ 	/* success */
+--- a/tools/up-tool.c	2015-07-29 14:47:49.000000000 +0200
++++ b/tools/up-tool.c	2016-11-04 13:24:57.465792067 +0100
+@@ -285,7 +285,12 @@
+ 	g_option_context_free (context);
+ 
+ 	loop = g_main_loop_new (NULL, FALSE);
+-	client = up_client_new ();
++	client = up_client_new_full (NULL, &error);
++	if (client == NULL) {
++		g_warning ("Cannot connect to upowerd: %s", error->message);
++		g_error_free (error);
++		return EXIT_FAILURE;
++	}
+ 
+ 	if (opt_version) {
+ 		gchar *daemon_version;
