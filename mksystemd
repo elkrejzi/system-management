@@ -1,0 +1,72 @@
+#!/bin/bash -e
+
+# Usage: mksystemd VERSION PGP-KEY (optional)
+
+if [ -z ${1} ]
+then
+  echo "Usage: mksystemd VERSION PGP-KEY (optional)"
+  exit 1;
+else
+  export PKGVER=${1}
+fi
+
+if [ ! -z ${2} ]
+then
+  export PGPKEY=${2}
+  echo "Signing with ${PGPKEY}"
+fi
+
+export PATCH_LOCATION="http://www.linuxfromscratch.org/~krejzi/systemd"
+
+if [ "$(hostname)" == "krejzi" ]
+then
+  export SFTP="krejzi@higgs.linuxfromscratch.org:~/public_html/systemd"
+fi
+
+rm -rf systemd
+
+if [ -e ${HOME}/src/git/systemd.tar.xz ]
+then
+  tar xf ${HOME}/src/git/systemd.tar.xz
+  pushd systemd
+    git fetch origin
+    git reset --hard origin/master
+  popd
+else
+  git clone https://github.com/systemd/systemd.git
+fi
+
+pushd systemd
+  git checkout v${PKGVER}
+  wget ${PATCH_LOCATION}/systemd-${PKGVER}-make-dist.patch -O - | patch -Np1 -i -
+  ./autogen.sh
+  ./configure CFLAGS="-fno-lto" --prefix=/usr --sysconfdir=/etc --localstatedir=/var --libdir=/usr/lib  --with-rootprefix=/ --with-rootlibdir=/lib --enable-split-usr
+  make dist
+
+  cp systemd-${PKGVER}.tar.xz ..
+
+  md5sum systemd-${PKGVER}.tar.xz >> systemd-${PKGVER}.hashes.txt
+  sha256sum systemd-${PKGVER}.tar.xz >> systemd-${PKGVER}.hashes.txt
+  sha512sum systemd-${PKGVER}.tar.xz >> systemd-${PKGVER}.hashes.txt
+
+  export UPLOAD_LIST=(
+    systemd-${PKGVER}.tar.xz
+    systemd-${PKGVER}.hashes.txt
+  )
+
+  if [ ! -z ${PGPKEY} ]
+  then
+    gpg --default-key ${PGPKEY} --armor --output systemd-${PKGVER}.tar.xz.asc --detach-sig systemd-${PKGVER}.tar.xz
+    UPLOAD_LIST+=("systemd-${PKGVER}.tar.xz.asc")
+    gpg --default-key ${PGPKEY} --armor --output systemd-${PKGVER}.hashes.txt.asc --detach-sig systemd-${PKGVER}.hashes.txt
+    UPLOAD_LIST+=("systemd-${PKGVER}.hashes.txt.asc")
+  fi
+
+  if [ ! -z ${SFTP} ]
+  then
+    scp ${UPLOAD_LIST[@]} ${SFTP}
+  fi
+
+popd
+
+rm -rf systemd
