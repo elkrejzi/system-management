@@ -1,0 +1,29 @@
+#!/bin/bash -e
+
+export PKGNAME=vim
+export PKGVER=8.0.0065
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/vim/vim/archive/v${PKGVER}.tar.gz"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_STATIC=1
+export CONFIGURE_FLAGS=(--localstatedir=/var/lib/vim
+                        --disable-desktop-database-update
+                        --disable-icon-cache-update
+                        --with-features=huge
+                        --with-x
+                        --enable-gui=gtk2
+                        --enable-cscope
+                        --enable-multibyte
+                        --enable-luainterp=dynamic
+                        --enable-perlinterp=dynamic
+                        --enable-pythoninterp=dynamic
+                        --enable-python3interp=dynamic
+                        --enable-rubyinterp=dynamic
+                        --enable-tclinterp=dynamic)
+
+configure_pre() {
+  sed -i 's|^.*\(#define SYS_.*VIMRC_FILE.*"\) .*$|\1|' src/feature.h
+  sed -i 's|^.*\(#define VIMRC_FILE.*"\) .*$|\1|' src/feature.h
+}
+
+. $(dirname $0)/master.sh
