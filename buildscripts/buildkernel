@@ -97,8 +97,7 @@ make_install_override() {
 
   find ${HEADERSDIR}/arch/x86 -name ".*.cmd" -delete
 
-  for SCRIPT in Kbuild.include Lindent Makefile.build                       \
-                Makefile.{clean,extrawarn,host,kasan,lib,modpost,ubsan}     \
+  for SCRIPT in Kbuild.include Lindent "Makefile*"                          \
                 check{includes,stack,version}.pl conmakehash                \
                 {depmod,gcc-goto,gcc-version,gen_initramfs_list,mkuboot}.sh \
                 gcc-x86_{32,64}-has-stack-protector.sh kallsyms kernel-doc  \

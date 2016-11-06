@@ -223,13 +223,13 @@ case $(basename $0) in
   ;;
   buildgspell )
     export PKGNAME=gspell
-    export PKGVER=1.2.0
+    export PKGVER=1.2.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
   ;;
   buildgtksourceview )
     export PKGNAME=gtksourceview
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
   ;;
   buildgtk-vnc )
     export PKGNAME=gtk-vnc

@@ -1,0 +1,101 @@
+#!/bin/bash -e
+
+export PKGNAME=docker
+export PKGVER=1.12.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/docker/docker/archive/v${PKGVER}.tar.gz"
+export NO_STRIP=1
+export POSTINST_TRIGGER=("getent group docker > /dev/null || groupadd -g 98 docker")
+
+export GO_VER=1.7.3
+export GO_MD2MAN_VER=1.0.6
+
+configure_override() {
+  rm -rf go go-md2man
+
+  wget -c https://storage.googleapis.com/golang/go${GO_VER}.linux-amd64.tar.gz -O - | bsdtar xf -
+
+  export PATH=${PATH}:${PWD}/go/bin
+  export GOROOT=${PWD}/go
+
+  install -dm755 go-md2man
+
+  pushd go-md2man
+
+    git clone https://github.com/cpuguy83/go-md2man.git
+
+    pushd go-md2man
+      git checkout v${GO_MD2MAN_VER}
+    popd
+
+    export GOPATH=${PWD}
+
+    install -dm755 src/github.com/cpuguy83
+
+    ln -sf ../../../go-md2man src/github.com/cpuguy83/go-md2man
+
+    pushd src/github.com/cpuguy83/go-md2man
+      go get -v ./...
+    popd
+
+  popd
+
+  export PATH=${PATH}:${PWD}/go-md2man/bin
+
+  export CONTAINERD_COMMIT=$(grep "ENV CONTAINERD_COMMIT" Dockerfile | awk '{print $3}')
+  export RUNC_COMMIT=$(grep "ENV RUNC_COMMIT" Dockerfile | awk '{print $3}')
+
+  install -dm755 src/github.com/docker
+
+  git clone https://github.com/docker/containerd.git src/github.com/docker/containerd
+  git clone https://github.com/docker/runc.git src/github.com/docker/runc
+
+  pushd src/github.com/docker/containerd
+    git checkout ${CONTAINERD_COMMIT}
+  popd
+
+  pushd src/github.com/docker/runc
+    git checkout ${RUNC_COMMIT}
+  popd
+
+  export GOPATH=${GOPATH}:${PWD}
+
+  export AUTO_GOPATH=1
+  export DOCKER_GITCOMMIT=${PKGVER}
+}
+
+make_override() {
+  pushd src/github.com/docker/containerd
+    make
+  popd
+
+  pushd src/github.com/docker/runc
+    LDFLAGS= make
+  popd
+
+  hack/make.sh dynbinary
+  man/md2man-all.sh 2>/dev/null
+}
+
+make_install_override() {
+  install -Dm755 src/github.com/docker/containerd/bin/containerd ${DEST}/usr/bin/docker-containerd
+  install -Dm755 src/github.com/docker/containerd/bin/containerd-shim ${DEST}/usr/bin/docker-containerd-shim
+  install -Dm755 src/github.com/docker/containerd/bin/ctr ${DEST}/usr/bin/docker-containerd-ctr
+
+  install -Dm755 src/github.com/docker/runc/runc ${DEST}/usr/bin/docker-runc
+
+  install -Dm755 bundles/${PKGVER}/dynbinary-client/docker-${PKGVER} ${DEST}/usr/bin/docker
+  install -Dm755 bundles/${PKGVER}/dynbinary-daemon/docker-proxy-${PKGVER} ${DEST}/usr/bin/docker-proxy
+  install -Dm755 bundles/${PKGVER}/dynbinary-daemon/dockerd-${PKGVER} ${DEST}/usr/bin/dockerd
+
+  install -Dm644 contrib/init/systemd/docker.service ${DEST}/lib/systemd/system/docker.service
+  install -Dm644 contrib/init/systemd/docker.socket ${DEST}/lib/systemd/system/docker.socket
+  install -Dm644 contrib/udev/80-docker.rules ${DEST}/lib/udev/rules.d/80-docker.rules
+
+  install -dm755 ${DEST}/usr/share/man
+  mv man/man* ${DEST}/usr/share/man
+
+  rm -rf ../go ../go-md2man
+}
+
+. $(dirname $0)/master.sh

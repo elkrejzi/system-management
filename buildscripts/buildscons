@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=scons
-export PKGVER=2.5.0
+export PKGVER=2.5.1
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://downloads.sourceforge.net/scons/${PKGTAR}"
 
