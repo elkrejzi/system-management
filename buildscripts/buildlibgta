@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
-export PKGNAME=libxkbcommon
-export PKGVER=0.7.0
+export PKGNAME=libgta
+export PKGVER=1.0.8
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-export PKGURL="http://xkbcommon.org/download/${PKGTAR}"
+export PKGURL="http://download.savannah.gnu.org/releases/gta/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
 . $(dirname $0)/master.sh

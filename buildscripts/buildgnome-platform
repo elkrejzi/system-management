@@ -23,7 +23,7 @@ case $(basename $0) in
   ;;
   buildevolution-data-server )
     export PKGNAME=evolution-data-server
-    export PKGVER=3.22.1
+    export PKGVER=3.22.2
     export CONFIGURE_FLAGS=(--disable-uoa
                             --with-krb5=/usr
                             --with-openldap
@@ -118,7 +118,7 @@ case $(basename $0) in
   ;;
   buildgnome-desktop )
     export PKGNAME=gnome-desktop
-    export PKGVER=3.22.1
+    export PKGVER=3.22.2
     export CONFIGURE_FLAGS=(--with-gnome-distributor=Krejzi)
   ;;
   buildgnome-keyring )
@@ -133,7 +133,7 @@ case $(basename $0) in
   ;;
   buildgnome-online-accounts )
     export PKGNAME=gnome-online-accounts
-    export PKGVER=3.22.1
+    export PKGVER=3.22.2
     export CONFIGURE_FLAGS=(--enable-kerberos --disable-compile-warnings)
   ;;
   buildgnome-online-miners )
@@ -142,7 +142,7 @@ case $(basename $0) in
   ;;
   buildgnome-session )
     export PKGNAME=gnome-session
-    export PKGVER=3.22.1
+    export PKGVER=3.22.2
   ;;
   buildgnome-settings-daemon )
     export PKGNAME=gnome-settings-daemon
@@ -151,7 +151,7 @@ case $(basename $0) in
   ;;
   buildgnome-shell )
     export PKGNAME=gnome-shell
-    export PKGVER=3.22.1
+    export PKGVER=3.22.2
     make_install_post() {
       install -dm755 ${DEST}/usr/lib/gnome-shell/mozilla
 
@@ -161,7 +161,7 @@ case $(basename $0) in
   ;;
   buildgnome-shell-extensions )
     export PKGNAME=gnome-shell-extensions
-    export PKGVER=3.22.1
+    export PKGVER=3.22.2
     export KEEP_STATIC=1
     export NO_STRIP=1
   ;;
@@ -240,7 +240,7 @@ case $(basename $0) in
   ;;
   buildgvfs )
     export PKGNAME=gvfs
-    export PKGVER=1.30.1.1
+    export PKGVER=1.30.2
     export POSTINST_TRIGGER=("[ -x /usr/bin/gio-querymodules ] && echo \"Processing triggers for gio-2.0\" && /usr/bin/gio-querymodules /usr/lib/gio/modules")
     make_install_post() {
       export SPACE_ADDED=1
@@ -351,7 +351,7 @@ case $(basename $0) in
   ;;
   buildmutter )
     export PKGNAME=mutter
-    export PKGVER=3.22.1
+    export PKGVER=3.22.2
     export CONFIGURE_FLAGS=(--enable-compile-warnings=minimum
                             --disable-maintainer-flags
                             --disable-Werror)
@@ -375,7 +375,7 @@ case $(basename $0) in
   ;;
   buildvte )
     export PKGNAME=vte
-    export PKGVER=0.46.0
+    export PKGVER=0.46.1
     export CONFIGURE_FLAGS=(--enable-introspection)
     make_install_post() {
       rm -rf ${DEST}/etc

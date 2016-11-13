@@ -7,4 +7,11 @@ export PKGURL="http://www.netfilter.org/projects/libnftnl/files/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export PATCHES_LIST=("libnftnl-fixes.patch")
 
+make_install_post() {
+  install -dm755 ${DEST}/lib
+
+  mv ${DEST}/usr/lib/libnftnl.so.* ${DEST}/lib
+  ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libnftnl.so) ${DEST}/usr/lib/libnftnl.so
+}
+
 . $(dirname $0)/master.sh

@@ -6,6 +6,13 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://ftp.gnu.org/gnu/nettle/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 
+make_install_post() {
+  install -dm755 ${DEST}/lib
+
+  mv ${DEST}/usr/lib/libnettle.so.* ${DEST}/lib
+  ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libnettle.so) ${DEST}/usr/lib/libnettle.so
+}
+
 post_install_config() {
   rm -rf ${DEST}/usr/*/*.a
 }

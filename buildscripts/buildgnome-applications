@@ -3,7 +3,7 @@
 case $(basename $0) in
   buildaisleriot )
     export PKGNAME=aisleriot
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
     export CONFIGURE_FLAGS=(--with-platform=gtk-only
                             --with-card-theme-formats=svg,fixed,pysol
                             --with-pysol-card-theme-path=/usr/share/PySolFC)
@@ -23,7 +23,7 @@ case $(basename $0) in
   ;;
   buildepiphany )
     export PKGNAME=epiphany
-    export PKGVER=3.22.1
+    export PKGVER=3.22.2
     make_install_post() {
       sed -i "s#multipart/related;##" ${DEST}/usr/share/applications/epiphany.desktop
     }
@@ -40,7 +40,7 @@ case $(basename $0) in
   ;;
   buildfile-roller )
     export PKGNAME=file-roller
-    export PKGVER=3.22.1
+    export PKGVER=3.22.2
     export CONFIGURE_FLAGS=(--disable-packagekit)
   ;;
   buildgedit )
@@ -64,7 +64,7 @@ case $(basename $0) in
   ;;
   buildgnome-calculator )
     export PKGNAME=gnome-calculator
-    export PKGVER=3.22.1
+    export PKGVER=3.22.2
   ;;
   buildgnome-calendar )
     export PKGNAME=gnome-calendar
@@ -76,7 +76,7 @@ case $(basename $0) in
   ;;
   buildgnome-color-manager )
     export PKGNAME=gnome-color-manager
-    export PKGVER=3.22.1
+    export PKGVER=3.22.2
     export CONFIGURE_FLAGS=(--disable-packagekit)
   ;;
   buildgnome-contacts )
@@ -85,7 +85,7 @@ case $(basename $0) in
   ;;
   buildgnome-disk-utility )
     export PKGNAME=gnome-disk-utility
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
   ;;
   buildgnome-documents )
     export PKGNAME=gnome-documents
@@ -97,7 +97,7 @@ case $(basename $0) in
   ;;
   buildgnome-maps )
     export PKGNAME=gnome-maps
-    export PKGVER=3.22.1
+    export PKGVER=3.22.2
   ;;
   buildgnome-nettool )
     export PKGNAME=gnome-nettool
@@ -111,16 +111,16 @@ case $(basename $0) in
   ;;
   buildgnome-power-manager )
     export PKGNAME=gnome-power-manager
-    export PKGVER=3.22.1
+    export PKGVER=3.22.2
   ;;
   buildgnome-system-monitor )
     export PKGNAME=gnome-system-monitor
-    export PKGVER=3.22.0
+    export PKGVER=3.22.2
     export CONFIGURE_FLAGS=(--enable-systemd)
   ;;
   buildgnome-terminal )
     export PKGNAME=gnome-terminal
-    export PKGVER=3.22.0
+    export PKGVER=3.22.1
     export CONFIGURE_FLAGS=(--disable-migration)
   ;;
   buildgnome-todo )
@@ -137,7 +137,7 @@ case $(basename $0) in
   ;;
   buildgucharmap )
     export PKGNAME=gucharmap
-    export PKGVER=9.0.1
+    export PKGVER=9.0.2
     export CONFIGURE_FLAGS=(--enable-vala --with-unicode-data=download)
   ;;
   buildnautilus )
@@ -160,7 +160,7 @@ case $(basename $0) in
   ;;
   buildpolari )
     export PKGNAME=polari
-    export PKGVER=3.22.1
+    export PKGVER=3.22.2
   ;;
   buildseahorse )
     export PKGNAME=seahorse

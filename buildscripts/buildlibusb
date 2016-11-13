@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
 export PKGNAME=libusb
-export PKGVER=1.0.20
+export PKGVER=1.0.21
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
-export PKGURL="https://downloads.sourceforge.net/libusb/${PKGTAR}"
+export PKGURL="https://github.com/libusb/libusb/releases/download/v${PKGVER}/${PKGTAR}"
 
 . $(dirname $0)/master.sh

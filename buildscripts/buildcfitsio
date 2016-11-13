@@ -1,0 +1,17 @@
+#!/bin/bash -e
+
+export PKGNAME=cfitsio
+export PKGVER=3.390
+export PKGTAR=${PKGNAME}${PKGVER/./}.tar.gz
+export PKGDIR=${PKGNAME}
+export PKGURL="http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio3390.tar.gz"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--enable-reentrant)
+export MAKE_FLAGS="shared utils"
+
+make_install_post() {
+  rm -rf ${DEST}/usr/bin/{cookbook,smem,testprog}
+  rm -rf ${DEST}/usr/lib/*.a
+}
+
+. $(dirname $0)/master.sh

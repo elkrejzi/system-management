@@ -8,6 +8,10 @@ export MAKE_JOBS_FLAGS="-j4"
 
 make_install_post() {
   rm -rf ${DEST}/usr/share/emacs ${DEST}/usr/share/info/*.png
+  install -dm755 ${DEST}/lib
+
+  mv ${DEST}/usr/lib/libidn.so.* ${DEST}/lib
+  ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libidn.so) ${DEST}/usr/lib/libidn.so
 }
 
 . $(dirname $0)/master.sh

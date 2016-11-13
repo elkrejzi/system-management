@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=proj
+export PKGVER=4.9.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://download.osgeo.org/proj/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_pre() {
+  wget http://download.osgeo.org/proj/proj-datumgrid-1.5.zip -O - | bsdtar xf - -C ${PWD}/nad
+}
+
+. $(dirname $0)/master.sh

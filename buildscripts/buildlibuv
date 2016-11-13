@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=libuv
+export PKGVER=1.10.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/libuv/libuv/archive/v${PKGVER}.tar.gz"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_pre() {
+  ./autogen.sh
+}
+
+. $(dirname $0)/master.sh

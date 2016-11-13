@@ -1,10 +1,11 @@
 #!/bin/bash -e
 
 export PKGNAME=hwloc
-export PKGVER=1.11.2
+export PKGVER=1.11.4
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://www.open-mpi.org/software/hwloc/v${PKGVER:0:4}/downloads/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--enable-plugins)
 
 make_install_post() {
   rm -rf ${DEST}/usr/share/applications

@@ -1,0 +1,16 @@
+#!/bin/bash -e
+
+export PKGNAME=gdal
+export PKGVER=2.1.2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://download.osgeo.org/gdal/${PKGVER}/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--with-mysql
+                        --with-opencl
+                        --with-poppler
+                        --with-spatialite
+                        --without-jasper)
+
+export MAKE_INSTALL_FLAGS="install-man INST_MAN=/usr/share/man"
+
+. $(dirname $0)/master.sh

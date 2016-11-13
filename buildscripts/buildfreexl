@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+export PKGNAME=freexl
+export PKGVER=1.0.2
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://www.gaia-gis.it/gaia-sins/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+. $(dirname $0)/master.sh

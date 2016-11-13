@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+export PKGNAME=OpenSceneGraph
+export PKGVER=3.4.0
+export PKGTAR=${PKGNAME}-${PKGVER}.zip
+export PKGURL="http://trac.openscenegraph.org/downloads/developer_releases/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export PATCHES_LIST=("OpenSceneGraph-fixes.patch")
+export CMAKE_FLAGS=(-DBUILD_SHARED_LIBS=ON -DLIB_POSTFIX="")
+
+. $(dirname $0)/master.sh

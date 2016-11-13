@@ -2,6 +2,19 @@
 
 case $(basename $0) in
 
+  buildcython )
+    export PKGNAME=Cython
+    export PKGVER=0.25.1
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://files.pythonhosted.org/packages/source/C/Cython/${PKGTAR}"
+    export DEST=/binary/python/cython-${PKGVER}
+    make_install_post() {
+      for file in ${DEST}/usr/bin/*
+      do
+        mv ${file} ${file}3
+      done
+    }
+  ;;
   buildpython-alabaster )
     export PKGNAME=alabaster
     export PKGVER=0.7.9
@@ -77,7 +90,7 @@ case $(basename $0) in
   ;;
   buildpython-mako )
     export PKGNAME=Mako
-    export PKGVER=1.0.5
+    export PKGVER=1.0.6
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://files.pythonhosted.org/packages/source/M/Mako/${PKGTAR}"
     export DEST=/binary/python/python-mako-${PKGVER}
@@ -91,6 +104,30 @@ case $(basename $0) in
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://files.pythonhosted.org/packages/source/M/MarkupSafe/${PKGTAR}"
     export DEST=/binary/python/python-markupsafe-${PKGVER}
+  ;;
+  buildpython-numpy )
+    export PKGNAME=numpy
+    export PKGVER=1.11.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://files.pythonhosted.org/packages/source/n/numpy/${PKGTAR}"
+    export DEST=/binary/python/python-numpy-${PKGVER}
+    export EXTRA_CFG="config_fc --fcompiler=gnu95"
+    export EXTRA_INSTALL="config_fc --fcompiler=gnu95"
+    export LDFLAGS="-shared"
+    configure_pre(){
+cat > site.cfg << "EOF"
+[atlas]
+atlas_libs = cblas
+libraries = cblas
+EOF
+    }
+    configure_pre_32(){
+cat > site.cfg << "EOF"
+[atlas]
+atlas_libs = cblas
+libraries = cblas
+EOF
+    }
   ;;
   buildpython-pygments )
     export PKGNAME=Pygments
@@ -146,7 +183,7 @@ case $(basename $0) in
   ;;
   buildpython-setuptools )
     export PKGNAME=setuptools
-    export PKGVER=28.7.1
+    export PKGVER=28.8.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://files.pythonhosted.org/packages/source/s/setuptools/${PKGTAR}"
     export DEST=/binary/python/python-setuptools-${PKGVER}
@@ -251,17 +288,17 @@ configure_override() {
 make_override() {
   if [ ${MULTILIB} == 0 ]
   then
-    ${PYTHON} setup.py build ${EXTRA_CFG}
+    ${PYTHON} setup.py ${EXTRA_CFG} build
   else
-    python setup.py build ${EXTRA_CFG}
+    python setup.py ${EXTRA_CFG} build
   fi
 }
 make_install_override() {
   if [ ${MULTILIB} == 0 ]
   then
-    ${PYTHON} setup.py install --root=${DEST} --optimize=1
+    ${PYTHON} setup.py ${EXTRA_INSTALL} install --root=${DEST} --optimize=1
   else
-    python setup.py install --root=${DEST} --optimize=1
+    python setup.py ${EXTRA_INSTALL} install --root=${DEST} --optimize=1
   fi
 }
 

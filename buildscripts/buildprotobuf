@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+export PKGNAME=protobuf
+export PKGVER=3.1.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/google/protobuf/archive/v${PKGVER}.tar.gz"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export CMAKE_FLAGS=(-DCMAKE_INSTALL_LIBDIR=lib -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_SHARED_LIBS=ON)
+
+configure_pre() {
+  export PATH_TO_SOURCE="../${PKGNAME}-${PKGVER}/cmake"
+}
+
+. $(dirname $0)/master.sh

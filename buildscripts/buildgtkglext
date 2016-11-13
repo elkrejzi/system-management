@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=gtkglext
+export PKGVER=1.2.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="https://downloads.sourceforge.net/gtkglext/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+
+configure_pre() {
+  autoreconf -fi
+}
+
+. $(dirname $0)/master.sh

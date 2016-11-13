@@ -13,4 +13,11 @@ configure_override() {
   sed -i "/CFLAGS/s#-O3#${CFLAGS}#g" lib/Makefile programs/Makefile
 }
 
+make_install_post() {
+  install -dm755 ${DEST}/lib
+
+  mv ${DEST}/usr/lib/liblz4.so.* ${DEST}/lib
+  ln -sf ../../lib/$(readlink ${DEST}/usr/lib/liblz4.so) ${DEST}/usr/lib/liblz4.so
+}
+
 . $(dirname $0)/master.sh

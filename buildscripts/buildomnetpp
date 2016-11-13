@@ -1,0 +1,96 @@
+#!/bin/bash -e
+
+export PKGNAME=omnetpp
+export PKGVER=5.0
+export PKGTAR=${PKGNAME}-${PKGVER}-src.tgz
+
+# Download manually:
+# https://omnetpp.org/omnetpp
+
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_STATIC=1
+
+configure_pre() {
+  export PATH=${PATH}:${PWD}/bin
+  export LD_LIBRARY_PATH=${PWD}/lib
+
+cat > configure.user << EOF
+CC="${DEFAULT_CC}"
+CXX="${DEFAULT_CXX} -std=c++11"
+CFLAGS_RELEASE="${CFLAGS}"
+
+WITH_TKENV=yes
+WITH_QTENV=yes
+WITH_OSG=yes
+WITH_NETBUILDER=yes
+WITH_PARSIM=yes
+
+EMBED_TCL_CODE=yes
+PREFER_CLANG=no
+PREFER_QTENV=yes
+QT_VERSION=5
+SHARED_LIBS=yes
+USE_CXX11=yes
+EOF
+}
+
+make_install_override() {
+  sed "s:${PWD}:/usr:g" Makefile.inc > Makefile.inc2
+  sed -i -e "/INCL_DIR/s#/usr/include#&/omnetpp#g" \
+         -e "s#/usr/images#/usr/share/omnetpp/images#g" \
+         -e "s#/usr/doc#/usr/share/omnetpp/doc#g" \
+         -e "s#/usr/samples#/usr/share/omnetpp/samples#g" \
+         -e "s#/usr/tools/linux64#/usr/bin#g" \
+         -e "s#/usr/src/tkenv#/usr/share/omnetpp/tkenv#g" \
+         -e "s#/usr/ui##g" \
+         -e "s#/usr/out##g" \
+         -e "s#/usr/src##g" \
+         -e "s#/usr/src/utils##g" \
+         -e "s#/usr/test##g" \
+         Makefile.inc2
+
+cat > bin/opp_configfilepath << EOF
+#!/bin/sh
+echo '/usr/share/omnetpp/Makefile.inc'
+EOF
+
+  sed -i "s:IDEDIR=.*:IDEDIR=/usr/share/omnetpp/ide:g" bin/omnetpp
+  sed -i 's#$IDEDIR/error.log#$HOME/.omnet-error.log#g' bin/omnetpp
+
+  install -dm755 ${DEST}/usr/bin ${DEST}/usr/include/omnetpp ${DEST}/usr/lib
+  install -dm755 ${DEST}/usr/share/omnetpp/doc ${DEST}/usr/share/omnetpp/ide
+  install -dm755 ${DEST}/usr/share/omnetpp/images ${DEST}/usr/share/omnetpp/samples
+  install -dm755 ${DEST}/usr/share/omnetpp/tkenv
+  install -dm755 ${DEST}/usr/share/applications ${DEST}/usr/share/pixmaps
+
+  cp -R bin/* ${DEST}/usr/bin
+  cp -R include/* ${DEST}/usr/include/omnetpp
+  cp -R lib/clang/*.a ${DEST}/usr/lib
+  cp -R lib/clang/*.so ${DEST}/usr/lib
+  cp -R lib/tkpath ${DEST}/usr/lib
+
+  cp -R doc/* ${DEST}/usr/share/omnetpp/doc
+  cp -R ide/* ${DEST}/usr/share/omnetpp/ide
+  cp -R images/* ${DEST}/usr/share/omnetpp/images
+  cp -R samples/* ${DEST}/usr/share/omnetpp/samples
+  cp -R src/tkenv/*.tcl ${DEST}/usr/share/omnetpp/tkenv
+
+cat > ${DEST}/usr/share/applications/omnetpp.desktop << EOF
+[Desktop Entry]
+Type=Application
+Icon=omnetpp
+Name=OMNeT++
+Comment=Start OMNeT++ IDE
+Exec=omnetpp
+Categories=Development;
+EOF
+
+  install -m644 Makefile.inc2 ${DEST}/usr/share/omnetpp/Makefile.inc
+  install -m644 ide/icon.png ${DEST}/usr/share/pixmaps/omnetpp.png
+
+  ln -sf /usr/bin ${DEST}/usr/share/omnetpp
+  ln -sf /usr/include/omnetpp ${DEST}/usr/share/omnetpp/include
+  ln -sf /usr/lib ${DEST}/usr/share/omnetpp
+}
+
+. $(dirname $0)/master.sh

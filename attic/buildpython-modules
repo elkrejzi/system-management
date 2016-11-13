@@ -2,19 +2,6 @@
 
 case $(basename $0) in
 
-  buildcython )
-    export PKGNAME=Cython
-    export PKGVER=0.24
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="http://cython.org/release/${PKGTAR}"
-    export DEST=/binary/python/cython-${PKGVER}
-    make_install_post() {
-      for file in ${DEST}/usr/bin/*
-      do
-        mv ${file} ${file}3
-      done
-    }
-  ;;
   buildpython-pillow )
     export PKGNAME=Pillow
     export PKGVER=3.2.0
