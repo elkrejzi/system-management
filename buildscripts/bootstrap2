@@ -24,8 +24,6 @@ $(dirname $0)/buildjasper
 $(dirname $0)/buildlcms
 $(dirname $0)/buildlcms2
 $(dirname $0)/buildlibmng
-$(dirname $0)/buildlibmad
-$(dirname $0)/buildlibid3tag
 $(dirname $0)/buildimlib2
 $(dirname $0)/buildw3m
 $(dirname $0)/buildxdg-utils
@@ -123,15 +121,10 @@ $(dirname $0)/buildlibvisual
 $(dirname $0)/buildspeexdsp
 $(dirname $0)/buildspeex
 $(dirname $0)/buildlibsndfile
-$(dirname $0)/buildlibsamplerate
-$(dirname $0)/buildcelt
-$(dirname $0)/buildeigen
-$(dirname $0)/buildgsm
 $(dirname $0)/buildopus
 $(dirname $0)/buildsbc
 $(dirname $0)/buildsoxr
 $(dirname $0)/buildwebrtc-audio-processing
-$(dirname $0)/buildjack
 $(dirname $0)/buildpulseaudio
 $(dirname $0)/buildportaudio
 $(dirname $0)/buildopenal-soft
@@ -161,8 +154,9 @@ $(dirname $0)/buildgnome-themes-standard
 $(dirname $0)/builddesktop-file-utils
 $(dirname $0)/buildshared-mime-info
 $(dirname $0)/buildqtbase
-$(dirname $0)/buildqtmodules
-$(dirname $0)/buildfirefox
+$(dirname $0)/buildqtmultimedia
+$(dirname $0)/buildqttools
+$(dirname $0)/buildfirefox-upstream
 $(dirname $0)/buildthunderbird-upstream
 $(dirname $0)/buildsamba
 

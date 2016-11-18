@@ -38,7 +38,7 @@ case $(basename $0) in
   ;;
   buildxorg-server )
     export PKGNAME=xorg-server
-    export PKGVER=1.18.99.902
+    export PKGVER=1.19.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="https://www.x.org/releases/individual/xserver/${PKGTAR}"
     export KEEP_EMPTY_DIRS=1

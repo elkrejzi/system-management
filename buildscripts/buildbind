@@ -9,12 +9,7 @@ export MAKE_JOBS_FLAGS="-j4"
 export CONFIGURE_FLAGS=(--sysconfdir=/etc/bind
                         --with-openssl=/usr
                         --with-gssapi=/usr
-                        --with-libtool
-                        --with-dlz-postgres
-                        --with-dlz-mysql
-                        --with-dlz-bdb
-                        --with-dlz-ldap
-                        --with-dlz-odbc=/usr)
+                        --with-libtool)
 
 configure_post() {
   sed  -i "/DLZDRIVER_LIBS/s:ldb:& -lodbc:" bin/named/Makefile

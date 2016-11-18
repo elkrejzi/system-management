@@ -1,0 +1,42 @@
+--- a/src/dbgengine/nmv-dbg-common.h	2014-07-09 10:36:05.000000000 +0200
++++ b/src/dbgengine/nmv-dbg-common.h	2016-11-18 16:05:52.910637564 +0100
+@@ -171,7 +171,7 @@
+ 
+     bool has_slot () const
+     {
+-        return m_slot;
++        return static_cast<bool> (m_slot);
+     }
+ 
+     template<class T>
+--- a/src/dbgengine/nmv-i-var-list-walker.h	2013-01-21 13:05:35.000000000 +0100
++++ b/src/dbgengine/nmv-i-var-list-walker.h	2016-11-18 16:05:52.910637564 +0100
+@@ -22,7 +22,7 @@
+  *
+  *See COPYRIGHT file copyright information.
+  */
+-#ifndef __NMV_VAR_LIST_WALKER_H__
++#ifndef __NMV_I_VAR_LIST_WALKER_H__
+ #define __NMV_I_VAR_LIST_WALKER_H__
+ 
+ #include "nmv-i-var-walker.h"
+--- a/src/persp/dbgperspective/nmv-dbg-perspective.cc	2014-07-14 23:35:19.000000000 +0200
++++ b/src/persp/dbgperspective/nmv-dbg-perspective.cc	2016-11-18 16:06:03.533702582 +0100
+@@ -5672,7 +5672,7 @@
+     a_source_editor->clear_decorations ();
+ 
+     Glib::RefPtr<Gsv::Buffer> asm_buf;
+-    if ((asm_buf = a_source_editor->get_assembly_source_buffer ()) == 0) {
++    if (!(asm_buf = a_source_editor->get_assembly_source_buffer ())) {
+         SourceEditor::setup_buffer_mime_and_lang (asm_buf, "text/x-asm");
+         a_source_editor->register_assembly_source_buffer (asm_buf);
+         asm_buf = a_source_editor->get_assembly_source_buffer ();
+@@ -5720,7 +5720,7 @@
+ 
+     Glib::RefPtr<Gsv::Buffer> source_buf;
+     UString source_path;
+-    if ((source_buf = source_editor->get_non_assembly_source_buffer ()) == 0) {
++    if (!(source_buf = source_editor->get_non_assembly_source_buffer ())) {
+         // Woops!
+         // We don't have any source code buffer. Let's try hard to get
+         // the source code corresponding to the current frame. For that,

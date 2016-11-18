@@ -50,6 +50,7 @@ export CONFIGURE_FLAGS_32=(--disable-efi
 post_install_config() {
   rm -rf ${DEST}/etc/init.d ${DEST}/etc/rpm ${DEST}/usr/lib/rpm
   rm -rf ${DEST}/etc/systemd/system/multi-user.target.wants/systemd-{networkd,resolved,timesyncd}.service
+  rm -rf ${DEST}/etc/systemd/system/multi-user.target.wants/machines.target
   rm -rf ${DEST}/etc/systemd/system/{network-online,sockets,sysinit}.target.wants
   rm -rf ${DEST}/lib/systemd/system/local-fs.target.wants/var-lib-machines.mount
   rm -rf ${DEST}/lib/systemd/system/sysinit.target.wants/systemd-update-done.service

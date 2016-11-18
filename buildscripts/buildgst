@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-export PKGVER=1.10.0
+export PKGVER=1.10.1
 export MAKE_JOBS_FLAGS="-j4"
 export DEFAULT_CXX="clang++ -std=c++11"
 
@@ -51,7 +51,7 @@ export CONFIGURE_FLAGS_32=(--libexecdir=/usr/lib32
                            "${EXTRA_ARGS[@]}")
 
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
-export PKGURL="http://gstreamer.freedesktop.org/src/${PKGNAME}/${PKGTAR}"
+export PKGURL="https://gstreamer.freedesktop.org/src/${PKGNAME}/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 
 . $(dirname $0)/master.sh

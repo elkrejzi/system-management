@@ -18,7 +18,7 @@ case $(basename $0) in
   ;;
   buildxf86-input-synaptics )
     export PKGNAME=xf86-input-synaptics
-    export PKGVER=1.8.99.2
+    export PKGVER=1.9.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="https://www.x.org/releases/individual/driver/${PKGTAR}"
   ;;
@@ -32,7 +32,7 @@ case $(basename $0) in
   ;;
   buildxf86-video-amdgpu )
     export PKGNAME=xf86-video-amdgpu
-    export PKGVER=1.1.99
+    export PKGVER=1.2.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="https://www.x.org/releases/individual/driver/${PKGTAR}"
   ;;

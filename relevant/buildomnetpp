@@ -9,6 +9,7 @@ export PKGTAR=${PKGNAME}-${PKGVER}-src.tgz
 
 export MAKE_JOBS_FLAGS="-j4"
 export KEEP_STATIC=1
+export MAKE_FLAGS="MODE=release"
 
 configure_pre() {
   export PATH=${PATH}:${PWD}/bin

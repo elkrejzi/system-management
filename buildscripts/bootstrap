@@ -207,8 +207,6 @@ $(dirname $0)/buildwayland-protocols
 $(dirname $0)/buildyaml
 $(dirname $0)/buildyasm
 $(dirname $0)/buildruby
-$(dirname $0)/buildmariadb
-$(dirname $0)/buildpostgresql 1
 $(dirname $0)/buildcyrus-sasl 1
 $(dirname $0)/buildopenldap
 $(dirname $0)/buildkrb5
@@ -227,17 +225,10 @@ cp -rfv /binary/cyrus-sasl-[0-9]*/usr/lib/*.so.* /usr/lib
 
 $(dirname $0)/buildcyrus-sasl
 
-pushd /binary/postgresql-[0-9]*
-  pkg_remove
-popd
-
-$(dirname $0)/buildpostgresql
-
 $(dirname $0)/buildapr
 $(dirname $0)/buildapr-util
 $(dirname $0)/buildbluez
 $(dirname $0)/buildgit
-$(dirname $0)/buildhttpd
 $(dirname $0)/buildserf
 
 pushd /binary/python/Python-2.[0-9]*

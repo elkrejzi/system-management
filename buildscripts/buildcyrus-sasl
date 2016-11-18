@@ -18,7 +18,6 @@ export CONFIGURE_FLAGS=("${ADDITIONAL_CONFIGURE_FLAGS[@]}"
                         --with-sqlite3=/usr
                         --enable-login
                         --enable-ntlm
-                        --enable-sql
                         --enable-auth-sasldb)
 
 configure_pre() {

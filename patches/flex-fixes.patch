@@ -1,0 +1,208 @@
+--- a/src/flex.skl	2016-10-21 02:43:44.000000000 +0200
++++ b/src/flex.skl	2016-11-18 23:34:24.143747470 +0100
+@@ -106,7 +106,8 @@
+ m4_ifdef( [[M4_YY_PREFIX]],, [[m4_define([[M4_YY_PREFIX]], [[yy]])]])
+ 
+ m4preproc_define(`M4_GEN_PREFIX',
+-    ``m4_define(yy[[$1]], [[M4_YY_PREFIX[[$1]]m4_ifelse($'`#,0,,[[($'`@)]])]])'')
++    ``[[#define yy$1 ]]M4_YY_PREFIX[[$1]]
++m4_define([[yy$1]], [[M4_YY_PREFIX[[$1]]m4_ifelse($'`#,0,,[[($'`@)]])]])'')
+ 
+ %if-c++-only
+     /* The c++ scanner is a mess. The FlexLexer.h header file relies on the
+--- a/src/scan.l	2016-10-23 20:04:57.000000000 +0200
++++ b/src/scan.l	2016-11-18 23:34:11.231720145 +0100
+@@ -102,20 +102,22 @@
+ 		posix_compat = true;
+ 
+ #define START_CODEBLOCK(x) do { \
+-     /* Emit the needed line directive... */\
+-     if (indented_code == false) { \
+-         linenum++; \
+-         line_directive_out(NULL, 1); \
+-     } \
+-     add_action(M4QSTART); \
+-     yy_push_state(CODEBLOCK); \
+-     if ((indented_code = x)) ACTION_ECHO; \
+-     } while(0)
++    /* Emit the needed line directive... */\
++    if (indented_code == false) { \
++        linenum++; \
++        line_directive_out(NULL, 1); \
++    } \
++    add_action(M4QSTART); \
++    yy_push_state(CODEBLOCK); \
++    if ((indented_code = x)) ACTION_ECHO; \
++} while(0)
++
+ #define END_CODEBLOCK do { \
+-     yy_pop_state();\
++    yy_pop_state();\
+     add_action(M4QEND); \
+-     if (!indented_code) line_directive_out(NULL, 0);\
+-      } while (0)
++    if (!indented_code) line_directive_out(NULL, 0);\
++} while (0)
++
+ %}
+ 
+ %option caseless nodefault noreject stack noyy_top_state
+@@ -486,17 +488,18 @@
+ 
+ 	^{WS} START_CODEBLOCK(true); /* indented code in prolog */
+ 
+-	^{NOT_WS}.*	{	/* non-indented code */
+-			if ( bracelevel <= 0 )
+-				{ /* not in %{ ... %} */
+-				yyless( 0 );	/* put it all back */
+-				yy_set_bol( 1 );
+-				mark_prolog();
+-				BEGIN(SECT2);
+-				}
+-			else
+-				ACTION_ECHO;
+-			}
++	^{NOT_WS}.*	{
++        /* non-indented code */
++		if ( bracelevel <= 0 ) {
++            /* not in %{ ... %} */
++            yyless( 0 );	/* put it all back */
++            yy_set_bol( 1 );
++            mark_prolog();
++            BEGIN(SECT2);
++        } else {
++            START_CODEBLOCK(true);
++        }
++    }
+ 
+ 	.		ACTION_ECHO;
+ 	{NL}	++linenum; ACTION_ECHO;
+@@ -903,30 +906,28 @@
+ 	<ACTION>"/*"		ACTION_ECHO; yy_push_state( CODE_COMMENT );
+ 
+ 	<CODEBLOCK,ACTION>{
+-		"reject"	{
+-			ACTION_ECHO;
+-			CHECK_REJECT(yytext);
+-			}
+-		"yymore"	{
+-			ACTION_ECHO;
+-			CHECK_YYMORE(yytext);
+-			}
++		"reject" {
++            ACTION_ECHO;
++            CHECK_REJECT(yytext);
++        }
++		"yymore" {
++            ACTION_ECHO;
++            CHECK_YYMORE(yytext);
++        }
+ 	}
+ 
+-    .           ACTION_ECHO;
+-	{NL}		{
+-			++linenum;
+-			ACTION_ECHO;
+-			if ( bracelevel == 0 ||
+-			     (doing_codeblock && indented_code) )
+-				{
+-				if ( doing_rule_action )
+-					add_action( "\tYY_BREAK]""]\n" );
+-
+-				doing_rule_action = doing_codeblock = false;
+-				BEGIN(SECT2);
+-				}
+-			}
++    .       ACTION_ECHO;
++	{NL}	{
++		++linenum;
++		ACTION_ECHO;
++		if (bracelevel == 0 || (doing_codeblock && indented_code)) {
++            if ( doing_rule_action )
++                add_action( "\tYY_BREAK]""]\n" );
++
++            doing_rule_action = doing_codeblock = false;
++            BEGIN(SECT2);
++        }
++    }
+ }
+ 
+ 
+@@ -935,38 +936,37 @@
+ 	"{"		ACTION_ECHO; ++bracelevel;
+ 	"}"		ACTION_ECHO; --bracelevel;
+ 	[^[:alpha:]_{}\"'/\n\[\]]+	ACTION_ECHO;
+-    [\[\]]      ACTION_ECHO;
+-	{NAME}		ACTION_ECHO;
++        {NAME}		ACTION_ECHO;
+         "'"([^\'\\\n]|\\.)"'" ACTION_ECHO; /* character constant */
+-        "'"             ACTION_ECHO; yy_push_state(CHARACTER_CONSTANT);
++        "'"             ACTION_ECHO; BEGIN(CHARACTER_CONSTANT);
+ 	\"		ACTION_ECHO; BEGIN(ACTION_STRING);
+-	{NL}		{
++	{NL} {
+ 			++linenum;
+ 			ACTION_ECHO;
+-			if ( bracelevel == 0 )
+-				{
++			if (bracelevel == 0) {
+ 				if ( doing_rule_action )
+-					add_action( "\tYY_BREAK]""]\n" );
++                    add_action( "\tYY_BREAK]""]\n" );
+ 
+-				doing_rule_action = false;
+-				BEGIN(SECT2);
+-				}
+-			}
+-	.		ACTION_ECHO;
++                doing_rule_action = false;
++                BEGIN(SECT2);
++            }
++        }
++        .      ACTION_ECHO;
+ }
+ 
+ <ACTION_STRING>{
+-	[^\]\"\\\n\[MmY]+	ACTION_ECHO;
++	[^\[\]\"\\\n]+	ACTION_ECHO;
+ 	\"		ACTION_ECHO; BEGIN(ACTION);
+ }
+ <CHARACTER_CONSTANT>{
+-	[^\[\]\'\\\nMmY]+       ACTION_ECHO;
+-        \'              ACTION_ECHO; yy_pop_state();
++	[^\[\]\'\\\n]+  ACTION_ECHO;
++        \'              ACTION_ECHO; BEGIN(ACTION);
+ }
+ <ACTION_STRING,CHARACTER_CONSTANT>{
+-	\\.		ACTION_ECHO;
+-	{NL}		++linenum; ACTION_ECHO;
+-	.		ACTION_ECHO;
++        (\\\n)*         ACTION_ECHO;
++	\\(\\\n)*.	ACTION_ECHO;
++	{NL}	++linenum; ACTION_ECHO; BEGIN(ACTION);
++        .	ACTION_ECHO;
+ }
+ 
+ <COMMENT,CODE_COMMENT,COMMENT_DISCARD,ACTION,ACTION_STRING,CHARACTER_CONSTANT><<EOF>>	{
+@@ -991,8 +991,8 @@
+ <SECT3>{
+     {M4QSTART}   fputs(escaped_qstart, yyout);
+     {M4QEND}     fputs(escaped_qend, yyout);
+-    [^\[\]\n]*(\n?) ECHO;
+-    .|\n         ECHO;
++    [^\[\]]*     ECHO;
++    [][]         ECHO;
+     <<EOF>>      {
+         sectnum = 0;
+         yyterminate();
+@@ -1001,8 +1001,8 @@
+ <SECT3_NOESCAPE>{
+     {M4QSTART}  fprintf(yyout, "[""[%s]""]", escaped_qstart);
+     {M4QEND}    fprintf(yyout, "[""[%s]""]", escaped_qend);
+-    [^\[\]\n]*(\n?) ECHO;
+-    (.|\n)      ECHO;
++    [^][]*      ECHO;
++    [][]        ECHO;
+     <<EOF>>		{
+        sectnum = 0;
+        yyterminate();

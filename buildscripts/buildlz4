@@ -1,11 +1,10 @@
 #!/bin/bash -e
 
 export PKGNAME=lz4
-export PKGVER=131
-export PKGTAR=${PKGNAME}-r${PKGVER}.tar.gz
-export PKGDIR=${PKGNAME}-r${PKGVER}
-export PKGURL="https://github.com/Cyan4973/lz4/archive/r${PKGVER}.tar.gz"
-export MAKE_FLAGS="lib lz4programs PREFIX=/usr"
+export PKGVER=1.7.3
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="https://github.com/lz4/lz4/archive/v${PKGVER}.tar.gz"
+export MAKE_FLAGS="lib all PREFIX=/usr"
 export MAKE_INSTALL_FLAGS="PREFIX=/usr"
 
 configure_override() {

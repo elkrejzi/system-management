@@ -6,6 +6,7 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/westes/flex/releases/download/v${PKGVER}/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export KEEP_STATIC=1
+export PATCHES_LIST=("flex-fixes.patch")
 
 export HELP2MAN=/bin/true
 

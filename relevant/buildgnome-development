@@ -1,0 +1,85 @@
+#!/bin/bash -e
+
+case $(basename $0) in
+
+  buildanjuta )
+    export PKGNAME=anjuta
+    export PKGVER=3.22.0
+    export CONFIGURE_FLAGS=(--disable-compile-warnings)
+    configure_pre(){
+      sed -i "/vala/s#-0.32#-0.34#g" configure
+    }
+  ;;
+  builddevhelp )
+    export PKGNAME=devhelp
+    export PKGVER=3.22.0
+  ;;
+  buildgdl )
+    export PKGNAME=gdl
+    export PKGVER=3.22.0
+  ;;
+  buildgdlmm )
+    export PKGNAME=gdlmm
+    export PKGVER=3.7.3
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
+    export USER_CXXFLAGS="-std=c++11"
+  ;;
+  buildghex )
+    export PKGNAME=ghex
+    export PKGVER=3.18.3
+    export CONFIGURE_FLAGS=(--disable-compile-warnings)
+  ;;
+  buildglade )
+    export PKGNAME=glade
+    export PKGVER=3.20.0
+  ;;
+  buildgtksourceviewmm )
+    export PKGNAME=gtksourceviewmm
+    export PKGVER=3.18.0
+  ;;
+  buildgoocanvas )
+    export PKGNAME=goocanvas
+    export PKGVER=2.0.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
+  ;;
+  buildlibgda )
+    export PKGNAME=libgda
+    export PKGVER=5.2.4
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
+    export CONFIGURE_FLAGS=(--enable-binreloc
+                            --enable-gda-gi
+                            --enable-gdaui-gi
+                            --enable-gdaui-vala
+                            --enable-json
+                            --enable-system-sqlite
+                            --enable-vala
+                            --without-bdb
+                            VALA_API_VERSION=0.34)
+    configure_pre() {
+      sed -i "/JRE.*1.7/s#1.7#1.8#g" configure
+    }
+  ;;
+  buildnemiver )
+    export PKGNAME=nemiver
+    export PKGVER=0.9.6
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
+    export PATCHES_LIST=("nemiver-fixes.patch")
+  ;;
+
+esac
+
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_DOC=1
+
+if [ -z ${PKGURL} ]
+then
+  export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:4}/${PKGTAR}"
+fi
+
+. $(dirname $0)/master.sh

@@ -44,6 +44,9 @@ case $(basename $0) in
   buildkio-extras )
     export PKGNAME=kio-extras
   ;;
+  buildkonsole )
+    export PKGNAME=konsole
+  ;;
   buildksystemlog )
     export PKGNAME=ksystemlog
     configure_pre() {

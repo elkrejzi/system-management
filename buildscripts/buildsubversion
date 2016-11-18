@@ -10,12 +10,10 @@ export POSTINST_TRIGGER=("install -dm700 /run/svnserve")
 configure_override() {
   export RUBYDIR=$(ruby -e "require 'rbconfig'" -e "CONFIG = RbConfig::MAKEFILE_CONFIG" -e "puts RbConfig::expand(CONFIG[\"vendorarchdir\"])")
 
-  ./configure --prefix=/usr --with-apr=/usr --with-apr-util=/usr \
-              --with-zlib=/usr --with-serf=/usr --with-apxs=/usr/bin/apxs \
-              --with-apache-libexecdir=$(/usr/bin/apxs -q libexecdir) \
-              --with-sqlite=/usr --with-berkeley-db=:::db --enable-bdb6 \
-              --with-gnome-keyring --without-kwallet --disable-static \
-              --with-ruby-sitedir=${RUBYDIR}
+  ./configure --prefix=/usr --with-apr=/usr --with-apr-util=/usr   \
+              --with-zlib=/usr --with-serf=/usr --with-sqlite=/usr \
+              --with-gnome-keyring --without-berkeley-db --without-kwallet \
+              --disable-static --with-ruby-sitedir=${RUBYDIR}
 }
 
 make_override() {

@@ -1,1 +1,30 @@
-buildqtmodules
+#!/bin/bash -e
+
+export PKGNAME=qtmultimedia
+export PKGVER=5.7.0
+export PKGTAR=${PKGNAME}-opensource-src-${PKGVER}.tar.xz
+export PKGDIR=${PKGNAME}-opensource-src-${PKGVER}
+
+# stable
+export PKGURL="http://download.qt.io/official_releases/qt/5.7/${PKGVER}/submodules/${PKGTAR}"
+
+# development
+#export PKGURL="https://download.qt.io/development_releases/qt/5.7/${PKGVER}/submodules/${PKGTAR}"
+
+export MAKE_JOBS_FLAGS="-j4"
+export NO_OPTIMIZATION=1
+export MAKE_INSTALL_FLAGS="INSTALL_ROOT=\${DEST}"
+
+configure_override() {
+  qmake
+}
+
+make_post() {
+  find . -name "*.pc" -exec perl -pi -e "s, -L$PWD/?\S+,,g" {} \;
+}
+
+make_install_post() {
+  find ${DEST}/usr/lib -name "*.prl" -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+}
+
+. $(dirname $0)/master.sh
