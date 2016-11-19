@@ -14,9 +14,25 @@ $(dirname $0)/buildlibva
 $(dirname $0)/buildlibvdpau
 $(dirname $0)/buildopencl-headers
 $(dirname $0)/buildocl-icd
+$(dirname $0)/buildVulkan-Docs
+$(dirname $0)/buildVulkan-LoaderAndValidationLayers
 $(dirname $0)/buildmesa
+
+pushd /binary/multimedia/libva-[0-9]*
+  pkg_remove
+popd
+
+$(dirname $0)/buildlibva
+
+$(dirname $0)/buildcmrt
 $(dirname $0)/buildglu
 $(dirname $0)/buildfreeglut
+$(dirname $0)/buildbeignet
+$(dirname $0)/buildclinfo
+$(dirname $0)/buildintel-hybrid-driver
+$(dirname $0)/buildlibtxc_dxtn
+$(dirname $0)/buildlibva-intel-driver
+$(dirname $0)/buildlibvdpau-va-gl
 $(dirname $0)/buildlibjpeg-turbo
 $(dirname $0)/buildtiff
 $(dirname $0)/buildgiflib
@@ -46,12 +62,6 @@ pushd /binary/freetype-[0-9]*
 popd
 
 $(dirname $0)/buildfreetype
-
-pushd /binary/multimedia/libva-[0-9]*
-  pkg_remove
-popd
-
-$(dirname $0)/buildlibva
 
 $(dirname $0)/buildpango
 $(dirname $0)/buildgdk-pixbuf
@@ -150,9 +160,97 @@ $(dirname $0)/buildshared-mime-info
 $(dirname $0)/buildqtbase
 $(dirname $0)/buildqtmultimedia
 $(dirname $0)/buildqttools
-$(dirname $0)/buildfirefox-upstream
-$(dirname $0)/buildthunderbird-upstream
 $(dirname $0)/buildsamba
+$(dirname $0)/builddjvulibre
+$(dirname $0)/buildexiv2
+$(dirname $0)/buildfribidi
+$(dirname $0)/buildijs
+$(dirname $0)/buildlibexif
+$(dirname $0)/buildlibgd
+$(dirname $0)/buildlibraw
+$(dirname $0)/buildopenjpeg2
+$(dirname $0)/buildghostscript
+$(dirname $0)/buildlibgphoto2
+$(dirname $0)/buildpoppler
+$(dirname $0)/buildgraphviz
+$(dirname $0)/buildImageMagick
+$(dirname $0)/buildlibcddb
+$(dirname $0)/buildlibdvdread
+$(dirname $0)/buildv4l-utils
+$(dirname $0)/buildchromaprint
+$(dirname $0)/buildfdk-aac
+$(dirname $0)/buildlame
+$(dirname $0)/buildlibass
+$(dirname $0)/buildlibbluray
+$(dirname $0)/buildlibcanberra
+$(dirname $0)/buildlibcdio
+$(dirname $0)/buildlibdvdcss
+$(dirname $0)/buildlibdvdnav
+$(dirname $0)/buildlibmtp
+$(dirname $0)/buildlibnfs
+$(dirname $0)/buildlibshout
+$(dirname $0)/buildlibssh
+$(dirname $0)/buildluajit
+$(dirname $0)/buildneon
+$(dirname $0)/buildtaglib
+$(dirname $0)/buildvo-aacenc
+$(dirname $0)/buildvo-amrwbenc
+$(dirname $0)/buildwavpack
+$(dirname $0)/buildx264
+$(dirname $0)/buildx265
+$(dirname $0)/buildxvidcore
+$(dirname $0)/buildlibcdio-paranoia
+$(dirname $0)/buildffmpeg
+
+$(dirname $0)/buildx264
+
+$(dirname $0)/buildmpv
+$(dirname $0)/buildgst-plugins-good
+$(dirname $0)/buildgst-plugins-bad
+$(dirname $0)/buildgst-plugins-ugly
+$(dirname $0)/buildgst-libav
+$(dirname $0)/buildgstreamer-vaapi
+$(dirname $0)/buildlibassuan
+$(dirname $0)/buildlibksba
+$(dirname $0)/buildnpth
+$(dirname $0)/buildpkcs11-helper
+$(dirname $0)/buildpth
+$(dirname $0)/buildgnupg
+$(dirname $0)/buildgcr
+$(dirname $0)/buildgpgme
+$(dirname $0)/buildopenssh
+$(dirname $0)/buildpinentry
+$(dirname $0)/buildmedia-player-info
+$(dirname $0)/buildmobile-broadband-provider-info
+$(dirname $0)/buildlibplist
+$(dirname $0)/buildlibusbmuxd
+$(dirname $0)/buildlibimobiledevice
+$(dirname $0)/buildlibatasmart
+$(dirname $0)/buildlm_sensors
+$(dirname $0)/buildmozjs24
+$(dirname $0)/buildnss-mdns
+$(dirname $0)/buildparted
+$(dirname $0)/buildtidy-html5
+$(dirname $0)/buildxapian-core
+$(dirname $0)/buildalsa-plugins
+$(dirname $0)/buildalsa-utils
+$(dirname $0)/buildbind
+$(dirname $0)/builddoxygen
+$(dirname $0)/buildfirefox-upstream
+$(dirname $0)/buildflashplayer
+$(dirname $0)/buildrtkit
+$(dirname $0)/buildsmartmontools
+$(dirname $0)/buildthunderbird-upstream
+$(dirname $0)/buildudisks
+$(dirname $0)/buildupower
+$(dirname $0)/buildxorg-server
+$(dirname $0)/buildxf86-input-evdev
+$(dirname $0)/buildxf86-input-libinput
+$(dirname $0)/buildxf86-input-synaptics
+$(dirname $0)/buildxf86-input-wacom
+$(dirname $0)/buildxf86-video-amdgpu
+$(dirname $0)/buildxf86-video-intel
+$(dirname $0)/buildweston
 
 pushd /binary/avahi-[0-9]*
   pkg_remove

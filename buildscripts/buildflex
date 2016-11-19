@@ -8,7 +8,11 @@ export MAKE_JOBS_FLAGS="-j4"
 export KEEP_STATIC=1
 export PATCHES_LIST=("flex-fixes.patch")
 
-export HELP2MAN=/bin/true
+export HELP2MAN=$(type -P true)
+
+configure_pre(){
+  touch src/scan.*
+}
 
 make_install_post() {
   ln -sf flex ${DEST}/usr/bin/lex

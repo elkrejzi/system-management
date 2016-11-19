@@ -1,1 +1,86 @@
-buildvulkan-runtime
+#!/bin/bash -e
+
+export PKGNAME=Vulkan-LoaderAndValidationLayers
+export PKGVER=1.0.30.0
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGDIR=${PKGNAME}-sdk-${PKGVER}
+export PKGURL="https://github.com/KhronosGroup/Vulkan-LoaderAndValidationLayers/archive/sdk-${PKGVER}.tar.gz"
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export MULTILIB_BUILD=1
+export CMAKE_FLAGS=(-DCMAKE_INSTALL_SYSCONFDIR=/etc
+                    -DCMAKE_SKIP_RPATH=ON
+                    -DBUILD_TESTS=OFF
+                    -DBUILD_WSI_XCB_SUPPORT=On
+                    -DBUILD_WSI_XLIB_SUPPORT=On
+                    -DBUILD_WSI_WAYLAND_SUPPORT=On)
+export CMAKE_FLAGS_32=(${CMAKE_FLAGS[@]})
+export DEFAULT_CC="gcc"
+export DEFAULT_CXX="g++"
+export DEFAULT_CC_M32="gcc -m32"
+export DEFAULT_CXX_M32="g++ -m32"
+
+post_extract_action() {
+  pushd ${PKGDIR}
+    sed -i "114,128d" demos/CMakeLists.txt
+
+    if [ ${MULTILIB} == 0 ]
+    then
+      export CC="gcc"
+      export CXX="g++"
+    else
+      export CC="gcc -m32"
+      export CXX="g++ -m32"
+    fi
+
+     export CFLAGS=${DEFAULT_CFLAGS}
+     export CXXFLAGS=${DEFAULT_CXXFLAGS}
+
+    ./update_external_sources.sh
+
+    unset CC CXX CFLAGS CXXFLAGS
+  popd
+}
+
+make_install_override() {
+  if [ ${MULTILIB} == 0 ]
+  then
+    local LIB=lib
+  else
+    local LIB=lib32
+  fi
+
+  install -dm755 ${DEST}/etc                \
+                 ${DEST}/usr/bin            \
+                 ${DEST}/usr/include/vulkan \
+                 ${DEST}/usr/${LIB}
+
+  if [ ${MULTILIB} == 0 ]
+  then
+    install -dm755 ${DEST}/usr/share/vulkan/explicit_layer.d \
+                   ${DEST}/usr/share/vulkan/implicit_layer.d
+
+    install -m755 demos/vulkaninfo ${DEST}/usr/bin
+    install -m644 ../${PKGDIR}/include/vulkan/*.h ${DEST}/usr/include/vulkan
+
+    rm -rf ${DEST}/usr/include/vulkan/vk_platform.h ${DEST}/usr/include/vulkan/vulkan.h
+  else
+    install -m755 demos/vulkaninfo ${DEST}/usr/bin/vulkaninfo32
+  fi
+
+  install -m755 layers/*.so ${DEST}/usr/${LIB}
+
+  install -m755 loader/*.so.*.* ${DEST}/usr/${LIB}
+  cp -rf loader/*.so.? ${DEST}/usr/${LIB}
+  cp -rf loader/*.so ${DEST}/usr/${LIB}
+
+  if [ ${MULTILIB} == 0 ]
+  then
+    for i in ../${PKGDIR}/layers/linux/*.json
+    do
+      sed 's#./##' $i > ${DEST}/usr/share/vulkan/explicit_layer.d/$(basename $i)
+    done
+  fi
+}
+
+. $(dirname $0)/master.sh
