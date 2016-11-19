@@ -1,19 +1,6 @@
 #!/bin/bash -e
 
 case $(basename $0) in
-  buildpyatspi )
-    export PKGNAME=pyatspi
-    export PKGVER=2.18.0
-    export MULTILIB_BUILD=1
-    export CONFIGURE_FLAGS=(PYTHON=/usr/bin/python3)
-    export CONFIGURE_FLAGS_32=(PYTHON=/usr/bin/python --libdir=/usr/lib)
-    configure_pre_32() {
-      unset PKG_CONFIG_PATH
-    }
-    make_install_override() {
-      make install DESTDIR=${DEST}
-    }
-  ;;
   buildpy2cairo )
     export PKGNAME=py2cairo
     export PKGVER=1.10.0
@@ -26,12 +13,6 @@ case $(basename $0) in
       export PYTHON=/usr/bin/python3
     }
   ;;
-  buildpygobject2 )
-    export PKGNAME=pygobject
-    export PKGVER=2.28.6
-    export PATCHES_LIST=("pygobject-fixes.patch")
-    export CONFIGURE_FLAGS=(--disable-introspection)
-  ;;
   buildpygobject3 )
     export PKGNAME=pygobject
     export PKGVER=3.22.0
@@ -43,15 +24,6 @@ case $(basename $0) in
     }
     make_install_override() {
       make install DESTDIR=${DEST}
-    }
-  ;;
-  buildpygtk )
-    export PKGNAME=pygtk
-    export PKGVER=2.24.0
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
-    make_install_post() {
-      rm -rf ${DEST}/usr/bin/pygtk-demo
-      rm -rf ${DEST}/usr/lib/pygtk
     }
   ;;
 esac

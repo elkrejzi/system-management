@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=portaudio
-export PKGVER=19_20140130
+export PKGVER=190600_20161030
 export PKGTAR=pa_stable_v${PKGVER}.tgz
 export PKGURL="http://www.portaudio.com/archives/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}

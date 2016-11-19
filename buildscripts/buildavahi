@@ -10,11 +10,11 @@ export KEEP_EMPTY_DIRS=1
 if [ ! -z $1 ]
 then
   export ADDITIONAL_CONFIGURE_FLAGS=(--disable-gtk
-                                     --disable-gtk3
-                                     --disable-python)
+                                     --disable-gtk3)
 fi
 
 export CONFIGURE_FLAGS=("${ADDITIONAL_CONFIGURE_FLAGS[@]}"
+                        --disable-python          \
                         --disable-qt3             \
                         --disable-qt4             \
                         --disable-mono            \

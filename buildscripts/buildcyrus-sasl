@@ -7,18 +7,15 @@ export PKGURL="ftp://ftp.cyrusimap.org/cyrus-sasl/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export PATCHES_LIST=("cyrus-sasl-fixes.patch")
 
-if [ -z $1 ]
-then
-  export ADDITIONAL_CONFIGURE_FLAGS=(--with-ldap --enable-ldapdb)
-fi
-
 export CONFIGURE_FLAGS=("${ADDITIONAL_CONFIGURE_FLAGS[@]}"
                         --with-dbpath=/var/lib/sasl/sasldb2
                         --with-saslauthd=/var/run/saslauthd
                         --with-sqlite3=/usr
                         --enable-login
                         --enable-ntlm
-                        --enable-auth-sasldb)
+                        --enable-auth-sasldb
+                        --disable-gssapi
+                        --disable-ldapdb)
 
 configure_pre() {
   autoreconf -fi
@@ -41,12 +38,10 @@ cat > ${DEST}/etc/default/saslauthd << "EOF"
 #
 # Available options in this package:
 # getpwent  -- use the getpwent() library function
-# kerberos5 -- use Kerberos 5
 # pam       -- use PAM
 # rimap     -- use a remote IMAP server
 # shadow    -- use the local shadow password file
 # sasldb    -- use the local sasldb database file
-# ldap      -- use LDAP (configuration is in /etc/saslauthd.conf)
 #
 # Only one option may be used at a time. See the saslauthd man page
 # for more information.

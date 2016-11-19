@@ -25,6 +25,13 @@ case $(basename $0) in
       cp -rf libImaging/*.h ${DEST}/usr/include/python$(pkg-config --modversion python2)
     }
   ;;
+  buildpython-pyinotify )
+    export PKGNAME=pyinotify
+    export PKGVER=0.9.6
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://github.com/seb-m/pyinotify/archive/${PKGVER}.tar.gz"
+    export DEST=/binary/python/python-pyinotify-${PKGVER}
+  ;;
   buildpython-reportlab )
     export PKGNAME=reportlab
     export PKGVER=3.3.0
@@ -38,6 +45,13 @@ case $(basename $0) in
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://pypi.python.org/packages/source/r/requests/${PKGTAR}"
     export DEST=/binary/python/python-requests-${PKGVER}
+  ;;
+  buildpython-systemd )
+    export PKGNAME=python-systemd
+    export PKGVER=233
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://github.com/systemd/python-systemd/archive/v${PKGVER}.tar.gz"
+    export DEST=/binary/python/python-systemd-${PKGVER}
   ;;
   buildpython-unidecode )
     export PKGNAME=Unidecode

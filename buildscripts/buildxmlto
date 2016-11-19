@@ -6,5 +6,6 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://fedorahosted.org/releases/x/m/xmlto/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export KEEP_STATIC=1
+export CONFIGURE_FLAGS=(--with-webbrowser=links LINKS=/usr/bin/links)
 
 . $(dirname $0)/master.sh

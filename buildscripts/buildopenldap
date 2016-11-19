@@ -18,8 +18,8 @@ export CONFIGURE_FLAGS=(--libexecdir=/usr/lib
                         --disable-bdb
                         --disable-hdb
                         --disable-ndb
-                        --enable-spasswd
-                        --enable-sql)
+                        --disable-sql
+                        --enable-spasswd)
 
 configure_pre() {
   autoconf

@@ -187,7 +187,6 @@ $(dirname $0)/buildefivar
 $(dirname $0)/buildguile
 $(dirname $0)/buildhtop
 $(dirname $0)/buildiana-etc
-$(dirname $0)/buildjemalloc
 $(dirname $0)/buildlibedit
 $(dirname $0)/buildlibevent
 $(dirname $0)/buildlibgnome-keyring
@@ -207,7 +206,7 @@ $(dirname $0)/buildwayland-protocols
 $(dirname $0)/buildyaml
 $(dirname $0)/buildyasm
 $(dirname $0)/buildruby
-$(dirname $0)/buildcyrus-sasl 1
+$(dirname $0)/buildcyrus-sasl
 $(dirname $0)/buildopenldap
 $(dirname $0)/buildkrb5
 
@@ -216,15 +215,6 @@ pushd /binary/curl-[0-9]*
 popd
 
 $(dirname $0)/buildcurl
-
-pushd /binary/cyrus-sasl-[0-9]*
-  pkg_remove
-popd
-
-cp -rfv /binary/cyrus-sasl-[0-9]*/usr/lib/*.so.* /usr/lib
-
-$(dirname $0)/buildcyrus-sasl
-
 $(dirname $0)/buildapr
 $(dirname $0)/buildapr-util
 $(dirname $0)/buildbluez

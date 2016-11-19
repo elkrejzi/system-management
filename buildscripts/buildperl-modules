@@ -40,7 +40,7 @@ case $(basename $0) in
   ;;
   buildperl-net-smtp-ssl )
     export PKGNAME=Net-SMTP-SSL
-    export PKGVER=1.03
+    export PKGVER=1.04
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="http://search.cpan.org/CPAN/authors/id/R/RJ/RJBS/${PKGTAR}"
     export DEST=/binary/perl/perl-net-smtp-ssl-${PKGVER}

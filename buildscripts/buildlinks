@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+export PKGNAME=links
+export PKGVER=2.13
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="http://links.twibright.com/download/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export CONFIGURE_FLAGS=(--without-gpm --without-librsvg --without-x)
+
+. $(dirname $0)/master.sh

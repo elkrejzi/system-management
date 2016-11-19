@@ -139,13 +139,6 @@ EOF
       mv ${DEST}/usr/bin/pygmentize{,3}
     }
   ;;
-  buildpython-pyinotify )
-    export PKGNAME=pyinotify
-    export PKGVER=0.9.6
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://github.com/seb-m/pyinotify/archive/${PKGVER}.tar.gz"
-    export DEST=/binary/python/python-pyinotify-${PKGVER}
-  ;;
   buildpython-pyparsing )
     export PKGNAME=pyparsing
     export PKGVER=2.1.10
@@ -155,7 +148,7 @@ EOF
   ;;
   buildpython-pytz )
     export PKGNAME=pytz
-    export PKGVER=2016.6.1
+    export PKGVER=2016.7
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="https://files.pythonhosted.org/packages/source/p/pytz/${PKGTAR}"
     export DEST=/binary/python/python-pytz-${PKGVER}
@@ -221,13 +214,6 @@ EOF
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://files.pythonhosted.org/packages/source/s/sphinx_rtd_theme/${PKGTAR}"
     export DEST=/binary/python/python-sphinx_rtd_theme-${PKGVER}
-  ;;
-  buildpython-systemd )
-    export PKGNAME=python-systemd
-    export PKGVER=232
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://github.com/systemd/python-systemd/archive/v${PKGVER}.tar.gz"
-    export DEST=/binary/python/python-systemd-${PKGVER}
   ;;
   buildpython-modules )
     if [ -z $1 ]
