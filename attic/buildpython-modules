@@ -32,6 +32,13 @@ case $(basename $0) in
     export PKGURL="https://github.com/seb-m/pyinotify/archive/${PKGVER}.tar.gz"
     export DEST=/binary/python/python-pyinotify-${PKGVER}
   ;;
+  buildpython-pyyaml )
+    export PKGNAME=PyYAML
+    export PKGVER=3.12
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="http://pyyaml.org/download/pyyaml/${PKGTAR}"
+    export DEST=/binary/python/python-pyyaml-${PKGVER}
+  ;;
   buildpython-reportlab )
     export PKGNAME=reportlab
     export PKGVER=3.3.0

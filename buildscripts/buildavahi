@@ -36,13 +36,6 @@ configure_pre() {
 
 make_install_post() {
   rm -rf ${DEST}/etc/avahi/services/* ${DEST}/var
-
-  install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/etc/systemd/system/sockets.target.wants
-
-  ln -sf /lib/systemd/system/avahi-daemon.service ${DEST}/etc/systemd/system/dbus-org.freedesktop.Avahi.service
-  ln -sf /lib/systemd/system/avahi-daemon.service ${DEST}/etc/systemd/system/multi-user.target.wants/avahi-daemon.service
-  ln -sf /lib/systemd/system/avahi-daemon.socket ${DEST}/etc/systemd/system/sockets.target.wants/avahi-daemon.socket
-  ln -sf /lib/systemd/system/avahi-dnsconfd.service ${DEST}/etc/systemd/system/multi-user.target.wants/avahi-dnsconfd.service
 }
 
 . $(dirname $0)/master.sh

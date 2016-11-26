@@ -199,7 +199,6 @@ $(dirname $0)/buildpciutils
 $(dirname $0)/buildscons
 $(dirname $0)/buildswig
 $(dirname $0)/buildtk
-$(dirname $0)/buildunixODBC
 $(dirname $0)/buildusbutils
 $(dirname $0)/buildwayland
 $(dirname $0)/buildwayland-protocols

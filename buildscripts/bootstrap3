@@ -148,7 +148,8 @@ $(dirname $0)/builddleyna
 $(dirname $0)/buildmailnag
 $(dirname $0)/buildmailnag-gnome-shell
 $(dirname $0)/buildperl-modules 2
-$(dirname $0)/buildpython-modules 2
+$(dirname $0)/buildpython-m2crypto
+$(dirname $0)/buildpython-typing
 $(dirname $0)/buildbluefish
 $(dirname $0)/buildgimp
 $(dirname $0)/buildgparted

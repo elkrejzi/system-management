@@ -23,18 +23,7 @@ post_install_config() {
 
   wget https://www.kernel.org/pub/software/scm/git/git-manpages-${PKGVER}.tar.xz -O - | tar xfJ - -C ${DEST}/usr/share/man
 
-  install -dm755 ${DEST}/etc/httpd/extra ${DEST}/etc/systemd/system/sockets.target.wants ${DEST}/lib/systemd/system
-
-cat > ${DEST}/etc/httpd/extra/git.conf << "EOF"
-<Directory "/usr/libexec/git-core/">
-        AllowOverride None
-        Options ExecCGI FollowSymlinks
-        Require all granted
-</Directory>
-
-SetEnv GIT_PROJECT_ROOT /var/lib/git/repositories
-ScriptAlias /git/ /usr/libexec/git-core/git-http-backend/
-EOF
+  install -dm755 ${DEST}/lib/systemd/system
 
 cat > ${DEST}/lib/systemd/system/git-daemon@.service << "EOF"
 [Unit]
@@ -59,8 +48,6 @@ Accept=true
 [Install]
 WantedBy=sockets.target
 EOF
-
-  ln -sf /lib/systemd/system/git-daemon.socket ${DEST}/etc/systemd/system/sockets.target.wants/git-daemon.socket
 }
 
 . $(dirname $0)/master.sh

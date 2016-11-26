@@ -32,7 +32,7 @@ make_install_post() {
   sed -e 's|/usr/spool/samba|/var/spool/samba|g' -i ${DEST}/etc/samba/smb.conf.default
   sed -e 's|log.%m|%m.log|g' -i ${DEST}/etc/samba/smb.conf.default
 
-  install -dm755 ${DEST}/etc/default ${DEST}/etc/pam.d ${DEST}/etc/systemd/system/multi-user.target.wants
+  install -dm755 ${DEST}/etc/default ${DEST}/etc/pam.d
   install -dm755 ${DEST}/usr/lib/tmpfiles.d ${DEST}/lib/systemd/system ${DEST}/usr/lib/cups/backend
 
 cat > ${DEST}/etc/default/samba << "EOF"
@@ -134,10 +134,6 @@ WantedBy=multi-user.target
 EOF
 
   ln -sf /usr/bin/smbspool ${DEST}/usr/lib/cups/backend/smb
-
-  ln -sf /lib/systemd/system/nmbd.service ${DEST}/etc/systemd/system/multi-user.target.wants/nmbd.service
-  ln -sf /lib/systemd/system/smbd.service ${DEST}/etc/systemd/system/multi-user.target.wants/smbd.service
-  ln -sf /lib/systemd/system/winbindd.service ${DEST}/etc/systemd/system/multi-user.target.wants/winbindd.service
 }
 
 generate_install_override() {

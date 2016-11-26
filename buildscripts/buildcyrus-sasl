@@ -28,8 +28,7 @@ configure_pre() {
 make_install_post() {
   sed -i "s:libdir =:exec_prefix=/usr\n&:" ${DEST}/usr/lib/pkgconfig/libsasl2.pc
 
-  install -dm755 ${DEST}/etc/default ${DEST}/etc/systemd/system/multi-user.target.wants
-  install -dm755 ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d
+  install -dm755 ${DEST}/etc/default ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d
 
 cat > ${DEST}/etc/default/saslauthd << "EOF"
 # Begin /etc/default/saslauthd
@@ -85,8 +84,6 @@ PIDFile=/run/saslauthd/saslauthd.pid
 [Install]
 WantedBy=multi-user.target
 EOF
-
-  ln -sf /lib/systemd/system/saslauthd.service ${DEST}/etc/systemd/system/multi-user.target.wants/saslauthd.service
 }
 
 generate_install_override() {

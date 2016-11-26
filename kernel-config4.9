@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 4.9.0-rc2 Kernel Configuration
+# Linux/x86 4.9.0-rc6 Kernel Configuration
 #
 CONFIG_64BIT=y
 CONFIG_X86_64=y
@@ -1313,8 +1313,8 @@ CONFIG_STANDALONE=y
 CONFIG_PREVENT_FIRMWARE_BUILD=y
 CONFIG_FW_LOADER=y
 CONFIG_FIRMWARE_IN_KERNEL=y
-CONFIG_EXTRA_FIRMWARE="i915/skl_dmc_ver1.bin i915/skl_guc_ver1.bin i915/skl_guc_ver4.bin intel/dsp_fw_release.bin intel/ibt-hw-37.8.10-fw-1.10.3.11.e.bseq intel/ibt-hw-37.8.bseq iwlwifi-7265D-22.ucode rtl_nic/rtl8168h-2.fw"
-CONFIG_EXTRA_FIRMWARE_DIR="/lib/firmware"
+CONFIG_EXTRA_FIRMWARE="amdgpu/topaz_ce.bin amdgpu/topaz_k_smc.bin amdgpu/topaz_mc.bin amdgpu/topaz_me.bin amdgpu/topaz_mec2.bin amdgpu/topaz_mec.bin amdgpu/topaz_pfp.bin amdgpu/topaz_rlc.bin amdgpu/topaz_sdma1.bin amdgpu/topaz_sdma.bin amdgpu/topaz_smc.bin i915/skl_dmc_ver1_26.bin i915/skl_guc_ver6_1.bin intel/dsp_fw_release.bin intel/ibt-hw-37.8.10-fw-1.10.3.11.e.bseq intel/ibt-hw-37.8.bseq iwlwifi-7265D-22.ucode rtl_nic/rtl8168h-2.fw"
+CONFIG_EXTRA_FIRMWARE_DIR="%FWDIR%"
 # CONFIG_FW_LOADER_USER_HELPER_FALLBACK is not set
 CONFIG_WANT_DEV_COREDUMP=y
 CONFIG_ALLOW_DEV_COREDUMP=y
@@ -1333,7 +1333,6 @@ CONFIG_DMA_SHARED_BUFFER=y
 #
 # Bus devices
 #
-# CONFIG_QCOM_EBI2 is not set
 CONFIG_CONNECTOR=m
 # CONFIG_MTD is not set
 # CONFIG_OF is not set
@@ -2053,7 +2052,6 @@ CONFIG_I2C_I801=y
 # Enable PHYLIB and NETWORK_PHY_TIMESTAMPING to see the additional clocks.
 #
 CONFIG_GPIOLIB=y
-CONFIG_GPIO_DEVRES=y
 CONFIG_GPIO_ACPI=y
 # CONFIG_DEBUG_GPIO is not set
 # CONFIG_GPIO_SYSFS is not set
@@ -2584,7 +2582,7 @@ CONFIG_DRM_KMS_HELPER=y
 CONFIG_DRM_KMS_FB_HELPER=y
 CONFIG_DRM_FBDEV_EMULATION=y
 # CONFIG_DRM_LOAD_EDID_FIRMWARE is not set
-CONFIG_DRM_TTM=m
+CONFIG_DRM_TTM=y
 
 #
 # I2C encoder or helper chips
@@ -2593,7 +2591,7 @@ CONFIG_DRM_TTM=m
 # CONFIG_DRM_I2C_SIL164 is not set
 # CONFIG_DRM_I2C_NXP_TDA998X is not set
 # CONFIG_DRM_RADEON is not set
-CONFIG_DRM_AMDGPU=m
+CONFIG_DRM_AMDGPU=y
 # CONFIG_DRM_AMDGPU_SI is not set
 # CONFIG_DRM_AMDGPU_CIK is not set
 CONFIG_DRM_AMDGPU_USERPTR=y
@@ -2608,7 +2606,7 @@ CONFIG_DRM_I915=y
 # CONFIG_DRM_I915_PRELIMINARY_HW_SUPPORT is not set
 CONFIG_DRM_I915_USERPTR=y
 CONFIG_DRM_I915_GVT=y
-# CONFIG_DRM_VGEM is not set
+CONFIG_DRM_VGEM=m
 # CONFIG_DRM_VMWGFX is not set
 # CONFIG_DRM_GMA500 is not set
 # CONFIG_DRM_UDL is not set
@@ -3481,8 +3479,6 @@ CONFIG_COMMON_CLK=y
 # CONFIG_COMMON_CLK_NXP is not set
 # CONFIG_COMMON_CLK_PXA is not set
 # CONFIG_COMMON_CLK_PIC32 is not set
-# CONFIG_COMMON_CLK_MT8135 is not set
-# CONFIG_COMMON_CLK_MT8173 is not set
 
 #
 # Hardware Spinlock drivers

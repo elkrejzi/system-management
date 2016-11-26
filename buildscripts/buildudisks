@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=udisks
-export PKGVER=2.1.7
+export PKGVER=2.1.8
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://udisks.freedesktop.org/releases/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

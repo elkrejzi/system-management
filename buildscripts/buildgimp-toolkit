@@ -144,7 +144,7 @@ EOF
   ;;
   buildvala )
     export PKGNAME=vala
-    export PKGVER=0.34.2
+    export PKGVER=0.34.3
   ;;
 esac
 

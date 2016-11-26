@@ -1,5 +1,5 @@
 --- a/src/myspell/myspell_checker.cpp	2010-04-01 22:53:37.000000000 +0200
-+++ b/src/myspell/myspell_checker.cpp	2016-11-19 11:33:40.956431223 +0100
++++ b/src/myspell/myspell_checker.cpp	2016-11-26 19:19:02.524293112 +0100
 @@ -148,6 +148,10 @@
  		g_iconv_close(m_translate_out);
  }
@@ -11,3 +11,12 @@
  bool
  MySpellChecker::checkWord(const char *utf8Word, size_t len)
  {
+@@ -427,7 +431,7 @@
+ 	if(myspell == NULL){
+ 		return false;
+ 	}
+-	char *enc = myspell->get_dic_encoding();
++	const char *enc = myspell->get_dic_encoding();
+ 
+ 	m_translate_in = g_iconv_open(enc, "UTF-8");
+ 	m_translate_out = g_iconv_open("UTF-8", enc);

@@ -160,13 +160,6 @@ EOF
     export PKGURL="https://files.pythonhosted.org/packages/source/p/pyxdg/${PKGTAR}"
     export DEST=/binary/python/python-pyxdg-${PKGVER}
   ;;
-  buildpython-pyyaml )
-    export PKGNAME=PyYAML
-    export PKGVER=3.12
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="http://pyyaml.org/download/pyyaml/${PKGTAR}"
-    export DEST=/binary/python/python-pyyaml-${PKGVER}
-  ;;
   buildpython-rdflib )
     export PKGNAME=rdflib
     export PKGVER=4.2.1
@@ -218,7 +211,7 @@ EOF
   buildpython-modules )
     if [ -z $1 ]
     then
-      echo "$(basename $0) 1|2"
+      echo "$(basename $0) 1"
       exit 1
     fi
 
@@ -245,13 +238,6 @@ EOF
       $(dirname $0)/buildpython-rdflib
       $(dirname $0)/buildpython-sphinx
       $(dirname $0)/buildpython-sphinx_rtd_theme
-    elif [ $1 == 2 ]
-    then
-      $(dirname $0)/buildpython-m2crypto
-      $(dirname $0)/buildpython-pyinotify
-      $(dirname $0)/buildpython-pyyaml
-      $(dirname $0)/buildpython-systemd
-      $(dirname $0)/buildpython-typing
     fi
     exit 0
   ;;

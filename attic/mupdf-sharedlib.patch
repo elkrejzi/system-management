@@ -1,0 +1,31 @@
+--- a/Makefile	2016-04-21 13:14:32.000000000 +0200
++++ b/Makefile	2016-11-26 18:52:15.159622493 +0100
+@@ -15,7 +15,7 @@
+ # Do not specify CFLAGS or LIBS on the make invocation line - specify
+ # XCFLAGS or XLIBS instead. Make ignores any lines in the makefile that
+ # set a variable that was set on the command line.
+-CFLAGS += $(XCFLAGS) -Iinclude -I$(GEN)
++CFLAGS += $(XCFLAGS) -Iinclude -I$(GEN) -fPIC
+ LIBS += $(XLIBS) -lm
+ 
+ LIBS += $(FREETYPE_LIBS)
+@@ -141,14 +141,16 @@
+ 
+ # --- Library ---
+ 
+-MUPDF_LIB = $(OUT)/libmupdf.a
+-THIRD_LIB = $(OUT)/libmupdfthird.a
++MUPDF_LIB = $(OUT)/libmupdf.so
++THIRD_LIB = $(OUT)/libmupdfthird.so
+ 
+ MUPDF_OBJ := $(FITZ_OBJ) $(FONT_OBJ) $(PDF_OBJ) $(XPS_OBJ) $(CBZ_OBJ) $(HTML_OBJ) $(GPRF_OBJ)
+ THIRD_OBJ := $(FREETYPE_OBJ) $(HARFBUZZ_OBJ) $(JBIG2DEC_OBJ) $(JPEG_OBJ) $(MUJS_OBJ) $(OPENJPEG_OBJ) $(ZLIB_OBJ)
+ 
+-$(MUPDF_LIB) : $(MUPDF_OBJ)
++$(MUPDF_LIB) : $(MUPDF_OBJ) $(THIRD_LIB)
++	$(LINK_CMD) -shared -Wl,-soname -Wl,libmupdf.so -Wl,--no-undefined
+ $(THIRD_LIB) : $(THIRD_OBJ)
++	$(LINK_CMD) -shared -Wl,-soname -Wl,libmupdfthird.so -Wl,--no-undefined
+ 
+ INSTALL_LIBS := $(MUPDF_LIB) $(THIRD_LIB)
+ 

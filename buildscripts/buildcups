@@ -44,14 +44,6 @@ post_install_config() {
   chmod 600 ${DEST}/etc/cups/classes.conf ${DEST}/etc/cups/printers.conf
   chmod 640 ${DEST}/etc/cups/subscriptions.conf
 
-  install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants \
-                 ${DEST}/etc/systemd/system/printer.target.wants    \
-                 ${DEST}/etc/systemd/system/sockets.target.wants
-
-  ln -sf /lib/systemd/system/org.cups.cupsd.path ${DEST}/etc/systemd/system/multi-user.target.wants/org.cups.cupsd.path
-  ln -sf /lib/systemd/system/org.cups.cupsd.service ${DEST}/etc/systemd/system/printer.target.wants/org.cups.cupsd.service
-  ln -sf /lib/systemd/system/org.cups.cupsd.socket ${DEST}/etc/systemd/system/sockets.target.wants/org.cups.cupsd.socket
-
 cat > ${DEST}/etc/cups/client.conf << "EOF"
 # see 'man client.conf'
 ServerName /var/run/cups/cups.sock

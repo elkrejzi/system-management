@@ -6,18 +6,15 @@ export PKGTAR=${PKGNAME}-${PKGVER}-source.tar.gz
 export PKGURL="http://mupdf.com/downloads/${PKGTAR}"
 export PKGDIR=${PKGNAME}-${PKGVER}-source
 export MAKE_JOBS_FLAGS="-j4"
-export PATCHES_LIST=("mupdf-fixes.patch")
+export PATCHES_LIST=("mupdf-fixes.patch" "mupdf-sharedlib.patch")
 export KEEP_STATIC=1
-export MAKE_FLAGS="build=release"
-export MAKE_INSTALL_FLAGS="build=release prefix=/usr"
+export MAKE_INSTALL_FLAGS="prefix=/usr"
 
 configure_override() {
   rm -rf thirdparty/curl thirdparty/freetype thirdparty/harfbuzz
   rm -rf thirdparty/jpeg thirdparty/openjpeg thirdparty/zlib
-}
 
-make_install_post() {
-  chmod 644 ${DEST}/usr/lib/*.a
+  export XCFLAGS=${CFLAGS}
 }
 
 . $(dirname $0)/master.sh

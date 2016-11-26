@@ -2,7 +2,10 @@
 
 export PKGNAME=linux
 export PKGVER=4.8
-export PATCHVER=4.8.9
+export CONFVER=${PKGVER}
+#export CONFVER=4.9
+export PATCHVER=4.8.11
+#export PATCHVER=4.9-rc6
 export COMMON_URL="https://cdn.kernel.org/pub/linux/kernel/v4.x"
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="${COMMON_URL}/${PKGTAR}"
@@ -32,11 +35,11 @@ configure_override() {
 
   if [ ! -e ".config" ]
   then
-    install -m644 /media/ntfs/Other/Linux/kernel-config .config
+    install -m644 ${ROOT_PATH}/kernel-config${CONFVER} .config
+    sed -i "s#%FWDIR%#${ROOT_PATH}/kernel_firmware#;s#/lib/firmware#${ROOT_PATH}/kernel_firmware#" .config
   fi
 
   sed -i "s:-ltinfo ::g" tools/thermal/tmon/Makefile
-  sed -i "/SKL_CSR_VERSION_REQUIRED/s#1, 23#1, 26#" drivers/gpu/drm/i915/intel_csr.c
 }
 
 make_override() {

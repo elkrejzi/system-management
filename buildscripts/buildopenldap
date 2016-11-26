@@ -33,7 +33,7 @@ make_install_post() {
   rm -rf ${DEST}/etc/openldap/ldap.conf ${DEST}/etc/openldap/slapd.conf ${DEST}/etc/openldap/slapd.ldif
   rm -rf ${DEST}/var/run
 
-  install -dm755 ${DEST}/etc/default ${DEST}/etc/openldap/slapd.d ${DEST}/etc/systemd/system/multi-user.target.wants
+  install -dm755 ${DEST}/etc/default ${DEST}/etc/openldap/slapd.d
   install -dm755 ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d ${DEST}/var/lib/openldap
 
 cat > ${DEST}/etc/default/slapd << "EOF"
@@ -68,8 +68,6 @@ ExecStart=/usr/sbin/slapd -u ldap -g ldap $SLAPD_OPTS
 [Install]
 WantedBy=multi-user.target
 EOF
-
-  ln -sf /lib/systemd/system/slapd.service ${DEST}/etc/systemd/system/multi-user.target.wants/slapd.service
 }
 
 generate_install_override() {

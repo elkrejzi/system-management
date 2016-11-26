@@ -9,10 +9,4 @@ export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1
 export CONFIGURE_FLAGS=(--enable-admin-group=adm)
 
-make_install_post() {
-  install -dm755 ${DEST}/etc/systemd/system/graphical.target.wants
-
-  ln -sf /lib/systemd/system/accounts-daemon.service ${DEST}/etc/systemd/system/graphical.target.wants/accounts-daemon.service
-}
-
 . $(dirname $0)/master.sh

@@ -33,8 +33,7 @@ make_install_override() {
 
   unset LD_LIBRARY_PATH
 
-  install -dm755 ${DEST}/etc/default ${DEST}/etc/systemd/system/multi-user.target.wants
-  install -dm755 ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d
+  install -dm755 ${DEST}/etc/default ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d
 
 cat > ${DEST}/etc/default/svnserve << "EOF"
 # Begin /etc/default/svnserve
@@ -64,8 +63,6 @@ ExecStart=/usr/bin/svnserve --daemon --pid-file=/run/svnserve/svnserve.pid $SVNS
 [Install]
 WantedBy=multi-user.target
 EOF
-
-  ln -sf /lib/systemd/system/svnserve.service ${DEST}/etc/systemd/system/multi-user.target.wants/svnserve.service
 }
 
 . $(dirname $0)/master.sh

@@ -16,6 +16,9 @@ case $(basename $0) in
   builddleyna-server )
     export PKGNAME=dleyna-server
     export PKGVER=0.5.0
+    configure_pre() {
+      sed -i "/connector.h/a #include <libgupnp/gupnp-context-manager.h>" libdleyna/server/upnp.h
+    }
   ;;
   builddleyna )
     export PKG_AUTO_INSTALL=1

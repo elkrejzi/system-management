@@ -18,7 +18,7 @@ configure_post() {
 make_install_post() {
   rm -rf ${DEST}/var
 
-  install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d
+  install -dm755 ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d
 
 cat > ${DEST}/etc/bind/named.conf << "EOF"
 // This is the primary configuration file for the BIND DNS server named.
@@ -188,8 +188,6 @@ ExecStop=/usr/sbin/rndc stop
 [Install]
 WantedBy=multi-user.target
 EOF
-
-  ln -sf /lib/systemd/system/named.service ${DEST}/etc/systemd/system/multi-user.target.wants/named.service
 }
 
 generate_install_override() {

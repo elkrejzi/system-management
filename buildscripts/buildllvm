@@ -199,10 +199,6 @@ configure_pre_32() {
   rm -rf ../${PKGDIR}/tools/clang/tools/extra
 }
 
-configure_post_32() {
-  sed -i "s#/lib/libffi.so#/lib32/libffi.so#g" $(grep -rl lib/libffi.so)
-}
-
 make_install_post() {
   for arch in i386 x86_64
   do

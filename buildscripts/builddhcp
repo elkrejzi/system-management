@@ -53,10 +53,8 @@ EOF
 
   rm -rf ${DEST}/server/etc/dhcp/*
 
-  install -dm755 ${DEST}/server/etc/default ${DEST}/server/etc/systemd/system/multi-user.target.wants
+  install -dm755 ${DEST}/server/etc/default
   install -dm755 ${DEST}/server/lib/systemd/system ${DEST}/server/var/lib/dhcpd
-
-  ln -sf /lib/systemd/system/dhcpd.service ${DEST}/server/etc/systemd/system/multi-user.target.wants/dhcpd.service
 
 cat > ${DEST}/server/etc/default/dhcpd << "EOF"
 # Begin /etc/default/dhcpd

@@ -1,8 +1,7 @@
 #!/bin/bash -e
 
-systemctl disable avahi-{daemon,dnsconfd} cups-browsed httpd krb5-{kadmind,kdc,kpropd} mysqld nmbd org.cups.cupsd php-fpm postfix postgresql saslauthd slapd smbd svnserve thermald winbindd git-daemon.socket
-
-systemctl enable systemd-timesyncd
+systemctl enable accounts-daemon bluetooth ModemManager named NetworkManager NetworkManager-dispatcher rtkit-daemon systemd-timesyncd upower wpa_supplicant
+systemctl enable sshd.socket
 
 install -dm755 /media/ntfs /media/other /media/win
 
@@ -20,7 +19,7 @@ cat > /etc/fstab << "EOF"
 
 none /var/tmp tmpfs defaults 0 0
 
-UUID=2E1EFAE61EFAA5CD /media/win   ntfs defaults 0 0
+UUID=FEB8D68CB8D64337 /media/win   ntfs defaults 0 0
 UUID=C228EA6328EA5647 /media/ntfs  ntfs defaults 0 0
 UUID=3CB8F34AB8F30166 /media/other ntfs defaults 0 0
 EOF
@@ -51,20 +50,13 @@ named:x:20:
 gdm:x:21:
 systemd-journal:x:23:
 input:x:24:
-httpd:x:25:
 polkitd:x:27:
-rpc:x:28:
-postfix:x:32:
-postdrop:x:33:
 mail:x:34:
-mysql:x:40:
-postgres:x:41:
 sshd:x:50:
 git:x:55:
 kvm:x:61:
 wireshark:x:62:
 rtkit:x:65:
-scanner:x:70:
 colord:x:71:
 systemd-coredump:x:72:
 systemd-journal-gateway:x:73:
@@ -90,12 +82,7 @@ lp:x:9:9:Print Service User:/var/spool/cups:/bin/false
 messagebus:x:18:18:D-Bus Message Daemon User:/var/run/dbus:/bin/false
 named:x:20:20::/var/cache/bind:/bin/false
 gdm:x:21:21:GDM Daemon Owner:/var/lib/gdm:/bin/false
-httpd:x:25:25:HTTP Daemon Owner:/var/www:/bin/false
 polkitd:x:27:27:PolicyKit Daemon Owner:/etc/polkit-1:/bin/false
-rpc:x:28:28:RPC Bind Daemon Owner:/dev/null:/bin/false
-postfix:x:32:32:Postfix Daemon Owner:/var/spool/postfix:/bin/false
-mysql:x:40:40:MySQL Server:/var/lib/mysql:/bin/false
-postgres:x:41:41:PostgreSQL Server:/var/lib/postgresql:/bin/bash
 sshd:x:50:50:OpenSSH PrivSep:/var/run/sshd:/sbin/nologin
 git:x:55:55:Git Repositories Owner:/var/lib/git:/bin/bash
 rtkit:x:65:65:RealtimeKit:/proc:/sbin/nologin
@@ -172,31 +159,9 @@ EOF
 #EndSection
 #EOF
 
-cat >> /etc/httpd/httpd.conf << "EOF"
-<Proxy fcgi://127.0.0.1:9000>
-  ProxySet timeout=600
-</Proxy>
+echo -e "armin ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/99-local
 
-ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://127.0.0.1:9000/var/www/$1
-DirectoryIndex index.php index.html
-
-#<FilesMatch "\.php$">
-#	SetHandler application/x-httpd-php
-#</FilesMatch>
-#<FilesMatch "\.phps$">
-#	SetHandler application/x-httpd-php-source
-#</FilesMatch>
-
-Include /etc/httpd/extra/cgit.conf
-Include /etc/httpd/extra/git.conf
-EOF
-
-for module in include_module proxy_module proxy_connect_module proxy_fcgi_module dav_module suexec_module dav_fs_module vhost_alias_module userdir_module rewrite_module
-do
-  sed -i "/LoadModule ${module}/s:#Lo:Lo:g" /etc/httpd/httpd.conf
-done
-
-sed -i "/root ALL/a  armin ALL=(ALL) NOPASSWD: ALL" /etc/sudoers
+chmod 440 /etc/sudoers.d/99-local
 
 install -dm755 /etc/adobe
 install -dm755 /etc/modprobe.d
@@ -241,14 +206,13 @@ iptables -A FORWARD -i eth0 -o wlan0 -j ACCEPT
 exit 0
 EOF
 
-sed -i 's#;date.timezone =#date.timezone = "Europe/Sarajevo"#' /etc/php/php.ini
-
 sed -i "s:#HandleLidSwitch=suspend:HandleLidSwitch=ignore:g" /etc/systemd/logind.conf
 sed -i "s:#DefaultTimeoutStopSec=90s:DefaultTimeoutStopSec=30s:g" /etc/systemd/system.conf
 
 install -dm755 /lib/firmware
 
-cp -a /media/ntfs/Other/Linux/kernel_firmware/* /lib/firmware
+cp -r ${ROOT_PATH}/kernel_firmware/amdgpu /lib/firmware
+cp -r ${ROOT_PATH}/kernel_firmware/ath9k_htc /lib/firmware
 
 find /lib/firmware -type d -exec chmod 755 {} \;
 find /lib/firmware -type f -exec chmod 644 {} \;
@@ -278,8 +242,8 @@ Now run the following from outside the chroot
 
 export LFS=/mnt/lfs
 
-for D in AccountsService alsa bluetooth \
-         git mysql NetworkManager postgresql upower  \
+for D in AccountsService alsa bluetooth   \
+         git NetworkManager upower        \
          systemd/backlight systemd/rfkill
 do
   rm -rf $LFS/var/lib/${D}

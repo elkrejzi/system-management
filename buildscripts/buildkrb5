@@ -39,7 +39,7 @@ make_install_post() {
 
   rm -rf ${DEST}/usr/share/examples ${DEST}/usr/share/gnats
 
-  install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/lib/systemd/system
+  install -dm755 ${DEST}/lib/systemd/system
 
 cat > ${DEST}/lib/systemd/system/krb5-kdc.service << "EOF"
 [Unit]
@@ -74,10 +74,6 @@ ExecStart=/usr/sbin/kpropd -S
 [Install]
 WantedBy=multi-user.target
 EOF
-
-  ln -sf /lib/systemd/system/krb5-kdc.service ${DEST}/etc/systemd/system/multi-user.target.wants/krb5-kdc.service
-  ln -sf /lib/systemd/system/krb5-kpropd.service ${DEST}/etc/systemd/system/multi-user.target.wants/krb5-kpropd.service
-  ln -sf /lib/systemd/system/krb5-kadmind.service ${DEST}/etc/systemd/system/multi-user.target.wants/krb5-kadmind.service
 }
 
 . $(dirname $0)/master.sh

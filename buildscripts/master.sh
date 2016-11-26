@@ -3,11 +3,14 @@
 # Auto install packages after installation. Useful for bootstrap
 # export PKG_AUTO_INSTALL=1
 
+# Root directory of the repository.
+export ROOT_PATH="$(realpath $(dirname $(realpath $0))/..)"
+
 # Default location where package sources are stored
 export SROOT=/media/ntfs/Other/Linux/sources
 
 # Default location where patches are stored
-export PROOT=/media/ntfs/Other/Linux/patches
+export PROOT=${ROOT_PATH}/patches
 
 # Default C compiler used to build 64 bit packages
 if [ -z "${DEFAULT_CC}" ]

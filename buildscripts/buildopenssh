@@ -30,8 +30,7 @@ make_install_post() {
 
   sed -i "/OpenBSD/d" ${DEST}/etc/ssh/moduli
 
-  install -dm755 ${DEST}/etc/pam.d ${DEST}/etc/systemd/system/sockets.target.wants
-  install -dm755 ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d 
+  install -dm755 ${DEST}/etc/pam.d ${DEST}/lib/systemd/system ${DEST}/usr/lib/tmpfiles.d
 
 cat > ${DEST}/etc/pam.d/sshd << "EOF"
 # Begin /etc/pam.d/sshd
@@ -269,8 +268,6 @@ Accept=yes
 [Install]
 WantedBy=sockets.target
 EOF
-
-  ln -sf /lib/systemd/system/sshd.socket ${DEST}/etc/systemd/system/sockets.target.wants/sshd.socket
 }
 
 . $(dirname $0)/master.sh

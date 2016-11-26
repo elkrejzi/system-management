@@ -16,12 +16,9 @@ configure_pre() {
 }
 
 make_install_post() {
-  install -dm755 ${DEST}/etc/systemd/system/graphical.target.wants
   install -dm755 ${DEST}/usr/share/dbus-1/interfaces
 
   ./rtkit-daemon --introspect > ${DEST}/usr/share/dbus-1/interfaces/org.freedesktop.RealtimeKit1.xml
-
-  ln -sf /lib/systemd/system/rtkit-daemon.service ${DEST}/etc/systemd/system/graphical.target.wants/rtkit-daemon.service
 }
 
 . $(dirname $0)/master.sh

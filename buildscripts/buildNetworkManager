@@ -22,7 +22,7 @@ configure_pre() {
 make_install_post() {
   rm -rf ${DEST}/lib/systemd/system/network-online.target.wants ${DEST}/var/run
 
-  install -dm755 ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/usr/lib/tmpfiles.d
+  install -dm755 ${DEST}/usr/lib/tmpfiles.d
 
 cat > ${DEST}/etc/NetworkManager/NetworkManager.conf << "EOF"
 [main]
@@ -32,10 +32,6 @@ EOF
 cat > ${DEST}/usr/lib/tmpfiles.d/NetworkManager.conf << "EOF"
 d /run/NetworkManager 755 root root -
 EOF
-
-  ln -sf /lib/systemd/system/NetworkManager.service ${DEST}/etc/systemd/system/multi-user.target.wants/NetworkManager.service
-  ln -sf /lib/systemd/system/NetworkManager.service ${DEST}/etc/systemd/system/dbus-org.freedesktop.NetworkManager.service
-  ln -sf /lib/systemd/system/NetworkManager-dispatcher.service ${DEST}/etc/systemd/system/dbus-org.freedesktop.nm-dispatcher.service
 }
 
 . $(dirname $0)/master.sh

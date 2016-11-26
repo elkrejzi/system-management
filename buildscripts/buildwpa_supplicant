@@ -78,7 +78,7 @@ make_override() {
 }
 
 make_install_override() {
-  install -dm755 ${DEST}/etc/dbus-1/system.d ${DEST}/etc/systemd/system/multi-user.target.wants ${DEST}/lib/systemd/system
+  install -dm755 ${DEST}/etc/dbus-1/system.d ${DEST}/lib/systemd/system
   install -dm755 ${DEST}/sbin ${DEST}/usr/bin ${DEST}/usr/share/applications ${DEST}/usr/share/dbus-1/system-services
   install -dm755 ${DEST}/usr/share/doc/wpa_supplicant ${DEST}/usr/share/pixmaps  ${DEST}/usr/share/man/man5 ${DEST}/usr/share/man/man8
 
@@ -98,9 +98,6 @@ make_install_override() {
 
   install -m644 examples/*.conf ${DEST}/usr/share/doc/wpa_supplicant
   install -m644 systemd/*.service ${DEST}/lib/systemd/system
-
-  ln -sf /lib/systemd/system/wpa_supplicant.service ${DEST}/etc/systemd/system/dbus-fi.epitest.hostap.WPASupplicant.service
-  ln -sf /lib/systemd/system/wpa_supplicant.service ${DEST}/etc/systemd/system/multi-user.target.wants/wpa_supplicant.service
 }
 
 . $(dirname $0)/master.sh
