@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=kpartx
-export PKGVER=0.6.3
+export PKGVER=0.6.4
 export PKGTAR=multipath-tools-${PKGVER}.tar.gz
 export PKGDIR=multipath-tools-${PKGVER}
 export PKGBUILD=${PKGDIR}/kpartx

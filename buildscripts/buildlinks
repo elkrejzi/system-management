@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=links
-export PKGVER=2.13
+export PKGVER=2.14
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://links.twibright.com/download/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

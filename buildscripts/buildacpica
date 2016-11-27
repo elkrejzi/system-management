@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=acpica
-export PKGVER=20160930
+export PKGVER=20161117
 export PKGTAR=${PKGNAME}-unix-${PKGVER}.tar.gz
 export PKGDIR=${PKGNAME}-unix-${PKGVER}
 export PKGBUILD=${PKGDIR}/generate/unix
@@ -12,6 +12,10 @@ configure_override() {
   sed -i "/OPT_CFLAGS/s:-O2:${CFLAGS}:" Makefile.config
 
   unset CFLAGS
+}
+
+make_install_post() {
+  rm -rf ${DEST}/usr/bin/acpidump
 }
 
 . $(dirname $0)/master.sh

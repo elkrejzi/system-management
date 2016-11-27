@@ -1,0 +1,283 @@
+# Build finished on Thu Oct  6 19:14:18 UTC 2016. Build duration: 17 hours 5 minutes 54 seconds
+
+# Begin Sat Oct 22 17:04:06 UTC 2016
+
+libgit2-0.24.2
+libgit2-glib-0.24.4
+netkit-telnet-0.17
+osinfo-db-tools-1.0.0
+osinfo-db-20160728
+perl-parse-yapp-1.05
+
+Updated to icu-58.1
+
+Rebuild harfbuzz-1.3.2 against icu-58.1
+Rebuild libical-2.0.0 against icu-58.1
+
+Updated to btrfs-progs-4.8.1
+Updated to dbus-1.10.12
+Updated to ffmpeg-3.1.5
+Updated to firefox-49.0.2
+Updated to flashplayer-11.2.202.637
+Updated to gdb-7.12
+Updated to gnutls-3.5.5
+Updated to google-chrome-54.0.2840.71
+Updated to gparted-0.27.0
+Updated to gpgme-1.7.1
+Updated to guile-2.0.13
+Updated to hdparm-9.50
+Updated to ImageMagick-6.9.6-2
+Updated to iproute2-4.8.0
+Updated to jasper-1.900.5
+Updated to libcdio-0.94
+Updated to libnfs-1.11.0
+Updated to libnotify-0.7.7
+Updated to libosinfo-1.0.0
+Updated to libpng-1.6.26
+Updated to linux-4.8.4-krejzi
+Updated to man-pages-4.08
+Updated to mesa-13.0.0-rc1
+Updated to mpv-0.21.0
+Updated to nspr-4.13.1
+Updated to php-7.0.12
+Updated to poppler-0.48.0
+Updated to python-cssselect-1.0.0
+Updated to python-pyparsing-2.1.10
+Updated to python-setuptools-28.6.1
+Updated to spice-gtk-0.33
+Updated to sqlite-3.15.0
+Updated to sqlitebrowser-3.9.1
+Updated to steam-1.0.0.53
+Updated to strace-4.14
+Updated to sudo-1.8.18p1
+Updated to thunderbird-50.0b2 (binary version)
+Updated to tzdata-2016h
+Updated to util-linux-2.29-rc2
+Updated to xf86-input-libinput-0.22.0
+Updated to xf86-input-synaptics-1.8.99.2
+Updated to xscreensaver-5.36
+Updated to zimg-2.3
+
+Updated to Vulkan-Docs-1.0.31
+Updated to glslang-3.0 (git snapshot)
+Updated to SPIRV-Tools-1.1.1 (git snapshot)
+Updated to Vulkan-LoaderAndValidationLayers-1.0.30.0 (git snapshot)
+
+Updated to glib-2.50.1
+Updated to vala-0.34.1
+Updated to gssdp-1.0.1
+Updated to webkitgtk-2.14.1
+Updated to gnome-desktop-3.22.1
+Updated to gnome-online-accounts-3.22.1
+Updated to gnome-settings-daemon-3.22.1
+Updated to gupnp-1.0.1
+Updated to gvfs-1.30.1.1
+Updated to libgee-0.18.1
+Updated to mutter-3.22.1
+Updated to nautilus-3.22.1
+Updated to evolution-data-server-3.22.1
+Updated to gupnp-av-0.12.10
+Updated to tracker-1.10.1
+Updated to gdm-3.22.1
+Updated to gnome-session-3.22.1
+Updated to gnome-control-center-3.22.1
+Updated to gnome-shell-3.22.1
+Updated to gnome-shell-extensions-3.22.1
+Updated to cheese-3.22.1
+Updated to dconf-editor-3.22.1
+Updated to eog-3.20.5
+Updated to epiphany-3.22.1
+Updated to evince-3.22.1
+Updated to file-roller-3.22.1
+Updated to gnome-calculator-3.22.1
+Updated to gnome-clocks-3.22.1
+Updated to gnome-color-manager-3.22.1
+Updated to gnome-logs-3.22.1
+Updated to gnome-maps-3.22.1
+Updated to gnome-power-manager-3.22.1
+Updated to polari-3.22.1
+
+gedit-code-assistance-3.16.0
+gedit-latex-3.20.0
+gedit-plugins-3.22.0
+rubber-1.4
+
+Rebuild bluez-5.42 against icu-58.1
+Rebuild boost-1.62.0 against icu-58.1
+Rebuild cups-filters-1.11.4 against poppler-0.48.0
+Rebuild gnome-calendar-3.22.1 against icu-58.1
+Rebuild gnome-todo-3.20.2 against icu-58.1
+Rebuild openldap-2.4.44 against icu-58.1
+Rebuild postfix-3.1.3 against icu-58.1
+Rebuild qtbase-5.7.0 against icu-58.1
+Rebuild raptor2-2.0.15 against icu-58.1
+Rebuild texlive-20160523 against icu-58.1
+
+Updated to extra-cmake-modules-5.27.0
+Updated to attica-5.27.0
+Updated to breeze-icons-5.27.0
+Updated to karchive-5.27.0
+Updated to kcodecs-5.27.0
+Updated to kconfig-5.27.0
+Updated to kcoreaddons-5.27.0
+Updated to kdbusaddons-5.27.0
+Updated to kguiaddons-5.27.0
+Updated to ki18n-5.27.0
+Updated to kitemviews-5.27.0
+Updated to kwidgetsaddons-5.27.0
+Updated to kwindowsystem-5.27.0
+Updated to solid-5.27.0
+Updated to sonnet-5.27.0
+Updated to kauth-5.27.0
+Updated to kcompletion-5.27.0
+Updated to kcrash-5.27.0
+Updated to kdoctools-5.27.0
+Updated to knotifications-5.27.0
+Updated to kpty-5.27.0
+Updated to kconfigwidgets-5.27.0
+Updated to kservice-5.27.0
+Updated to kglobalaccel-5.27.0
+Updated to kiconthemes-5.27.0
+Updated to kjobwidgets-5.27.0
+Updated to ktextwidgets-5.27.0
+Updated to kwallet-5.27.0
+Updated to kxmlgui-5.27.0
+Updated to kbookmarks-5.27.0
+Updated to kio-5.27.0
+Updated to frameworkintegration-5.27.0
+Updated to kinit-5.27.0
+Updated to knotifyconfig-5.27.0
+Updated to kparts-5.27.0
+
+# End Sat Oct 22 22:21:35 UTC 2016
+
+# Begin Sun Oct 30 12:04:57 UTC 2016
+
+Updated to beignet-1.2.0 (git snapshot)
+Updated to bluez-5.43
+Updated to btrfs-progs-4.8.2
+Updated to ffmpeg-3.2
+Updated to file-5.29
+Updated to firefox-50.0b11 (binary version)
+Updated to flashplayer-11.2.202.643
+Updated to flex-2.6.2
+Updated to gexiv2-0.10.4
+Updated to git-2.10.2
+Updated to gtk+-3.22.2
+Updated to harfbuzz-1.3.3
+Updated to iw-4.9
+Updated to jasper-1.900.16
+Updated to libarchive-3.2.2
+Updated to libpcap-1.8.1
+Updated to libXi-1.7.8
+Updated to mesa-13.0.0-rc2
+Updated to nano-2.7.1
+Updated to postgresql-9.6.1
+Updated to python-beaker-1.8.1
+Updated to python-setuptools-28.7.1
+Updated to samba-4.5.1
+Updated to SDL2-2.0.5
+Updated to taglib-1.11.1
+Updated to tevent-0.9.31
+Updated to thunderbird-50.0b3 (binary version)
+Updated to vala-0.34.2
+Updated to valgrind-3.12.0
+Updated to xapian-core-1.4.1
+Updated to xfsprogs-4.8.0
+Updated to xorg-server-1.18.99.902
+
+Rebuild mpv-0.21.0 against ffmpeg-3.2
+
+# End Sun Oct 30 13:11:49 UTC 2016
+
+# Begin Sun Nov  6 13:01:43 UTC 2016
+
+mupdf-1.9a
+
+Updated to babl-0.1.20
+Updated to beignet-1.2.1
+Updated to bind-9.11.0-P1
+Updated to cmake-3.6.3
+Updated to cryptsetup-1.7.3
+Updated to cups-filters-1.11.6
+Updated to curl-7.51.0
+Updated to gegl-0.3.10
+Updated to gnome-photos-3.22.2
+Updated to gnome-todo-3.22.0
+Updated to gnutls-3.5.6
+Updated to google-chrome-54.0.2840.90
+Updated to gspell-1.2.1
+Updated to gstreamer-1.10.0
+Updated to gst-plugins-base-1.10.0
+Updated to gst-plugins-good-1.10.0
+Updated to gst-plugins-bad-1.10.0
+Updated to gst-plugins-ugly-1.10.0
+Updated to gst-libav-1.10.0
+Updated to gstreamer-vaapi-1.10.0
+Updated to gtksourceview-3.22.1
+Updated to highlight-3.33
+Updated to ImageMagick-6.9.6-3
+Updated to jasper-1.900.19
+Updated to libreoffice-5.2.3
+Updated to libssh2-1.8.0
+Updated to linux-4.8.6-krejzi
+Updated to LVM2-2.02.167
+Updated to mesa-13.0.0
+Updated to neon-0.30.2
+Updated to python-mako-1.0.5
+Updated to scons-2.5.1
+Updated to sqlite-3.15.1
+Updated to systemd-232
+Updated to tzdata-2016i
+Updated to webkitgtk-2.14.2
+Updated to whois-5.2.13
+
+# End Sun Nov  6 15:47:22 UTC 2016
+
+# Begin Sun Nov 13 11:04:11 UTC 2016
+
+libuv-1.10.0
+
+Updated to btrfs-progs-4.8.3
+Updated to cmake-3.7.0
+Updated to flashplayer-11.2.202.644
+Updated to google-chrome-54.0.2840.90
+Updated to graphite2-1.3.9
+Updated to jasper-1.900.27
+Updated to libinput-1.5.1
+Updated to libqmi-1.16.2
+Updated to libusb-1.0.21
+Updated to libva-1.7.3
+Updated to libva-intel-driver-1.7.3
+Updated to libxkbcommon-0.7.0
+Updated to linux-4.8.7-krejzi
+Updated to mariadb-10.1.19
+Updated to php-7.0.13
+Updated to python-mako-1.0.6
+Updated to python-setuptools-28.8.0
+Updated to util-linux-2.29
+
+Updated to glib-2.50.2
+Updated to gtk+-3.22.3
+Updated to evolution-data-server-3.22.2
+Updated to gnome-desktop-3.22.2
+Updated to gvfs-1.30.2
+Updated to mutter-3.22.2
+Updated to vte-0.46.1
+Updated to gnome-online-accounts-3.22.2
+Updated to gnome-session-3.22.2
+Updated to gnome-shell-3.22.2
+Updated to gnome-shell-extensions-3.22.2
+Updated to aisleriot-3.22.1
+Updated to epiphany-3.22.2
+Updated to file-roller-3.22.2
+Updated to gnome-calculator-3.22.2
+Updated to gnome-disk-utility-3.22.1
+Updated to gnome-maps-3.22.2
+Updated to gnome-power-manager-3.22.2
+Updated to gnome-system-monitor-3.22.2
+Updated to gnome-terminal-3.22.1
+Updated to gucharmap-9.0.2
+Updated to polari-3.22.2
+
+# End Sun Nov 13 12:27:44 UTC 2016

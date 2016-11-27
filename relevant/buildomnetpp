@@ -36,6 +36,8 @@ EOF
 }
 
 make_install_override() {
+  exit 0
+
   sed "s:${PWD}:/usr:g" Makefile.inc > Makefile.inc2
   sed -i -e "/INCL_DIR/s#/usr/include#&/omnetpp#g" \
          -e "s#/usr/images#/usr/share/omnetpp/images#g" \

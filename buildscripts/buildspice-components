@@ -7,7 +7,7 @@ case $(basename $0) in
   ;;
   buildspice )
     export PKGNAME=spice
-    export PKGVER=0.13.2
+    export PKGVER=0.13.3
   ;;
   buildspice-gtk )
     export PKGNAME=spice-gtk
