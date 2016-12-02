@@ -1,13 +1,12 @@
 #!/bin/bash -e
 
 export PKGNAME=libgphoto2
-export PKGVER=2.5.10
+export PKGVER=2.5.11
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://downloads.sourceforge.net/gphoto/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
 export KEEP_LA=1
 export POSTINST_TRIGGER=("udevadm hwdb --update")
-export PATCHES_LIST=("libgphoto2-fixes.patch")
 export CONFIGURE_FLAGS=(--disable-rpath)
 
 make_install_post() {

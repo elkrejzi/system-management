@@ -1,11 +1,15 @@
 #!/bin/bash -e
 
 export PKGNAME=jasper
-export PKGVER=1.900.29
+export PKGVER=2.0.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="http://www.ece.uvic.ca/~frodo/jasper/software/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
-export CONFIGURE_FLAGS=(--enable-shared)
+export CMAKE_BUILD=1
+export CMAKE_FLAGS=(-DCMAKE_SKIP_RPATH=ON -DBUILD_TESTING=OFF -DJAS_ENABLE_OPENGL=OFF)
+
+configure_pre() {
+  sed -i "s#DESTINATION man#DESTINATION share/man/man1#g" ../${PKGDIR}/src/appl/CMakeLists.txt
+}
 
 . $(dirname $0)/master.sh

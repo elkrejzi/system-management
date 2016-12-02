@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=hunspell
-export PKGVER=1.5.0
+export PKGVER=1.5.4
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://github.com/hunspell/hunspell/archive/v${PKGVER}.tar.gz"
 export MAKE_JOBS_FLAGS="-j4"

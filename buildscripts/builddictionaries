@@ -6,9 +6,9 @@ then
   rm -rf /binary/dictionaries
 fi
 
-export ASPELL_EN_VER=2016.06.26
+export ASPELL_EN_VER=2016.11.20
 export ASPELL_HR_VER=0.51
-export HUNSPELL_EN_VER=2016.06.26
+export HUNSPELL_EN_VER=2016.11.20
 export HUNSPELL_HR_VER=20060617
 
 # Begin aspell-en

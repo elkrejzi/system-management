@@ -1,8 +1,8 @@
 #!/bin/bash -e
 
-export PKGVER=1.10.1
+export PKGVER=1.10.2
 export MAKE_JOBS_FLAGS="-j4"
-export DEFAULT_CXX="clang++ -std=c++11"
+export USER_CXXFLAGS="-std=c++11"
 
 case $(basename $0) in
   buildgst-libav )
