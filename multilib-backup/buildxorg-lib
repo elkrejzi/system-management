@@ -1,0 +1,221 @@
+#!/bin/bash -e
+
+case $(basename $0) in
+  buildlibdmx )
+    export PKGNAME=libdmx
+    export PKGVER=1.1.3
+  ;;
+  buildlibfontenc )
+    export PKGNAME=libfontenc
+    export PKGVER=1.1.3
+  ;;
+  buildlibFS )
+    export PKGNAME=libFS
+    export PKGVER=1.0.7
+  ;;
+  buildlibICE )
+    export PKGNAME=libICE
+    export PKGVER=1.0.9
+  ;;
+  buildlibpciaccess )
+    export PKGNAME=libpciaccess
+    export PKGVER=0.13.4
+  ;;
+  buildlibSM )
+    export PKGNAME=libSM
+    export PKGVER=1.2.2
+  ;;
+  buildlibX11 )
+    export PKGNAME=libX11
+    export PKGVER=1.6.4
+  ;;
+  buildlibXau )
+    export PKGNAME=libXau
+    export PKGVER=1.0.8
+  ;;
+  buildlibXaw )
+    export PKGNAME=libXaw
+    export PKGVER=1.0.13
+  ;;
+  buildlibxcb )
+    export PKGNAME=libxcb
+    export PKGVER=1.12
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+    export PKGURL="https://www.x.org/releases/individual/xcb/${PKGTAR}"
+    export CONFIGURE_FLAGS=(--disable-devel-docs)
+    export CONFIGURE_FLAGS_32=(--disable-devel-docs)
+
+    configure_pre() {
+      sed -e "s/pthread-stubs//" -i configure.ac
+      autoreconf -fi
+    }
+    configure_pre_32() {
+      sed -e "s/pthread-stubs//" -i configure.ac
+      autoreconf -fi
+    }
+  ;;
+  buildlibXcomposite )
+    export PKGNAME=libXcomposite
+    export PKGVER=0.4.4
+  ;;
+  buildlibXcursor )
+    export PKGNAME=libXcursor
+    export PKGVER=1.1.14
+  ;;
+  buildlibXdamage )
+    export PKGNAME=libXdamage
+    export PKGVER=1.1.4
+  ;;
+  buildlibXdmcp )
+    export PKGNAME=libXdmcp
+    export PKGVER=1.1.2
+  ;;
+  buildlibXext )
+    export PKGNAME=libXext
+    export PKGVER=1.3.3
+  ;;
+  buildlibXfixes )
+    export PKGNAME=libXfixes
+    export PKGVER=5.0.3
+  ;;
+  buildlibXfont )
+    export PKGNAME=libXfont
+    export PKGVER=1.5.2
+  ;;
+  buildlibXfont2 )
+    export PKGNAME=libXfont2
+    export PKGVER=2.0.1
+  ;;
+  buildlibXft )
+    export PKGNAME=libXft
+    export PKGVER=2.3.2
+  ;;
+  buildlibXi )
+    export PKGNAME=libXi
+    export PKGVER=1.7.8
+  ;;
+  buildlibXinerama )
+    export PKGNAME=libXinerama
+    export PKGVER=1.1.3
+  ;;
+  buildlibxkbfile )
+    export PKGNAME=libxkbfile
+    export PKGVER=1.0.9
+  ;;
+  buildlibXmu )
+    export PKGNAME=libXmu
+    export PKGVER=1.1.2
+  ;;
+  buildlibXpm )
+    export PKGNAME=libXpm
+    export PKGVER=3.5.11
+  ;;
+  buildlibXpresent )
+    export PKGNAME=libXpresent
+    export PKGVER=1.0.0
+  ;;
+  buildlibXrandr )
+    export PKGNAME=libXrandr
+    export PKGVER=1.5.1
+  ;;
+  buildlibXrender )
+    export PKGNAME=libXrender
+    export PKGVER=0.9.10
+  ;;
+  buildlibXres )
+    export PKGNAME=libXres
+    export PKGVER=1.0.7
+  ;;
+  buildlibXScrnSaver )
+    export PKGNAME=libXScrnSaver
+    export PKGVER=1.2.2
+  ;;
+  buildlibxshmfence )
+    export PKGNAME=libxshmfence
+    export PKGVER=1.2
+  ;;
+  buildlibXt )
+    export PKGNAME=libXt
+    export PKGVER=1.1.5
+  ;;
+  buildlibXtst )
+    export PKGNAME=libXtst
+    export PKGVER=1.2.3
+    make_install_post() {
+      find ${DEST}/usr/share/man -type f -name '*.[[:digit:]]' -exec sed -ri '1s|^\.so (.*)\.([0-9]+)|.so man\2/\1.\2|' {} +
+    }
+  ;;
+  buildlibXv )
+    export PKGNAME=libXv
+    export PKGVER=1.0.11
+  ;;
+  buildlibXvMC )
+    export PKGNAME=libXvMC
+    export PKGVER=1.0.10
+  ;;
+  buildlibXxf86dga )
+    export PKGNAME=libXxf86dga
+    export PKGVER=1.1.4
+  ;;
+  buildlibXxf86vm )
+    export PKGNAME=libXxf86vm
+    export PKGVER=1.1.4
+  ;;
+  buildxorg-lib )
+    export PKG_AUTO_INSTALL=1
+
+    $(dirname $0)/buildlibXau
+    $(dirname $0)/buildlibXdmcp
+    $(dirname $0)/buildlibxcb
+    $(dirname $0)/buildlibX11
+    $(dirname $0)/buildlibXext
+    $(dirname $0)/buildlibFS
+    $(dirname $0)/buildlibICE
+    $(dirname $0)/buildlibSM
+    $(dirname $0)/buildlibXScrnSaver
+    $(dirname $0)/buildlibXt
+    $(dirname $0)/buildlibXmu
+    $(dirname $0)/buildlibXpm
+    $(dirname $0)/buildlibXaw
+    $(dirname $0)/buildlibXfixes
+    $(dirname $0)/buildlibXcomposite
+    $(dirname $0)/buildlibXrender
+    $(dirname $0)/buildlibXcursor
+    $(dirname $0)/buildlibXdamage
+    $(dirname $0)/buildlibfontenc
+    $(dirname $0)/buildlibXfont
+    $(dirname $0)/buildlibXfont2
+    $(dirname $0)/buildlibXft
+    $(dirname $0)/buildlibXi
+    $(dirname $0)/buildlibXinerama
+    $(dirname $0)/buildlibXrandr
+    $(dirname $0)/buildlibXpresent
+    $(dirname $0)/buildlibXres
+    $(dirname $0)/buildlibXtst
+    $(dirname $0)/buildlibXv
+    $(dirname $0)/buildlibXvMC
+    $(dirname $0)/buildlibXxf86dga
+    $(dirname $0)/buildlibXxf86vm
+    $(dirname $0)/buildlibdmx
+    $(dirname $0)/buildlibpciaccess
+    $(dirname $0)/buildlibxkbfile
+    $(dirname $0)/buildlibxshmfence
+
+    find /binary/xorg/lib -name "INSTALL" -exec grep -rl "exit 0" {} \; | while read f ; do head --lines -2 ${f} > ${f}.new ; mv ${f}.new ${f} ; chmod 755 ${f} ; done
+
+    exit 0
+  ;;
+esac
+
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export DEST=/binary/xorg/lib/${PKGNAME}-${PKGVER}
+
+if [ -z ${PKGURL} ]
+then
+  export PKGURL="https://www.x.org/releases/individual/lib/${PKGTAR}"
+fi
+
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,57 @@
+#!/bin/bash -e
+
+export PKGVER=1.10.2
+export MAKE_JOBS_FLAGS="-j4"
+export USER_CXXFLAGS="-std=c++11"
+
+case $(basename $0) in
+  buildgst-libav )
+    export PKGNAME=gst-libav
+    export MODULE=" Libav Plugins"
+  ;;
+  buildgst-plugins-bad )
+    export PKGNAME=gst-plugins-bad
+    export MODULE=" Bad Plugins"
+  ;;
+  buildgst-plugins-base )
+    export PKGNAME=gst-plugins-base
+    export MODULE=" Base Plugins"
+    export MULTILIB_BUILD=1
+  ;;
+  buildgst-plugins-good )
+    export PKGNAME=gst-plugins-good
+    export MODULE=" Good Plugins"
+  ;;
+  buildgst-plugins-ugly )
+    export PKGNAME=gst-plugins-ugly
+    export MODULE=" Ugly Plugins"
+  ;;
+  buildgstreamer )
+    export PKGNAME=gstreamer
+    export MULTILIB_BUILD=1
+  ;;
+  buildgstreamer-vaapi )
+    export PKGNAME=gstreamer-vaapi
+    export MODULE=" VAAPI Plugins"
+  ;;
+esac
+
+export EXTRA_ARGS=(--with-package-name="GStreamer${MODULE} ${PKGVER} BLFS"
+                   --with-package-origin="http://www.linuxfromscratch.org/blfs/view/systemd/")
+
+if [ ${PKGNAME} == "gst-libav" ]
+then
+  EXTRA_ARGS+=(--with-system-libav)
+fi
+
+export CONFIGURE_FLAGS=(--libexecdir=/usr/lib "${EXTRA_ARGS[@]}")
+export CONFIGURE_FLAGS_32=(--libexecdir=/usr/lib32
+                           --disable-examples
+                           --disable-introspection
+                           "${EXTRA_ARGS[@]}")
+
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="https://gstreamer.freedesktop.org/src/${PKGNAME}/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
+
+. $(dirname $0)/master.sh

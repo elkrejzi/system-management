@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+export PKGNAME=alsa-plugins
+export PKGVER=1.1.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
+export PKGURL="ftp://ftp.alsa-project.org/pub/plugins/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS_32=(--disable-avcodec)
+
+. $(dirname $0)/master.sh

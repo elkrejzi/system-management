@@ -1,0 +1,28 @@
+#!/bin/bash -e
+
+export PKGNAME=libunwind
+export PKGVER=1.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://download.savannah.gnu.org/releases/libunwind/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS_32=(--build=i686-pc-linux-gnu)
+
+configure_pre() {
+  sed -i "/LIBCRTS/s#-lgcc##g" configure
+}
+
+configure_pre_32() {
+  sed -i "/LIBCRTS/s#-lgcc##g" configure
+}
+
+make_install_post() {
+  rm -rf ${DEST}/usr/lib/libunwind-generic.a
+}
+
+make_install_post_32() {
+  rm -rf ${DEST}/usr/lib32/libunwind-generic.a
+  mv dest/usr/include/libunwind-x86.h ${DEST}/usr/include
+}
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,26 @@
+#!/bin/bash -e
+
+export PKGNAME=zlib
+export PKGVER=1.2.8
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://zlib.net/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+
+configure_override() {
+  ./configure --prefix=/usr
+}
+
+configure_override_32() {
+  ./configure --prefix=/usr --libdir=/usr/lib32
+}
+
+post_install_config() {
+  install -dm755 ${DEST}/lib
+  mv ${DEST}/usr/lib/libz.so.* ${DEST}/lib
+  ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libz.so) ${DEST}/usr/lib/libz.so
+
+  rm -rf ${DEST}/usr/*/*.a
+}
+
+. $(dirname $0)/master.sh

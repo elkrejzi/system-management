@@ -1,0 +1,163 @@
+#!/bin/bash -e
+
+export MAKE_JOBS_FLAGS="-j4"
+
+case $(basename $0) in
+  buildatk )
+    export PKGNAME=atk
+    export PKGVER=2.22.0
+    export DEST=/binary/${PKGNAME}-${PKGVER}
+  ;;
+  buildat-spi2-atk )
+    export PKGNAME=at-spi2-atk
+    export PKGVER=2.22.0
+  ;;
+  buildat-spi2-core )
+    export PKGNAME=at-spi2-core
+    export PKGVER=2.22.0
+  ;;
+  buildcairo )
+    export PKGNAME=cairo
+    export PKGVER=1.14.6
+    export DEST=/binary/${PKGNAME}-${PKGVER}
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="https://www.cairographics.org/releases/${PKGTAR}"
+    export MULTILIB_BUILD=1
+    export CONFIGURE_FLAGS=(--enable-tee)
+    export CONFIGURE_FLAGS_32=(--enable-tee)
+    configure_post_32() {
+      sed -i "/DIST_SUBDIRS/s:boilerplate test::" Makefile
+      sed -i "/am__append_1/s:boilerplate test::" Makefile
+    }
+  ;;
+  buildclutter )
+    export PKGNAME=clutter
+    export PKGVER=1.26.0
+    export CONFIGURE_FLAGS=(--enable-egl-backend
+                            --enable-gdk-backend
+                            --enable-wayland-backend
+                            --enable-wayland-compositor
+                            --enable-x11-backend
+                            --enable-evdev-input)
+    configure_pre() {
+      sed -i "/int main (void)/d" configure
+    }
+  ;;
+  buildclutter-gst )
+    export PKGNAME=clutter-gst
+    export PKGVER=3.0.20
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
+  ;;
+  buildclutter-gtk )
+    export PKGNAME=clutter-gtk
+    export PKGVER=1.8.2
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+    export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
+  ;;
+  buildcogl )
+    export PKGNAME=cogl
+    export PKGVER=1.22.2
+    export CONFIGURE_FLAGS=(--enable-gles1
+                            --enable-gles2
+                            --enable-wayland-egl-server
+                            --enable-wayland-egl-platform
+                            --enable-kms-egl-platform
+                            --enable-xlib-egl-platform
+                            --disable-maintainer-flags)
+  ;;
+  buildgdk-pixbuf )
+    export PKGNAME=gdk-pixbuf
+    export PKGVER=2.36.0
+    export DEST=/binary/${PKGNAME}-${PKGVER}
+    export CONFIGURE_FLAGS=(--with-x11 --with-libjasper)
+    export SPACE_ADDED=1
+    export POSTINST_TRIGGER=("[ -x /usr/bin/gdk-pixbuf-query-loaders ] && echo \"Processing triggers for gdk-pixbuf-2.0\" && /usr/bin/gdk-pixbuf-query-loaders --update-cache")
+  ;;
+  buildglib2 )
+    export PKGNAME=glib
+    export PKGVER=2.50.2
+    export DEST=/binary/${PKGNAME}-${PKGVER}
+    export KEEP_EMPTY_DIRS=1
+    export MULTILIB_BUILD=1
+    export PATCHES_LIST=("glib-compile-schemas-quiet.patch")
+    export CONFIGURE_FLAGS=(--with-pcre=system --with-python=/usr/bin/python3)
+    export CONFIGURE_FLAGS_32=(--with-pcre=system)
+    make_install_post() {
+      rm -rf ${DEST}/usr/share/gdb
+      install -dm755 ${DEST}/lib
+      mv ${DEST}/usr/lib/libglib-2.0.so.* ${DEST}/lib
+      ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libglib-2.0.so) ${DEST}/usr/lib/libglib-2.0.so
+    }
+    make_install_post_32() {
+      mv dest/usr/bin/gio-querymodules ${DEST}/usr/bin/gio-querymodules-32
+    }
+  ;;
+  buildgobject-introspection )
+    export PKGNAME=gobject-introspection
+    export PKGVER=1.50.0
+    export PYTHON=python3
+  ;;
+  buildgtk2 )
+    export PKGNAME=gtk+
+    export PKGVER=2.24.31
+    export DEST=/binary/${PKGNAME}-${PKGVER}
+    export CONFIGURE_FLAGS=(--enable-man)
+    export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-query-immodules-2.0 ] && echo \"Processing triggers for gtk-2.0\" && /usr/bin/gtk-query-immodules-2.0 --update-cache")
+    export SPACE_ADDED=1
+    configure_pre() {
+      sed -i 's#l \(gtk-.*\).sgml#& -o \1#' docs/{faq,tutorial}/Makefile.in
+    }
+    make_install_post() {
+      rm -rf ${DEST}/usr/bin/gtk-update-icon-cache ${DEST}/usr/share/man/man1/gtk-update-icon-cache.1
+
+cat > ${DEST}/usr/share/gtk-2.0/gtkrc << "EOF"
+gtk-icon-theme-name = "Adwaita"
+gtk-theme-name = "Adwaita"
+gtk-font-name = "Cantarell 11"
+EOF
+    }
+  ;;
+  buildgtk3 )
+    export PKGNAME=gtk+
+    export PKGVER=3.22.4
+    export CONFIGURE_FLAGS=(--enable-broadway-backend --enable-wayland-backend --enable-x11-backend --enable-man)
+    export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-query-immodules-3.0 ] && echo \"Processing triggers for gtk-3.0\" && /usr/bin/gtk-query-immodules-3.0 --update-cache")
+    export SPACE_ADDED=1
+    make_install_post() {
+      rm -f ${DEST}/usr/share/man/man1/gtk3-*
+
+cat > ${DEST}/usr/share/gtk-3.0/settings.ini << "EOF"
+[Settings]
+gtk-icon-theme-name = Adwaita
+gtk-theme-name = Adwaita
+gtk-font-name = Cantarell 11
+EOF
+    }
+  ;;
+  buildpango )
+    export PKGNAME=pango
+    export PKGVER=1.40.3
+    export DEST=/binary/${PKGNAME}-${PKGVER}
+    export MULTILIB_BUILD=1
+    export CONFIGURE_FLAGS_32=(--disable-introspection)
+  ;;
+  buildvala )
+    export PKGNAME=vala
+    export PKGVER=0.34.3
+  ;;
+esac
+
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+
+if [ -z ${DEST} ]
+then
+  export DEST=/binary/gnome/${PKGNAME}-${PKGVER}
+fi
+
+if [ -z ${PKGURL} ]
+then
+  export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:4}/${PKGTAR}"
+fi
+
+. $(dirname $0)/master.sh

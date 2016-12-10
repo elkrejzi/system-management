@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+export PKGNAME=libtheora
+export PKGVER=1.1.1
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
+export PKGURL="http://downloads.xiph.org/releases/theora/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS=(--disable-examples --disable-sdltest)
+export CONFIGURE_FLAGS_32=(--disable-asm --disable-examples --disable-sdltest)
+
+. $(dirname $0)/master.sh

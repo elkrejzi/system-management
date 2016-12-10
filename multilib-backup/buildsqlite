@@ -1,0 +1,36 @@
+#!/bin/bash -e
+
+export PKGNAME=sqlite
+export PKGVER=3.15.2
+export PKGDLVER=3150200
+export PKGTAR=${PKGNAME}-autoconf-${PKGDLVER}.tar.gz
+export PKGDIR=${PKGNAME}-autoconf-${PKGDLVER}
+export PKGURL="http://sqlite.org/2016/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+
+export USER_CFLAGS="-DSQLITE_ENABLE_FTS3=1            \
+                    -DSQLITE_ENABLE_FTS5=1            \
+                    -DSQLITE_ENABLE_COLUMN_METADATA=1 \
+                    -DSQLITE_ENABLE_UNLOCK_NOTIFY=1   \
+                    -DSQLITE_ENABLE_DBSTAT_VTAB=1     \
+                    -DSQLITE_ENABLE_FTS3_TOKENIZER=1  \
+                    -DSQLITE_SECURE_DELETE=1"
+
+export CONFIGURE_FLAGS=(--enable-fts5)
+export CONFIGURE_FLAGS_32=(--enable-fts5)
+
+make_install_post() {
+  pushd tea
+
+  ./configure --prefix=/usr        \
+              --with-system-sqlite \
+              --with-tcl=/usr/lib
+
+  make
+  make install DESTDIR=${DEST}
+
+  popd
+}
+
+. $(dirname $0)/master.sh

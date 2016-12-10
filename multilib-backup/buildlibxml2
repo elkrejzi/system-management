@@ -1,0 +1,16 @@
+#!/bin/bash -e
+
+export PKGNAME=libxml2
+export PKGVER=2.9.4
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://xmlsoft.org/sources/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS=(--with-history)
+export CONFIGURE_FLAGS_32=(--with-history --without-python)
+
+make_install_post_32() {
+  rm -rf ${DEST}/usr/lib32/xml2Conf.sh
+}
+
+. $(dirname $0)/master.sh

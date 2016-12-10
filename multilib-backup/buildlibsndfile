@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+export PKGNAME=libsndfile
+export PKGVER=1.0.27
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://www.mega-nerd.com/libsndfile/files/${PKGTAR}"
+export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
+export MAKE_JOBS_FLAGS="-j4"
+export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done")
+export MULTILIB_BUILD=1
+
+. $(dirname $0)/master.sh

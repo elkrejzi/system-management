@@ -1,0 +1,30 @@
+#!/bin/bash -e
+
+export PKGNAME=dbus
+export PKGVER=1.10.14
+export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+export PKGURL="http://dbus.freedesktop.org/releases/dbus/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export KEEP_EMPTY_DIRS=1
+export MULTILIB_BUILD=1
+
+export POSTINST_TRIGGER=("chgrp messagebus /usr/libexec/dbus-daemon-launch-helper"
+                         "chmod 4754 /usr/libexec/dbus-daemon-launch-helper")
+
+export CONFIGURE_FLAGS_EXTRA=(--enable-systemd
+                              --enable-user-session
+                              --with-console-auth-dir=/run/console/)
+
+export CONFIGURE_FLAGS=("${CONFIGURE_FLAGS_EXTRA[@]}" --with-systemdsystemunitdir=/lib/systemd/system)
+export CONFIGURE_FLAGS_32=("${CONFIGURE_FLAGS_EXTRA[@]}" --without-x)
+
+make_install_post() {
+  rm -rf ${DEST}/var/run
+
+  mv ${DEST}/usr/lib/libdbus-1.so.* ${DEST}/lib
+  ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libdbus-1.so) ${DEST}/usr/lib/libdbus-1.so
+
+  ln -sf /etc/machine-id ${DEST}/var/lib/dbus
+}
+
+. $(dirname $0)/master.sh

@@ -1,0 +1,24 @@
+#!/bin/bash -e
+
+export PKGNAME=acl
+export PKGVER=2.2.52
+export PKGTAR=${PKGNAME}-${PKGVER}.src.tar.gz
+export PKGURL="http://download.savannah.gnu.org/releases/acl/${PKGTAR}"
+export MAKE_JOBS_FLAGS="-j4"
+export MULTILIB_BUILD=1
+export CONFIGURE_FLAGS=(--libexecdir=/usr/lib)
+export CONFIGURE_FLAGS_32=(--libexecdir=/usr/lib32)
+export MAKE_FLAGS="OPTIMIZER="
+export MAKE_FLAGS_32="OPTIMIZER="
+export MAKE_INSTALL_FLAGS="install-dev install-lib DIST_ROOT=\${DEST}"
+export MAKE_INSTALL_FLAGS_32="install-dev install-lib DIST_ROOT=\${PWD}/dest"
+
+make_install_post() {
+  install -dm755 ${DEST}/lib
+  mv ${DEST}/usr/lib/libacl.so.* ${DEST}/lib
+  ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libacl.so) ${DEST}/usr/lib/libacl.so
+
+  rm -rf ${DEST}/usr/*/*.a
+}
+
+. $(dirname $0)/master.sh

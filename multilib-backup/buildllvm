@@ -1,0 +1,288 @@
+#!/bin/bash -e
+
+export PKGNAME=llvm
+export PKGVER=3.9.0
+
+#export LLVM_RELEASE_BRANCH=""
+
+proj=(
+  cfe
+  clang-tools-extra
+  compiler-rt
+  libcxx
+  libcxxabi
+  libunwind
+  #lld Broken: https://llvm.org/bugs/show_bug.cgi?id=27590
+  lldb
+  openmp
+  polly
+)
+
+prepare_src_common() {
+  if [ ${f} == "cfe" ]
+  then
+    PKGDIR=cfe patch_apply clang-runtime.patch
+
+    mv ${f} ${PKGDIR}/tools/clang
+  elif [ ${f} == "clang-tools-extra" ]
+  then
+    mv ${f} ${PKGDIR}/tools/clang/tools/extra
+  elif [ ${f} == "lld" ] || [ ${f} == "lldb" ] || [ ${f} == "polly" ]
+  then
+    mv ${f} ${PKGDIR}/tools
+  elif [ ${f} != "cfe" ] && [ ${f} != "clang-tools-extra" ] && [ ${f} != "llvm" ]
+  then
+    if [ ${f} == "openmp" ]
+    then
+      sed -i "/LIBOMP_ALIASES/s#libgomp;##g" ${f}/runtime/src/CMakeLists.txt
+    fi
+
+    if [ ${f} == "libcxx" ]
+    then
+      sed -i "s:gcc_s:compiler-rt:g" ${f}/cmake/config-ix.cmake ${f}/lib/CMakeLists.txt
+    fi
+
+    mv ${f} ${PKGDIR}/projects
+  fi
+
+  if [ ! -e ${PKGDIR}/crtbegin-i386.S ] || [ ! -e ${PKGDIR}/crtend-i386.S ] ||
+     [ ! -e ${PKGDIR}/crtbegin-x86_64.S ] || [ ! -e ${PKGDIR}/crtend-x86_64.S ] ||
+     [ ! -e ${PKGDIR}/crtfastmath-i386.c ] || [ ! -e ${PKGDIR}/crtfastmath-x86_64.c ]
+  then
+    for arch in i386 x86_64
+    do
+      wget -O - http://ftp.netbsd.org/pub/NetBSD/NetBSD-current/src/lib/csu/arch/${arch}/crtbegin.S | sed "/asm.h/d;/RCSID/d" > ${PKGDIR}/crtbegin-${arch}.S
+      wget -O - http://ftp.netbsd.org/pub/NetBSD/NetBSD-current/src/lib/csu/arch/${arch}/crtend.S | sed "/asm.h/d;/RCSID/d" > ${PKGDIR}/crtend-${arch}.S
+      wget "https://gcc.gnu.org/viewcvs/gcc/trunk/libgcc/config/i386/crtfastmath.c?revision=232055&view=co" -O ${PKGDIR}/crtfastmath-${arch}.c
+    done
+  fi
+}
+
+if [ "$(basename $0)" == "buildllvm-svn" ]
+then
+  export PKGDIR=${PKGNAME}
+
+  prepare_src_override() {
+    if [ ${MULTILIB} == 0 ]
+    then
+      if [ -e ${PKGDIR} ] || [ -e ${PKGBUILD} ]
+      then
+        if [ -z ${RECURSIVE_CALL} ]
+        then
+          echo "Warning: Old source and/or build dir exists. Removing."
+          rm -rf ${PKGDIR} ${PKGBUILD}
+        fi
+      fi
+
+      for f in ${PKGNAME} ${proj[@]}
+      do
+        if [ -e git/${f}.tar.xz ] && [ -z ${LLVM_RELEASE_BRANCH} ]
+        then
+          tar xf git/${f}.tar.xz
+          pushd ${f}
+            svn up
+          popd
+        else
+	  if [ ! -z ${LLVM_RELEASE_BRANCH} ]
+          then
+            svn co https://llvm.org/svn/llvm-project/${f}/branches/${LLVM_RELEASE_BRANCH} ${f}
+          else
+            svn co https://llvm.org/svn/llvm-project/${f}/trunk ${f}
+          fi
+        fi
+
+        prepare_src_common
+      done
+
+      pushd ${PKGDIR}
+        export PKGVER=$(grep LLVM_VERSION CMakeLists.txt | grep -o [0-9] | tr "\n" ".")"svn"$(svnversion)
+      popd
+
+      if [ -z ${DEST_SET} ]
+      then
+        export DEST=/binary/${PKGNAME}-${PKGVER}
+        export DEST_SET=1
+      fi
+
+      if [ -e ${DEST} ] || [ -e ${DEST}-debug ]
+      then
+        if [ ${PKG_BUILDING} != 1 ]
+        then
+          echo "Warning: Old package installation dir exits. Removing."
+          rm -rf ${DEST} ${DEST}-debug
+        fi
+      fi
+
+      export PKG_BUILDING=1
+
+      cp -a ${PKGDIR} ${PKGDIR}-checkout
+    else
+      mv ${PKGDIR}-checkout ${PKGDIR}
+    fi
+
+    install -dm755 ${PKGBUILD}
+  }
+else
+  export PKGTAR=${PKGNAME}-${PKGVER}.src.tar.xz
+  export PKGURL="http://llvm.org/releases/${PKGVER}/${PKGTAR}"
+  export PKGDIR=${PKGNAME}-${PKGVER}.src
+
+  post_extract_action() {
+    if [ -z ${POST_PREPARE} ]
+    then
+      export POST_PREPARE=1
+      export RECURSIVE_CALL=1
+      for f in ${proj[@]}
+      do
+        PKGURL="http://llvm.org/releases/${PKGVER}/${f}-${PKGVER}.src.tar.xz" \
+        CMAKE_BUILD=0 prepare_src ${f}-${PKGVER}.src.tar.xz
+
+        if [ -d ${f}-${PKGVER}.src ]
+        then
+          mv ${f}-${PKGVER}.src ${f}
+        fi
+
+        prepare_src_common
+
+      done
+    fi
+  }
+fi
+
+export MAKE_JOBS_FLAGS="-j4"
+export CMAKE_BUILD=1
+export MULTILIB_BUILD=1
+
+export SHARED_FLAGS=(-DCLANG_DEFAULT_CXX_STDLIB=libc++
+                     -DCLANG_DEFAULT_OPENMP_RUNTIME=libomp
+                     -DCLANG_INCLUDE_TESTS=OFF
+                     -DCOMPILER_RT_INCLUDE_TESTS=OFF
+                     -DLLVM_BUILD_LLVM_DYLIB=ON
+                     -DLLVM_ENABLE_DOXYGEN=OFF
+                     -DLLVM_ENABLE_FFI=ON
+                     -DLLVM_ENABLE_LIBCXXABI=ON
+                     -DLLVM_ENABLE_RTTI=ON
+                     -DLLVM_INCLUDE_EXAMPLES=OFF
+                     -DLLVM_INCLUDE_TESTS=OFF
+                     -DLLVM_LINK_LLVM_DYLIB=ON
+                     -DLIBCXX_ENABLE_ASSERTIONS=OFF
+                     -DLIBCXX_INCLUDE_DOCS=OFF
+                     -DLIBCXX_INCLUDE_TESTS=OFF
+                     -DLIBCXXABI_ENABLE_ASSERTIONS=OFF
+                     -DLIBCXXABI_ENABLE_STATIC=OFF
+                     -DLIBCXXABI_USE_LLVM_UNWINDER=ON
+                     -DLIBUNWIND_ENABLE_ASSERTIONS=OFF
+                     -DLIBUNWIND_ENABLE_SHARED=OFF
+                     -DLLVM_TARGETS_TO_BUILD="AMDGPU;X86"
+                     -DLLVM_BINUTILS_INCDIR=/usr/include)
+
+export CMAKE_FLAGS=("${SHARED_FLAGS[@]}"
+                    -DLLVM_BUILD_DOCS=ON
+                    -DLLVM_ENABLE_SPHINX=ON
+                    -DSPHINX_OUTPUT_HTML=OFF
+                    -DSPHINX_WARNINGS_AS_ERRORS=OFF)
+
+export CMAKE_FLAGS_32=("${SHARED_FLAGS[@]}"
+                       -DCLANG_INCLUDE_DOCS=OFF
+                       -DLLVM_LIBDIR_SUFFIX=32
+                       -DLLVM_TARGET_ARCH=i686
+                       -DLIBCXX_INCLUDE_DOCS=OFF
+                       -DFFI_LIBRARY_DIR=/usr/lib32
+                       -DLLVM_DEFAULT_TARGET_TRIPLE=i686-pc-linux-gnu)
+
+configure_pre() {
+  unset POST_PREPARE RECURSIVE_CALL
+}
+
+configure_pre_32() {
+  rm -rf ../${PKGDIR}/tools/{lld,lldb}
+  rm -rf ../${PKGDIR}/tools/clang/tools/extra
+}
+
+make_install_post() {
+  for arch in i386 x86_64
+  do
+    CCARGS=""
+
+    if [ ${arch} == "i386" ]
+    then
+      CCARGS="-m32"
+    fi
+
+    install -dm755 ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch} ${DEST}/usr/lib/clang/${PKGVER%.svn*}/lib/linux/${arch}
+
+    clang ${CCARGS} -g -O2 -fno-stack-protector -fpic -c ../${PKGDIR}/crtbegin-${arch}.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/crtbegin.o
+    clang ${CCARGS} -g -O2 -fno-stack-protector -fpic -DSHARED -c ../${PKGDIR}/crtbegin-${arch}.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/crtbeginS.o
+    clang ${CCARGS} -g -O2 -fno-stack-protector -fpic -c ../${PKGDIR}/crtend-${arch}.S -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/crtend.o
+
+    clang ${CCARGS} -g -O2 -fno-stack-protector -fpic -c ../${PKGDIR}/crtfastmath-${arch}.c -o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/crtfastmath.o
+
+    ln -sf crtbegin.o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/crtbeginT.o
+    ln -sf crtend.o ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/crtendS.o
+
+    mv ${DEST}/usr/lib/clang/${PKGVER%.svn*}/lib/linux/libclang_rt.builtins-${arch}.a ${DEST}/usr/lib/clang/${PKGVER%.svn*}/lib/linux/${arch}/
+
+cat > ${DEST}/usr/lib/clang/${PKGVER%.svn*}/lib/linux/libclang_rt.builtins-${arch}.a << EOF
+INPUT ( /usr/lib/clang/${PKGVER%.svn*}/lib/linux/${arch}/libclang_rt.builtins-${arch}.a AS_NEEDED ( /usr/lib/clang/${PKGVER%.svn*}/lib/linux/${arch}/libunwind.a -lpthread -ldl -lm ) )
+EOF
+
+    ln -sf ../lib/linux/libclang_rt.builtins-${arch}.a ${DEST}/usr/lib/clang/${PKGVER%.svn*}/${arch}/libcompiler-rt.a
+  done
+
+  install -dm755 ${DEST}/usr/lib/bfd-plugins
+  ln -sf ../LLVMgold.so ${DEST}/usr/lib/bfd-plugins/LLVMgold.so
+
+  mv ${DEST}/usr/include/llvm/Config/llvm-config.h ${DEST}/usr/include/llvm/Config/llvm-config-64.h
+
+cat > ${DEST}/usr/include/llvm/Config/llvm-config.h << "EOF"
+#include <bits/wordsize.h>
+
+#if __WORDSIZE == 32
+#include "llvm-config-32.h"
+#elif __WORDSIZE == 64
+#include "llvm-config-64.h"
+#else
+#error "Unknown word size"
+#endif
+EOF
+
+  install -m644 ../${PKGDIR}/tools/lldb/docs/lldb.1 ${DEST}/usr/share/man/man1/lldb.1
+
+  cp -r ../${PKGDIR}/tools/clang/bindings/python/clang ${DEST}/usr/lib/python2.7/site-packages
+
+  python -m compileall ${DEST}/usr/share/scan-view
+  python -O -m compileall ${DEST}/usr/share/scan-view
+
+  python -m compileall ${DEST}/usr/lib/python2.7/site-packages/clang
+  python -O -m compileall ${DEST}/usr/lib/python2.7/site-packages/clang
+
+  python -m compileall ${DEST}/usr/lib/python2.7/site-packages/lldb
+  python -O -m compileall ${DEST}/usr/lib/python2.7/site-packages/lldb
+}
+
+make_install_post_32() {
+  mv dest/usr/bin/llvm-config ${DEST}/usr/bin/llvm-config32
+  mv dest/usr/include/llvm/Config/llvm-config.h ${DEST}/usr/include/llvm/Config/llvm-config-32.h
+
+  install -dm755 ${DEST}/usr/lib32/bfd-plugins
+  ln -sf ../LLVMgold.so ${DEST}/usr/lib32/bfd-plugins/LLVMgold.so
+}
+
+post_install_config() {
+  remove_rpath
+
+  for arch in i386 x86_64
+  do
+    LIB="lib"
+
+    if [ ${arch} == "i386" ]
+    then
+      LIB="lib32"
+    fi
+
+    mv ${DEST}/usr/${LIB}/libunwind.a ${DEST}/usr/lib/clang/${PKGVER%.svn*}/lib/linux/${arch}/libunwind.a
+  done
+
+}
+
+. $(dirname $0)/master.sh
