@@ -1,12 +1,6 @@
 #!/bin/bash -e
 
 case $(basename $0) in
-  buildxf86-input-evdev )
-    export PKGNAME=xf86-input-evdev
-    export PKGVER=2.10.4
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
-    export PKGURL="https://www.x.org/releases/individual/driver/${PKGTAR}"
-  ;;
   buildxf86-input-libinput )
     export PKGNAME=xf86-input-libinput
     export PKGVER=0.22.0
@@ -16,15 +10,9 @@ case $(basename $0) in
       mv ${DEST}/usr/share/X11/xorg.conf.d/40-libinput.conf ${DEST}/usr/share/X11/xorg.conf.d/60-libinput.conf
     }
   ;;
-  buildxf86-input-synaptics )
-    export PKGNAME=xf86-input-synaptics
-    export PKGVER=1.9.0
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
-    export PKGURL="https://www.x.org/releases/individual/driver/${PKGTAR}"
-  ;;
   buildxf86-input-wacom )
     export PKGNAME=xf86-input-wacom
-    export PKGVER=0.33.0
+    export PKGVER=0.34.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="https://downloads.sourceforge.net/linuxwacom/${PKGTAR}"
     export CONFIGURE_FLAGS=(--with-udev-rules-dir=/lib/udev/rules.d
@@ -50,9 +38,7 @@ case $(basename $0) in
   buildxorg-drivers )
     export PKG_AUTO_INSTALL=1
 
-    $(dirname $0)/buildxf86-input-evdev
     $(dirname $0)/buildxf86-input-libinput
-    $(dirname $0)/buildxf86-input-synaptics
     $(dirname $0)/buildxf86-input-wacom
     $(dirname $0)/buildxf86-video-amdgpu
     $(dirname $0)/buildxf86-video-intel

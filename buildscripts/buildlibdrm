@@ -5,17 +5,9 @@ export PKGVER=2.4.74
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://dri.freedesktop.org/libdrm/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export DEBUG_BUILD=1
-export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--enable-udev --disable-valgrind)
-export CONFIGURE_FLAGS_32=(--enable-udev --disable-valgrind)
 
 configure_pre() {
-  sed -e "/pthread-stubs/d" -i configure.ac
-  autoreconf -fi
-}
-
-configure_pre_32() {
   sed -e "/pthread-stubs/d" -i configure.ac
   autoreconf -fi
 }

@@ -132,7 +132,6 @@ $(dirname $0)/buildwebrtc-audio-processing
 $(dirname $0)/buildpulseaudio
 $(dirname $0)/buildportaudio
 $(dirname $0)/buildopenal-soft
-$(dirname $0)/buildSDL
 $(dirname $0)/buildSDL2
 $(dirname $0)/buildmpg123
 $(dirname $0)/buildlibproxy
@@ -213,7 +212,6 @@ $(dirname $0)/buildgstreamer-vaapi
 $(dirname $0)/buildlibassuan
 $(dirname $0)/buildlibksba
 $(dirname $0)/buildnpth
-$(dirname $0)/buildpkcs11-helper
 $(dirname $0)/buildpth
 $(dirname $0)/buildgnupg
 $(dirname $0)/buildgcr
@@ -222,9 +220,6 @@ $(dirname $0)/buildopenssh
 $(dirname $0)/buildpinentry
 $(dirname $0)/buildmedia-player-info
 $(dirname $0)/buildmobile-broadband-provider-info
-$(dirname $0)/buildlibplist
-$(dirname $0)/buildlibusbmuxd
-$(dirname $0)/buildlibimobiledevice
 $(dirname $0)/buildlibatasmart
 $(dirname $0)/buildlm_sensors
 $(dirname $0)/buildmozjs24
@@ -244,12 +239,7 @@ $(dirname $0)/buildthunderbird-upstream
 $(dirname $0)/buildudisks
 $(dirname $0)/buildupower
 $(dirname $0)/buildxorg-server
-$(dirname $0)/buildxf86-input-evdev
-$(dirname $0)/buildxf86-input-libinput
-$(dirname $0)/buildxf86-input-synaptics
-$(dirname $0)/buildxf86-input-wacom
-$(dirname $0)/buildxf86-video-amdgpu
-$(dirname $0)/buildxf86-video-intel
+$(dirname $0)/buildxorg-drivrs
 $(dirname $0)/buildweston
 
 pushd /binary/avahi-[0-9]*

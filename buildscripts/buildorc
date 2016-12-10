@@ -5,15 +5,9 @@ export PKGVER=0.4.26
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://gstreamer.freedesktop.org/src/orc/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
 
 configure_post() {
   sed "/SUBDIRS/s:testsuite::" -i Makefile
 }
-
-configure_post_32() {
-  sed "/SUBDIRS/s:testsuite::" -i Makefile
-}
-
 
 . $(dirname $0)/master.sh

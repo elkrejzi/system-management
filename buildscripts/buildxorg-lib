@@ -43,13 +43,7 @@ case $(basename $0) in
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="https://www.x.org/releases/individual/xcb/${PKGTAR}"
     export CONFIGURE_FLAGS=(--disable-devel-docs)
-    export CONFIGURE_FLAGS_32=(--disable-devel-docs)
-
     configure_pre() {
-      sed -e "s/pthread-stubs//" -i configure.ac
-      autoreconf -fi
-    }
-    configure_pre_32() {
       sed -e "s/pthread-stubs//" -i configure.ac
       autoreconf -fi
     }
@@ -77,10 +71,6 @@ case $(basename $0) in
   buildlibXfixes )
     export PKGNAME=libXfixes
     export PKGVER=5.0.3
-  ;;
-  buildlibXfont )
-    export PKGNAME=libXfont
-    export PKGVER=1.5.2
   ;;
   buildlibXfont2 )
     export PKGNAME=libXfont2
@@ -183,7 +173,6 @@ case $(basename $0) in
     $(dirname $0)/buildlibXcursor
     $(dirname $0)/buildlibXdamage
     $(dirname $0)/buildlibfontenc
-    $(dirname $0)/buildlibXfont
     $(dirname $0)/buildlibXfont2
     $(dirname $0)/buildlibXft
     $(dirname $0)/buildlibXi
@@ -216,6 +205,5 @@ then
 fi
 
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
 
 . $(dirname $0)/master.sh

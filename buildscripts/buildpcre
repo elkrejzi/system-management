@@ -5,19 +5,13 @@ export PKGVER=8.39
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="https://downloads.sourceforge.net/pcre/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
-
 export CONFIGURE_FLAGS_SHARED=(--enable-unicode-properties
                                --enable-pcre16
                                --enable-pcre32
-                               --enable-jit)
-
-export CONFIGURE_FLAGS=("${CONFIGURE_FLAGS_SHARED[@]}"
-                        --enable-pcregrep-libz
-                        --enable-pcregrep-libbz2
-                        --enable-pcretest-libreadline)
-
-export CONFIGURE_FLAGS_32=("${CONFIGURE_FLAGS_SHARED[@]}")
+                               --enable-jit
+                               --enable-pcregrep-libz
+                               --enable-pcregrep-libbz2
+                               --enable-pcretest-libreadline)
 
 make_install_post() {
   install -dm755 ${DEST}/lib

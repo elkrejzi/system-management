@@ -5,7 +5,7 @@ export PKGVER=1.2.56
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://downloads.sourceforge.net/libpng/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
+#export MULTILIB_BUILD=1
 
 make_override() {
   make libpng.la ${ADDITIONAL_MAKE_FLAGS}

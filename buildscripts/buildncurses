@@ -5,21 +5,16 @@ export PKGVER=6.0
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export PKGURL="https://ftp.gnu.org/gnu/ncurses/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
 
 configure_pre() {
   install -dm755 buildncursesw6 buildncursesw buildncurses
 }
 
-configure_pre_32() {
-  install -dm755 buildncursesw6 buildncursesw buildncurses
-}
-
-configure_override_shared() {
+configure_override() {
   local LIBDIR=$1
 
   local CFG_FLAGS_SHARED=(--prefix=/usr
-                          --libdir=/usr/${LIBDIR}
+                          --libdir=/usr/lib
                           --mandir=/usr/share/man
                           --with-shared
                           --without-debug)
@@ -29,7 +24,7 @@ configure_override_shared() {
                  --enable-pc-files    \
                  --enable-widec       \
                  --with-abi-version=6 \
-                 --with-pkg-config-libdir=/usr/${LIBDIR}/pkgconfig
+                 --with-pkg-config-libdir=/usr/lib/pkgconfig
   popd
 
   pushd buildncursesw
@@ -45,14 +40,6 @@ configure_override_shared() {
   popd
 }
 
-configure_override() {
-  configure_override_shared lib
-}
-
-configure_override_32() {
-  configure_override_shared lib32
-}
-
 make_override() {
   for d in buildncursesw6 buildncursesw buildncurses
   do
@@ -61,23 +48,15 @@ make_override() {
 }
 
 make_install_override() {
-  if [ ${MULTILIB} == 1 ]
-  then
-    local LIBDIR=lib32
-    make -C buildncursesw6 install DESTDIR=${PWD}/dest
-    mv ${PWD}/dest/usr/lib32 ${DEST}/usr
-  else
-    local LIBDIR=lib
-    make -C buildncursesw6 install DESTDIR=${DEST}
-  fi
+  make -C buildncursesw6 install DESTDIR=${DEST}
 
   for lib in ncurses form panel menu
   do
-    install -m755 buildncursesw/lib/lib${lib}w.so.5.9 ${DEST}/usr/${LIBDIR}
-    ln -sf lib${lib}w.so.5.9 ${DEST}/usr/${LIBDIR}/lib${lib}w.so.5
+    install -m755 buildncursesw/lib/lib${lib}w.so.5.9 ${DEST}/usr/lib
+    ln -sf lib${lib}w.so.5.9 ${DEST}/usr/lib/lib${lib}w.so.5
 
-    install -m755 buildncurses/lib/lib${lib}.so.5.9 ${DEST}/usr/${LIBDIR}
-    ln -sf lib${lib}.so.5.9 ${DEST}/usr/${LIBDIR}/lib${lib}.so.5
+    install -m755 buildncurses/lib/lib${lib}.so.5.9 ${DEST}/usr/lib
+    ln -sf lib${lib}.so.5.9 ${DEST}/usr/lib/lib${lib}.so.5
   done
 }
 
@@ -89,31 +68,21 @@ post_install_config() {
 
   for lib in ncurses form panel menu ; do
     rm -rf ${DEST}/usr/lib/lib${lib}.so
-    rm -rf ${DEST}/usr/lib32/lib${lib}.so
     echo "INPUT(-l${lib}w)" > ${DEST}/usr/lib/lib${lib}.so
-    echo "INPUT(-l${lib}w)" > ${DEST}/usr/lib32/lib${lib}.so
   done
 
   for lib in ncurses ncurses++ form panel menu; do
     ln -sf ${lib}w.pc ${DEST}/usr/lib/pkgconfig/${lib}.pc
-    ln -sf ${lib}w.pc ${DEST}/usr/lib32/pkgconfig/${lib}.pc
   done
 
   rm -rf ${DEST}/usr/lib/libcursesw.so
-  rm -rf ${DEST}/usr/lib32/libcursesw.so
   echo "INPUT(-lncursesw)" > ${DEST}/usr/lib/libcursesw.so
-  echo "INPUT(-lncursesw)" > ${DEST}/usr/lib32/libcursesw.so
   ln -sf libncurses.so ${DEST}/usr/lib/libcurses.so
-  ln -sf libncurses.so ${DEST}/usr/lib32/libcurses.so
 
   rm -rf ${DEST}/usr/lib/*.a
-  rm -rf ${DEST}/usr/lib32/*.a
 
   # libtinfo compat
-  for lib in lib lib32
-  do
-    ln -sf libncurses.so.5 ${DEST}/usr/${lib}/libtinfo.so.5
-  done
+  ln -sf libncurses.so.5 ${DEST}/usr/lib/libtinfo.so.5
 }
 
 . $(dirname $0)/master.sh

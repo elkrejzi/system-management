@@ -16,7 +16,6 @@ case $(basename $0) in
   buildgst-plugins-base )
     export PKGNAME=gst-plugins-base
     export MODULE=" Base Plugins"
-    export MULTILIB_BUILD=1
   ;;
   buildgst-plugins-good )
     export PKGNAME=gst-plugins-good
@@ -28,7 +27,6 @@ case $(basename $0) in
   ;;
   buildgstreamer )
     export PKGNAME=gstreamer
-    export MULTILIB_BUILD=1
   ;;
   buildgstreamer-vaapi )
     export PKGNAME=gstreamer-vaapi
@@ -45,11 +43,6 @@ then
 fi
 
 export CONFIGURE_FLAGS=(--libexecdir=/usr/lib "${EXTRA_ARGS[@]}")
-export CONFIGURE_FLAGS_32=(--libexecdir=/usr/lib32
-                           --disable-examples
-                           --disable-introspection
-                           "${EXTRA_ARGS[@]}")
-
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://gstreamer.freedesktop.org/src/${PKGNAME}/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}

@@ -8,41 +8,13 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://freedesktop.org/software/pulseaudio/releases/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--disable-bluez4 --disable-rpath --with-module-dir=/usr/lib/pulse/modules)
-export CONFIGURE_FLAGS_32=(--disable-bluez4 --disable-rpath --with-module-dir=/usr/lib/pulse/modules)
-
-_libs="libpulse.la libpulse-simple.la libpulse-mainloop-glib.la"
-_pkglibs="libpulsecommon-${SHLIBVER}.la libpulsedsp.la"
+export MAKE_INSTALL_FLAGS="bashcompletiondir=/usr/share/bash-completion/completions"
 
 configure_pre() {
   sed -i "s#; flat-volumes = yes#flat-volumes = no#" src/daemon/daemon.conf.in
 
   find . -name "Makefile.in" | xargs sed -i "s|(libdir)/@PACKAGE@|(libdir)/pulse|"
-}
-
-configure_pre_32() {
-  find . -name "Makefile.in" | xargs sed -i "s|(libdir)/@PACKAGE@|(libdir)/pulse|"
-}
-
-make_override() {
-  if [ ${MULTILIB} == 1 ]
-  then
-    make -C src ${_libs} ${_pkglibs} ${ADDITIONAL_MAKE_FLAGS}
-  else
-    make ${ADDITIONAL_MAKE_FLAGS}
-  fi
-}
-
-make_install_override() {
-  if [ ${MULTILIB} == 1 ]
-  then
-    make -C src lib_LTLIBRARIES="${_libs}" install-libLTLIBRARIES ${ADDITIONAL_MAKE_INSTALL_FLAGS}
-    make -C src pkglib_LTLIBRARIES="${_pkglibs}" install-pkglibLTLIBRARIES ${ADDITIONAL_MAKE_INSTALL_FLAGS}
-    make install-pkgconfigDATA ${ADDITIONAL_MAKE_INSTALL_FLAGS}
-  else
-    make install ${ADDITIONAL_MAKE_INSTALL_FLAGS} bashcompletiondir=/usr/share/bash-completion/completions
-  fi
 }
 
 post_install_config() {

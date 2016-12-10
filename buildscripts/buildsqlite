@@ -7,7 +7,6 @@ export PKGTAR=${PKGNAME}-autoconf-${PKGDLVER}.tar.gz
 export PKGDIR=${PKGNAME}-autoconf-${PKGDLVER}
 export PKGURL="http://sqlite.org/2016/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
 
 export USER_CFLAGS="-DSQLITE_ENABLE_FTS3=1            \
                     -DSQLITE_ENABLE_FTS5=1            \
@@ -18,7 +17,6 @@ export USER_CFLAGS="-DSQLITE_ENABLE_FTS3=1            \
                     -DSQLITE_SECURE_DELETE=1"
 
 export CONFIGURE_FLAGS=(--enable-fts5)
-export CONFIGURE_FLAGS_32=(--enable-fts5)
 
 make_install_post() {
   pushd tea

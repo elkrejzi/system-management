@@ -5,22 +5,12 @@ export PKGVER=2.25
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
-export MAKE_FLAGS_32="-C libcap prefix=/usr lib=lib32"
 export MAKE_INSTALL_FLAGS="RAISE_SETFCAP=no PAM_LIBDIR=/lib prefix=/usr"
-export MAKE_INSTALL_FLAGS_32="-C libcap prefix=/usr lib=lib32"
 
 configure_override() {
   sed -i "s|-D_FILE_OFFSET_BITS=64|& ${CFLAGS}|" Make.Rules
   sed -i "s| gcc| ${CC}|" Make.Rules
   sed -i "s:LIBDIR:PAM_&:g" pam_cap/Makefile
-
-  unset CFLAGS
-}
-
-configure_override_32() {
-  sed -i "s|-D_FILE_OFFSET_BITS=64|& ${CFLAGS}|" Make.Rules
-  sed -i "s| gcc| ${CC}|" Make.Rules
 
   unset CFLAGS
 }

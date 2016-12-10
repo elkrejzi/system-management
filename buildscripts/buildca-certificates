@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=ca-certificates
-export PKGVER=20161102
+export PKGVER=20161130
 export PKGTAR=${PKGNAME}_${PKGVER}.tar.xz
 export PKGDIR=${PKGNAME}
 export PKGURL="http://http.debian.net/debian/pool/main/c/ca-certificates/${PKGTAR}"

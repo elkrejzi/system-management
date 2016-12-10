@@ -46,13 +46,6 @@ case $(basename $0) in
     export PKGURL="https://pypi.python.org/packages/source/r/reportlab/${PKGTAR}"
     export DEST=/binary/python/python-reportlab-${PKGVER}
   ;;
-  buildpython-requests )
-    export PKGNAME=requests
-    export PKGVER=2.8.1
-    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
-    export PKGURL="https://pypi.python.org/packages/source/r/requests/${PKGTAR}"
-    export DEST=/binary/python/python-requests-${PKGVER}
-  ;;
   buildpython-systemd )
     export PKGNAME=python-systemd
     export PKGVER=233

@@ -4,9 +4,7 @@ export PKGNAME=systemd
 export PKGVER=232
 export MAKE_JOBS_FLAGS="-j4"
 export KEEP_EMPTY_DIRS=1
-export MULTILIB_BUILD=1
 export USER_CFLAGS="-fno-lto -Wno-unknown-attributes"
-
 export CONFIGURE_FLAGS=(--disable-efi
                         --disable-firstboot
                         --disable-ldconfig
@@ -27,26 +25,6 @@ export CONFIGURE_FLAGS=(--disable-efi
                         --with-dbussystemservicedir=/usr/share/dbus-1/system-services
                         cc_cv_CFLAGS__flto=no)
 
-export CONFIGURE_FLAGS_32=(--disable-efi
-                           --disable-firstboot
-                           --disable-gnutls
-                           --disable-kmod
-                           --disable-ldconfig
-                           --disable-libcryptsetup
-                           --disable-libcurl
-                           --disable-libidn
-                           --disable-libiptc
-                           --disable-lz4
-                           --disable-machined
-                           --disable-microhttpd
-                           --disable-networkd
-                           --disable-pam
-                           --disable-qrencode
-                           --disable-sysusers
-                           --disable-xkbcommon
-                           --without-python
-                           cc_cv_CFLAGS__flto=no)
-
 post_install_config() {
   rm -rf ${DEST}/etc/init.d ${DEST}/etc/rpm ${DEST}/usr/lib/rpm
   rm -rf ${DEST}/etc/systemd/system/multi-user.target.wants/systemd-{networkd,resolved,timesyncd}.service
@@ -55,10 +33,7 @@ post_install_config() {
   rm -rf ${DEST}/lib/systemd/system/local-fs.target.wants/var-lib-machines.mount
   rm -rf ${DEST}/lib/systemd/system/sysinit.target.wants/systemd-update-done.service
 
-  install -dm755 ${DEST}/etc/profile.d ${DEST}/lib32 ${DEST}/sbin
-
-  mv ${DEST}/usr/lib/libnss_*.so.* ${DEST}/lib
-  mv ${DEST}/usr/lib32/libnss_*.so.* ${DEST}/lib32
+  install -dm755 ${DEST}/etc/profile.d ${DEST}/sbin
 
 cat > ${DEST}/etc/pam.d/systemd-user << "EOF"
 # Begin /etc/pam.d/systemd-user

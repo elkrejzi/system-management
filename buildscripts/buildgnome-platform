@@ -281,7 +281,7 @@ case $(basename $0) in
   ;;
   buildlibgsf )
     export PKGNAME=libgsf
-    export PKGVER=1.14.40
+    export PKGVER=1.14.41
   ;;
   buildlibgtop )
     export PKGNAME=libgtop
@@ -363,7 +363,7 @@ case $(basename $0) in
   ;;
   buildtracker )
     export PKGNAME=tracker
-    export PKGVER=1.10.1
+    export PKGVER=1.10.2
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
     export CONFIGURE_FLAGS=(--disable-miner-firefox --disable-miner-thunderbird --disable-miner-user-guides)

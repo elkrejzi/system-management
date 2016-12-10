@@ -6,7 +6,7 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="http://www.freedesktop.org/software/vaapi/releases/libva/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
+#export MULTILIB_BUILD=1
 
 post_install_config() {
   rm -rf ${DEST}/usr/lib/dri ${DEST}/usr/lib32/dri

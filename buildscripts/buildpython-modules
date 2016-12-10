@@ -48,7 +48,7 @@ case $(basename $0) in
   ;;
   buildpython-docutils )
     export PKGNAME=docutils
-    export PKGVER=0.12
+    export PKGVER=0.13.1
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://downloads.sourceforge.net/docutils/${PKGTAR}"
     export DEST=/binary/python/python-docutils-${PKGVER}
@@ -83,7 +83,7 @@ case $(basename $0) in
   ;;
   buildpython-lxml )
     export PKGNAME=lxml
-    export PKGVER=3.6.4
+    export PKGVER=3.7.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://files.pythonhosted.org/packages/source/l/lxml/${PKGTAR}"
     export DEST=/binary/python/python-lxml-${PKGVER}
@@ -148,7 +148,7 @@ EOF
   ;;
   buildpython-pytz )
     export PKGNAME=pytz
-    export PKGVER=2016.7
+    export PKGVER=2016.10
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
     export PKGURL="https://files.pythonhosted.org/packages/source/p/pytz/${PKGTAR}"
     export DEST=/binary/python/python-pytz-${PKGVER}
@@ -167,9 +167,16 @@ EOF
     export PKGURL="https://files.pythonhosted.org/packages/source/r/rdflib/${PKGTAR}"
     export DEST=/binary/python/python-rdflib-${PKGVER}
   ;;
+  buildpython-requests )
+    export PKGNAME=requests
+    export PKGVER=2.12.3
+    export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
+    export PKGURL="https://files.pythonhosted.org/packages/source/r/requests/${PKGTAR}"
+    export DEST=/binary/python/python-requests-${PKGVER}
+  ;;
   buildpython-setuptools )
     export PKGNAME=setuptools
-    export PKGVER=28.8.0
+    export PKGVER=30.4.0
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://files.pythonhosted.org/packages/source/s/setuptools/${PKGTAR}"
     export DEST=/binary/python/python-setuptools-${PKGVER}
@@ -190,7 +197,7 @@ EOF
   ;;
   buildpython-sphinx )
     export PKGNAME=Sphinx
-    export PKGVER=1.4.8
+    export PKGVER=1.5
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
     export PKGURL="https://files.pythonhosted.org/packages/source/S/Sphinx/${PKGTAR}"
     export DEST=/binary/python/python-sphinx-${PKGVER}
@@ -236,6 +243,7 @@ EOF
       $(dirname $0)/buildpython-lxml
       $(dirname $0)/buildpython-mako
       $(dirname $0)/buildpython-rdflib
+      $(dirname $0)/buildpython-requests
       $(dirname $0)/buildpython-sphinx
       $(dirname $0)/buildpython-sphinx_rtd_theme
     fi

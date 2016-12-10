@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export PKGNAME=osinfo-db
-export PKGVER=20160728
+export PKGVER=20161026
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="https://fedorahosted.org/releases/l/i/libosinfo/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"

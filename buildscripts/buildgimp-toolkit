@@ -18,17 +18,11 @@ case $(basename $0) in
   ;;
   buildcairo )
     export PKGNAME=cairo
-    export PKGVER=1.14.6
+    export PKGVER=1.14.8
     export DEST=/binary/${PKGNAME}-${PKGVER}
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://www.cairographics.org/releases/${PKGTAR}"
-    export MULTILIB_BUILD=1
     export CONFIGURE_FLAGS=(--enable-tee)
-    export CONFIGURE_FLAGS_32=(--enable-tee)
-    configure_post_32() {
-      sed -i "/DIST_SUBDIRS/s:boilerplate test::" Makefile
-      sed -i "/am__append_1/s:boilerplate test::" Makefile
-    }
   ;;
   buildclutter )
     export PKGNAME=clutter
@@ -45,7 +39,7 @@ case $(basename $0) in
   ;;
   buildclutter-gst )
     export PKGNAME=clutter-gst
-    export PKGVER=3.0.20
+    export PKGVER=3.0.22
     export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
     export PKGURL="https://download.gnome.org/sources/${PKGNAME}/${PKGVER:0:3}/${PKGTAR}"
   ;;
@@ -79,18 +73,13 @@ case $(basename $0) in
     export PKGVER=2.50.2
     export DEST=/binary/${PKGNAME}-${PKGVER}
     export KEEP_EMPTY_DIRS=1
-    export MULTILIB_BUILD=1
     export PATCHES_LIST=("glib-compile-schemas-quiet.patch")
     export CONFIGURE_FLAGS=(--with-pcre=system --with-python=/usr/bin/python3)
-    export CONFIGURE_FLAGS_32=(--with-pcre=system)
     make_install_post() {
       rm -rf ${DEST}/usr/share/gdb
       install -dm755 ${DEST}/lib
       mv ${DEST}/usr/lib/libglib-2.0.so.* ${DEST}/lib
       ln -sf ../../lib/$(readlink ${DEST}/usr/lib/libglib-2.0.so) ${DEST}/usr/lib/libglib-2.0.so
-    }
-    make_install_post_32() {
-      mv dest/usr/bin/gio-querymodules ${DEST}/usr/bin/gio-querymodules-32
     }
   ;;
   buildgobject-introspection )
@@ -120,7 +109,7 @@ EOF
   ;;
   buildgtk3 )
     export PKGNAME=gtk+
-    export PKGVER=3.22.4
+    export PKGVER=3.22.5
     export CONFIGURE_FLAGS=(--enable-broadway-backend --enable-wayland-backend --enable-x11-backend --enable-man)
     export POSTINST_TRIGGER=("[ -x /usr/bin/gtk-query-immodules-3.0 ] && echo \"Processing triggers for gtk-3.0\" && /usr/bin/gtk-query-immodules-3.0 --update-cache")
     export SPACE_ADDED=1
@@ -139,12 +128,10 @@ EOF
     export PKGNAME=pango
     export PKGVER=1.40.3
     export DEST=/binary/${PKGNAME}-${PKGVER}
-    export MULTILIB_BUILD=1
-    export CONFIGURE_FLAGS_32=(--disable-introspection)
   ;;
   buildvala )
     export PKGNAME=vala
-    export PKGVER=0.34.3
+    export PKGVER=0.34.4
   ;;
 esac
 

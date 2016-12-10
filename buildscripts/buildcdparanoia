@@ -6,22 +6,14 @@ export PKGTAR=${PKGNAME}-${PKGVER}.src.tgz
 export PKGDIR=${PKGNAME}-${PKGVER}
 export PKGURL="http://downloads.xiph.org/releases/cdparanoia/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
-export INSTALL_CMD=("for dir in usr/include usr/lib usr/lib32 ; do cp -rf --remove-destination \$dir /usr ; done")
-export MULTILIB_BUILD=1
+export INSTALL_CMD=("for dir in usr/include usr/lib ; do cp -rf --remove-destination \$dir /usr ; done")
 export PATCHES_LIST=("cdparanoia.patch")
-export PATCHES_LIST_32=("cdparanoia.patch")
 export USER_CFLAGS="-fPIC"
 export USER_CXXFLAGS="-fPIC"
 export CONFIGURE_FLAGS=(--libdir='${prefix}/lib' --mandir='${prefix}/share/man')
-export CONFIGURE_FLAGS_32=(--libdir='${prefix}/lib32' --mandir='${prefix}/share/man')
 export MAKE_INSTALL_FLAGS="prefix=\${DEST}/usr"
-export MAKE_INSTALL_FLAGS_32="prefix=\${PWD}/dest/usr"
 
 configure_pre() {
-  autoreconf -fi
-}
-
-configure_pre_32() {
   autoreconf -fi
 }
 

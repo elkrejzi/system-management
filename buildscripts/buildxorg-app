@@ -1,10 +1,6 @@
 #!/bin/bash -e
 
 case $(basename $0) in
-  buildbdftopcf )
-    export PKGNAME=bdftopcf
-    export PKGVER=1.0.5
-  ;;
   buildiceauth )
     export PKGNAME=iceauth
     export PKGVER=1.0.7
@@ -167,7 +163,6 @@ case $(basename $0) in
   buildxorg-app )
     export PKG_AUTO_INSTALL=1
 
-    $(dirname $0)/buildbdftopcf
     $(dirname $0)/buildiceauth
     $(dirname $0)/buildluit
     $(dirname $0)/buildmkfontdir

@@ -1,24 +1,15 @@
 #!/bin/bash -e
 
 export PKGNAME=icu
-export PKGVER=58.1
-export PKGTAR=icu4c-58_1-src.tgz
+export PKGVER=58.2
+export PKGTAR=icu4c-${PKGVER/./_}-src.tgz
 export PKGURL="http://download.icu-project.org/files/icu4c/${PKGVER}/${PKGTAR}"
 export PKGDIR=${PKGNAME}
 export PKGBUILD=${PKGDIR}/source
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
 
 configure_pre() {
   sed -i "/xlocale.h/i #   include <locale.h>" i18n/digitlst.cpp
-}
-
-configure_pre_32() {
-  sed -i "/xlocale.h/i #   include <locale.h>" i18n/digitlst.cpp
-}
-
-make_install_post_32() {
-  mv dest/usr/bin/icu-config ${DEST}/usr/bin/icu-config-32
 }
 
 . $(dirname $0)/master.sh

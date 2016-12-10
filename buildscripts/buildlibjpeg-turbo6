@@ -6,9 +6,9 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.gz
 export DEST=/binary/${PKGNAME}6-${PKGVER}
 export PKGURL="https://downloads.sourceforge.net/libjpeg-turbo/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
+#export MULTILIB_BUILD=1
 export CONFIGURE_FLAGS=(--without-simd)
-export CONFIGURE_FLAGS_32=(--without-simd)
+#export CONFIGURE_FLAGS_32=(--without-simd)
 
 make_override() {
   make libjpeg.la ${ADDITIONAL_MAKE_FLAGS}

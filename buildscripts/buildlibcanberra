@@ -6,13 +6,7 @@ export PKGTAR=${PKGNAME}-${PKGVER}.tar.xz
 export PKGURL="http://0pointer.de/lennart/projects/libcanberra/${PKGTAR}"
 export DEST=/binary/multimedia/${PKGNAME}-${PKGVER}
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
 export PATCHES_LIST=("libcanberra.patch")
-export PATCHES_LIST_32=("libcanberra.patch")
 export CONFIGURE_FLAGS=(--disable-null --disable-oss)
-export CONFIGURE_FLAGS_32=(--disable-gtk
-                           --disable-gtk3
-                           --disable-null
-                           --disable-oss)
 
 . $(dirname $0)/master.sh

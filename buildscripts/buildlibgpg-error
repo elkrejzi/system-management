@@ -5,7 +5,7 @@ export PKGVER=1.25
 export PKGTAR=${PKGNAME}-${PKGVER}.tar.bz2
 export PKGURL="ftp://ftp.gnupg.org/gcrypt/libgpg-error/${PKGTAR}"
 export MAKE_JOBS_FLAGS="-j4"
-export MULTILIB_BUILD=1
+#export MULTILIB_BUILD=1
 
 make_install_post() {
   install -dm755 ${DEST}/lib
